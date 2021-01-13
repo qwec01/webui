@@ -1,3 +1,4 @@
+import { ClearableInputDirective } from './clearable-input.directive';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -18,7 +19,8 @@ import { IXAutoDirective } from './ix-auto.directive';
     AppAccordionDirective,
     FontSizeDirective,
     LazyViewerDirective,
-    IXAutoDirective
+    IXAutoDirective,
+    ClearableInputDirective,
   ],
   exports: [
     EqualValidatorDirective,
@@ -26,7 +28,8 @@ import { IXAutoDirective } from './ix-auto.directive';
     AppAccordionDirective,
     FontSizeDirective,
     LazyViewerDirective,
-    IXAutoDirective
+    IXAutoDirective,
+    ClearableInputDirective,
   ]
 })
 export class CommonDirectivesModule { }

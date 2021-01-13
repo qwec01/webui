@@ -38,9 +38,10 @@
 			[id]="config.name"
 			(change)="valueChange()"
 			(paste)="onPaste($event)"
-			(input)="onInput()">
-
-  	<button mat-icon-button type="button" *ngIf="config.togglePw" class="toggle_pw" (click)="togglePW()"
+			(input)="onInput()"
+			clearableInput>
+		
+		<button mat-icon-button type="button" *ngIf="config.togglePw" class="toggle_pw" (click)="togglePW()"
   		ix-auto
   		ix-auto-type="button"
   		ix-auto-identifier="{{config.name}}_toggle-pw">

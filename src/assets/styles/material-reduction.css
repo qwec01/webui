@@ -432,6 +432,27 @@ entity-form-list .list-action-block-wrapper .form-element select{
   opacity: 0.75;
 }
 
+.form-element button.clear_input {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  opacity: 0.75; 
+  cursor: pointer; 
+  user-select: none;
+  background: transparent;
+  color: #fff;
+  box-shadow: none;
+  border: 0;
+  padding: 0 10px;
+}
+
+.form-element button.clear_input:hover,
+.form-element button.clear_input:focus,
+.form-element button.clear_input:active {
+  color: var(--primary);
+}
+
 .form-element .mat-form-field-type-mat-select .mat-form-field-wrapper {
   min-height: 33px;
   width: 100% !important;
