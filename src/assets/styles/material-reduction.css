@@ -807,7 +807,6 @@ mat-card.mat-card .mat-list-base{
   padding-top: 4px;
 }
 
-<<<<<<< HEAD
 .mat-expansion-panel-header span.mat-expansion-indicator{
   margin-top: -4px;
   position: relative;
@@ -870,3 +869,10 @@ mat-icon.truecommand-icon.FAILED > span.mat-badge-content {
   background: var(--warn);
 }
 
+@media only screen and (max-width: 600px) {
+  .search-field {
+    margin-bottom: 8px !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+}

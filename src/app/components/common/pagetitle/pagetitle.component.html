@@ -1,8 +1,9 @@
 <div fxLayout="row wrap" class="page-title" *ngIf="titleText">
   <app-breadcrumb fxFlex="100%" [ngClass]="{ 'invisible': !breadcrumbs && routeParts.length < 2 }" [product_type]="product_type"></app-breadcrumb>
-  <div fxFlex="100%" fxLayout='row wrap' fxLayoutAlign="space-between end">
+  <div fxFlex="100%" style="display: flex; flex-wrap: wrap;">
     <h1>{{ routeParts[routeParts.length - 1].title | translate }}</h1>
-    
-    <viewcontroller #viewcontroller></viewcontroller>
+    <div fxFlex="grow" style="padding-left: 8px;">
+      <viewcontroller #viewcontroller></viewcontroller>
+    </div>
   </div>
 </div>
