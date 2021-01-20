@@ -872,7 +872,5 @@ mat-icon.truecommand-icon.FAILED > span.mat-badge-content {
 @media only screen and (max-width: 600px) {
   .search-field {
     margin-bottom: 8px !important;
-    padding-left: 1rem !important;
-    padding-right: 1rem !important;
   }
 }
