@@ -7,6 +7,7 @@ import * as _ from 'lodash';
 
 import { Wizard } from '../../../common/entity/entity-form/models/wizard.interface';
 import helptext from '../../../../helptext/task-calendar/replication/replication-wizard';
+import helptext_repl from '../../../../helptext/task-calendar/replication/replication';
 import sshConnectionsHelptex from '../../../../helptext/system/ssh-connections';
 
 import { DialogService, KeychainCredentialService, WebSocketService, ReplicationService, TaskService, StorageService } from '../../../../services';
@@ -28,6 +29,7 @@ export class ReplicationWizardComponent {
     public isLinear = true;
     public summary_title = "Replication Summary";
     protected entityWizard: any;
+    protected datasets = [];
 
     protected custActions: Array<any> = [
         {
@@ -752,6 +754,9 @@ export class ReplicationWizardComponent {
                 this.namesInUse.push(...res.map(replication => replication.name));
             }
         )
+        this.ws.call('pool.dataset.query').subscribe(res => {
+            this.datasets = res;
+        });
     }
 
     isCustActionVisible(id, stepperIndex) {
@@ -1224,7 +1229,27 @@ export class ReplicationWizardComponent {
 
         this.loader.close();
         if (!toStop) {
-            this.router.navigate(new Array('/').concat(this.route_success));
+            let encrypted = false;
+            const enc_datasets = [];
+            console.log(value.source_datasets);
+            if (value.source_datasets_from === 'local') {
+                for (let i=0; i<value.source_datasets.length; i++) {
+                    const dataset = _.find(this.datasets, {name:value.source_datasets[i]});
+                    if (dataset && dataset.encrypted) {
+                        encrypted = true;
+                        enc_datasets.push(dataset.name);
+                    }
+                }
+            }
+            if (encrypted) {
+                this.dialogService.Info(helptext_repl.replication_encrypted_dialog.title,
+                    helptext.replication_encrypted_dialog.message1 + enc_datasets.toString() +
+                    helptext.replication_encrypted_dialog.message2).subscribe(res => {
+                        this.router.navigate(new Array('/').concat(this.route_success));
+                });
+            } else {
+                this.router.navigate(new Array('/').concat(this.route_success));
+            }
         }
     }
 

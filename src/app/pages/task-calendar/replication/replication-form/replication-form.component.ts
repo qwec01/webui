@@ -26,6 +26,13 @@ export class ReplicationFormComponent {
     protected isEntity = true;
     protected entityForm: any;
     protected queryRes: any;
+    
+    protected datasets = [];
+    protected push: boolean;
+    protected properties: boolean;
+    protected encrypted = false;
+    protected enc_datasets = [];
+
     public speedLimitField: any;
     public form_message = {
         type: 'notice',
@@ -872,6 +879,9 @@ export class ReplicationFormComponent {
         private keychainCredentialService: KeychainCredentialService,
         private replicationService: ReplicationService,
         private dialogService: DialogService) {
+        this.ws.call('pool.dataset.query').subscribe(res => {
+            this.datasets = res;
+        });
         const transportFieldsets = _.find(this.fieldSets, {class: 'transport'});
         const sshCredentialsField = _.find(transportFieldsets.config, { name: 'ssh_credentials' });
         this.keychainCredentialService.getSSHConnections().subscribe(
@@ -939,6 +949,23 @@ export class ReplicationFormComponent {
             )
     }
 
+    checkEncryptionState() {
+        if (this.push && this.properties) {
+            let source = this.entityForm.formGroup.controls['source_datasets_PUSH'];
+            this.encrypted = false;
+            this.enc_datasets = [];
+            for (let i=0; i< source.length; i++) {
+                const dataset = _.find(this.datasets, {name:source[i]});
+                if (dataset && dataset.encrypted) {
+                    this.encrypted = true;
+                    this.enc_datasets.push(dataset.name);
+                }
+            }
+            console.log(this.encrypted);
+            console.log(this.enc_datasets);
+        }
+    }
+
     afterInit(entityForm) {
         this.entityForm = entityForm;
         const isTruenasCore = window.localStorage.getItem('product_type') === 'CORE' ? true : false;
@@ -964,6 +991,10 @@ export class ReplicationFormComponent {
         );
         entityForm.formGroup.controls['direction'].valueChanges.subscribe(
             (res) => {
+                if (res === 'PUSH') {
+                    this.push = true;
+                    this.checkEncryptionState();
+                }
                 if (res === 'PUSH' &&
                     entityForm.formGroup.controls['transport'].value !== 'LOCAL' &&
                     entityForm.formGroup.controls['also_include_naming_schema'].value !== undefined) {
