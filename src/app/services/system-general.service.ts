@@ -18,29 +18,36 @@ export class SystemGeneralService {
   refreshSysGeneral$ = new Subject();
 
   // Prevent repetitive api calls in a short time when data is already available
-  public generalConfigInfo: any;
+  // Prevent repetitive api calls in a short time when data is already available
+  private generalConfigInfo: any = {};
+  private getGeneralConfigInfoWaiting = false;
   public getGeneralConfig = new Observable<any>(observer => {
-    if((!this.generalConfigInfo || _.isEmpty(this.generalConfigInfo))) {
-      // Since the api call can be made many times before the first response comes back, 
-      // set waiting to true to make if condition false after the first call
-      this.generalConfigInfo = { waiting: true};
-      this.ws.call('system.general.config').subscribe(res => {
-        this.generalConfigInfo = res;
+    const sendRequest = setInterval(() => {
+      if(this.getGeneralConfigInfoWaiting) {
+        const wait = setInterval(() => {
+          if (!this.getGeneralConfigInfoWaiting) {
+            clearInterval(wait);
+            if(!_.isEmpty(this.generalConfigInfo)) {
+              clearInterval(sendRequest);
+              observer.next(this.generalConfigInfo);
+              this.generalConfigInfo = {};
+            }
+          }
+        }, 10);
+      } else if(_.isEmpty(this.generalConfigInfo)) {
+        this.getGeneralConfigInfoWaiting = true;
+        this.ws.call('system.general.config').subscribe(res => {
+          this.generalConfigInfo = {...res};
+          this.getGeneralConfigInfoWaiting = false;
+        }, err => {
+          this.getGeneralConfigInfoWaiting = false;
+        })
+      } else {
+        clearInterval(sendRequest);
         observer.next(this.generalConfigInfo);
-      })
-    } else {
-      // Check every ten ms to see if the object is ready, then stop checking and send the obj
-      const wait = setInterval(() => {
-        if (this.generalConfigInfo && !this.generalConfigInfo.waiting) {
-          clearInterval(wait);
-          observer.next(this.generalConfigInfo);
-        }
-      }, 10)
-    }
-    // After a pause, set object to empty so calls can be made
-    setTimeout(() => {
-      this.generalConfigInfo = {};
-    }, 2000)
+        this.generalConfigInfo = {};
+      }
+    }, 2 * 1000);
   });
 
   public advancedConfigInfo: any;
