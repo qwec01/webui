@@ -11,6 +11,9 @@ import { EntityUtils } from '../../../common/entity/utils';
 import { T } from '../../../../translate-marker';
 import { FieldSet } from '../../../common/entity/entity-form/models/fieldset.interface';
 import { FieldSets } from 'app/pages/common/entity/entity-form/classes/field-sets';
+import { DialogFormConfiguration } from '../../../common/entity/entity-dialog/dialog-form-configuration.interface';
+import sshConnectionsHelptex from '../../../../helptext/system/ssh-connections';
+import { AppLoaderService } from '../../../../services/app-loader/app-loader.service';
 
 @Component({
     selector: 'app-replication-list',
@@ -881,11 +884,163 @@ export class ReplicationFormComponent {
     ])
     protected fieldConfig;
 
+    protected dialogFieldConfig = [
+        {
+            type: 'input',
+            name: 'name',
+            placeholder: sshConnectionsHelptex.name_placeholder,
+            tooltip: sshConnectionsHelptex.name_tooltip,
+            required: true,
+            validation: [Validators.required],
+        },
+        {
+            type: 'select',
+            name: 'setup_method',
+            placeholder: sshConnectionsHelptex.setup_method_placeholder,
+            tooltip: sshConnectionsHelptex.setup_method_tooltip,
+            options: [
+                {
+                    label: T("Manual"),
+                    value: 'manual',
+                }, {
+                    label: T("Semi-automatic (TrueNAS CORE only)"),
+                    value: 'semiautomatic',
+                }
+            ],
+            value: 'semiautomatic',
+            isHidden: false,
+        },
+        {
+            type: 'input',
+            name: 'host',
+            placeholder: sshConnectionsHelptex.host_placeholder,
+            tooltip: sshConnectionsHelptex.host_tooltip,
+            required: true,
+            validation: [Validators.required],
+            relation: [{
+                action: 'SHOW',
+                when: [{
+                    name: 'setup_method',
+                    value: 'manual',
+                }]
+            }],
+        }, {
+            type: 'input',
+            inputType: 'number',
+            name: 'port',
+            placeholder: sshConnectionsHelptex.port_placeholder,
+            tooltip: sshConnectionsHelptex.port_tooltip,
+            value: 22,
+            relation: [{
+                action: 'SHOW',
+                when: [{
+                    name: 'setup_method',
+                    value: 'manual',
+                }]
+            }],
+        }, {
+            type: 'input',
+            name: 'url',
+            placeholder: sshConnectionsHelptex.url_placeholder,
+            tooltip: sshConnectionsHelptex.url_tooltip,
+            required: true,
+            validation: [Validators.required],
+            relation: [{
+                action: 'SHOW',
+                when: [{
+                    name: 'setup_method',
+                    value: 'semiautomatic',
+                }]
+            }],
+        }, {
+            type: 'input',
+            name: 'username',
+            placeholder: sshConnectionsHelptex.username_placeholder,
+            tooltip: sshConnectionsHelptex.username_tooltip,
+            value: 'root',
+            required: true,
+            validation: [Validators.required],
+        }, {
+            type: 'input',
+            inputType: 'password',
+            name: 'password',
+            placeholder: sshConnectionsHelptex.password_placeholder,
+            tooltip: sshConnectionsHelptex.password_tooltip,
+            togglePw: true,
+            required: true,
+            validation: [Validators.required],
+            relation: [{
+                action: 'SHOW',
+                when: [{
+                    name: 'setup_method',
+                    value: 'semiautomatic',
+                }]
+            }],
+        }, {
+            type: 'select',
+            name: 'private_key',
+            placeholder: sshConnectionsHelptex.private_key_placeholder,
+            tooltip: sshConnectionsHelptex.private_key_tooltip,
+            options: [
+                {
+                    label: T("Generate New"),
+                    value: 'NEW'
+                }
+            ],
+            required: true,
+            validation: [Validators.required],
+        }, {
+            type: 'input',
+            name: 'remote_host_key',
+            isHidden: true,
+        }, {
+            type: 'select',
+            name: 'cipher',
+            placeholder: sshConnectionsHelptex.cipher_placeholder,
+            tooltip: sshConnectionsHelptex.cipher_tooltip,
+            options: [
+                {
+                    label: T("Standard (Secure)"),
+                    value: 'STANDARD',
+                }, {
+                    label: T("Fast (Less secure)"),
+                    value: 'FAST',
+                }, {
+                    label: T("Disabled (Not encrypted)"),
+                    value: 'DISABLED',
+                }
+            ],
+            value: 'STANDARD',
+        }
+    ];
+
+    protected createCalls = {
+        private_key: 'keychaincredential.create',
+        ssh_credentials_semiautomatic: 'keychaincredential.remote_ssh_semiautomatic_setup',
+        ssh_credentials_manual: 'keychaincredential.create',
+        periodic_snapshot_tasks: 'pool.snapshottask.create',
+        replication: 'replication.create',
+        snapshot: 'zfs.snapshot.create',
+    }
+
+    protected deleteCalls = {
+        private_key: 'keychaincredential.delete',
+        ssh_credentials: 'keychaincredential.delete',
+        periodic_snapshot_tasks: 'pool.snapshottask.delete',
+        replication: 'replication.delete',
+    }
+
+    protected semiSSHFieldGroup: any[] = [
+        'url',
+        'password',
+    ];
+
     constructor(
         private ws: WebSocketService,
         protected taskService: TaskService,
         protected storageService: StorageService,
         private aroute: ActivatedRoute,
+        private loader: AppLoaderService, 
         private keychainCredentialService: KeychainCredentialService,
         private replicationService: ReplicationService,
         private dialogService: DialogService) {
@@ -895,6 +1050,7 @@ export class ReplicationFormComponent {
                 for (const i in res) {
                     sshCredentialsField.options.push({ label: res[i].name, value: res[i].id });
                 }
+                sshCredentialsField.options.push({ label: 'Create New', value: 'NEW' });
             }
         )
         const periodicSnapshotTasksField = this.fieldSets.config('periodic_snapshot_tasks');
@@ -1041,16 +1197,20 @@ export class ReplicationFormComponent {
 
         entityForm.formGroup.controls['ssh_credentials'].valueChanges.subscribe(
             (res) => {
-                for (const item of ['target_dataset_PUSH', 'source_datasets_PULL']) {
-                    const explorerComponent = this.fieldSets.config(item).customTemplateStringOptions.explorerComponent;
-                    if (explorerComponent) {
-                        explorerComponent.nodes = [{
-                            mountpoint: explorerComponent.config.initial,
-                            name: explorerComponent.config.initial,
-                            hasChildren: true
-                        }];
+                if (res === 'NEW') {
+                    this.createSSHConnection();
+                } else {
+                    for (const item of ['target_dataset_PUSH', 'source_datasets_PULL']) {
+                        const explorerComponent = this.fieldSets.config(item).customTemplateStringOptions.explorerComponent;
+                        if (explorerComponent) {
+                            explorerComponent.nodes = [{
+                                mountpoint: explorerComponent.config.initial,
+                                name: explorerComponent.config.initial,
+                                hasChildren: true
+                            }];
+                        }
                     }
-                }
+                }                
             }
         )
 
@@ -1309,4 +1469,143 @@ export class ReplicationFormComponent {
             parent.form_message.content = '';
         }
     }
+
+    createSSHConnection() {
+        const self = this;
+
+        const conf: DialogFormConfiguration = {
+            title: T("Create SSH Connection"),
+            fieldConfig: this.dialogFieldConfig,
+            saveButtonText: T("Create SSH Connection"),
+            customSubmit: async function (entityDialog) {
+                const value = entityDialog.formValue;
+                let prerequisite = true;
+                self.loader.open();
+
+                if (value['private_key'] == 'NEW') {
+                    await self.replicationService.genSSHKeypair().then(
+                        (res) => {
+                            value['sshkeypair'] = res;
+                        },
+                        (err) => {
+                            prerequisite = false;
+                            new EntityUtils().handleWSError(self, err, self.dialogService);
+                        }
+                    )
+                }
+                if (value['setup_method'] == 'manual') {
+                    await self.getRemoteHostKey(value).then(
+                        (res) => {
+                            value['remote_host_key'] = res;
+                        },
+                        (err) => {
+                            prerequisite = false;
+                            new EntityUtils().handleWSError(self, err, self.dialogService);
+                        }
+                    )
+                }
+
+                if (!prerequisite) {
+                    self.loader.close();
+                    return;
+                }
+                const createdItems = {
+                    private_key: null,
+                    ssh_credentials: null,
+                }
+                let hasError = false;
+                for (const item in createdItems) {
+                    if (!((item === 'private_key' && value['private_key'] !== 'NEW'))) {
+                        await self.doCreate(value, item).then(
+                            (res) => {
+                                value[item] = res.id;
+                                createdItems[item] = res.id;
+                                if (item === 'private_key') {
+                                    const privateKeyField = _.find(self.dialogFieldConfig, { name: 'private_key' });
+                                    privateKeyField.options.push({ label: res.name + ' (New Created)', value: res.id });
+                                }
+                                if (item === 'ssh_credentials') {
+                                    const sshCredentialsField = self.fieldSets.config('ssh_credentials');
+                                    sshCredentialsField.options.push({ label: res.name + ' (New Created)', value: res.id });
+                                    self.entityForm.formGroup.controls['ssh_credentials'].setValue(res.id);
+                                }
+                            },
+                            (err) => {
+                                hasError = true;
+                                self.rollBack(createdItems);
+                                new EntityUtils().handleWSError(self, err, self.dialogService, self.dialogFieldConfig);
+                            }
+                        )
+                    }
+                }
+                self.loader.close();
+                if (!hasError) {
+                    entityDialog.dialogRef.close(true);
+                }
+            }
+        }
+        this.dialogService.dialogForm(conf, true);
+    }
+
+    async doCreate(data, item) {
+        let payload;
+        if (item === 'private_key') {
+            payload = {
+                name: data['name'] + ' Key',
+                type: 'SSH_KEY_PAIR',
+                attributes: data['sshkeypair'],
+            }
+            return this.ws.call(this.createCalls[item], [payload]).toPromise();
+        }
+
+        if (item === 'ssh_credentials') {
+            item += '_' + data['setup_method'];
+            if (data['setup_method'] == 'manual') {
+                payload = {
+                    name: data['name'],
+                    type: 'SSH_CREDENTIALS',
+                    attributes: {
+                        cipher: data['cipher'],
+                        host: data['host'],
+                        port: data['port'],
+                        private_key: data['private_key'],
+                        remote_host_key: data['remote_host_key'],
+                        username: data['username'],
+                    }
+                };
+            } else {
+                payload = {
+                    name: data['name'],
+                    private_key: data['private_key'],
+                    cipher: data['cipher'],
+                };
+                for (const i of this.semiSSHFieldGroup) {
+                    payload[i] = data[i];
+                }
+            }
+            return this.ws.call(this.createCalls[item], [payload]).toPromise();
+        }
+    }
+
+    getRemoteHostKey(value) {
+        const payload = {
+            'host': value['host'],
+            'port': value['port'],
+        };
+        return this.ws.call('keychaincredential.remote_ssh_host_key_scan', [payload]).toPromise();
+    }
+
+    async rollBack(items) {
+        const keys = Object.keys(items).reverse();
+        for (let i = 0; i < keys.length; i++) {
+            if (items[keys[i]] != null) {
+                await this.ws.call(this.deleteCalls[keys[i]], [items[keys[i]]]).toPromise().then(
+                    (res) => {
+                        console.log('rollback ' + keys[i], res);
+                    }
+                );
+            }
+        }
+    }
+    
 }
