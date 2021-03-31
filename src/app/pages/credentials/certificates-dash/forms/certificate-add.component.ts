@@ -310,22 +310,6 @@ export class CertificateAddComponent {
           tooltip: helptext_system_certificates.add.basic_constraints.enabled.tooltip,
         },
         {
-          type: 'input',
-          inputType: 'number',
-          name: 'BasicConstraints-path_length',
-          placeholder: helptext_system_certificates.add.basic_constraints.path_length.placeholder,
-          tooltip: helptext_system_certificates.add.basic_constraints.path_length.tooltip,
-          relation: [
-            {
-              action: 'SHOW',
-              when: [{
-                name: 'BasicConstraints-enabled',
-                value: true,
-              }]
-            },
-          ]
-        },
-        {
           type: 'select',
           multiple: true,
           name: 'BasicConstraints',
@@ -343,6 +327,22 @@ export class CertificateAddComponent {
               tooltip: helptext_system_certificates.add.basic_constraints.extension_critical.tooltip,
             }
           ],
+          relation: [
+            {
+              action: 'SHOW',
+              when: [{
+                name: 'BasicConstraints-enabled',
+                value: true,
+              }]
+            },
+          ]
+        },
+        {
+          type: 'input',
+          inputType: 'number',
+          name: 'BasicConstraints-path_length',
+          placeholder: helptext_system_certificates.add.basic_constraints.path_length.placeholder,
+          tooltip: helptext_system_certificates.add.basic_constraints.path_length.tooltip,
           relation: [
             {
               action: 'SHOW',
@@ -758,7 +758,29 @@ export class CertificateAddComponent {
       this.hideField(this.internalFields[i], false, entity);
     }
     this.hideField(this.internalFields[2], true, entity);
-
+    this.getField('BasicConstraints-enabled').valueChanges.subscribe(res => {
+      if(res) {
+        const basicConstraintsField = this.getField('BasicConstraints')
+        if(basicConstraintsField.value) {
+          this.hideField('BasicConstraints-path_length', basicConstraintsField.value.findIndex(val => val === 'ca')===-1, entity);
+        } else {
+          this.hideField('BasicConstraints-path_length', true, entity);
+        }
+      } else {
+        this.hideField('BasicConstraints-path_length', true, entity);
+      }
+    })
+    this.getField('BasicConstraints').valueChanges.subscribe(res => {
+      if(res) {
+        if(this.getField('BasicConstraints-enabled').value) {
+          this.hideField('BasicConstraints-path_length', res.findIndex(val => val === 'ca')===-1, entity);
+        } else {
+          this.hideField('BasicConstraints-path_length', true, entity);
+        }
+      } else {
+        this.hideField('BasicConstraints-path_length', true, entity);
+      }
+    });
     this.getField('create_type').valueChanges.subscribe((res) => {
       this.wizardConfig[2].skip = false;
 
@@ -890,6 +912,9 @@ export class CertificateAddComponent {
       // load selected profile settings
       this.loadProfiles(res);
       this.currentProfile = res;
+      if(this.getField('BasicConstraints').value) {
+        this.hideField('BasicConstraints-path_length', this.getField('BasicConstraints').value.findIndex(res => res === 'ca')===-1, entity);
+      }
       this.setSummary();
     });
 
