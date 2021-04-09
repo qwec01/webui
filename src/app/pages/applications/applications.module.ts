@@ -1,35 +1,35 @@
-import { NgModule } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
+import { NgModule } from "@angular/core";
+import { TranslateModule } from "@ngx-translate/core";
 
-import { CommonDirectivesModule } from 'app/directives/common/common-directives.module';
-import { MaterialModule } from '../../appMaterial.module';
-import { EntityModule } from '../common/entity/entity.module';
+import { CommonDirectivesModule } from "app/directives/common/common-directives.module";
+import { MaterialModule } from "../../appMaterial.module";
+import { EntityModule } from "../common/entity/entity.module";
 
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { FlexLayoutModule } from "@angular/flex-layout";
 
-import { ApplicationsComponent } from './applications.component';
-import { ApplicationsRoutingModule } from './applications-routing.module';
-import { CatalogComponent } from './catalog/catalog.component';
-import { ChartReleasesComponent } from './chart-releases/chart-releases.component';
-import { DockerImagesComponent } from './docker-images/docker-images.component';
-import { KubernetesSettingsComponent } from './forms/kubernetes-settings.component';
-import { ChartReleaseAddComponent } from './forms/chart-release-add.component';
-import { ChartReleaseEditComponent } from './forms/chart-release-edit.component';
-import { CoreComponents } from 'app/core/components/corecomponents.module';
+import { ApplicationsComponent } from "./applications.component";
+import { ApplicationsRoutingModule } from "./applications-routing.module";
+import { CatalogComponent } from "./catalog/catalog.component";
+import { ChartReleasesComponent } from "./chart-releases/chart-releases.component";
+import { DockerImagesComponent } from "./docker-images/docker-images.component";
+import { KubernetesSettingsComponent } from "./forms/kubernetes-settings.component";
+import { ChartReleaseAddComponent } from "./forms/chart-release-add.component";
+import { ChartReleaseEditComponent } from "./forms/chart-release-edit.component";
+import { CoreComponents } from "app/core/components/corecomponents.module";
 
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { PodShellComponent } from './pod-shell/pod-shell.component';
-import { ChartFormComponent } from './forms/chart-form.component';
-import { ChartWizardComponent } from './forms/chart-wizard.component';
-import { PodLogsComponent } from './pod-logs/pod-logs.component';
-import { ChartEventsDialog } from './dialogs/chart-events/chart-events-dialog.component';
-import { AppCommonModule } from '../../components/common/app-common.module';
-import { CatalogSummaryDialog } from './dialogs/catalog-summary/catalog-summary-dialog.component';
-import { ManageCatalogsComponent } from './manage-catalogs/manage-catalogs.component';
-import { ManageCatalogSummaryDialog } from './dialogs/manage-catalog-summary/manage-catalog-summary-dialog.component';
-import { CatalogAddFormComponent } from './forms/catalog-add-form.component';
-import { CatalogEditFormComponent } from './forms/catalog-edit-form.component';
-import { PullImageFormComponent } from './forms/pull-image-form.component';
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { PodShellComponent } from "./pod-shell/pod-shell.component";
+import { ChartFormComponent } from "./forms/chart-form.component";
+import { ChartWizardComponent } from "./forms/chart-wizard.component";
+import { PodLogsComponent } from "./pod-logs/pod-logs.component";
+import { ChartEventsDialog } from "./dialogs/chart-events/chart-events-dialog.component";
+import { AppCommonModule } from "../../components/common/app-common.module";
+import { CatalogSummaryDialog } from "./dialogs/catalog-summary/catalog-summary-dialog.component";
+import { ManageCatalogsComponent } from "./manage-catalogs/manage-catalogs.component";
+import { ManageCatalogSummaryDialog } from "./dialogs/manage-catalog-summary/manage-catalog-summary-dialog.component";
+import { CatalogAddFormComponent } from "./forms/catalog-add-form.component";
+import { CatalogEditFormComponent } from "./forms/catalog-edit-form.component";
+import { PullImageFormComponent } from "./forms/pull-image-form.component";
 
 @NgModule({
   imports: [
@@ -44,8 +44,7 @@ import { PullImageFormComponent } from './forms/pull-image-form.component';
     FormsModule,
     ReactiveFormsModule,
   ],
-  exports: [
-  ],
+  exports: [],
   declarations: [
     ApplicationsComponent,
     CatalogComponent,
@@ -65,6 +64,6 @@ import { PullImageFormComponent } from './forms/pull-image-form.component';
     CatalogAddFormComponent,
     CatalogEditFormComponent,
     PullImageFormComponent,
-  ]
+  ],
 })
-export class ApplicationsModule { }
+export class ApplicationsModule {}

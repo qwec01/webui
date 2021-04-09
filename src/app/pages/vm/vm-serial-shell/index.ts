@@ -1,1 +1,1 @@
-export { VMSerialShellComponent } from './vmserial-shell.component';
+export { VMSerialShellComponent } from "./vmserial-shell.component";

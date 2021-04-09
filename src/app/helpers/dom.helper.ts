@@ -1,17 +1,15 @@
 export function removeClass(el, className) {
-  if (!el || el.length === 0)
-    return;
+  if (!el || el.length === 0) return;
   if (!el.length) {
     el.classList.remove(className);
   } else {
     for (var i = 0; i < el.length; i++) {
-      el[i].classList.remove(className)
+      el[i].classList.remove(className);
     }
   }
 }
 export function addClass(el, className) {
-  if (!el)
-    return;
+  if (!el) return;
   if (!el.length) {
     el.classList.add(className);
   } else {
@@ -21,8 +19,7 @@ export function addClass(el, className) {
   }
 }
 export function findClosest(el, className) {
-  if (!el)
-    return;
+  if (!el) return;
   while (el) {
     var parent = el.parentElement;
     if (parent && hasClass(parent, className)) {
@@ -32,13 +29,13 @@ export function findClosest(el, className) {
   }
 }
 export function hasClass(el, className) {
-  if (!el)
-    return;
-  return (` ${el.className} `).replace(/[\n\t]/g, ' ').indexOf(` ${className} `) > -1;
+  if (!el) return;
+  return (
+    ` ${el.className} `.replace(/[\n\t]/g, " ").indexOf(` ${className} `) > -1
+  );
 }
 export function toggleClass(el, className) {
-  if (!el)
-    return;
+  if (!el) return;
   if (hasClass(el, className)) {
     removeClass(el, className);
   } else {
@@ -54,13 +51,16 @@ export function changeTheme(themes: any[], themeName: string) {
     //removeClass(document.body, 'native');
   });
   addClass(document.body, themeName);*/
-  addClass(document.body, 'ix-blue');
-};
+  addClass(document.body, "ix-blue");
+}
 export function ieChatjsFix() {
-  if(window.hasOwnProperty('MSInputMethodContext') || document.hasOwnProperty('documentMode')) {
-    document.body.style.width = '99.9%';
+  if (
+    window.hasOwnProperty("MSInputMethodContext") ||
+    document.hasOwnProperty("documentMode")
+  ) {
+    document.body.style.width = "99.9%";
     setTimeout(() => {
-      document.body.style.width = '100%';
-    })
+      document.body.style.width = "100%";
+    });
   }
 }

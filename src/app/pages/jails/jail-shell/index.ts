@@ -1,1 +1,1 @@
-export { JailShellComponent } from './jail-shell.component';
+export { JailShellComponent } from "./jail-shell.component";

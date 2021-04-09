@@ -4,7 +4,10 @@
   font-weight: 400;
   src: url("MaterialIcons-Regular.eot");
   /* For IE6-8 */
-  src: local("Material Icons"), local("MaterialIcons-Regular"), url("MaterialIcons-Regular.woff2") format("woff2"), url("MaterialIcons-Regular.woff") format("woff"), url("MaterialIcons-Regular.ttf") format("truetype");
+  src: local("Material Icons"), local("MaterialIcons-Regular"),
+    url("MaterialIcons-Regular.woff2") format("woff2"),
+    url("MaterialIcons-Regular.woff") format("woff"),
+    url("MaterialIcons-Regular.ttf") format("truetype");
 }
 
 .material-icons {
@@ -26,5 +29,5 @@
   /* Support for Firefox. */
   -moz-osx-font-smoothing: grayscale;
   /* Support for IE. */
-  font-feature-settings: 'liga';
+  font-feature-settings: "liga";
 }

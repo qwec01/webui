@@ -1,1 +1,1 @@
-export { KerberosRealmsFormComponent } from './kerberosrealms-form.component';
+export { KerberosRealmsFormComponent } from "./kerberosrealms-form.component";

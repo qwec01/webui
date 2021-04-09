@@ -1,4 +1,4 @@
-@import 'xterm/css/xterm.css';
+@import "xterm/css/xterm.css";
 .terminal-wrapper {
   padding: 10px 0 10px 10px;
   background: black;

@@ -1,1 +1,1 @@
-export { SmartFormComponent } from './smart-form.component';
+export { SmartFormComponent } from "./smart-form.component";

@@ -1,4 +1,4 @@
-import {Location} from '@angular/common';
+import { Location } from "@angular/common";
 import {
   Component,
   ContentChildren,
@@ -12,26 +12,32 @@ import {
   ViewChild,
   ViewChildren,
   OnChanges,
-  AfterViewInit
-} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, FormArray, Validators} from '@angular/forms';
-import {ActivatedRoute, Router} from '@angular/router';
-import * as _ from 'lodash';
-import { TranslateService } from '@ngx-translate/core';
-import { T } from '../../../../translate-marker';
+  AfterViewInit,
+} from "@angular/core";
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  FormArray,
+  Validators,
+} from "@angular/forms";
+import { ActivatedRoute, Router } from "@angular/router";
+import * as _ from "lodash";
+import { TranslateService } from "@ngx-translate/core";
+import { T } from "../../../../translate-marker";
 
-import {RestService, WebSocketService} from '../../../../services/';
-import {AppLoaderService} from '../../../../services/app-loader/app-loader.service';
-import {EntityTemplateDirective} from '../entity-template.directive';
-import {EntityUtils} from '../utils';
+import { RestService, WebSocketService } from "../../../../services/";
+import { AppLoaderService } from "../../../../services/app-loader/app-loader.service";
+import { EntityTemplateDirective } from "../entity-template.directive";
+import { EntityUtils } from "../utils";
 
-import {FieldConfig} from './models/field-config.interface';
-import {FieldSet} from './models/fieldset.interface';
-import {EntityFormService} from './services/entity-form.service';
-import {FieldRelationService} from './services/field-relation.service';
-import { Subscription ,  Subject } from 'rxjs';
-import { Formconfiguration } from './entity-form.component';
-import { CoreEvent } from 'app/core/services/core.service';
+import { FieldConfig } from "./models/field-config.interface";
+import { FieldSet } from "./models/fieldset.interface";
+import { EntityFormService } from "./services/entity-form.service";
+import { FieldRelationService } from "./services/field-relation.service";
+import { Subscription, Subject } from "rxjs";
+import { Formconfiguration } from "./entity-form.component";
+import { CoreEvent } from "app/core/services/core.service";
 
 export interface FormConfig {
   fieldSets?;
@@ -63,64 +69,74 @@ export interface FormConfig {
   custom_add_query?;
   actionButtonsAlign?: string;
   custActions?: any[];
-  customFilter?:any[];
-  
+  customFilter?: any[];
+
   beforeSubmit?;
   afterSubmit?;
   customSubmit?;
   clean?;
   errorReport?;
   hide_fileds?;
-  isBasicMode?
-  advanced_field?
+  isBasicMode?;
+  advanced_field?;
   basic_field?;
   route_conf?;
   preHandler?;
-  initialCount?
+  initialCount?;
   initialCount_default?;
 
   goBack?();
   onSuccess?(res);
-  multiStateSubmit?:boolean;
+  multiStateSubmit?: boolean;
 }
 
 @Component({
-  selector : 'entity-form-embedded',
-  templateUrl : './entity-form-embedded.component.html',
-  styleUrls : [ './entity-form-embedded.component.css' ],
-  providers : [ EntityFormService, FieldRelationService ]
+  selector: "entity-form-embedded",
+  templateUrl: "./entity-form-embedded.component.html",
+  styleUrls: ["./entity-form-embedded.component.css"],
+  providers: [EntityFormService, FieldRelationService],
 })
-export class EntityFormEmbeddedComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
-
-  @Input('conf') conf: FormConfig;
-  @Input() data:any;
+export class EntityFormEmbeddedComponent
+  implements OnInit, OnDestroy, AfterViewInit, OnChanges {
+  @Input("conf") conf: FormConfig;
+  @Input() data: any;
   @Input() hiddenFieldSets: string[] = [];
   @Input() target: Subject<CoreEvent>;
 
   public formGroup: FormGroup;
   public fieldSetDisplay: string;
-  public fieldSets: FieldSet[]
+  public fieldSets: FieldSet[];
   public fieldConfig: FieldConfig[];
   public hasConf = true;
   public saveSubmitText = T("Save");
-  public saveSubmitStatus:string = ""; 
+  public saveSubmitStatus: string = "";
   public actionButtonsAlign = "center";
 
   get controls() {
-    return this.fieldConfig.filter(({type}) => type !== 'button');
+    return this.fieldConfig.filter(({ type }) => type !== "button");
   }
-  get changes() { return this.formGroup.valueChanges; }
-  get statusChanges() { return this.formGroup.statusChanges; }
-  get dirty() { return this.entityForm ? this.entityForm.dirty : false; }
-  get valid() { return this.formGroup.valid; }
-  get value() { return this.formGroup.value; }
+  get changes() {
+    return this.formGroup.valueChanges;
+  }
+  get statusChanges() {
+    return this.formGroup.statusChanges;
+  }
+  get dirty() {
+    return this.entityForm ? this.entityForm.dirty : false;
+  }
+  get valid() {
+    return this.formGroup.valid;
+  }
+  get value() {
+    return this.formGroup.value;
+  }
 
   templateTop: TemplateRef<any>;
   @ContentChildren(EntityTemplateDirective)
   templates: QueryList<EntityTemplateDirective>;
 
-  @ViewChildren('component') components;
-  @ViewChild('entityForm', {static: false}) entityForm;
+  @ViewChildren("component") components;
+  @ViewChild("entityForm", { static: false }) entityForm;
 
   public busy: Subscription;
 
@@ -128,27 +144,32 @@ export class EntityFormEmbeddedComponent implements OnInit, OnDestroy, AfterView
   public error: string;
   public success = false;
 
-  constructor(protected router: Router, protected route: ActivatedRoute,
-    protected rest: RestService, protected ws: WebSocketService,
-    protected location: Location, private fb: FormBuilder,
+  constructor(
+    protected router: Router,
+    protected route: ActivatedRoute,
+    protected rest: RestService,
+    protected ws: WebSocketService,
+    protected location: Location,
+    private fb: FormBuilder,
     protected entityFormService: EntityFormService,
     protected fieldRelationService: FieldRelationService,
     protected loader: AppLoaderService,
-    public translate: TranslateService) {}
+    public translate: TranslateService
+  ) {}
 
   ngAfterViewInit() {
     this.templates.forEach((item) => {
-      if (item.type === 'TOP') {
-	this.templateTop = item.templateRef;
+      if (item.type === "TOP") {
+        this.templateTop = item.templateRef;
       }
     });
   }
 
   ngOnInit() {
-    if(this.conf.saveSubmitText) {
+    if (this.conf.saveSubmitText) {
       this.saveSubmitText = this.conf.saveSubmitText;
     }
-    
+
     if (this.conf.preInit) {
       this.conf.preInit(this);
     }
@@ -157,9 +178,9 @@ export class EntityFormEmbeddedComponent implements OnInit, OnDestroy, AfterView
       this.conf.afterInit(this);
     }
 
-    if(this.target){
-      this.target.subscribe((evt:CoreEvent) => {
-        switch(evt.name){
+    if (this.target) {
+      this.target.subscribe((evt: CoreEvent) => {
+        switch (evt.name) {
           case "SetHiddenFieldsets":
             this.setHiddenFieldSets(evt.data);
             break;
@@ -170,10 +191,10 @@ export class EntityFormEmbeddedComponent implements OnInit, OnDestroy, AfterView
             this.saveSubmitText = this.conf.saveSubmitText;
             break;
           case "SubmitStart":
-            this.saveSubmitStatus = '';
+            this.saveSubmitStatus = "";
             break;
           case "SubmitComplete":
-            this.saveSubmitStatus = 'checkmark';
+            this.saveSubmitStatus = "checkmark";
             this.entityForm.form.markAsPristine();
             break;
         }
@@ -181,43 +202,46 @@ export class EntityFormEmbeddedComponent implements OnInit, OnDestroy, AfterView
     }
   }
 
-  init(){
-
+  init() {
     // Setup Fields
     this.fieldConfig = this.conf.fieldConfig;
     this.actionButtonsAlign = this.conf.actionButtonsAlign;
     this.fieldSetDisplay = this.conf.fieldSetDisplay;
     if (this.conf.fieldSets) {
       /* Temp patch to support both FieldSet approaches */
-      this.fieldSets = this.conf.fieldSets.list ? this.conf.fieldSets.list() : this.conf.fieldSets;
+      this.fieldSets = this.conf.fieldSets.list
+        ? this.conf.fieldSets.list()
+        : this.conf.fieldSets;
     }
     this.formGroup = this.entityFormService.createFormGroup(this.fieldConfig);
     this.setControlChangeDetection();
 
-      for (const i in this.fieldConfig) {
-        const config = this.fieldConfig[i];
-        if (config.relation.length > 0) {
-          this.setRelation(config);
-        }
+    for (const i in this.fieldConfig) {
+      const config = this.fieldConfig[i];
+      if (config.relation.length > 0) {
+        this.setRelation(config);
       }
+    }
 
     if (this.conf.values) {
       // We are no longer responsible for API calls.
-	for (let i in this.data) {
-	  let fg = this.formGroup.controls[i];
-	  if (fg) {
-	    const current_field = this.fieldConfig.find((control) => control.name === i);
-	    if (current_field.type === "array") {
-	      this.setArrayValue(this.data[i], fg, i);
-	    } else {
-	      fg.setValue(this.data[i]);
-	    }
-	  }
-	}
-	if (this.conf.initial) {
-	  this.conf.initial.bind(this.conf)(this);
-	}
-    } 
+      for (let i in this.data) {
+        let fg = this.formGroup.controls[i];
+        if (fg) {
+          const current_field = this.fieldConfig.find(
+            (control) => control.name === i
+          );
+          if (current_field.type === "array") {
+            this.setArrayValue(this.data[i], fg, i);
+          } else {
+            fg.setValue(this.data[i]);
+          }
+        }
+      }
+      if (this.conf.initial) {
+        this.conf.initial.bind(this.conf)(this);
+      }
+    }
   }
 
   ngOnChanges(changes) {
@@ -225,48 +249,54 @@ export class EntityFormEmbeddedComponent implements OnInit, OnDestroy, AfterView
       this.onFormGroupChanged();
     }
 
-    if(changes.data){
+    if (changes.data) {
       this.init();
       this.onFormGroupChanged();
-      if(this.entityForm){
+      if (this.entityForm) {
         this.entityForm.form.markAsPristine();
       }
     }
   }
 
-  setControlChangeDetection(){ 
+  setControlChangeDetection() {
     this.formGroup.valueChanges.subscribe((evt) => {
-        this.target.next({name:"FormGroupValueChanged",data:evt,sender:this.formGroup});
+      this.target.next({
+        name: "FormGroupValueChanged",
+        data: evt,
+        sender: this.formGroup,
+      });
     });
     let fg = Object.keys(this.formGroup.controls);
     fg.forEach((control) => {
-      this.formGroup.controls[control].valueChanges.subscribe((evt) => { 
-      });
+      this.formGroup.controls[control].valueChanges.subscribe((evt) => {});
     });
   }
 
-  onFormGroupChanged(){
-      const controls = Object.keys(this.formGroup.controls);
-      const configControls = this.controls.map((item) => item.name);
+  onFormGroupChanged() {
+    const controls = Object.keys(this.formGroup.controls);
+    const configControls = this.controls.map((item) => item.name);
 
-      controls.filter((control) => !configControls.includes(control))
-	.forEach((control) => this.formGroup.removeControl(control));
+    controls
+      .filter((control) => !configControls.includes(control))
+      .forEach((control) => this.formGroup.removeControl(control));
 
-      configControls.filter((control) => !controls.includes(control))
-	.forEach((name) => {
-	  const config =
-	    this.fieldConfig.find((control) => control.name === name);
-	  this.formGroup.addControl(name, this.createControl(config));
-	});
+    configControls
+      .filter((control) => !controls.includes(control))
+      .forEach((name) => {
+        const config = this.fieldConfig.find(
+          (control) => control.name === name
+        );
+        this.formGroup.addControl(name, this.createControl(config));
+      });
 
-      let fg = Object.assign({}, this.formGroup);
+    let fg = Object.assign({}, this.formGroup);
   }
 
   goBack() {
-    this.target.next({name:"FormCancelled", sender:this.conf});
+    this.target.next({ name: "FormCancelled", sender: this.conf });
   }
 
-  onSubmit(event: Event, eventName?:string) {
+  onSubmit(event: Event, eventName?: string) {
     event.preventDefault();
     event.stopPropagation();
     this.error = null;
@@ -275,13 +305,13 @@ export class EntityFormEmbeddedComponent implements OnInit, OnDestroy, AfterView
     let value = _.cloneDeep(this.formGroup.value);
     for (const i in value) {
       if (value.hasOwnProperty(i)) {
-	if (this.conf['clean_' + i]) {
-	  value = this.conf['clean_' + i](value, i);
-	}
+        if (this.conf["clean_" + i]) {
+          value = this.conf["clean_" + i](value, i);
+        }
       }
     }
-    if ('id' in value) {
-      delete value['id'];
+    if ("id" in value) {
+      delete value["id"];
     }
 
     if (this.conf.clean) {
@@ -292,15 +322,17 @@ export class EntityFormEmbeddedComponent implements OnInit, OnDestroy, AfterView
       this.conf.beforeSubmit(value);
     }
 
-    if(!eventName){
-      this.target.next({name:"FormSubmitted", data:value, sender:this.conf});
+    if (!eventName) {
+      this.target.next({
+        name: "FormSubmitted",
+        data: value,
+        sender: this.conf,
+      });
       this.after(value);
     } else {
-      this.target.next({name:eventName, data:value, sender:this.conf});
+      this.target.next({ name: eventName, data: value, sender: this.conf });
       this.after(value);
-
     }
-
   }
 
   after(value) {
@@ -311,15 +343,15 @@ export class EntityFormEmbeddedComponent implements OnInit, OnDestroy, AfterView
 
   clearErrors() {
     for (let f = 0; f < this.fieldConfig.length; f++) {
-      this.fieldConfig[f]['errors'] = '';
-      this.fieldConfig[f]['hasErrors'] = false;
+      this.fieldConfig[f]["errors"] = "";
+      this.fieldConfig[f]["hasErrors"] = false;
     }
   }
 
   isShow(id: any): any {
     if (this.conf.isBasicMode) {
       if (this.conf.advanced_field.indexOf(id) > -1) {
-	return false;
+        return false;
       }
     }
     return true;
@@ -330,31 +362,31 @@ export class EntityFormEmbeddedComponent implements OnInit, OnDestroy, AfterView
     if (!route) {
       route = this.conf.route_success;
     }
-    this.router.navigate(new Array('/').concat(route));
+    this.router.navigate(new Array("/").concat(route));
   }
 
   createControl(config: FieldConfig) {
-    const {disabled, validation, value} = config;
-    return this.fb.control({disabled, value}, validation);
+    const { disabled, validation, value } = config;
+    return this.fb.control({ disabled, value }, validation);
   }
 
   setDisabled(name: string, disable: boolean) {
     if (this.formGroup.controls[name]) {
-      const method = disable ? 'disable' : 'enable';
+      const method = disable ? "disable" : "enable";
       this.formGroup.controls[name][method]();
       return;
     }
 
     this.fieldConfig = this.fieldConfig.map((item) => {
       if (item.name === name) {
-	item.disabled = disable;
+        item.disabled = disable;
       }
       return item;
     });
   }
 
   setValue(name: string, value: any) {
-    this.formGroup.controls[name].setValue(value, {emitEvent : true});
+    this.formGroup.controls[name].setValue(value, { emitEvent: true });
   }
 
   setArrayValue(data: any[], formArray: any, name: string) {
@@ -362,11 +394,11 @@ export class EntityFormEmbeddedComponent implements OnInit, OnDestroy, AfterView
     for (const i in this.fieldConfig) {
       const config = this.fieldConfig[i];
       if (config.name === name) {
-	array_controls = config.formarray;
+        array_controls = config.formarray;
       }
     }
 
-    if(this.conf.preHandler) {
+    if (this.conf.preHandler) {
       data = this.conf.preHandler(data, formArray);
     }
 
@@ -376,42 +408,49 @@ export class EntityFormEmbeddedComponent implements OnInit, OnDestroy, AfterView
 
       const formGroup = this.entityFormService.createFormGroup(array_controls);
       for (const i in value) {
-	const formControl = formGroup.controls[i];
-	formControl.setValue(value[i]);
+        const formControl = formGroup.controls[i];
+        formControl.setValue(value[i]);
       }
       formArray.insert(index, formGroup);
     });
   }
 
   setRelation(config: FieldConfig) {
-    const activations =
-      this.fieldRelationService.findActivationRelation(config.relation);
+    const activations = this.fieldRelationService.findActivationRelation(
+      config.relation
+    );
     if (activations) {
       const tobeDisabled = this.fieldRelationService.isFormControlToBeDisabled(
-	activations, this.formGroup);
+        activations,
+        this.formGroup
+      );
       this.setDisabled(config.name, tobeDisabled);
 
-      this.fieldRelationService.getRelatedFormControls(config, this.formGroup)
-	.forEach(control => {
-	  control.valueChanges.subscribe(
-	    () => { this.relationUpdate(config, activations); });
-	});
+      this.fieldRelationService
+        .getRelatedFormControls(config, this.formGroup)
+        .forEach((control) => {
+          control.valueChanges.subscribe(() => {
+            this.relationUpdate(config, activations);
+          });
+        });
     }
   }
 
   relationUpdate(config: FieldConfig, activations: any) {
     const tobeDisabled = this.fieldRelationService.isFormControlToBeDisabled(
-      activations, this.formGroup);
+      activations,
+      this.formGroup
+    );
     this.setDisabled(config.name, tobeDisabled);
   }
 
-  ngOnDestroy() { 
-    if(this.sub){
-      this.sub.unsubscribe(); 
+  ngOnDestroy() {
+    if (this.sub) {
+      this.sub.unsubscribe();
     }
   }
 
-  setHiddenFieldSets(fs: string[]){
+  setHiddenFieldSets(fs: string[]) {
     this.hiddenFieldSets = fs;
   }
 }

@@ -1,26 +1,26 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component, OnInit, Input } from "@angular/core";
+import { Router, ActivatedRoute } from "@angular/router";
 
-import * as _ from 'lodash';
+import * as _ from "lodash";
 
-import { EntityFormComponent } from '../../../common/entity/entity-form';
-import { FieldConfig } from '../../../common/entity/entity-form/models/field-config.interface';
-import { TaskService, UserService, RestService } from '../../../../services/';
-import { EntityFormService } from '../../../common/entity/entity-form/services/entity-form.service';
-import { FormGroup } from '@angular/forms';
-import { AppLoaderService } from '../../../../services/app-loader/app-loader.service';
-import { T } from '../../../../translate-marker';
-import { TranslateService } from '@ngx-translate/core';
-import { EntityUtils } from '../utils';
+import { EntityFormComponent } from "../../../common/entity/entity-form";
+import { FieldConfig } from "../../../common/entity/entity-form/models/field-config.interface";
+import { TaskService, UserService, RestService } from "../../../../services/";
+import { EntityFormService } from "../../../common/entity/entity-form/services/entity-form.service";
+import { FormGroup } from "@angular/forms";
+import { AppLoaderService } from "../../../../services/app-loader/app-loader.service";
+import { T } from "../../../../translate-marker";
+import { TranslateService } from "@ngx-translate/core";
+import { EntityUtils } from "../utils";
 
 @Component({
-  selector: 'entity-task',
-  templateUrl: './entity-task.component.html',
-  styleUrls: ['entity-task.component.css'],
-  providers: [TaskService, UserService, EntityFormService]
+  selector: "entity-task",
+  templateUrl: "./entity-task.component.html",
+  styleUrls: ["entity-task.component.css"],
+  providers: [TaskService, UserService, EntityFormService],
 })
 export class EntityTaskComponent implements OnInit {
-  @Input('conf') conf: any;
+  @Input("conf") conf: any;
 
   protected entityForm: EntityFormComponent;
   protected isEntity: boolean = true;
@@ -39,15 +39,17 @@ export class EntityTaskComponent implements OnInit {
   protected data: any;
   public showDefaults: boolean = false;
 
-  protected preTaskName: string = '';
+  protected preTaskName: string = "";
 
-  constructor(protected router: Router,
+  constructor(
+    protected router: Router,
     protected aroute: ActivatedRoute,
     protected taskService: TaskService,
     protected userService: UserService,
     protected entityFormService: EntityFormService,
     protected loader: AppLoaderService,
-    protected rest: RestService) {}
+    protected rest: RestService
+  ) {}
 
   ngOnInit() {
     if (this.conf.preInit) {
@@ -57,109 +59,151 @@ export class EntityTaskComponent implements OnInit {
     this.preTaskName = this.conf.preTaskName;
 
     let date = new Date();
-    this.month_field = _.find(this.conf.fieldConfig, { 'name': this.preTaskName + '_month' });
-    this.day_field = _.find(this.conf.fieldConfig, { 'name': this.preTaskName + '_dayweek' });
-    this.daymonth_field = _.find(this.conf.fieldConfig, { 'name': this.preTaskName + '_daymonth' });
-    this.hour_field = _.find(this.conf.fieldConfig, { 'name': this.preTaskName + '_hour' });
-    this.mintue_field = _.find(this.conf.fieldConfig, { 'name': this.preTaskName + '_minute' });
+    this.month_field = _.find(this.conf.fieldConfig, {
+      name: this.preTaskName + "_month",
+    });
+    this.day_field = _.find(this.conf.fieldConfig, {
+      name: this.preTaskName + "_dayweek",
+    });
+    this.daymonth_field = _.find(this.conf.fieldConfig, {
+      name: this.preTaskName + "_daymonth",
+    });
+    this.hour_field = _.find(this.conf.fieldConfig, {
+      name: this.preTaskName + "_hour",
+    });
+    this.mintue_field = _.find(this.conf.fieldConfig, {
+      name: this.preTaskName + "_minute",
+    });
 
-    this.aroute.params.subscribe(params => {
-      if (this.conf.resource_name && !this.conf.resource_name.endsWith('/')) {
-        this.conf.resource_name = this.conf.resource_name + '/';
+    this.aroute.params.subscribe((params) => {
+      if (this.conf.resource_name && !this.conf.resource_name.endsWith("/")) {
+        this.conf.resource_name = this.conf.resource_name + "/";
       }
       if (this.isEntity) {
-        this.pk = params['pk'];
+        this.pk = params["pk"];
         if (this.pk && !this.isNew) {
           // only enable advanced mode
         } else {
           this.isNew = true;
         }
       }
-      this.formGroup = this.entityFormService.createFormGroup(this.conf.fieldConfig);
-      this.formGroup.controls[this.preTaskName + '_repeat'].valueChanges.subscribe((res) => {
-        if (res == 'none') {
-          this.month_field['isHidden'] = false;
-          this.day_field['isHidden'] = false;
-          this.daymonth_field['isHidden'] = false;
-          this.hour_field['isHidden'] = false;
+      this.formGroup = this.entityFormService.createFormGroup(
+        this.conf.fieldConfig
+      );
+      this.formGroup.controls[
+        this.preTaskName + "_repeat"
+      ].valueChanges.subscribe((res) => {
+        if (res == "none") {
+          this.month_field["isHidden"] = false;
+          this.day_field["isHidden"] = false;
+          this.daymonth_field["isHidden"] = false;
+          this.hour_field["isHidden"] = false;
           if (this.mintue_field) {
-            this.mintue_field['isHidden'] = false;
+            this.mintue_field["isHidden"] = false;
           }
 
           if (this.isNew) {
-            this.formGroup.controls[this.preTaskName + '_month'].setValue([date.getMonth().toString()]);
-            this.formGroup.controls[this.preTaskName + '_dayweek'].setValue([date.getDay().toString()]);
-            this.formGroup.controls[this.preTaskName + '_daymonth'].setValue(date.getDate().toString());
-            this.formGroup.controls[this.preTaskName + '_hour'].setValue(date.getHours().toString());
+            this.formGroup.controls[this.preTaskName + "_month"].setValue([
+              date.getMonth().toString(),
+            ]);
+            this.formGroup.controls[this.preTaskName + "_dayweek"].setValue([
+              date.getDay().toString(),
+            ]);
+            this.formGroup.controls[this.preTaskName + "_daymonth"].setValue(
+              date.getDate().toString()
+            );
+            this.formGroup.controls[this.preTaskName + "_hour"].setValue(
+              date.getHours().toString()
+            );
             if (this.mintue_field) {
-              this.formGroup.controls[this.preTaskName + '_minute'].setValue(date.getMinutes().toString());
+              this.formGroup.controls[this.preTaskName + "_minute"].setValue(
+                date.getMinutes().toString()
+              );
             }
           }
-        } else if (res == 'hourly') {
-          this.month_field['isHidden'] = true;
-          this.day_field['isHidden'] = true;
-          this.daymonth_field['isHidden'] = true;
-          this.hour_field['isHidden'] = true;
+        } else if (res == "hourly") {
+          this.month_field["isHidden"] = true;
+          this.day_field["isHidden"] = true;
+          this.daymonth_field["isHidden"] = true;
+          this.hour_field["isHidden"] = true;
           if (this.mintue_field) {
-            this.mintue_field['isHidden'] = false;
+            this.mintue_field["isHidden"] = false;
           }
 
           if (this.isNew && this.mintue_field) {
-            this.formGroup.controls[this.preTaskName + '_minute'].setValue(date.getMinutes().toString());
+            this.formGroup.controls[this.preTaskName + "_minute"].setValue(
+              date.getMinutes().toString()
+            );
           }
-        } else if (res == 'daily') {
-          this.month_field['isHidden'] = true;
-          this.day_field['isHidden'] = true;
-          this.daymonth_field['isHidden'] = true;
-          this.hour_field['isHidden'] = false;
+        } else if (res == "daily") {
+          this.month_field["isHidden"] = true;
+          this.day_field["isHidden"] = true;
+          this.daymonth_field["isHidden"] = true;
+          this.hour_field["isHidden"] = false;
           if (this.mintue_field) {
-            this.mintue_field['isHidden'] = false;
+            this.mintue_field["isHidden"] = false;
           }
 
           if (this.isNew) {
-            this.formGroup.controls[this.preTaskName + '_hour'].setValue(date.getHours().toString());
+            this.formGroup.controls[this.preTaskName + "_hour"].setValue(
+              date.getHours().toString()
+            );
             if (this.mintue_field) {
-              this.formGroup.controls[this.preTaskName + '_minute'].setValue(date.getMinutes().toString());
+              this.formGroup.controls[this.preTaskName + "_minute"].setValue(
+                date.getMinutes().toString()
+              );
             }
           }
-        } else if (res == 'weekly') {
-          this.month_field['isHidden'] = true;
-          this.day_field['isHidden'] = false;
-          this.daymonth_field['isHidden'] = true;
-          this.hour_field['isHidden'] = false;
+        } else if (res == "weekly") {
+          this.month_field["isHidden"] = true;
+          this.day_field["isHidden"] = false;
+          this.daymonth_field["isHidden"] = true;
+          this.hour_field["isHidden"] = false;
           if (this.mintue_field) {
-            this.mintue_field['isHidden'] = false;
+            this.mintue_field["isHidden"] = false;
           }
 
           if (this.isNew) {
-            this.formGroup.controls[this.preTaskName + '_dayweek'].setValue([date.getDay().toString()]);
-            this.formGroup.controls[this.preTaskName + '_hour'].setValue(date.getHours().toString());
+            this.formGroup.controls[this.preTaskName + "_dayweek"].setValue([
+              date.getDay().toString(),
+            ]);
+            this.formGroup.controls[this.preTaskName + "_hour"].setValue(
+              date.getHours().toString()
+            );
             if (this.mintue_field) {
-              this.formGroup.controls[this.preTaskName + '_minute'].setValue(date.getMinutes().toString());
+              this.formGroup.controls[this.preTaskName + "_minute"].setValue(
+                date.getMinutes().toString()
+              );
             }
           }
-        } else if (res == 'monthly') {
-          this.month_field['isHidden'] = true;
-          this.day_field['isHidden'] = true;
-          this.daymonth_field['isHidden'] = false;
-          this.hour_field['isHidden'] = false;
+        } else if (res == "monthly") {
+          this.month_field["isHidden"] = true;
+          this.day_field["isHidden"] = true;
+          this.daymonth_field["isHidden"] = false;
+          this.hour_field["isHidden"] = false;
           if (this.mintue_field) {
-            this.mintue_field['isHidden'] = false;
+            this.mintue_field["isHidden"] = false;
           }
 
           if (this.isNew) {
-            this.formGroup.controls[this.preTaskName + '_daymonth'].setValue(date.getDate().toString());
-            this.formGroup.controls[this.preTaskName + '_hour'].setValue(date.getHours().toString());
+            this.formGroup.controls[this.preTaskName + "_daymonth"].setValue(
+              date.getDate().toString()
+            );
+            this.formGroup.controls[this.preTaskName + "_hour"].setValue(
+              date.getHours().toString()
+            );
             if (this.mintue_field) {
-              this.formGroup.controls[this.preTaskName + '_minute'].setValue(date.getMinutes().toString());
+              this.formGroup.controls[this.preTaskName + "_minute"].setValue(
+                date.getMinutes().toString()
+              );
             }
           }
         }
-      })
+      });
     });
 
     if (!this.isNew) {
-      let query = this.conf.resource_name + '/' + this.pk;
+      let query = this.conf.resource_name + "/" + this.pk;
       // if we want to use this again we will need to convert to websocket
       /*this.rest.get(query, {}).subscribe((res) => {
         if (res.data) {
@@ -224,7 +268,9 @@ export class EntityTaskComponent implements OnInit {
       this.conf.afterInit(this);
     }
 
-    setTimeout(() => { this.setShowDefaults(); }, 500);
+    setTimeout(() => {
+      this.setShowDefaults();
+    }, 500);
   }
 
   setShowDefaults() {
@@ -241,7 +287,7 @@ export class EntityTaskComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(new Array('').concat(this.conf.route_success));
+    this.router.navigate(new Array("").concat(this.conf.route_success));
   }
 
   onSubmit(event: Event) {
@@ -250,21 +296,21 @@ export class EntityTaskComponent implements OnInit {
     this.error = null;
     let value = _.cloneDeep(this.formGroup.value);
 
-    if (value[this.preTaskName + '_repeat'] == 'hourly') {
-      value[this.preTaskName + '_dayweek'] = '*';
-      value[this.preTaskName + '_month'] = '*';
-      value[this.preTaskName + '_daymonth'] = '*';
-      value[this.preTaskName + '_hour'] = '*';
-    } else if (value[this.preTaskName + '_repeat'] == 'daily') {
-      value[this.preTaskName + '_dayweek'] = '*';
-      value[this.preTaskName + '_month'] = '*';
-      value[this.preTaskName + '_daymonth'] = '*';
-    } else if (value[this.preTaskName + '_repeat'] == 'weekly') {
-      value[this.preTaskName + '_month'] = '*';
-      value[this.preTaskName + '_daymonth'] = '*';
-    } else if (value[this.preTaskName + '_repeat'] == 'monthly') {
-      value[this.preTaskName + '_dayweek'] = '*';
-      value[this.preTaskName + '_month'] = '*';
+    if (value[this.preTaskName + "_repeat"] == "hourly") {
+      value[this.preTaskName + "_dayweek"] = "*";
+      value[this.preTaskName + "_month"] = "*";
+      value[this.preTaskName + "_daymonth"] = "*";
+      value[this.preTaskName + "_hour"] = "*";
+    } else if (value[this.preTaskName + "_repeat"] == "daily") {
+      value[this.preTaskName + "_dayweek"] = "*";
+      value[this.preTaskName + "_month"] = "*";
+      value[this.preTaskName + "_daymonth"] = "*";
+    } else if (value[this.preTaskName + "_repeat"] == "weekly") {
+      value[this.preTaskName + "_month"] = "*";
+      value[this.preTaskName + "_daymonth"] = "*";
+    } else if (value[this.preTaskName + "_repeat"] == "monthly") {
+      value[this.preTaskName + "_dayweek"] = "*";
+      value[this.preTaskName + "_month"] = "*";
     }
 
     this.loader.open();
@@ -294,6 +340,5 @@ export class EntityTaskComponent implements OnInit {
           new EntityUtils().handleError(this, res);
         });
     }*/
-
   }
 }

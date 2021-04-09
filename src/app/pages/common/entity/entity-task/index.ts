@@ -1,1 +1,1 @@
-export { EntityTaskComponent } from './entity-task.component';
+export { EntityTaskComponent } from "./entity-task.component";

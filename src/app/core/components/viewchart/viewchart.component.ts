@@ -1,8 +1,15 @@
-import { Component, AfterViewInit, OnInit, OnChanges, Input, HostListener } from '@angular/core';
-import { LayoutChild } from 'app/core/classes/layouts';
-import { ViewComponent } from 'app/core/components/view/view.component';
-import {UUID} from 'angular2-uuid';
-import { LegendOptions, TooltipOptions } from './viewchart.component.types';
+import {
+  Component,
+  AfterViewInit,
+  OnInit,
+  OnChanges,
+  Input,
+  HostListener,
+} from "@angular/core";
+import { LayoutChild } from "app/core/classes/layouts";
+import { ViewComponent } from "app/core/components/view/view.component";
+import { UUID } from "angular2-uuid";
+import { LegendOptions, TooltipOptions } from "./viewchart.component.types";
 
 export interface ChartData {
   legend: string;
@@ -11,8 +18,8 @@ export interface ChartData {
 
 export interface Legend {
   swatch?: string;
-  name:string;
-  value?:number | string;
+  name: string;
+  value?: number | string;
   x?: number | string;
   visible: boolean;
 }
@@ -37,16 +44,15 @@ export const ViewChartMetadata = {
       <div id="{{chartId}}" [ngClass]="chartClass">
       </div>
     </div>
-  `
-}
+  `,
+};
 
 @Component({
-  selector: 'viewchart',
+  selector: "viewchart",
   template: ViewChartMetadata.template,
-  styleUrls: ['./viewchart.component.css']
+  styleUrls: ["./viewchart.component.css"],
 })
 export class ViewChartComponent extends ViewComponent implements AfterViewInit {
-
   public chartColors: string[];
   public maxLabels: number;
   public units: string;
@@ -57,39 +63,39 @@ export class ViewChartComponent extends ViewComponent implements AfterViewInit {
   public chart: any;
   public chartLoaded: boolean = false;
   protected _chartType: string;
-  protected _data: any[] = ['No Data', 1];
+  protected _data: any[] = ["No Data", 1];
   protected _chartId: string;
   protected colors: string[];
   public legend: Legend[] = [];
   public showLegendValues: boolean = false;
   protected legendOptions: LegendOptions = {
-    show: false
+    show: false,
   };
   protected tooltipOptions: TooltipOptions = {
     contents: (raw, defaultTitleFormat, defaultValueFormat, color) => {
-      if(!this.showLegendValues){
+      if (!this.showLegendValues) {
         this.showLegendValues = true;
       }
       let time = raw[0].x;
-      for(let index = 0; index < this.legend.length; index++){
-        for(let i = 0; i < raw.length; i++){
-          if(this.legend[index].name == raw[i].name){
+      for (let index = 0; index < this.legend.length; index++) {
+        for (let i = 0; i < raw.length; i++) {
+          if (this.legend[index].name == raw[i].name) {
             this.legend[index].value = raw[i].value;
           }
         }
         this.legend[index].x = time;
       }
-      return '<div style="display:none">' + time + '</div>';
-    }
-  }
+      return '<div style="display:none">' + time + "</div>";
+    },
+  };
 
-  protected chartConfig: any;//ChartConfiguration;
+  protected chartConfig: any; //ChartConfiguration;
 
-  constructor() { 
+  constructor() {
     super();
     this.chartId = "chart-" + UUID.UUID();
     this.chartType = "pie";
-    this.units = '';
+    this.units = "";
   }
 
   ngAfterViewInit() {
@@ -97,47 +103,53 @@ export class ViewChartComponent extends ViewComponent implements AfterViewInit {
   }
 
   ngOnChanges(changes) {
-    if(changes.data){ // This only works with @Input() properties
+    if (changes.data) {
+      // This only works with @Input() properties
       console.log(changes.data);
-      if(this.chartConfig){
+      if (this.chartConfig) {
         this.chart.load({
-          columns: [changes.data]
+          columns: [changes.data],
         });
-      } 
-      
+      }
     }
   }
 
-  get data(){
+  get data() {
     return this._data;
   }
 
-  set data(d:ChartData[]){
-    if(!d){
+  set data(d: ChartData[]) {
+    if (!d) {
       this._data = [];
     } else {
       let result: any[] = [];
- 
-      for(let i = 0; i < d.length; i++){
+
+      for (let i = 0; i < d.length; i++) {
         // setup data
         let item = d[i];
         let legend = [item.legend];
-        let dataObj = legend.concat(item.data)
+        let dataObj = legend.concat(item.data);
         result.push(dataObj);
 
-        let legendHtmlItem: Legend = {swatch:'',name:item.legend, value: "empty", x:"empty", visible:true};
-        if(this.chartType == "donut" || this.chartType == "pie"){
+        let legendHtmlItem: Legend = {
+          swatch: "",
+          name: item.legend,
+          value: "empty",
+          x: "empty",
+          visible: true,
+        };
+        if (this.chartType == "donut" || this.chartType == "pie") {
           legendHtmlItem.value = d[i].data[0];
           this.showLegendValues = true;
         }
 
         // Don't duplicate legend items when new data comes in
         let legendIndex = this.findLegendItem(legendHtmlItem);
-        if(legendIndex == -1){
+        if (legendIndex == -1) {
           this.legend.push(legendHtmlItem);
         } else {
           let dupe = this.legend[legendIndex];
-          dupe.value = legendHtmlItem.value
+          dupe.value = legendHtmlItem.value;
         }
       }
       this._data = result;
@@ -146,78 +158,76 @@ export class ViewChartComponent extends ViewComponent implements AfterViewInit {
     }
   }
 
-  get chartId(){
+  get chartId() {
     return this._chartId;
   }
 
-  set chartId(sel: string){
+  set chartId(sel: string) {
     this._chartId = sel;
   }
 
-  get chartClass(){
+  get chartClass() {
     return this._chartType;
   }
 
-  get chartType(){
+  get chartType() {
     return this._chartType;
   }
 
-  set chartType(str:string){
+  set chartType(str: string) {
     this._chartType = str;
   }
 
-  findLegendItem(item:Legend){
-    for(let i = 0; i < this.legend.length; i++){
+  findLegendItem(item: Legend) {
+    for (let i = 0; i < this.legend.length; i++) {
       let legendItem = this.legend[i];
-      if(legendItem.name == item.name){
+      if (legendItem.name == item.name) {
         return i;
       }
     }
     return -1;
   }
 
-  makeConfig(){
+  makeConfig() {
     this.chartConfig = {
-     bindto: '#' + this.chartId,
-     data: {
-       columns: this._data,
-       type: this.chartType
-     },
-     size:{
-       width: this.width,
-       height: this.height
-     },
-     tooltip:{
-       show:false,
-       format: {
-         value: (value, ratio, id, index) => {
-           if(this.units){
-             return value + this.units; 
-           } else {
-             return value;
-           }
-         }
-       }
-     }
-    }
+      bindto: "#" + this.chartId,
+      data: {
+        columns: this._data,
+        type: this.chartType,
+      },
+      size: {
+        width: this.width,
+        height: this.height,
+      },
+      tooltip: {
+        show: false,
+        format: {
+          value: (value, ratio, id, index) => {
+            if (this.units) {
+              return value + this.units;
+            } else {
+              return value;
+            }
+          },
+        },
+      },
+    };
     return this.chartConfig;
   }
 
-  focus(item){
-    if(item.visible){
+  focus(item) {
+    if (item.visible) {
       this.chart.hide(item.name);
     } else {
       this.chart.show(item.name);
     }
-      item.visible = !item.visible;
+    item.visible = !item.visible;
   }
 
-  refresh(){
+  refresh() {
     // Reset legend to avoid concatenation
     this.render();
   }
 
-  render(conf?:any){
-  }
-
+  render(conf?: any) {}
 }

@@ -1,1 +1,1 @@
-export { TargetFormComponent } from './target-form.component';
+export { TargetFormComponent } from "./target-form.component";

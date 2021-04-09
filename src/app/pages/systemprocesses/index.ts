@@ -1,1 +1,1 @@
-export * from './system-processes.component';
+export * from "./system-processes.component";

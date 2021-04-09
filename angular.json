@@ -45,9 +45,7 @@
               "src/assets/customicons"
             ],
             "stylePreprocessorOptions": {
-              "includePaths": [
-                "src/assets/styles/scss-imports"
-              ]
+              "includePaths": ["src/assets/styles/scss-imports"]
             },
             "styles": [
               "src/assets/styles/reset.css",
@@ -185,9 +183,7 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "e2e/tsconfig.e2e.json"
-            ],
+            "tsConfig": ["e2e/tsconfig.e2e.json"],
             "exclude": []
           }
         }

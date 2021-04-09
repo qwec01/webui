@@ -8,26 +8,26 @@
   position: relative;
 }
 
-.app-logo{
+.app-logo {
   top: 13px;
   width: 36px;
   height: 36px;
 }
 
-.truenas-scale .app-logo{
+.truenas-scale .app-logo {
   top: 12px;
   width: 40px;
   height: 40px;
 }
 
-.retro .app-logo{
-  width:40px;
-  height:40px;
+.retro .app-logo {
+  width: 40px;
+  height: 40px;
   /*left: 32px;*/
 }
 
 .branding .app-logo-text {
-  width: 96px; 
+  width: 96px;
   height: auto;
   top: 11px;
 }
@@ -37,11 +37,12 @@
   top: 7px;
 }
 
-.branding.retro .app-logo-text, .branding.scale .app-logo-text  {
-  top:13px;
+.branding.retro .app-logo-text,
+.branding.scale .app-logo-text {
+  top: 13px;
 }
 
-.branding.topbar{
+.branding.topbar {
   background-color: var(--topbar) !important;
   color: var(--topbar-txt) !important;
 }
@@ -55,25 +56,25 @@
 
 /* To get rid of VScroll on entity tables */
 .rightside-content-hold {
-	padding-bottom: 5px;
+  padding-bottom: 5px;
 }
 
 .hostname-label {
-	text-align: center;
-	font-size: larger;
+  text-align: center;
+  font-size: larger;
   margin: auto;
   margin-bottom: 10px;
 }
 
 .fn-maincontent {
-  overflow:  hidden !important;
+  overflow: hidden !important;
 }
 
 .sidenav-copyright-txt {
   text-align: center;
   margin: 1rem auto;
   opacity: 0.5;
-  font-size: .6rem;
+  font-size: 0.6rem;
   position: absolute;
   bottom: 0;
   width: 100%;
@@ -81,11 +82,10 @@
 
 .sidenav-copyright-icon {
   text-align: center;
-  margin: 3rem auto .5rem auto;
+  margin: 3rem auto 0.5rem auto;
   opacity: 0.4;
 }
 
 jw-modal {
-    display: block;
+  display: block;
 }
-

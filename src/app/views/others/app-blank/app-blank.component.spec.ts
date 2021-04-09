@@ -1,16 +1,15 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { AppBlankComponent } from './app-blank.component';
+import { AppBlankComponent } from "./app-blank.component";
 
-describe('AppBlankComponent', () => {
+describe("AppBlankComponent", () => {
   let component: AppBlankComponent;
   let fixture: ComponentFixture<AppBlankComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AppBlankComponent ]
-    })
-    .compileComponents();
+      declarations: [AppBlankComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('AppBlankComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should be created', () => {
+  it("should be created", () => {
     expect(component).toBeTruthy();
   });
 });

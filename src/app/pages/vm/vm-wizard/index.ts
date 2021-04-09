@@ -1,1 +1,1 @@
-export { VMWizardComponent } from './vm-wizard.component';
+export { VMWizardComponent } from "./vm-wizard.component";

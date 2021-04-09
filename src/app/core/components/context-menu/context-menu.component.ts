@@ -31,7 +31,7 @@ import { MatMenuTrigger } from "@angular/material/menu";
 
 @Component({
   selector: "app-context-menu",
-  template: "<ng-content></ng-content>"
+  template: "<ng-content></ng-content>",
 })
 export class ContextMenuComponent extends MatMenuTrigger {
   /* Use these dial in the exact menu position required */

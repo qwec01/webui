@@ -1,13 +1,9 @@
+import { throwError as observableThrowError, Observable } from "rxjs";
 
-import {throwError as observableThrowError,  Observable } from 'rxjs';
+import { catchError, map } from "rxjs/operators";
+import "rxjs";
 
-import {catchError, map} from 'rxjs/operators';
-import 'rxjs';
-
-
-
-
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 /* import {
   Headers,
   Http,
@@ -17,15 +13,14 @@ import { Injectable } from '@angular/core';
   Response
 } from '@angular/http'; */
 
-import { HttpClient } from '@angular/common/http';
+import { HttpClient } from "@angular/common/http";
 
-import { environment } from '../../environments/environment';
+import { environment } from "../../environments/environment";
 
-import { WebSocketService } from './ws.service';
+import { WebSocketService } from "./ws.service";
 
 @Injectable()
 export class RestService {
-
   name: string;
   // needs to be more dynamic this should be changed later to use http or https
   // depending on if it is available
@@ -36,7 +31,7 @@ export class RestService {
     const self = this;
     this.http = http;
     this.openapi = Observable.create(function (observer) {
-/*      self.get('swagger.json', {}).subscribe((res) => {
+      /*      self.get('swagger.json', {}).subscribe((res) => {
         observer.next(res.data);
       });*/
     });
@@ -48,7 +43,7 @@ export class RestService {
     let data = null;
 
     if (range) {
-      total = range.split('/');
+      total = range.split("/");
       total = new Number(total[total.length - 1]);
     }
     if (res.status !== 204) {
@@ -73,24 +68,32 @@ export class RestService {
     });
   }
 
-  request(method: HttpClient, path: string, options: Object, useBaseUrl?: boolean) {
+  request(
+    method: HttpClient,
+    path: string,
+    options: Object,
+    useBaseUrl?: boolean
+  ) {
     const headers = new Headers({
-      'Content-Type': 'application/json',
-      'Authorization': 'Token ' + this.ws.token
+      "Content-Type": "application/json",
+      Authorization: "Token " + this.ws.token,
     });
-    if (path){
+    if (path) {
       if (!path.match(/\/$/) && !path.match(/\?/)) {
-        path = path + '/';
+        path = path + "/";
       }
-  }
+    }
 
-    const requestUrl: string = (typeof (useBaseUrl) !== "undefined" && useBaseUrl === false)
-      ? path : this.baseUrl + path;
+    const requestUrl: string =
+      typeof useBaseUrl !== "undefined" && useBaseUrl === false
+        ? path
+        : this.baseUrl + path;
 
     const requestOptions: Object = Object.assign(
       { method: method, url: requestUrl, headers: headers },
-      options);
-    return /*this.http.request(new Request(new RequestOptions(requestOptions))).pipe(
+      options
+    );
+    return; /*this.http.request(new Request(new RequestOptions(requestOptions))).pipe(
       map(this.handleResponse),
       catchError(this.handleError),); */
   }
@@ -99,31 +102,31 @@ export class RestService {
     let result: Object = new Object();
     let search: Array<String> = [];
     for (let i in options) {
-      if (i == 'offset') {
+      if (i == "offset") {
         search.push("offset(" + options[i] + ")=");
-      } else if (i == 'sort') {
+      } else if (i == "sort") {
         search.push("sort(" + options[i] + ")=");
       } else {
         search.push(i + "=" + options[i]);
       }
     }
-    result['search'] = search.join("&");
+    result["search"] = search.join("&");
     return result;
   }
 
   get(path: string, options: Object, useBaseUrl?: boolean) {
-    return /* this.request(RequestMethod.Get, path, this.buildOptions(options), useBaseUrl); */
+    return; /* this.request(RequestMethod.Get, path, this.buildOptions(options), useBaseUrl); */
   }
 
   post(path: string, options: Object, useBaseUrl?: boolean) {
-    return /* this.request(RequestMethod.Post, path, options, useBaseUrl); */
+    return; /* this.request(RequestMethod.Post, path, options, useBaseUrl); */
   }
 
   put(path: string, options: Object, useBaseUrl?: boolean) {
-    return /* this.request(RequestMethod.Put, path, options, useBaseUrl); */
+    return; /* this.request(RequestMethod.Put, path, options, useBaseUrl); */
   }
 
   delete(path: string, options: Object, useBaseUrl?: boolean) {
-    return /* this.request(RequestMethod.Delete, path, options, useBaseUrl); */
+    return; /* this.request(RequestMethod.Delete, path, options, useBaseUrl); */
   }
 }

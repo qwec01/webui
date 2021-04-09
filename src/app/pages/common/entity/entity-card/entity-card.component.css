@@ -12,25 +12,25 @@
   float: right;
 }
 
-.table>thead>tr>th:first-child {
+.table > thead > tr > th:first-child {
   text-align: left;
 }
 
-.table>tbody>tr>td:first-child {
+.table > tbody > tr > td:first-child {
   text-align: left;
 }
 
 .table-bordered,
-.table-bordered>thead>tr>th,
-.table-bordered>tbody>tr>th,
-.table-bordered>tfoot>tr>th,
-.table-bordered>thead>tr>td,
-.table-bordered>tbody>tr>td,
-.table-bordered>tfoot>tr>td {
+.table-bordered > thead > tr > th,
+.table-bordered > tbody > tr > th,
+.table-bordered > tfoot > tr > th,
+.table-bordered > thead > tr > td,
+.table-bordered > tbody > tr > td,
+.table-bordered > tfoot > tr > td {
   line-height: 1.5em;
   height: 1.5em;
-  padding: .5em;
-  font-size: .9em;
+  padding: 0.5em;
+  font-size: 0.9em;
 }
 
 i {
@@ -99,8 +99,8 @@ i {
   -webkit-transition: 0.5s;
 }
 
-.raised.flip{
-  z-index:2;
+.raised.flip {
+  z-index: 2;
 }
 
 .flip .card-container.flipped {
@@ -123,7 +123,7 @@ i {
   position: absolute;
   -webkit-backface-visibility: hidden;
   z-index: 2;
-  margin:0;
-  padding:0 !important;
+  margin: 0;
+  padding: 0 !important;
   /*overflow:hidden;*/
 }

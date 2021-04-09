@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
+import { NgModule } from "@angular/core";
+import { DomSanitizer } from "@angular/platform-browser";
 import { HttpClientModule } from "@angular/common/http";
 
 import { MatCheckboxModule } from "@angular/material/checkbox";
@@ -106,7 +106,7 @@ import { MatBadgeModule } from "@angular/material/badge";
     MatTableModule,
     MatNativeDateModule,
     MatAutocompleteModule,
-    MatBadgeModule
-  ]
+    MatBadgeModule,
+  ],
 })
 export class MaterialModule {}

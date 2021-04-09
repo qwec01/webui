@@ -1,1 +1,1 @@
-export { ScrubListComponent } from './scrub-list.component';
+export { ScrubListComponent } from "./scrub-list.component";

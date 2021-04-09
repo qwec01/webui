@@ -1,1 +1,1 @@
-export * from './guide.component';
+export * from "./guide.component";

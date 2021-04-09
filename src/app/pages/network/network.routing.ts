@@ -1,19 +1,21 @@
-import { ModuleWithProviders } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { ModuleWithProviders } from "@angular/core";
+import { RouterModule, Routes } from "@angular/router";
 
-import { NetworkComponent } from './network.component';
+import { NetworkComponent } from "./network.component";
 
 export const routes: Routes = [
   {
-    path: '',
-    data: { title: 'Network' },
+    path: "",
+    data: { title: "Network" },
     children: [
       {
-        path: '',
+        path: "",
         component: NetworkComponent,
-        data: { title: 'Network', breadcrumb: 'Netwrok', icon: 'settings' }
-      }
-    ]
-  }
+        data: { title: "Network", breadcrumb: "Netwrok", icon: "settings" },
+      },
+    ],
+  },
 ];
-export const routing: ModuleWithProviders<RouterModule> = RouterModule.forChild(routes);
+export const routing: ModuleWithProviders<RouterModule> = RouterModule.forChild(
+  routes
+);

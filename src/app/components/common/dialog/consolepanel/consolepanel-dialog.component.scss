@@ -37,6 +37,10 @@
 }
 
 @media screen and (max-height: 750px) {
-  .message { max-height: 340px;}
-  #console-box { max-height: 415px }
+  .message {
+    max-height: 340px;
+  }
+  #console-box {
+    max-height: 415px;
+  }
 }

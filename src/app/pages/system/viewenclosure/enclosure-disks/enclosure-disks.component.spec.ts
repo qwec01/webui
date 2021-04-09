@@ -1,16 +1,15 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { EnclosureDisksComponent } from './enclosure-details.component';
+import { EnclosureDisksComponent } from "./enclosure-details.component";
 
-describe('EnclosureDisksComponent', () => {
+describe("EnclosureDisksComponent", () => {
   let component: EnclosureDisksComponent;
   let fixture: ComponentFixture<EnclosureDisksComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EnclosureDisksComponent ]
-    })
-    .compileComponents();
+      declarations: [EnclosureDisksComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('EnclosureDisksComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

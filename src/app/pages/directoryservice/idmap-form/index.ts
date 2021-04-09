@@ -1,1 +1,1 @@
-export { IdmapFormComponent } from './idmap-form.component';
+export { IdmapFormComponent } from "./idmap-form.component";

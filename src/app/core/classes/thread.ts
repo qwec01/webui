@@ -1,28 +1,27 @@
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Observer } from 'rxjs';
-import { Subject } from 'rxjs';
-import { CoreEvent, CoreService } from 'app/core/services/core.service';
-import { iXAbstractObject } from 'app/core/classes/ix-abstractobject';
-import * as moment from 'moment';
+import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
+import { Observer } from "rxjs";
+import { Subject } from "rxjs";
+import { CoreEvent, CoreService } from "app/core/services/core.service";
+import { iXAbstractObject } from "app/core/classes/ix-abstractobject";
+import * as moment from "moment";
 
 export interface ProcessTask {
   responseEvent: string;
-  operation:any; // The main function
-  data:any[]; // Arguments for the function.
+  operation: any; // The main function
+  data: any[]; // Arguments for the function.
 }
 
 @Injectable()
 export class Thread extends iXAbstractObject {
-
-  private debug: boolean = false
-  public thread:Worker;
+  private debug: boolean = false;
+  public thread: Worker;
   protected ready: boolean;
   protected maxThreads: number;
   public threadPriority: number = 0.0; // between 0.0 and 1.0 (1.0 being highest);
 
   private _onmessage: any;
-  set onmessage(value:any){
+  set onmessage(value: any) {
     this._onmessage = value;
   }
 
@@ -33,13 +32,12 @@ export class Thread extends iXAbstractObject {
 
   //public messages: Subject<CoreEvent>
 
-
   // The functions that can be executed by thread.
   // For more info: https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Functions_and_classes_available_to_workers
-  public operations: any; 
+  public operations: any;
 
-  constructor(core: CoreService){
-    super()
+  constructor(core: CoreService) {
+    super();
     this.maxThreads = navigator.hardwareConcurrency;
 
     /*this.messages = new Subject();
@@ -48,16 +46,21 @@ export class Thread extends iXAbstractObject {
       this.thread.postMessage(evt);
     });*/
 
-    if(this.debug){
+    if (this.debug) {
       console.log("Thread Constructor");
-      console.log("Client machine has " + (this.maxThreads / 2) + " cores (" + this.maxThreads + " threads)");
+      console.log(
+        "Client machine has " +
+          this.maxThreads / 2 +
+          " cores (" +
+          this.maxThreads +
+          " threads)"
+      );
     }
-
   }
 
-  testMessages(){
+  testMessages() {
     //this.thread.postMessage(JSON.stringify({name:"CoreEventTest1"}));
-    this.thread.postMessage({name:"CoreEventTest2"});
+    this.thread.postMessage({ name: "CoreEventTest2" });
     //this.thread.postMessage("EventTest");
   }
 
@@ -65,8 +68,8 @@ export class Thread extends iXAbstractObject {
     // Some example code to show how messages can be exchanged with main thread
     const context: Worker = self as any; // Needed for TypeScript not to complain. DO NOT REMOVE!
     context.postMessage("ThreadInitialized"); // This inits the worker. DO NOT REMOVE!
-    console.log(context)
-    
+    console.log(context);
+
     /*context.onmessage = (msg: MessageEvent) => {
       let evt:CoreEvent = msg.data;
       let response = "SUCCESS!";
@@ -75,9 +78,8 @@ export class Thread extends iXAbstractObject {
 
     context.onerror = (err) => {
       console.log(err);
-    }
-
-  }
+    };
+  };
 
   createThread(fn) {
     //let blob = new Blob(['self.onmessage = ', fn.toString()], { type: 'text/javascript' });
@@ -87,9 +89,11 @@ export class Thread extends iXAbstractObject {
     return new Worker(url);
   }
 
-  start(){
-    if(!this.operations){
-      console.error("Started with thread.operations not set! Make sure operations is not null before trying to start process.")
+  start() {
+    if (!this.operations) {
+      console.error(
+        "Started with thread.operations not set! Make sure operations is not null before trying to start process."
+      );
       return;
     }
     // Create the worker thread
@@ -115,32 +119,31 @@ export class Thread extends iXAbstractObject {
     }*/
 
     // Initialize the thread
-    this.thread.postMessage({name: "StartThread", data: "first message"});
+    this.thread.postMessage({ name: "StartThread", data: "first message" });
     this.executing = true;
-  
   }
 
-  exit(){
+  exit() {
     this.finished = true;
     this.thread.terminate();
   }
 
-  cancel(){
+  cancel() {
     this.cancelled = true;
     this.thread.terminate();
   }
 
-  postMessage(e:any){
-      this.thread.postMessage(e);
+  postMessage(e: any) {
+    this.thread.postMessage(e);
   }
 
   /*onmessage(fn){
     this._onmessage = fn;
   }*/
 
-  sort =  function (data:any[], compareFunction?:any){ // Just like JS sort but now we can run in a worker
-    let result =  compareFunction ? data.sort(compareFunction) : data.sort();
+  sort = function (data: any[], compareFunction?: any) {
+    // Just like JS sort but now we can run in a worker
+    let result = compareFunction ? data.sort(compareFunction) : data.sort();
     return result;
-  }
-
+  };
 }

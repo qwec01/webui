@@ -1,1 +1,1 @@
-export { ExtentListComponent } from './extent-list.component';
+export { ExtentListComponent } from "./extent-list.component";

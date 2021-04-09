@@ -25,7 +25,7 @@
   text-transform: uppercase;
 }
 
-.breadcrumb li a:not('.no-click') {
+.breadcrumb li a:not(".no-click") {
   color: var(--primary);
 }
 
@@ -36,7 +36,6 @@
   position: absolute;
   right: 4px;
 }
-
 
 @media screen and (max-width: 400px) {
   .copyright-txt {

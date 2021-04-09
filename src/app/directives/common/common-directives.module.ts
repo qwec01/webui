@@ -1,24 +1,22 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
 
-import { EqualValidatorDirective } from './equal-validator.directive';
-import { SideNavAccordionDirective } from './sidenav-accordion.directive';
-import { AppAccordionDirective } from './app-accordion.directive';
-import { FontSizeDirective } from './font-size.directive';
-import { LazyViewerDirective } from './lazy-viewer/lazy-viewer.directive';
-import { IXAutoDirective } from './ix-auto.directive';
+import { EqualValidatorDirective } from "./equal-validator.directive";
+import { SideNavAccordionDirective } from "./sidenav-accordion.directive";
+import { AppAccordionDirective } from "./app-accordion.directive";
+import { FontSizeDirective } from "./font-size.directive";
+import { LazyViewerDirective } from "./lazy-viewer/lazy-viewer.directive";
+import { IXAutoDirective } from "./ix-auto.directive";
 
 @NgModule({
-  imports: [
-    CommonModule
-  ],
+  imports: [CommonModule],
   declarations: [
     EqualValidatorDirective,
     SideNavAccordionDirective,
     AppAccordionDirective,
     FontSizeDirective,
     LazyViewerDirective,
-    IXAutoDirective
+    IXAutoDirective,
   ],
   exports: [
     EqualValidatorDirective,
@@ -26,7 +24,7 @@ import { IXAutoDirective } from './ix-auto.directive';
     AppAccordionDirective,
     FontSizeDirective,
     LazyViewerDirective,
-    IXAutoDirective
-  ]
+    IXAutoDirective,
+  ],
 })
-export class CommonDirectivesModule { }
+export class CommonDirectivesModule {}

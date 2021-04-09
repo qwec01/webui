@@ -1,1 +1,1 @@
-export { AssociatedTargetListComponent } from './associated-target-list.component';
+export { AssociatedTargetListComponent } from "./associated-target-list.component";

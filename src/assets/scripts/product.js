@@ -1,1 +1,1 @@
-var product = 'TrueNAS'
+var product = "TrueNAS";

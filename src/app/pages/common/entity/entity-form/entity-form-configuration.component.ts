@@ -1,43 +1,45 @@
-import { Component, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import * as _ from 'lodash';
+import { Component, ViewChild } from "@angular/core";
+import { Router } from "@angular/router";
+import * as _ from "lodash";
 
-import { Subject } from 'rxjs';
-import { CoreEvent } from 'app/core/services/core.service';
+import { Subject } from "rxjs";
+import { CoreEvent } from "app/core/services/core.service";
 
-import { TooltipsService, WebSocketService } from 'app/services';
-import { EntityFormEmbeddedComponent } from './entity-form-embedded.component';
-import { EntityFormComponent, Formconfiguration } from './entity-form.component';
-import { FieldConfig } from './models/field-config.interface';
-import { FieldSets } from './classes/field-sets';
-import { ipv4Validator, ipv6Validator } from './validators/ip-validation';
-
+import { TooltipsService, WebSocketService } from "app/services";
+import { EntityFormEmbeddedComponent } from "./entity-form-embedded.component";
+import {
+  EntityFormComponent,
+  Formconfiguration,
+} from "./entity-form.component";
+import { FieldConfig } from "./models/field-config.interface";
+import { FieldSets } from "./classes/field-sets";
+import { ipv4Validator, ipv6Validator } from "./validators/ip-validation";
 
 @Component({
-  selector: 'entity-form-configuration',
+  selector: "entity-form-configuration",
   template: ``,
   providers: [TooltipsService],
 })
 export class EntityFormConfigurationComponent implements Formconfiguration {
-
-  @ViewChild('embeddedForm', {static : false}) embeddedForm: EntityFormEmbeddedComponent;
-  @ViewChild('regularForm', {static : false}) regularForm: EntityFormComponent;
+  @ViewChild("embeddedForm", { static: false })
+  embeddedForm: EntityFormEmbeddedComponent;
+  @ViewChild("regularForm", { static: false }) regularForm: EntityFormComponent;
 
   public fieldConfig: FieldConfig[] = [];
-  public fieldSets: FieldSets; 
+  public fieldSets: FieldSets;
 
   private entityEdit: EntityFormComponent;
-  
-  public title = '';
+
+  public title = "";
   public afterModalFormClosed;
   public formType: string;
 
   _isOneColumnForm: boolean = false;
-  get isOneColumnForm(){
+  get isOneColumnForm() {
     return this._isOneColumnForm;
   }
 
-  set isOneColumnForm(value){
+  set isOneColumnForm(value) {
     this._isOneColumnForm = value;
   }
 
@@ -51,23 +53,24 @@ export class EntityFormConfigurationComponent implements Formconfiguration {
   public target: Subject<CoreEvent>;
   public data: any;
 
-  constructor() {
-  }
+  constructor() {}
 
-  preInit(entity) {
-  }
+  preInit(entity) {}
 
   afterInit(entityEdit: any) {
     this.entityEdit = entityEdit;
-    if(this.formType == 'EntityFormComponent' && this.target && !this.customSubmit){
+    if (
+      this.formType == "EntityFormComponent" &&
+      this.target &&
+      !this.customSubmit
+    ) {
       this.customSubmit = (values) => {
         this.target.next({
-          name: 'FormSubmit',
+          name: "FormSubmit",
           data: values,
-          sender: this
+          sender: this,
         });
-      }
+      };
     }
   }
-
 }

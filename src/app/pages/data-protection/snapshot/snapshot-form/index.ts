@@ -1,1 +1,1 @@
-export { SnapshotFormComponent } from './snapshot-form.component';
+export { SnapshotFormComponent } from "./snapshot-form.component";

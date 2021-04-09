@@ -1,1 +1,1 @@
-export { KerberosSettingsComponent } from './kerberossettings.component';
+export { KerberosSettingsComponent } from "./kerberossettings.component";

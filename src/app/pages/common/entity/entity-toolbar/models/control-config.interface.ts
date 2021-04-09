@@ -1,17 +1,17 @@
-import { Subject } from 'rxjs';
-import { CoreEvent } from 'app/core/services/core.service';
+import { Subject } from "rxjs";
+import { CoreEvent } from "app/core/services/core.service";
 
 export interface ControlConfig {
-  name:string;
-  label:string;
-  labelIcon?:string;
-  labelIconType?:string;
+  name: string;
+  label: string;
+  labelIcon?: string;
+  labelIconType?: string;
   color?: string;
-  type:string;
-  disabled:boolean;
-  value?:any;
-  options?:any[];
-  placeholder?: string
+  type: string;
+  disabled: boolean;
+  value?: any;
+  options?: any[];
+  placeholder?: string;
 }
 
 export interface ToolbarConfig {

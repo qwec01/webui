@@ -1,1 +1,1 @@
-export { KerberosKeytabsListComponent } from './kerberoskeytabs-list.component';
+export { KerberosKeytabsListComponent } from "./kerberoskeytabs-list.component";

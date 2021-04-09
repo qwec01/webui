@@ -1,1 +1,1 @@
-export { VolumeStatusComponent } from './volume-status.component';
+export { VolumeStatusComponent } from "./volume-status.component";

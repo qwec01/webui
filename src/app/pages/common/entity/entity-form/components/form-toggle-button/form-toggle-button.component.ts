@@ -1,22 +1,22 @@
-import { Component, ViewContainerRef, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
+import { Component, ViewContainerRef, OnInit } from "@angular/core";
+import { FormGroup } from "@angular/forms";
+import { TranslateService } from "@ngx-translate/core";
 
-import { FieldConfig } from '../../models/field-config.interface';
-import { Field } from '../../models/field.interface';
-import { TooltipComponent } from '../tooltip/tooltip.component';
-import * as _ from 'lodash';
+import { FieldConfig } from "../../models/field-config.interface";
+import { Field } from "../../models/field.interface";
+import { TooltipComponent } from "../tooltip/tooltip.component";
+import * as _ from "lodash";
 
 @Component({
-  selector: 'form-toggle-button',
-  templateUrl: './form-toggle-button.component.html',
-  styleUrls: ['./form-toggle-button.component.css']
+  selector: "form-toggle-button",
+  templateUrl: "./form-toggle-button.component.html",
+  styleUrls: ["./form-toggle-button.component.css"],
 })
 export class FormToggleButtonComponent implements Field, OnInit {
   config: FieldConfig;
   group: FormGroup;
   fieldShow: string;
-  public groupValue: Array < any >= [];
+  public groupValue: Array<any> = [];
   protected init: boolean;
   protected control: any;
 
@@ -30,8 +30,8 @@ export class FormToggleButtonComponent implements Field, OnInit {
       if (this.init && this.config.options && res) {
         this.init = false;
         let all_selected = false;
-        let values = _.split(this.control.value, ',');
-        if (this.control.value == '*') {
+        let values = _.split(this.control.value, ",");
+        if (this.control.value == "*") {
           all_selected = true;
         }
         for (let i in this.config.options) {
@@ -46,14 +46,16 @@ export class FormToggleButtonComponent implements Field, OnInit {
           }
         }
       }
-
     });
   }
 
   check(item) {
     this.init = false;
     item.checked = !item.checked;
-    let target = _.findIndex(this.groupValue, _.unary(_.partialRight(_.includes, item.value)));
+    let target = _.findIndex(
+      this.groupValue,
+      _.unary(_.partialRight(_.includes, item.value))
+    );
     if (target > -1) {
       this.groupValue.splice(target, 1);
     } else {

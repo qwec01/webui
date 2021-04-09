@@ -1,1 +1,1 @@
-export { SMBFormComponent } from './smb-form.component';
+export { SMBFormComponent } from "./smb-form.component";

@@ -3,8 +3,8 @@ name: build_image
 on:
   pull_request:
     types:
-      - 'synchronize'
-      - 'opened'
+      - "synchronize"
+      - "opened"
 
 env:
   PR_NUMBER: ${{ github.event.pull_request.number }}

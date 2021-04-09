@@ -1,1 +1,1 @@
-export { PodLogsComponent } from './pod-logs.component';
+export { PodLogsComponent } from "./pod-logs.component";

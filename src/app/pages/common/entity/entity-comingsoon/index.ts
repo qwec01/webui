@@ -1,1 +1,1 @@
-export { EntityComingsoonComponent } from './entity-comingsoon.component';
+export { EntityComingsoonComponent } from "./entity-comingsoon.component";

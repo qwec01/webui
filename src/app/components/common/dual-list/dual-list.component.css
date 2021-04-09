@@ -50,14 +50,15 @@
   width: 100%;
 }
 
-.chosen, .draggable:active {
+.chosen,
+.draggable:active {
   width: 100%;
   background: var(--primary);
 }
 
 .cdk-drag-placeholder {
-  background: rgba(145,148,156, 0.1);
-  opacity: .5;
+  background: rgba(145, 148, 156, 0.1);
+  opacity: 0.5;
   border: 1px dashed var(--fg1);
   width: 100%;
 }

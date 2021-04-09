@@ -1,1 +1,1 @@
-export { PluginAddComponent } from './plugin-add.component';
+export { PluginAddComponent } from "./plugin-add.component";

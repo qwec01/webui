@@ -1,1 +1,1 @@
-export { ExtentFormComponent } from './extent-form.component';
+export { ExtentFormComponent } from "./extent-form.component";

@@ -1,1 +1,1 @@
-export { TwoFactorComponent } from './two-factor.component';
+export { TwoFactorComponent } from "./two-factor.component";

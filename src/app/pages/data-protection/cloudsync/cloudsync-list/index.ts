@@ -1,1 +1,1 @@
-export { CloudsyncListComponent } from './cloudsync-list.component';
+export { CloudsyncListComponent } from "./cloudsync-list.component";

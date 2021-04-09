@@ -1,8 +1,8 @@
-const webpack             = require('webpack');
-const webpackMerge        = require('webpack-merge');
-const commonConfig        = require('./webpack.electron.common.js');
+const webpack = require("webpack");
+const webpackMerge = require("webpack-merge");
+const commonConfig = require("./webpack.electron.common.js");
 
-const ENV = process.env.NODE_ENV = process.env.ENV = 'production';
+const ENV = (process.env.NODE_ENV = process.env.ENV = "production");
 
 module.exports = webpackMerge(commonConfig, {
   plugins: [
@@ -10,17 +10,17 @@ module.exports = webpackMerge(commonConfig, {
     new webpack.optimize.UglifyJsPlugin({
       beautify: false,
       mangle: {
-        screw_ie8: true
+        screw_ie8: true,
       },
       compress: {
-        screw_ie8: true
+        screw_ie8: true,
       },
-      comments: false
+      comments: false,
     }),
     new webpack.DefinePlugin({
-      'process.env': {
-        'ENV': JSON.stringify(ENV)
-      }
-    })
-  ]
+      "process.env": {
+        ENV: JSON.stringify(ENV),
+      },
+    }),
+  ],
 });

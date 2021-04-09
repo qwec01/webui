@@ -1,1 +1,1 @@
-export { DiskBulkEditComponent } from './disk-bulk-edit.component';
+export { DiskBulkEditComponent } from "./disk-bulk-edit.component";

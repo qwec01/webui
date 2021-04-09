@@ -1,1 +1,1 @@
-export { ResilverComponent } from './resilver.component';
+export { ResilverComponent } from "./resilver.component";

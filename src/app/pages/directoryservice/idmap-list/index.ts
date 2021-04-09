@@ -1,1 +1,1 @@
-export { IdmapListComponent } from './idmap-list.component';
+export { IdmapListComponent } from "./idmap-list.component";

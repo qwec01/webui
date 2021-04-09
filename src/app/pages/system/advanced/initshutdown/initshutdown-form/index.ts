@@ -1,1 +1,1 @@
-export { InitshutdownFormComponent } from './initshutdown-form.component';
+export { InitshutdownFormComponent } from "./initshutdown-form.component";

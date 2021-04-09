@@ -1,16 +1,15 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { ViewchartComponent } from './viewchart.component';
+import { ViewchartComponent } from "./viewchart.component";
 
-describe('ViewchartComponent', () => {
+describe("ViewchartComponent", () => {
   let component: ViewchartComponent;
   let fixture: ComponentFixture<ViewchartComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ViewchartComponent ]
-    })
-    .compileComponents();
+      declarations: [ViewchartComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('ViewchartComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

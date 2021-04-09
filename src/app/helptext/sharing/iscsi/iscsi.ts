@@ -1,11 +1,11 @@
 import { T } from "app/translate-marker";
 import { Validators } from "@angular/forms";
 import { matchOtherValidator } from "app/pages/common/entity/entity-form/validators/password-validation";
-import globalHelptext from '../../../helptext/global-helptext';
+import globalHelptext from "../../../helptext/global-helptext";
 
 export const helptext_sharing_iscsi = {
-  fieldset_target_basic: T('Basic Info'),
-  fieldset_target_group: T('iSCSI Group'),
+  fieldset_target_basic: T("Basic Info"),
+  fieldset_target_group: T("iSCSI Group"),
 
   target_form_placeholder_name: T("Target Name"),
   target_form_tooltip_name: T(
@@ -22,8 +22,10 @@ export const helptext_sharing_iscsi = {
   target_form_tooltip_alias: T("Optional user-friendly name."),
 
   target_form_placeholder_mode: T("Target Mode"),
-  target_form_tooltip_mode: T("Define the target as *iSCSI*,\
- *Fibre Channel*, or *Both*."),
+  target_form_tooltip_mode: T(
+    "Define the target as *iSCSI*,\
+ *Fibre Channel*, or *Both*."
+  ),
 
   target_form_placeholder_portal: T("Portal Group ID"),
   target_form_tooltip_portal: T(
@@ -50,9 +52,9 @@ export const helptext_sharing_iscsi = {
 
   target_form_placeholder_delete: T("Delete"),
 
-  fieldset_portal_basic: T('Basic Info'),
-  fieldset_portal_authgroup: T('Authentication Method and Group'),
-  fieldset_portal_ip: T('IP Address'),
+  fieldset_portal_basic: T("Basic Info"),
+  fieldset_portal_authgroup: T("Authentication Method and Group"),
+  fieldset_portal_ip: T("IP Address"),
 
   portal_form_placeholder_comment: T("Description"),
   portal_form_tooltip_comment: T(
@@ -60,21 +62,28 @@ export const helptext_sharing_iscsi = {
  group."
   ),
 
-  portal_form_placeholder_discovery_authmethod: T("Discovery Authentication Method"),
-  portal_form_tooltip_discovery_authmethod: T('iSCSI supports multiple \
+  portal_form_placeholder_discovery_authmethod: T(
+    "Discovery Authentication Method"
+  ),
+  portal_form_tooltip_discovery_authmethod: T(
+    "iSCSI supports multiple \
  authentication methods that are used by the target to discover valid \
  devices. <i>None</i> allows anonymous discovery while <i>CHAP</i> and \
- <i>Mutual CHAP</i> require authentication.'
+ <i>Mutual CHAP</i> require authentication."
   ),
 
-  portal_form_placeholder_discovery_authgroup: T("Discovery Authentication Group"),
-  portal_form_tooltip_discovery_authgroup: T("Group ID created in \
+  portal_form_placeholder_discovery_authgroup: T(
+    "Discovery Authentication Group"
+  ),
+  portal_form_tooltip_discovery_authgroup: T(
+    "Group ID created in \
  Authorized Access. Required when the Discovery Authentication Method is set to \
  CHAP or Mutual CHAP."
   ),
 
   portal_form_placeholder_ip: T("IP Address"),
-  portal_form_tooltip_ip: T("Select the IP addresses to be listened on \
+  portal_form_tooltip_ip: T(
+    "Select the IP addresses to be listened on \
  by the portal. Click ADD to add IP addresses with a different network \
  port. The address <i>0.0.0.0</i> can be selected to listen on all IPv4 \
  addresses, or <i>::</i> to listen on all IPv6 addresses."
@@ -92,11 +101,11 @@ export const helptext_sharing_iscsi = {
   portal_form_placeholder_delete: T("Delete"),
 
   initiator_form_tooltip_connected_initiators: T(
-	'Initiators currently connected to the system. Shown in IQN\
+    "Initiators currently connected to the system. Shown in IQN\
  format with an IP address. Set initiators and click an <b>-></b>\
  (arrow) to add the initiators to either the <i>Allowed Initiators</i>\
  or <i>Authorized Networks</i> lists. Clicking <i>Refresh</i> updates\
- the <i>Connected Initiators</i> list.'
+ the <i>Connected Initiators</i> list."
   ),
 
   all_placeholder_initiators: T("Allow All Initiators"),
@@ -122,7 +131,7 @@ export const helptext_sharing_iscsi = {
   initiator_form_placeholder_comment: T("Description"),
   initiator_form_tooltip_comment: T("Any notes about initiators."),
 
-  fieldset_globalconf: T('Global Configuration'),
+  fieldset_globalconf: T("Global Configuration"),
 
   globalconf_placeholder_basename: T("Base Name"),
   globalconf_tooltip_basename: T(
@@ -135,26 +144,30 @@ export const helptext_sharing_iscsi = {
   globalconf_validators_basename: [Validators.required],
 
   globalconf_placeholder_isns_servers: T("ISNS Servers"),
-  globalconf_tooltip_isns_servers: T("Hostnames or IP addresses of the \
+  globalconf_tooltip_isns_servers: T(
+    "Hostnames or IP addresses of the \
  ISNS servers to be registered with the iSCSI targets and portals of \
- the system. Separate entries by pressing <code>Enter</code>."),
+ the system. Separate entries by pressing <code>Enter</code>."
+  ),
 
   globalconf_placeholder_pool_avail_threshold: T(
     "Pool Available Space Threshold (%)"
   ),
-  globalconf_tooltip_pool_avail_threshold: T('Generate an alert when the \
+  globalconf_tooltip_pool_avail_threshold: T(
+    "Generate an alert when the \
    pool has this percent space remaining. This is typically \
    configured at the pool level when using zvols or at the extent level \
-   for both file and device based extents.'),
+   for both file and device based extents."
+  ),
 
-  globalconf_placeholder_alua: T('Enable iSCSI ALUA'),
+  globalconf_placeholder_alua: T("Enable iSCSI ALUA"),
   globalconf_tooltip_alua: T(`Allow initiator to discover paths to both\
  ${globalHelptext.ctrlrs} on the target and increase storage traffic\
  efficiency. Requires ALUA-capable, High Availability (HA) hardware.`),
 
-  fieldset_extent_basic: T('Basic Info'),
-  fieldset_extent_type: T('Type'),
-  fieldset_extent_options: T('Compatability'),
+  fieldset_extent_basic: T("Basic Info"),
+  fieldset_extent_type: T("Type"),
+  fieldset_extent_options: T("Compatability"),
 
   extent_placeholder_name: T("Name"),
   extent_tooltip_name: T(
@@ -164,8 +177,10 @@ export const helptext_sharing_iscsi = {
   extent_validators_name: [Validators.required],
 
   extent_placeholder_type: T("Extent Type"),
-  extent_tooltip_type: T("<i>Device</i> provides virtual storage access to zvols, zvol snapshots, or physical devices.\
-  <i>File</i> provides virtual storage access to a single file."),
+  extent_tooltip_type: T(
+    "<i>Device</i> provides virtual storage access to zvols, zvol snapshots, or physical devices.\
+  <i>File</i> provides virtual storage access to a single file."
+  ),
 
   extent_placeholder_disk: T("Device"),
   extent_tooltip_disk: T(
@@ -181,14 +196,16 @@ export const helptext_sharing_iscsi = {
   ),
 
   extent_placeholder_path: T("Path to the Extent"),
-  extent_tooltip_path: T("Browse to an existing file. Create a new file by browsing to a\
+  extent_tooltip_path: T(
+    "Browse to an existing file. Create a new file by browsing to a\
  dataset and appending /<i>{filename.ext}</i> to the path. Extents cannot be\
  created inside a jail root directory."
   ),
   extent_validators_path: [Validators.required],
 
   extent_placeholder_filesize: T("Filesize"),
-  extent_tooltip_filesize: T("Entering <i>0</i> uses the actual file size and requires that the\
+  extent_tooltip_filesize: T(
+    "Entering <i>0</i> uses the actual file size and requires that the\
  file already exists. Otherwise, specify the file size for the new file."
   ),
 
@@ -205,9 +222,10 @@ export const helptext_sharing_iscsi = {
   ),
 
   extent_placeholder_avail_threshold: T("Available Space Threshold (%)"),
-  extent_tooltip_avail_threshold: T('Only appears if a <i>File</i> or \
+  extent_tooltip_avail_threshold: T(
+    "Only appears if a <i>File</i> or \
  zvol is selected. When the specified percentage of free space is reached,\
- the system issues an alert.'
+ the system issues an alert."
   ),
 
   extent_placeholder_comment: T("Description"),
@@ -241,12 +259,12 @@ export const helptext_sharing_iscsi = {
  LUN."
   ),
 
-  extent_placeholder_enabled: T('Enabled'),
-  extent_tooltip_enabled: T('Set to enable the iSCSI extent.'),
+  extent_placeholder_enabled: T("Enabled"),
+  extent_tooltip_enabled: T("Set to enable the iSCSI extent."),
 
-  fieldset_group: T('Group'),
-  fieldset_user: T('User'),
-  fieldset_peeruser: T('Peer User'),
+  fieldset_group: T("Group"),
+  fieldset_user: T("User"),
+  fieldset_peeruser: T("Peer User"),
 
   authaccess_placeholder_tag: T("Group ID"),
   authaccess_tooltip_tag: T(
@@ -282,11 +300,13 @@ export const helptext_sharing_iscsi = {
     "Mutual secret password. Required when Peer User is set. Must be\
  different than the <i>Secret</i>."
   ),
-  authaccess_error_duplicate_secrets: T('Secret and Peer Secret can not be the same.'),
+  authaccess_error_duplicate_secrets: T(
+    "Secret and Peer Secret can not be the same."
+  ),
 
   authaccess_placeholder_peersecret_confirm: T("Peer Secret (Confirm)"),
 
-  fieldset_associated_target: T('Associated Target'),
+  fieldset_associated_target: T("Associated Target"),
 
   associated_target_placeholder_target: T("Target"),
   associated_target_tooltip_target: T("Select an existing target."),
@@ -303,70 +323,90 @@ export const helptext_sharing_iscsi = {
   associated_target_validators_lunid: [
     Validators.min(0),
     Validators.max(1023),
-    Validators.pattern(/^(0|[1-9]\d*)$/)
+    Validators.pattern(/^(0|[1-9]\d*)$/),
   ],
 
   associated_target_placeholder_extent: T("Extent"),
   associated_target_tooltip_extent: T("Select an existing extent."),
   associated_target_validators_extent: [Validators.required],
 
-  fc_mode_placeholder: T('Mode'),
-  fc_mode_tooltip: T(''),
+  fc_mode_placeholder: T("Mode"),
+  fc_mode_tooltip: T(""),
 
-  fc_target_placeholder: T('Targets'),
-  fc_target_tooltip: T(''),
+  fc_target_placeholder: T("Targets"),
+  fc_target_tooltip: T(""),
 
-  fc_initiators_placeholder: T('Connected Initiators'),
-  fc_initiators_tooltip: T(''),
+  fc_initiators_placeholder: T("Connected Initiators"),
+  fc_initiators_tooltip: T(""),
 
   fc_update_dialog: {
-    title: T('Updated'),
-    text: T('Fibre Channel '),
-    msg: T(' update successful')
+    title: T("Updated"),
+    text: T("Fibre Channel "),
+    msg: T(" update successful"),
   },
 
   // wizard
   step1_label: T("Create or Choose Block Device"),
 
   name_placeholder: T("Name"),
-  name_tooltip: T("Keep the name short. Using a name longer than 63 characters can prevent accessing the block device."),
+  name_tooltip: T(
+    "Keep the name short. Using a name longer than 63 characters can prevent accessing the block device."
+  ),
 
   disk_placeholder: T("Device"),
-  disk_tooltip: T("Select the unused zvol or zvol snapshot. Select\
- <i>Create New</i> to create a new zvol."),
+  disk_tooltip: T(
+    "Select the unused zvol or zvol snapshot. Select\
+ <i>Create New</i> to create a new zvol."
+  ),
 
   dataset_placeholder: T("Pool/Dataset"),
-  dataset_tooltip: T("Browse to an existing pool or dataset to store the new zvol."),
+  dataset_tooltip: T(
+    "Browse to an existing pool or dataset to store the new zvol."
+  ),
 
   volsize_placeholder: T("Size"),
   volsize_tooltip: T("Specify the size of the new zvol."),
 
   volblocksize_placeholder: T("Block Size"),
-  volblocksize_tooltip: T("Only override the default if the initiator requires a different block size."),
+  volblocksize_tooltip: T(
+    "Only override the default if the initiator requires a different block size."
+  ),
 
   usefor_placeholder: T("Sharing Platform"),
-  usefor_tooltip: T("Choose the platform that will use this share. The associated options are applied to this share."),
+  usefor_tooltip: T(
+    "Choose the platform that will use this share. The associated options are applied to this share."
+  ),
 
-  target_placeholder: T('Target'),
-  target_tooltip: T('Create a new Target or choose an existing target for this share.'),
+  target_placeholder: T("Target"),
+  target_tooltip: T(
+    "Create a new Target or choose an existing target for this share."
+  ),
 
   step2_label: T("Portal"),
 
   portal_placeholder: T("Portal"),
-  portal_tooltip: T("Select an existing portal or choose <i>Create New</i> to configure a new portal."),
+  portal_tooltip: T(
+    "Select an existing portal or choose <i>Create New</i> to configure a new portal."
+  ),
 
   step3_label: T("Initiator"),
 
   initiators_placeholder: T("Initiators"),
-  initiators_tooltip: T("Leave blank to allow all or enter a list of initiator hostnames. \
-   Separate entries by pressing <code>Enter</code>."),
+  initiators_tooltip: T(
+    "Leave blank to allow all or enter a list of initiator hostnames. \
+   Separate entries by pressing <code>Enter</code>."
+  ),
 
   auth_network: {
     placeholder: T("Authorized Networks"),
-    tooltip: T("Network addresses allowed to use this initiator. Leave blank to allow all \
+    tooltip: T(
+      "Network addresses allowed to use this initiator. Leave blank to allow all \
      networks or list network addresses with a CIDR mask. Separate entries by pressing \
-     <code>Enter</code>."),
-    error: T('Invalid network address list. Check for typos or missing CIDR netmasks and \
-     separate addresses by pressing <code>Enter</code>.')
-  }
+     <code>Enter</code>."
+    ),
+    error: T(
+      "Invalid network address list. Check for typos or missing CIDR netmasks and \
+     separate addresses by pressing <code>Enter</code>."
+    ),
+  },
 };

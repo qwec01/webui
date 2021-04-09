@@ -16,15 +16,17 @@ export const helptext_system_bootenv = {
   clone_name_placeholder: T("Name"),
   clone_name_tooltip: T(
     `Name of the new cloned boot environment. Alphanumeric characters, dashes (-), underscores (_), \
-    and periods (.) are allowed.`),
-  
+    and periods (.) are allowed.`
+  ),
+
   clone_source_placeholder: T("Source"),
   clone_source_tooltip: T("Boot environment to be cloned."),
 
   create_name_placeholder: T("Name"),
   create_name_tooltip: T(
     `Boot environment name. Alphanumeric characters, dashes (-), underscores (_), \
-    and periods (.) are allowed.`),
+    and periods (.) are allowed.`
+  ),
 
   list_dialog_activate_action: T("Activate"),
   list_dialog_keep_action: T("Set Keep Flag"),
@@ -36,13 +38,12 @@ export const helptext_system_bootenv = {
   replace_name_placeholder: T("Member Disk"),
 
   attach_dialog: {
-    title: T('Device Attached'),
-    message: T('was successfully attached.')
+    title: T("Device Attached"),
+    message: T("was successfully attached."),
   },
 
   delete_failure_dialog: {
-    title: T('Error'),
+    title: T("Error"),
     message: T("Could not delete boot environment."),
-  }
-
+  },
 };

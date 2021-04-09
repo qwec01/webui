@@ -1,1 +1,1 @@
-export { KerberosRealmsListComponent } from './kerberosrealms-list.component';
+export { KerberosRealmsListComponent } from "./kerberosrealms-list.component";

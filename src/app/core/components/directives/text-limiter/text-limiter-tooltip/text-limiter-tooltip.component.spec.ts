@@ -1,16 +1,15 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { TextLimiterTooltipComponent } from './text-limiter-tooltip.component';
+import { TextLimiterTooltipComponent } from "./text-limiter-tooltip.component";
 
-describe('TextLimiterTooltipComponent', () => {
+describe("TextLimiterTooltipComponent", () => {
   let component: TextLimiterTooltipComponent;
   let fixture: ComponentFixture<TextLimiterTooltipComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TextLimiterTooltipComponent ]
-    })
-    .compileComponents();
+      declarations: [TextLimiterTooltipComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +18,7 @@ describe('TextLimiterTooltipComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

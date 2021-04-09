@@ -10,8 +10,8 @@
   width: 100%;
   height: calc(100% - 30px);
   background: black;
-  overflow: auto;  
-  font-family: 'Inconsolata';
+  overflow: auto;
+  font-family: "Inconsolata";
   padding: 5px;
 }
 

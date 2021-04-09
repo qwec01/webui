@@ -1,1 +1,1 @@
-export { ScrubFormComponent } from './scrub-form.component';
+export { ScrubFormComponent } from "./scrub-form.component";

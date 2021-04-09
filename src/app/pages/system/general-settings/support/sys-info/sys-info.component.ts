@@ -1,11 +1,11 @@
-import { Component, Input } from '@angular/core';
-import { WebSocketService } from 'app/services/';
-import { DialogService } from 'app/services/dialog.service';
-import { AppLoaderService } from 'app/services/app-loader/app-loader.service';
+import { Component, Input } from "@angular/core";
+import { WebSocketService } from "app/services/";
+import { DialogService } from "app/services/dialog.service";
+import { AppLoaderService } from "app/services/app-loader/app-loader.service";
 
 @Component({
-  selector: 'app-sys-info',
-  templateUrl: './sys-info.component.html',
+  selector: "app-sys-info",
+  templateUrl: "./sys-info.component.html",
 })
 export class SysInfoComponent {
   @Input() version;
@@ -24,7 +24,9 @@ export class SysInfoComponent {
   @Input() add_hardware;
   @Input() daysLeftinContract;
 
-  constructor(protected loader: AppLoaderService, protected dialogService: DialogService,
-    protected ws: WebSocketService) { }
-
+  constructor(
+    protected loader: AppLoaderService,
+    protected dialogService: DialogService,
+    protected ws: WebSocketService
+  ) {}
 }

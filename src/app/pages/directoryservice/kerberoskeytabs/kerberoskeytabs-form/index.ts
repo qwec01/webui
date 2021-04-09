@@ -1,1 +1,1 @@
-export { KerberosKeytabsFormComponent } from './kerberoskeytabs-form.component';
+export { KerberosKeytabsFormComponent } from "./kerberoskeytabs-form.component";

@@ -1,34 +1,43 @@
-import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChange, ViewChild,ViewEncapsulation } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
-import { CopyPasteMessageComponent } from 'app/pages/shell/copy-paste-message.component';
-import * as _ from 'lodash';
-import { ShellService, WebSocketService } from '../../../services/';
+import {
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChange,
+  ViewChild,
+  ViewEncapsulation,
+} from "@angular/core";
+import { MatDialog } from "@angular/material/dialog";
+import { ActivatedRoute, Router } from "@angular/router";
+import { TranslateService } from "@ngx-translate/core";
+import { CopyPasteMessageComponent } from "app/pages/shell/copy-paste-message.component";
+import * as _ from "lodash";
+import { ShellService, WebSocketService } from "../../../services/";
 import helptext from "./../../../helptext/shell/shell";
-import { Terminal } from 'xterm';
-import { AttachAddon } from 'xterm-addon-attach';
-import { FitAddon } from 'xterm-addon-fit';
-import * as FontFaceObserver from 'fontfaceobserver';
+import { Terminal } from "xterm";
+import { AttachAddon } from "xterm-addon-attach";
+import { FitAddon } from "xterm-addon-fit";
+import * as FontFaceObserver from "fontfaceobserver";
 
 @Component({
-  selector: 'app-jail-shell',
-  templateUrl: './jail-shell.component.html',
-  styleUrls: ['./jail-shell.component.css'],
+  selector: "app-jail-shell",
+  templateUrl: "./jail-shell.component.html",
+  styleUrls: ["./jail-shell.component.css"],
   providers: [ShellService],
   encapsulation: ViewEncapsulation.None,
 })
-
 export class JailShellComponent implements OnInit, OnChanges, OnDestroy {
   // sets the shell prompt
-  @Input() prompt = '';
+  @Input() prompt = "";
   //xter container
-  @ViewChild('terminal', { static: true}) container: ElementRef;
+  @ViewChild("terminal", { static: true }) container: ElementRef;
   // xterm variables
   cols: string;
   rows: string;
   font_size = 14;
-  font_name = 'Inconsolata';
+  font_name = "Inconsolata";
   public connectionId: string;
   public token: any;
   public xterm: any;
@@ -36,20 +45,21 @@ export class JailShellComponent implements OnInit, OnChanges, OnDestroy {
   private fitAddon: any;
   public shell_tooltip = helptext.usage_tooltip;
 
-  clearLine = "\u001b[2K\r"
+  clearLine = "\u001b[2K\r";
   protected pk: string;
-  protected route_success: string[] = ['jails'];
-  constructor(private ws: WebSocketService,
-              public ss: ShellService,
-              protected aroute: ActivatedRoute,
-              public translate: TranslateService,
-              protected router: Router,
-              private dialog: MatDialog) {
-              }
+  protected route_success: string[] = ["jails"];
+  constructor(
+    private ws: WebSocketService,
+    public ss: ShellService,
+    protected aroute: ActivatedRoute,
+    public translate: TranslateService,
+    protected router: Router,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit() {
-    this.aroute.params.subscribe(params => {
-      this.pk = params['pk'];
+    this.aroute.params.subscribe((params) => {
+      this.pk = params["pk"];
       this.getAuthToken().subscribe((res) => {
         this.initializeWebShell(res);
         this.shellSubscription = this.ss.shellOutput.subscribe((value) => {
@@ -58,30 +68,29 @@ export class JailShellComponent implements OnInit, OnChanges, OnDestroy {
 
             if (_.trim(value) == "logout") {
               this.xterm.destroy();
-              this.router.navigate(new Array('/').concat(this.route_success));
+              this.router.navigate(new Array("/").concat(this.route_success));
             }
           }
         });
         this.initializeTerminal();
       });
     });
-
   }
 
   ngOnDestroy() {
     if (this.shellSubscription) {
       this.shellSubscription.unsubscribe();
     }
-    if (this.ss.connected){
+    if (this.ss.connected) {
       this.ss.socket.close();
     }
-  };
+  }
 
   onRightClick(): false {
     this.dialog.open(CopyPasteMessageComponent);
     return false;
   }
-  
+
   onResize(event) {
     this.resizeTerm();
   }
@@ -95,15 +104,13 @@ export class JailShellComponent implements OnInit, OnChanges, OnDestroy {
     this.resizeTerm();
   }
 
-  ngOnChanges(changes: {
-    [propKey: string]: SimpleChange
-  }) {
+  ngOnChanges(changes: { [propKey: string]: SimpleChange }) {
     const log: string[] = [];
     for (const propName in changes) {
       const changedProp = changes[propName];
       // reprint prompt
-      if (propName === 'prompt' && this.xterm != null) {
-        this.xterm.write(this.clearLine + this.prompt)
+      if (propName === "prompt" && this.xterm != null) {
+        this.xterm.write(this.clearLine + this.prompt);
       }
     }
   }
@@ -111,16 +118,16 @@ export class JailShellComponent implements OnInit, OnChanges, OnDestroy {
   getSize() {
     const domWidth = this.container.nativeElement.offsetWidth;
     const domHeight = this.container.nativeElement.offsetHeight;
-    var span = document.createElement('span');
+    var span = document.createElement("span");
     this.container.nativeElement.appendChild(span);
-    span.style.whiteSpace = 'nowrap';
+    span.style.whiteSpace = "nowrap";
     span.style.fontFamily = this.font_name;
-    span.style.fontSize = this.font_size + 'px';
-    span.innerHTML = 'a';
+    span.style.fontSize = this.font_size + "px";
+    span.innerHTML = "a";
 
     let cols = 0;
-    while(span.offsetWidth < domWidth) {      
-      span.innerHTML += 'a';
+    while (span.offsetWidth < domWidth) {
+      span.innerHTML += "a";
       cols++;
     }
 
@@ -129,15 +136,15 @@ export class JailShellComponent implements OnInit, OnChanges, OnDestroy {
     if (cols < 80) {
       cols = 80;
     }
-    
+
     if (rows < 10) {
       rows = 10;
     }
 
     return {
       rows: rows,
-      cols: cols
-    }
+      cols: cols,
+    };
   }
 
   initializeTerminal() {
@@ -158,24 +165,28 @@ export class JailShellComponent implements OnInit, OnChanges, OnDestroy {
     this.xterm.loadAddon(attachAddon);
     this.fitAddon = new FitAddon();
     this.xterm.loadAddon(this.fitAddon);
-    
+
     var font = new FontFaceObserver(this.font_name);
-    
-    font.load().then((e) => {
-      this.xterm.open(this.container.nativeElement);
-      this.fitAddon.fit();
-      this.xterm._initialized = true;
-    }, function (e) {
-      console.log('Font is not available', e);
-    });    
+
+    font.load().then(
+      (e) => {
+        this.xterm.open(this.container.nativeElement);
+        this.fitAddon.fit();
+        this.xterm._initialized = true;
+      },
+      function (e) {
+        console.log("Font is not available", e);
+      }
+    );
   }
 
-  resizeTerm(){
+  resizeTerm() {
     const size = this.getSize();
-    this.xterm.setOption('fontSize', this.font_size);
+    this.xterm.setOption("fontSize", this.font_size);
     this.fitAddon.fit();
-    this.ws.call('core.resize_shell', [this.connectionId, size.cols, size.rows]).subscribe((res)=> {
-    });
+    this.ws
+      .call("core.resize_shell", [this.connectionId, size.cols, size.rows])
+      .subscribe((res) => {});
     return true;
   }
 
@@ -184,15 +195,14 @@ export class JailShellComponent implements OnInit, OnChanges, OnDestroy {
     this.ss.jailId = this.pk;
     this.ss.connect();
 
-    this.ss.shellConnected.subscribe((res)=> {
+    this.ss.shellConnected.subscribe((res) => {
       this.connectionId = res.id;
       this.resizeTerm();
-    })
-
+    });
   }
 
   getAuthToken() {
-    return this.ws.call('auth.generate_token');
+    return this.ws.call("auth.generate_token");
   }
 
   onShellRightClick(): false {

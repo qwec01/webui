@@ -1,8 +1,8 @@
 .dynamic-field.hide {
-    display: none;
+  display: none;
 }
 .full-width {
-	width: 100%;
+  width: 100%;
 }
 
 .drop-container {
@@ -10,11 +10,11 @@
   border-radius: 6px;
   height: 150px;
   width: 100%;
-  box-shadow: 1px 2px 20px hsla(0, 0%, 4%, .1);
+  box-shadow: 1px 2px 20px hsla(0, 0%, 4%, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px dashed #c0c4c7
+  border: 2px dashed #c0c4c7;
 }
 
 :host mat-icon.paragraph-icon {
@@ -43,7 +43,7 @@
   right: 3px;
   top: -2px;
 }
-  
+
 .margin-for-error {
   position: relative;
   top: -12px;

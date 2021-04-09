@@ -1,1 +1,1 @@
-export { AFPFormComponent } from './afp-form.component';
+export { AFPFormComponent } from "./afp-form.component";

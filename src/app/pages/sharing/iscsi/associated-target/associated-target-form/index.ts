@@ -1,1 +1,1 @@
-export { AssociatedTargetFormComponent } from './associated-target-form.component';
+export { AssociatedTargetFormComponent } from "./associated-target-form.component";

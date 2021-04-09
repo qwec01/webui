@@ -1,64 +1,73 @@
-import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgxUploaderModule } from 'ngx-uploader';
+import { CommonModule } from "@angular/common";
+import { NgModule } from "@angular/core";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { NgxUploaderModule } from "ngx-uploader";
 
-import { QRCodeModule } from 'angular2-qrcode';
-import { EntityModule } from '../common/entity/entity.module';
+import { QRCodeModule } from "angular2-qrcode";
+import { EntityModule } from "../common/entity/entity.module";
 
-import { MaterialModule } from '../../appMaterial.module';
-import { MarkdownModule } from 'ngx-markdown';
-import { routing } from './system.routing';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { CommonDirectivesModule } from '../../directives/common/common-directives.module';
+import { MaterialModule } from "../../appMaterial.module";
+import { MarkdownModule } from "ngx-markdown";
+import { routing } from "./system.routing";
+import { FlexLayoutModule } from "@angular/flex-layout";
+import { CommonDirectivesModule } from "../../directives/common/common-directives.module";
 
-import { AdvancedSettingsComponent } from './advanced/';
-import { BootEnvironmentCloneComponent } from './bootenv/bootenv-clone/';
-import { BootEnvironmentRenameComponent } from './bootenv/bootenv-rename/';
-import { BootEnvironmentListComponent } from './bootenv/bootenv-list/';
-import { BootEnvironmentCreateComponent } from './bootenv/bootenv-create';
-import { BootEnvReplaceFormComponent } from './bootenv/bootenv-replace';
-import { BootStatusListComponent } from './bootenv/bootenv-status/';
-import { BootEnvAttachFormComponent } from './bootenv/bootenv-attach';
-import { TunableListComponent } from './tunable/tunable-list/';
-import { TunableFormComponent } from './tunable/tunable-form/';
-import { UpdateComponent } from './update/';
-import { ManualUpdateComponent } from './update/manualupdate/';
-import { NTPServerFormComponent } from './general-settings/ntpservers/ntpserver-form';
-import { SupportComponent } from './general-settings/support/support.component';
-import { AlertServiceListComponent } from './alertservice/alertservice-list/';
-import { TranslateModule } from '@ngx-translate/core';
-import { EmailComponent } from './email';
-import { AlertServiceComponent } from './alertservice/alert-service/alert-service.component';
-import { AlertConfigComponent } from './alert/alert.component';
-import { FailoverComponent } from './failover/failover.component';
-import { EnclosureModule } from './viewenclosure/enclosure.module';
-import { EulaComponent } from './general-settings/support/eula/eula.component';
-import { ProactiveComponent } from './general-settings/support/proactive/proactive.component';
-import { SupportFormLicensedComponent } from './general-settings/support/support-licensed/support-form-licensed.component';
-import { SupportFormUnlicensedComponent } from './general-settings/support/support-unlicensed/support-form-unlicensed.component';
-import { SysInfoComponent } from './general-settings/support/sys-info/sys-info.component'
-import { KmipComponent} from './kmip/kmip.component';
-import { TwoFactorComponent } from './two-factor/two-factor.component';
-import { QRDialog } from './two-factor/two-factor.component';
-import { GeneralSettingsComponent } from './general-settings/general-settings.component';
-import { LocalizationFormComponent } from './general-settings/localization-form/localization-form.component';
-import { GuiFormComponent } from './general-settings/gui-form/gui-form.component';
-import { LicenseComponent } from './general-settings/support/license/license.component';
-import { SyslogFormComponent } from './advanced/syslog-form/syslog-form.component';
-import { KernelFormComponent } from './advanced/kernel-form/kernel-form.component';
-import { ConsoleFormComponent } from './advanced/console-form/console-form.component';
-import { CronFormComponent } from './advanced/cron/cron-form/cron-form.component';
-import { CronListComponent } from './advanced/cron/cron-list/cron-list.component';
-import { InitshutdownFormComponent } from './advanced/initshutdown/initshutdown-form/initshutdown-form.component';
-import { InitshutdownListComponent } from './advanced/initshutdown/initshutdown-list/initshutdown-list.component';
+import { AdvancedSettingsComponent } from "./advanced/";
+import { BootEnvironmentCloneComponent } from "./bootenv/bootenv-clone/";
+import { BootEnvironmentRenameComponent } from "./bootenv/bootenv-rename/";
+import { BootEnvironmentListComponent } from "./bootenv/bootenv-list/";
+import { BootEnvironmentCreateComponent } from "./bootenv/bootenv-create";
+import { BootEnvReplaceFormComponent } from "./bootenv/bootenv-replace";
+import { BootStatusListComponent } from "./bootenv/bootenv-status/";
+import { BootEnvAttachFormComponent } from "./bootenv/bootenv-attach";
+import { TunableListComponent } from "./tunable/tunable-list/";
+import { TunableFormComponent } from "./tunable/tunable-form/";
+import { UpdateComponent } from "./update/";
+import { ManualUpdateComponent } from "./update/manualupdate/";
+import { NTPServerFormComponent } from "./general-settings/ntpservers/ntpserver-form";
+import { SupportComponent } from "./general-settings/support/support.component";
+import { AlertServiceListComponent } from "./alertservice/alertservice-list/";
+import { TranslateModule } from "@ngx-translate/core";
+import { EmailComponent } from "./email";
+import { AlertServiceComponent } from "./alertservice/alert-service/alert-service.component";
+import { AlertConfigComponent } from "./alert/alert.component";
+import { FailoverComponent } from "./failover/failover.component";
+import { EnclosureModule } from "./viewenclosure/enclosure.module";
+import { EulaComponent } from "./general-settings/support/eula/eula.component";
+import { ProactiveComponent } from "./general-settings/support/proactive/proactive.component";
+import { SupportFormLicensedComponent } from "./general-settings/support/support-licensed/support-form-licensed.component";
+import { SupportFormUnlicensedComponent } from "./general-settings/support/support-unlicensed/support-form-unlicensed.component";
+import { SysInfoComponent } from "./general-settings/support/sys-info/sys-info.component";
+import { KmipComponent } from "./kmip/kmip.component";
+import { TwoFactorComponent } from "./two-factor/two-factor.component";
+import { QRDialog } from "./two-factor/two-factor.component";
+import { GeneralSettingsComponent } from "./general-settings/general-settings.component";
+import { LocalizationFormComponent } from "./general-settings/localization-form/localization-form.component";
+import { GuiFormComponent } from "./general-settings/gui-form/gui-form.component";
+import { LicenseComponent } from "./general-settings/support/license/license.component";
+import { SyslogFormComponent } from "./advanced/syslog-form/syslog-form.component";
+import { KernelFormComponent } from "./advanced/kernel-form/kernel-form.component";
+import { ConsoleFormComponent } from "./advanced/console-form/console-form.component";
+import { CronFormComponent } from "./advanced/cron/cron-form/cron-form.component";
+import { CronListComponent } from "./advanced/cron/cron-list/cron-list.component";
+import { InitshutdownFormComponent } from "./advanced/initshutdown/initshutdown-form/initshutdown-form.component";
+import { InitshutdownListComponent } from "./advanced/initshutdown/initshutdown-list/initshutdown-list.component";
 
 @NgModule({
   imports: [
-    EntityModule, CommonModule, FormsModule,
-    ReactiveFormsModule, NgxUploaderModule, routing,
-    MaterialModule, MarkdownModule.forRoot(), TranslateModule, FlexLayoutModule,
-    EnclosureModule, CommonDirectivesModule, QRCodeModule
+    EntityModule,
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    NgxUploaderModule,
+    routing,
+    MaterialModule,
+    MarkdownModule.forRoot(),
+    TranslateModule,
+    FlexLayoutModule,
+    EnclosureModule,
+    CommonDirectivesModule,
+    QRCodeModule,
   ],
   declarations: [
     AdvancedSettingsComponent,
@@ -98,9 +107,9 @@ import { InitshutdownListComponent } from './advanced/initshutdown/initshutdown-
     InitshutdownFormComponent,
     InitshutdownListComponent,
     CronFormComponent,
-    CronListComponent
+    CronListComponent,
   ],
   entryComponents: [QRDialog],
-  providers: []
+  providers: [],
 })
 export class SystemModule {}

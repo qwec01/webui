@@ -1,1 +1,1 @@
-export * from './vdev.component';
+export * from "./vdev.component";

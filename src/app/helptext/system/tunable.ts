@@ -2,9 +2,9 @@ import { Validators } from "@angular/forms";
 import { T } from "app/translate-marker";
 
 export const helptext_system_tunable = {
-  metadata:{
-    fieldsets:[T('Tunable')],
-    fieldsets_scale:[T('Sysctl')]
+  metadata: {
+    fieldsets: [T("Tunable")],
+    fieldsets_scale: [T("Sysctl")],
   },
   var: {
     placeholder: T("Variable"),
@@ -19,7 +19,7 @@ export const helptext_system_tunable = {
  the system is running and generally take effect\
  immediately."
     ),
-    validation: [Validators.required]
+    validation: [Validators.required],
   },
 
   value: {
@@ -33,7 +33,7 @@ export const helptext_system_tunable = {
  href="https://www.freebsd.org/doc/en_US.ISO8859-1/books/handbook/config-tuning.html"\
  target="_blank">rc.conf</a> variable.'
     ),
-    validation: [Validators.required]
+    validation: [Validators.required],
   },
 
   type: {
@@ -44,12 +44,12 @@ export const helptext_system_tunable = {
  is required to apply <i>loader</i> or <i>rc.conf</i>\
  tunables. Configured tunables remain in effect until\
  deleted or Enabled is unset."
-    )
+    ),
   },
 
   description: {
     placeholder: T("Description"),
-    tooltip: T("Enter a description of the tunable.")
+    tooltip: T("Enter a description of the tunable."),
   },
 
   enabled: {
@@ -57,6 +57,6 @@ export const helptext_system_tunable = {
     tooltip: T(
       "Enable this tunable. Unset to disable this tunable\
  without deleting it."
-    )
+    ),
   },
 };

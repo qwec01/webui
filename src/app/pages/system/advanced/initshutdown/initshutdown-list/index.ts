@@ -1,1 +1,1 @@
-export { InitshutdownListComponent } from './initshutdown-list.component';
+export { InitshutdownListComponent } from "./initshutdown-list.component";

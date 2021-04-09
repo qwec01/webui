@@ -1,1 +1,1 @@
-export { RsyncFormComponent } from './rsync-form.component';
+export { RsyncFormComponent } from "./rsync-form.component";

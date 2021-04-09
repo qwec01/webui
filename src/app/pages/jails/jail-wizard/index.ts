@@ -1,1 +1,1 @@
-export { JailWizardComponent } from './jail-wizard.component';
+export { JailWizardComponent } from "./jail-wizard.component";

@@ -1,22 +1,27 @@
-import {Component, Input} from '@angular/core';
-import {FormGroup} from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
-import { iXAbstractObject } from 'app/core/classes/ix-abstractobject';
+import { Component, Input } from "@angular/core";
+import { FormGroup } from "@angular/forms";
+import { TranslateService } from "@ngx-translate/core";
+import { iXAbstractObject } from "app/core/classes/ix-abstractobject";
 
-import { Control } from '../../models/control.interface';
-import { ControlConfig } from '../../models/control-config.interface';
-import { Subject } from 'rxjs/Subject';
+import { Control } from "../../models/control.interface";
+import { ControlConfig } from "../../models/control-config.interface";
+import { Subject } from "rxjs/Subject";
 
 @Component({
-  selector : 'toolbar-select',
-  styleUrls : [ 'toolbar-select.component.scss' ],
-  template : `
+  selector: "toolbar-select",
+  styleUrls: ["toolbar-select.component.scss"],
+  template: `
     <div class="form-element dynamic-field form-select">
       <mat-form-field>
-        <mat-select [(ngModel)]="config.selectedValue" (selectionChange)="onChange($event)">
+        <mat-select
+          [(ngModel)]="config.selectedValue"
+          (selectionChange)="onChange($event)"
+        >
           <div>
             <mat-selection-list>
-              <ng-container *ngFor="let option of config.options; let i=index">
+              <ng-container
+                *ngFor="let option of config.options; let i = index"
+              >
                 <mat-option [value]="option.value">
                   {{ option.label | translate }}
                 </mat-option>
@@ -26,7 +31,7 @@ import { Subject } from 'rxjs/Subject';
         </mat-select>
       </mat-form-field>
     </div>
-  `
+  `,
 })
 export class ToolbarSelectComponent extends iXAbstractObject {
   @Input() config?: any;
@@ -37,8 +42,8 @@ export class ToolbarSelectComponent extends iXAbstractObject {
     super();
   }
 
-  onChange(event){
+  onChange(event) {
     this.config.value = event.value;
-    this.controller.next({name: this.config.name, value: this.config.value});
+    this.controller.next({ name: this.config.name, value: this.config.value });
   }
 }

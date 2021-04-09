@@ -1,1 +1,1 @@
-export { CronListComponent } from './cron-list.component';
+export { CronListComponent } from "./cron-list.component";

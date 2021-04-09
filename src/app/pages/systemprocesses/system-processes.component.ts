@@ -1,24 +1,29 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { ShellService, WebSocketService } from '../../services/';
-import { CopyPasteMessageComponent } from '../shell/copy-paste-message.component';
-import { Terminal } from 'xterm';
-import { AttachAddon } from 'xterm-addon-attach';
-import { FitAddon } from 'xterm-addon-fit';
-import * as FontFaceObserver from 'fontfaceobserver';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  ViewEncapsulation,
+} from "@angular/core";
+import { MatDialog } from "@angular/material/dialog";
+import { ShellService, WebSocketService } from "../../services/";
+import { CopyPasteMessageComponent } from "../shell/copy-paste-message.component";
+import { Terminal } from "xterm";
+import { AttachAddon } from "xterm-addon-attach";
+import { FitAddon } from "xterm-addon-fit";
+import * as FontFaceObserver from "fontfaceobserver";
 
 @Component({
-  selector: 'app-system-processes',
-  templateUrl: './system-processes.component.html',
-  styleUrls: ['./system-processes.component.scss'],
+  selector: "app-system-processes",
+  templateUrl: "./system-processes.component.html",
+  styleUrls: ["./system-processes.component.scss"],
   providers: [ShellService],
   encapsulation: ViewEncapsulation.None,
 })
-
 export class SystemProcessesComponent implements OnInit, OnDestroy {
-
   //xter container
-  @ViewChild('terminal', { static: true}) container: ElementRef;
+  @ViewChild("terminal", { static: true }) container: ElementRef;
 
   // xterm variables
   public token: any;
@@ -27,9 +32,9 @@ export class SystemProcessesComponent implements OnInit, OnDestroy {
   private top_displayed = false;
   private fitAddon: any;
   public connectionId: string;
-  clearLine = "\u001b[2K\r"
+  clearLine = "\u001b[2K\r";
   font_size = 14;
-  font_name = 'Inconsolata';
+  font_name = "Inconsolata";
 
   ngOnInit() {
     const self = this;
@@ -38,10 +43,10 @@ export class SystemProcessesComponent implements OnInit, OnDestroy {
       this.shellSubscription = this.ss.shellOutput.subscribe((value) => {
         // this.xterm.write(value);
         if (!this.top_displayed) {
-          setTimeout(function() {
-            self.xterm.send('top\n');
-            setTimeout(function() {
-              self.xterm.setOption('disableStdin', true);
+          setTimeout(function () {
+            self.xterm.send("top\n");
+            setTimeout(function () {
+              self.xterm.setOption("disableStdin", true);
             }, 100);
           }, 1000);
           this.top_displayed = true;
@@ -55,24 +60,24 @@ export class SystemProcessesComponent implements OnInit, OnDestroy {
     if (this.shellSubscription) {
       this.shellSubscription.unsubscribe();
     }
-    if (this.ss.connected){
+    if (this.ss.connected) {
       this.ss.socket.close();
     }
-  };
+  }
 
   getSize() {
     const domWidth = this.container.nativeElement.offsetWidth;
     const domHeight = this.container.nativeElement.offsetHeight;
-    var span = document.createElement('span');
+    var span = document.createElement("span");
     this.container.nativeElement.appendChild(span);
-    span.style.whiteSpace = 'nowrap';
+    span.style.whiteSpace = "nowrap";
     span.style.fontFamily = this.font_name;
-    span.style.fontSize = this.font_size + 'px';
-    span.innerHTML = 'a';
+    span.style.fontSize = this.font_size + "px";
+    span.innerHTML = "a";
 
     let cols = 0;
-    while(span.offsetWidth < domWidth) {      
-      span.innerHTML += 'a';
+    while (span.offsetWidth < domWidth) {
+      span.innerHTML += "a";
       cols++;
     }
 
@@ -81,15 +86,15 @@ export class SystemProcessesComponent implements OnInit, OnDestroy {
     if (cols < 80) {
       cols = 80;
     }
-    
+
     if (rows < 10) {
       rows = 10;
     }
 
     return {
       rows: rows,
-      cols: cols
-    }
+      cols: cols,
+    };
   }
 
   initializeTerminal() {
@@ -110,39 +115,43 @@ export class SystemProcessesComponent implements OnInit, OnDestroy {
     this.xterm.loadAddon(attachAddon);
     this.fitAddon = new FitAddon();
     this.xterm.loadAddon(this.fitAddon);
-    
+
     var font = new FontFaceObserver(this.font_name);
-    
-    font.load().then((e) => {
-      this.xterm.open(this.container.nativeElement);
-      this.fitAddon.fit();
-      this.xterm._initialized = true;
-    }, function (e) {
-      console.log('Font is not available', e);
-    });    
+
+    font.load().then(
+      (e) => {
+        this.xterm.open(this.container.nativeElement);
+        this.fitAddon.fit();
+        this.xterm._initialized = true;
+      },
+      function (e) {
+        console.log("Font is not available", e);
+      }
+    );
   }
 
-  resizeTerm(){
+  resizeTerm() {
     const size = this.getSize();
-    this.xterm.setOption('fontSize', this.font_size);
+    this.xterm.setOption("fontSize", this.font_size);
     this.fitAddon.fit();
-    this.ws.call('core.resize_shell', [this.connectionId, size.cols, size.rows]).subscribe((res)=> {
-    });
+    this.ws
+      .call("core.resize_shell", [this.connectionId, size.cols, size.rows])
+      .subscribe((res) => {});
     return true;
   }
-  
+
   initializeWebShell(res: string) {
     this.ss.token = res;
     this.ss.connect();
 
-    this.ss.shellConnected.subscribe((res)=> {
+    this.ss.shellConnected.subscribe((res) => {
       this.connectionId = res.id;
       this.resizeTerm();
-    })
+    });
   }
 
   getAuthToken() {
-    return this.ws.call('auth.generate_token');
+    return this.ws.call("auth.generate_token");
   }
 
   onRightClick(): false {
@@ -162,7 +171,10 @@ export class SystemProcessesComponent implements OnInit, OnDestroy {
     this.font_size = 14;
     this.resizeTerm();
   }
-  
-  constructor(private ws: WebSocketService, public ss: ShellService, private dialog: MatDialog) {
-  }
+
+  constructor(
+    private ws: WebSocketService,
+    public ss: ShellService,
+    private dialog: MatDialog
+  ) {}
 }

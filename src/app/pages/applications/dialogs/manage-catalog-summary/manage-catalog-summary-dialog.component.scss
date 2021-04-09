@@ -1,77 +1,74 @@
 .ix-blue manage-catalog-summary-dialog div.mat-dialog-content {
-    overflow: auto !important;
+  overflow: auto !important;
 }
 
 manage-catalog-summary-dialog {
-    font-size: 14px;
+  font-size: 14px;
 
-    .status {
-        padding: 3px;
-        opacity: 0.75;
-    }
+  .status {
+    padding: 3px;
+    opacity: 0.75;
+  }
 
-    .other {
-        border: 1px solid var(--fg1);
-    }
+  .other {
+    border: 1px solid var(--fg1);
+  }
 
-    .active {
-        border: 1px solid var(--green);
-        color: var(--green);
-    }
-    
-    .status-filter {
-        display: flex;
-        align-items: center;
+  .active {
+    border: 1px solid var(--green);
+    color: var(--green);
+  }
 
-        
-        .mat-form-field {
-            width: unset!important;
-            margin: 0 0 0 10px;
+  .status-filter {
+    display: flex;
+    align-items: center;
 
-            .mat-form-field-infix {
-                width: 80px;
-            }
-        }
-    }
+    .mat-form-field {
+      width: unset !important;
+      margin: 0 0 0 10px;
 
-    .title-div {
-        width: 100%;
-        margin: 10px 0;
+      .mat-form-field-infix {
+        width: 80px;
+      }
     }
-    
-    .version-list {
-        width: 100%;
-        margin-top: 10px;
-        overflow-y: auto;
-        height: 200px;
-    }
+  }
 
-    .row-dark {
-        background: rgba(0, 0, 0, 0.5);
-    }
+  .title-div {
+    width: 100%;
+    margin: 10px 0;
+  }
 
-    .row-light {
-        background: rgba(0, 0, 0, 0.1);
-    }
-    
-    .detail-row {
-        padding: 5px 10px;
-        div {
-            align-items: center;
-        }
+  .version-list {
+    width: 100%;
+    margin-top: 10px;
+    overflow-y: auto;
+    height: 200px;
+  }
 
-        .info-col {
-            height: 20px;
-        }        
-    }
-    
-    .value-row {
-        opacity: 0.5;
+  .row-dark {
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .row-light {
+    background: rgba(0, 0, 0, 0.1);
+  }
+
+  .detail-row {
+    padding: 5px 10px;
+    div {
+      align-items: center;
     }
 
-    .button-bar {
-        margin-bottom: -8px;
+    .info-col {
+      height: 20px;
     }
+  }
+
+  .value-row {
+    opacity: 0.5;
+  }
+
+  .button-bar {
+    margin-bottom: -8px;
+  }
 }
-
-

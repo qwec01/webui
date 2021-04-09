@@ -10,15 +10,8 @@
     "experimentalDecorators": true,
     "target": "es5",
     "allowSyntheticDefaultImports": true,
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "lib": [
-      "es2016",
-      "dom",
-      "es2017.object",
-      "es2016.array.include"
-    ],
+    "typeRoots": ["node_modules/@types"],
+    "lib": ["es2016", "dom", "es2017.object", "es2016.array.include"],
     "module": "es2015"
   },
   "angularCompilerOptions": {
@@ -33,8 +26,5 @@
     "src/**/*.module.ts",
     "src/**/*.routes.ts"
   ],
-  "exclude": [
-    "node_modules",
-    "**/*.spec.ts"
-  ]
+  "exclude": ["node_modules", "**/*.spec.ts"]
 }

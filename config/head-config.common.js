@@ -33,12 +33,15 @@ module.exports = {
     { rel: 'icon', type: 'image/png', sizes: '32x32', href: 'assets/icon/favicon-32x32.png' },
     { rel: 'icon', type: 'image/png', sizes: '96x96', href: 'assets/icon/favicon-96x96.png' },
      **/
-    { rel: 'icon', type: 'image/x-icon', href: 'assets/icon/freenas.ico' }
-
+    { rel: "icon", type: "image/x-icon", href: "assets/icon/freenas.ico" },
   ],
   meta: [
-    { name: 'msapplication-TileColor', content: '#ffffff' },
-    { name: 'msapplication-TileImage', content: 'assets/icon/ms-icon-144x144.png', '=content': true },
-    { name: 'theme-color', content: '#4691d1' }
-  ]
+    { name: "msapplication-TileColor", content: "#ffffff" },
+    {
+      name: "msapplication-TileImage",
+      content: "assets/icon/ms-icon-144x144.png",
+      "=content": true,
+    },
+    { name: "theme-color", content: "#4691d1" },
+  ],
 };

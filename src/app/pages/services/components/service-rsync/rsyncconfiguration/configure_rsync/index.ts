@@ -1,1 +1,1 @@
-export { CconfigureRYSNCComponent } from './configure_rsync.component';
+export { CconfigureRYSNCComponent } from "./configure_rsync.component";

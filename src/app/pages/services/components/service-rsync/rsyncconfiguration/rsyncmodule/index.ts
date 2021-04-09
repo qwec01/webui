@@ -1,1 +1,1 @@
-export { RYSNCConfigurationFormComponent } from './rsyncconfiguration-form.component';
+export { RYSNCConfigurationFormComponent } from "./rsyncconfiguration-form.component";

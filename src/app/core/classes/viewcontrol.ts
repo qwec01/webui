@@ -1,20 +1,19 @@
-import { CoreEvent } from 'app/core/services/core.service';
-import { Subject } from 'rxjs';
+import { CoreEvent } from "app/core/services/core.service";
+import { Subject } from "rxjs";
 
 export interface Action {
   coreEvent: CoreEvent;
 }
 
 export abstract class ViewControl {
-
   public action: CoreEvent;
-  public target:Subject<CoreEvent>;// (Send actions back to ViewController via this Subject)
+  public target: Subject<CoreEvent>; // (Send actions back to ViewController via this Subject)
   public isEnabled: boolean = true;
-  public layout:any; 
+  public layout: any;
 
   constructor() {}
 
-  sendAction(){
+  sendAction() {
     this.target.next(this.action);
   }
 }

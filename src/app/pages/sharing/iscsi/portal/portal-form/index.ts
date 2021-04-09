@@ -1,1 +1,1 @@
-export { PortalFormComponent } from './portal-form.component';
+export { PortalFormComponent } from "./portal-form.component";

@@ -1,1 +1,1 @@
-export { RsyncListComponent } from './rsync-list.component';
+export { RsyncListComponent } from "./rsync-list.component";

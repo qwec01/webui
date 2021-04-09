@@ -1,1 +1,1 @@
-export { DiskListComponent } from './disk-list.component';
+export { DiskListComponent } from "./disk-list.component";

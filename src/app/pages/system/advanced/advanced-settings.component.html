@@ -15,7 +15,7 @@
         <h3>{{ card.title | translate }}</h3>
         <div class="actions action-icon">
           <button mat-button color="default" (click)="doAdd(card.id)">
-            {{ 'Settings' | translate }}
+            {{ "Settings" | translate }}
           </button>
         </div>
       </mat-toolbar-row>
@@ -30,6 +30,10 @@
       </mat-card-content>
     </mat-card>
 
-    <app-table [conf]="card.tableConf" *ngIf="['cron', 'initshutdown', 'sysctl'].includes(card.id)" [gdArea]="card.id + '-card'"></app-table>
+    <app-table
+      [conf]="card.tableConf"
+      *ngIf="['cron', 'initshutdown', 'sysctl'].includes(card.id)"
+      [gdArea]="card.id + '-card'"
+    ></app-table>
   </ng-container>
 </div>

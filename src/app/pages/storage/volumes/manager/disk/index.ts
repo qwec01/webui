@@ -1,1 +1,1 @@
-export * from './disk.component';
+export * from "./disk.component";

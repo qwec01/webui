@@ -1,1 +1,1 @@
-export { NFSFormComponent } from './nfs-form.component';
+export { NFSFormComponent } from "./nfs-form.component";

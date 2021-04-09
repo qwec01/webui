@@ -2,7 +2,7 @@
   -webkit-box-orient: $box-orient;
   -webkit-box-direction: normal;
   -webkit-flex-direction: $flex-direction;
-  flex-direction: $flex-direction;  
+  flex-direction: $flex-direction;
 }
 
 @mixin smd-fab-speed-dial-box-order($ordinal-group, $order) {
@@ -11,7 +11,14 @@
   order: $order;
 }
 
-@mixin smd-fab-speed-dial-actions($box-orient, $box-direction, $flex-direction, $ordinal-group, $order, $action-item-margin-direction) {
+@mixin smd-fab-speed-dial-actions(
+  $box-orient,
+  $box-direction,
+  $flex-direction,
+  $ordinal-group,
+  $order,
+  $action-item-margin-direction
+) {
   -webkit-box-orient: $box-orient;
   -webkit-box-direction: $box-direction;
   -webkit-flex-direction: $flex-direction;
@@ -29,7 +36,7 @@ smd-fab-speed-dial {
   position: absolute;
   right: 33px;
   top: 10px;
-  z-index:2;
+  z-index: 2;
 
   &.smd-opened {
     .smd-fab-speed-dial-container {
@@ -57,8 +64,8 @@ smd-fab-speed-dial {
       z-index: 24;
 
       &.smd-spin {
-        -webkit-transition: all .6s cubic-bezier(.4,0,.2,1);
-        transition: all .6s cubic-bezier(.4,0,.2,1);
+        -webkit-transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
       }
     }
 
@@ -76,8 +83,8 @@ smd-fab-speed-dial {
         & .smd-fab-action-item {
           display: block;
           opacity: 1;
-          -webkit-transition: all .3s cubic-bezier(.55, 0, .55, .2);
-          transition: all .3s cubic-bezier(.55, 0, .55, .2);
+          -webkit-transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
+          transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
         }
       }
     }
@@ -89,10 +96,10 @@ smd-fab-speed-dial {
         & .smd-fab-action-item {
           -webkit-transform: scale(0);
           transform: scale(0);
-          -webkit-transition: all .3s cubic-bezier(.55, 0, .55, .2);
-          transition: all .3s cubic-bezier(.55, 0, .55, .2);
-          -webkit-transition-duration: .14286s;
-          transition-duration: .14286s;
+          -webkit-transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
+          transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
+          -webkit-transition-duration: 0.14286s;
+          transition-duration: 0.14286s;
         }
       }
     }
@@ -107,7 +114,14 @@ smd-fab-speed-dial {
       }
 
       & smd-fab-actions {
-        @include smd-fab-speed-dial-actions(vertical, normal, column, 3, 2, top);
+        @include smd-fab-speed-dial-actions(
+          vertical,
+          normal,
+          column,
+          3,
+          2,
+          top
+        );
       }
     }
   }
@@ -121,7 +135,14 @@ smd-fab-speed-dial {
       }
 
       & smd-fab-actions {
-        @include smd-fab-speed-dial-actions(vertical, reverse, column-reverse, 2, 1, bottom);
+        @include smd-fab-speed-dial-actions(
+          vertical,
+          reverse,
+          column-reverse,
+          2,
+          1,
+          bottom
+        );
       }
     }
   }
@@ -135,7 +156,14 @@ smd-fab-speed-dial {
       }
 
       & smd-fab-actions {
-        @include smd-fab-speed-dial-actions(horizontal, normal, row-reverse, 2, 1, right);
+        @include smd-fab-speed-dial-actions(
+          horizontal,
+          normal,
+          row-reverse,
+          2,
+          1,
+          right
+        );
       }
     }
   }
@@ -149,10 +177,15 @@ smd-fab-speed-dial {
       }
 
       & smd-fab-actions {
-        @include smd-fab-speed-dial-actions(horizontal, normal, row, 3, 2, left);
+        @include smd-fab-speed-dial-actions(
+          horizontal,
+          normal,
+          row,
+          3,
+          2,
+          left
+        );
       }
     }
   }
-
 }
-

@@ -1,25 +1,24 @@
-import { Component } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component } from "@angular/core";
+import { Router, ActivatedRoute } from "@angular/router";
 
-import * as _ from 'lodash';
+import * as _ from "lodash";
 
-import { FieldSet } from '../../../../common/entity/entity-form/models/fieldset.interface';
-import { IscsiService, WebSocketService } from '../../../../../services/';
-import { AppLoaderService } from '../../../../../services/app-loader/app-loader.service';
-import { EntityUtils } from '../../../../common/entity/utils';
-import { helptext_sharing_iscsi } from 'app/helptext/sharing';
+import { FieldSet } from "../../../../common/entity/entity-form/models/fieldset.interface";
+import { IscsiService, WebSocketService } from "../../../../../services/";
+import { AppLoaderService } from "../../../../../services/app-loader/app-loader.service";
+import { EntityUtils } from "../../../../common/entity/utils";
+import { helptext_sharing_iscsi } from "app/helptext/sharing";
 
 @Component({
-  selector: 'app-iscsi-associated-target-form',
+  selector: "app-iscsi-associated-target-form",
   template: `<entity-form [conf]="this"></entity-form>`,
-  providers: [ IscsiService ],
+  providers: [IscsiService],
 })
 export class AssociatedTargetFormComponent {
-
-  protected addCall = 'iscsi.targetextent.create';
-  protected queryCall = 'iscsi.targetextent.query';
-  protected editCall = 'iscsi.targetextent.update';
-  protected route_success: string[] = [ 'sharing', 'iscsi', 'associatedtarget' ];
+  protected addCall = "iscsi.targetextent.create";
+  protected queryCall = "iscsi.targetextent.query";
+  protected editCall = "iscsi.targetextent.update";
+  protected route_success: string[] = ["sharing", "iscsi", "associatedtarget"];
   protected isEntity = true;
   protected customFilter: Array<any> = [[["id", "="]]];
 
@@ -27,40 +26,45 @@ export class AssociatedTargetFormComponent {
     {
       name: helptext_sharing_iscsi.fieldset_associated_target,
       label: true,
-      class: 'associated_target',
-      width: '100%',
+      class: "associated_target",
+      width: "100%",
       config: [
         {
-          type: 'select',
-          name: 'target',
-          placeholder: helptext_sharing_iscsi.associated_target_placeholder_target,
+          type: "select",
+          name: "target",
+          placeholder:
+            helptext_sharing_iscsi.associated_target_placeholder_target,
           tooltip: helptext_sharing_iscsi.associated_target_tooltip_target,
           options: [],
-          value: '',
+          value: "",
           required: true,
-          validation : helptext_sharing_iscsi.associated_target_validators_target
+          validation:
+            helptext_sharing_iscsi.associated_target_validators_target,
         },
         {
-          type: 'input',
-          inputType: 'number',
-          name: 'lunid',
-          placeholder: helptext_sharing_iscsi.associated_target_placeholder_lunid,
+          type: "input",
+          inputType: "number",
+          name: "lunid",
+          placeholder:
+            helptext_sharing_iscsi.associated_target_placeholder_lunid,
           tooltip: helptext_sharing_iscsi.associated_target_tooltip_lunid,
-          value: '',
+          value: "",
           validation: helptext_sharing_iscsi.associated_target_validators_lunid,
         },
         {
-          type: 'select',
-          name: 'extent',
-          placeholder: helptext_sharing_iscsi.associated_target_placeholder_extent,
+          type: "select",
+          name: "extent",
+          placeholder:
+            helptext_sharing_iscsi.associated_target_placeholder_extent,
           tooltip: helptext_sharing_iscsi.associated_target_tooltip_extent,
           options: [],
-          value: '',
+          value: "",
           required: true,
-          validation : helptext_sharing_iscsi.associated_target_validators_extent
-        }
-      ]
-    }
+          validation:
+            helptext_sharing_iscsi.associated_target_validators_extent,
+        },
+      ],
+    },
   ];
 
   protected fieldConfig;
@@ -70,14 +74,19 @@ export class AssociatedTargetFormComponent {
   protected pk: any;
   protected entityForm: any;
 
-  constructor(protected router: Router, protected iscsiService: IscsiService, protected aroute: ActivatedRoute,
-              protected loader: AppLoaderService, protected ws: WebSocketService) {}
+  constructor(
+    protected router: Router,
+    protected iscsiService: IscsiService,
+    protected aroute: ActivatedRoute,
+    protected loader: AppLoaderService,
+    protected ws: WebSocketService
+  ) {}
 
   preInit() {
-    this.aroute.params.subscribe(params => {
-      if (params['pk']) {
-        this.pk = params['pk'];
-        this.customFilter[0][0].push(parseInt(params['pk'], 10));
+    this.aroute.params.subscribe((params) => {
+      if (params["pk"]) {
+        this.pk = params["pk"];
+        this.customFilter[0][0].push(parseInt(params["pk"], 10));
       }
     });
   }
@@ -86,26 +95,32 @@ export class AssociatedTargetFormComponent {
     this.entityForm = entityForm;
     this.fieldConfig = entityForm.fieldConfig;
 
-    this.target_control = _.find(this.fieldConfig, {'name' : 'target'});
-    this.target_control.options.push({label: '----------', value: ''});
+    this.target_control = _.find(this.fieldConfig, { name: "target" });
+    this.target_control.options.push({ label: "----------", value: "" });
     this.iscsiService.getTargets().subscribe((res) => {
       for (let i = 0; i < res.length; i++) {
-        this.target_control.options.push({label: res[i].name, value: res[i].id});
+        this.target_control.options.push({
+          label: res[i].name,
+          value: res[i].id,
+        });
       }
     });
 
-    this.extent_control = _.find(this.fieldConfig, {'name' : 'extent'});
-    this.extent_control.options.push({label: '----------', value: ''});
+    this.extent_control = _.find(this.fieldConfig, { name: "extent" });
+    this.extent_control.options.push({ label: "----------", value: "" });
     this.iscsiService.getExtents().subscribe((res) => {
       for (let i = 0; i < res.length; i++) {
-        this.extent_control.options.push({label: res[i].name, value: res[i].id});
+        this.extent_control.options.push({
+          label: res[i].name,
+          value: res[i].id,
+        });
       }
     });
   }
 
   beforeSubmit(value) {
-    if (value['lunid'] === "") {
-      delete value['lunid'];
+    if (value["lunid"] === "") {
+      delete value["lunid"];
     }
   }
 
@@ -114,7 +129,7 @@ export class AssociatedTargetFormComponent {
     this.ws.call(this.editCall, [this.pk, value]).subscribe(
       (res) => {
         this.loader.close();
-        this.router.navigate(new Array('/').concat(this.route_success));
+        this.router.navigate(new Array("/").concat(this.route_success));
       },
       (res) => {
         this.loader.close();

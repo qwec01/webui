@@ -1,42 +1,41 @@
-const helpers = require('./helpers');
-const webpackMerge = require('webpack-merge'); // used to merge webpack configs
-const commonConfig = require('./webpack.common.js'); // the settings that are common to prod and dev
+const helpers = require("./helpers");
+const webpackMerge = require("webpack-merge"); // used to merge webpack configs
+const commonConfig = require("./webpack.common.js"); // the settings that are common to prod and dev
 
 /**
  * Webpack Plugins
  */
-const DedupePlugin = require('webpack/lib/optimize/DedupePlugin');
-const DefinePlugin = require('webpack/lib/DefinePlugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const IgnorePlugin = require('webpack/lib/IgnorePlugin');
-const LoaderOptionsPlugin = require('webpack/lib/LoaderOptionsPlugin');
-const NormalModuleReplacementPlugin = require('webpack/lib/NormalModuleReplacementPlugin');
-const ProvidePlugin = require('webpack/lib/ProvidePlugin');
-const UglifyJsPlugin = require('webpack/lib/optimize/UglifyJsPlugin');
-const OptimizeJsPlugin = require('optimize-js-plugin');
+const DedupePlugin = require("webpack/lib/optimize/DedupePlugin");
+const DefinePlugin = require("webpack/lib/DefinePlugin");
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const IgnorePlugin = require("webpack/lib/IgnorePlugin");
+const LoaderOptionsPlugin = require("webpack/lib/LoaderOptionsPlugin");
+const NormalModuleReplacementPlugin = require("webpack/lib/NormalModuleReplacementPlugin");
+const ProvidePlugin = require("webpack/lib/ProvidePlugin");
+const UglifyJsPlugin = require("webpack/lib/optimize/UglifyJsPlugin");
+const OptimizeJsPlugin = require("optimize-js-plugin");
 /**
  * Webpack Constants
  */
-const ENV = process.env.NODE_ENV = process.env.ENV = 'production';
-const HOST = process.env.HOST || 'localhost';
+const ENV = (process.env.NODE_ENV = process.env.ENV = "production");
+const HOST = process.env.HOST || "localhost";
 const PORT = process.env.PORT || 8080;
-const METADATA = webpackMerge(commonConfig({env: ENV}).metadata, {
+const METADATA = webpackMerge(commonConfig({ env: ENV }).metadata, {
   host: HOST,
   port: PORT,
   ENV: ENV,
-  HMR: false
+  HMR: false,
 });
 
 module.exports = function (env) {
-  return webpackMerge(commonConfig({env: ENV}), {
-
+  return webpackMerge(commonConfig({ env: ENV }), {
     /**
      * Developer tool to enhance debugging
      *
      * See: http://webpack.github.io/docs/configuration.html#devtool
      * See: https://github.com/webpack/docs/wiki/build-performance#sourcemaps
      */
-    devtool: 'source-map',
+    devtool: "source-map",
 
     /**
      * Options affecting the output of the compilation.
@@ -44,13 +43,12 @@ module.exports = function (env) {
      * See: http://webpack.github.io/docs/configuration.html#output
      */
     output: {
-
       /**
        * The output directory as absolute path (required).
        *
        * See: http://webpack.github.io/docs/configuration.html#output-path
        */
-      path: helpers.root('dist'),
+      path: helpers.root("dist"),
 
       /**
        * Specifies the name of each output file on disk.
@@ -58,7 +56,7 @@ module.exports = function (env) {
        *
        * See: http://webpack.github.io/docs/configuration.html#output-filename
        */
-      filename: '[name].[chunkhash].bundle.js',
+      filename: "[name].[chunkhash].bundle.js",
 
       /**
        * The filename of the SourceMaps for the JavaScript files.
@@ -66,7 +64,7 @@ module.exports = function (env) {
        *
        * See: http://webpack.github.io/docs/configuration.html#output-sourcemapfilename
        */
-      sourceMapFilename: '[name].[chunkhash].bundle.map',
+      sourceMapFilename: "[name].[chunkhash].bundle.map",
 
       /**
        * The filename of non-entry chunks as relative path
@@ -74,8 +72,7 @@ module.exports = function (env) {
        *
        * See: http://webpack.github.io/docs/configuration.html#output-chunkfilename
        */
-      chunkFilename: '[id].[chunkhash].chunk.js'
-
+      chunkFilename: "[id].[chunkhash].chunk.js",
     },
 
     /**
@@ -84,7 +81,6 @@ module.exports = function (env) {
      * See: http://webpack.github.io/docs/configuration.html#plugins
      */
     plugins: [
-
       /**
        * Webpack plugin to optimize a JavaScript file for faster initial load
        * by wrapping eagerly-invoked functions.
@@ -93,7 +89,7 @@ module.exports = function (env) {
        */
 
       new OptimizeJsPlugin({
-        sourceMap: false
+        sourceMap: false,
       }),
 
       /**
@@ -117,13 +113,13 @@ module.exports = function (env) {
        */
       // NOTE: when adding more properties make sure you include them in custom-typings.d.ts
       new DefinePlugin({
-        'ENV': JSON.stringify(METADATA.ENV),
-        'HMR': METADATA.HMR,
-        'process.env': {
-          'ENV': JSON.stringify(METADATA.ENV),
-          'NODE_ENV': JSON.stringify(METADATA.ENV),
-          'HMR': METADATA.HMR,
-        }
+        ENV: JSON.stringify(METADATA.ENV),
+        HMR: METADATA.HMR,
+        "process.env": {
+          ENV: JSON.stringify(METADATA.ENV),
+          NODE_ENV: JSON.stringify(METADATA.ENV),
+          HMR: METADATA.HMR,
+        },
       }),
 
       /**
@@ -149,13 +145,12 @@ module.exports = function (env) {
         // }, // debug
         // comments: true, //debug
 
-
         beautify: false, //prod
         output: {
-          comments: false
+          comments: false,
         },
         mangle: {
-          screw_ie8: true
+          screw_ie8: true,
         }, //prod
         compress: {
           screw_ie8: true,
@@ -168,9 +163,9 @@ module.exports = function (env) {
           evaluate: true,
           if_return: true,
           join_vars: true,
-          negate_iife: false // we need this for lazy v8
+          negate_iife: false, // we need this for lazy v8
         },
-        comments: false //prod
+        comments: false, //prod
       }),
 
       /**
@@ -182,12 +177,12 @@ module.exports = function (env) {
 
       new NormalModuleReplacementPlugin(
         /angular2-hmr/,
-        helpers.root('config/empty.js')
+        helpers.root("config/empty.js")
       ),
 
       new NormalModuleReplacementPlugin(
         /zone\.js(\\|\/)dist(\\|\/)long-stack-trace-zone/,
-        helpers.root('config/empty.js')
+        helpers.root("config/empty.js")
       ),
 
       /**
@@ -221,9 +216,9 @@ module.exports = function (env) {
         minimize: true,
         debug: false,
         options: {
-          context: helpers.root('src'),
+          context: helpers.root("src"),
           output: {
-            path: helpers.root('dist')
+            path: helpers.root("dist"),
           },
 
           /**
@@ -235,9 +230,8 @@ module.exports = function (env) {
           tslint: {
             emitErrors: true,
             failOnHint: true,
-            resourcePath: 'src'
+            resourcePath: "src",
           },
-
 
           /**
            * Html loader advanced options
@@ -252,12 +246,11 @@ module.exports = function (env) {
             customAttrSurround: [
               [/#/, /(?:)/],
               [/\*/, /(?:)/],
-              [/\[?\(?/, /(?:)/]
+              [/\[?\(?/, /(?:)/],
             ],
-            customAttrAssign: [/\)?\]?=/]
+            customAttrAssign: [/\)?\]?=/],
           },
-
-        }
+        },
       }),
     ],
 
@@ -269,12 +262,11 @@ module.exports = function (env) {
      */
     node: {
       global: true,
-      crypto: 'empty',
+      crypto: "empty",
       process: false,
       module: false,
       clearImmediate: false,
-      setImmediate: false
-    }
-
+      setImmediate: false,
+    },
   });
 };

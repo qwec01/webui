@@ -1,13 +1,20 @@
-import { Component, OnInit, Input, ViewChild, AfterViewInit, AfterViewChecked } from '@angular/core';
-import { WebSocketService } from 'app/services';
+import {
+  Component,
+  OnInit,
+  Input,
+  ViewChild,
+  AfterViewInit,
+  AfterViewChecked,
+} from "@angular/core";
+import { WebSocketService } from "app/services";
 
-import { TableService } from './table.service';
+import { TableService } from "./table.service";
 
-import * as _ from 'lodash';
-import { EmptyConfig, EmptyType } from '../entity-empty/entity-empty.component';
-import { T } from 'app/translate-marker';
-import { EntityJobComponent } from '../entity-job';
-import { MatDialog } from '@angular/material/dialog';
+import * as _ from "lodash";
+import { EmptyConfig, EmptyType } from "../entity-empty/entity-empty.component";
+import { T } from "app/translate-marker";
+import { EntityJobComponent } from "../entity-job";
+import { MatDialog } from "@angular/material/dialog";
 
 export interface InputTableConf {
   title?: string;
@@ -42,17 +49,17 @@ export interface InputTableConf {
 }
 
 @Component({
-  selector: 'app-table',
-  templateUrl: './table.component.html',
-  styleUrls: ['./table.component.css'],
+  selector: "app-table",
+  templateUrl: "./table.component.html",
+  styleUrls: ["./table.component.css"],
   providers: [TableService],
 })
 export class TableComponent implements OnInit, AfterViewInit, AfterViewChecked {
-  @ViewChild('apptable') apptable;
-  @ViewChild('table') table;
+  @ViewChild("apptable") apptable;
+  @ViewChild("table") table;
 
   public _tableConf: InputTableConf;
-  public title = '';
+  public title = "";
   public titleHref: string;
   public dataSource;
   public displayedDataSource;
@@ -63,7 +70,7 @@ export class TableComponent implements OnInit, AfterViewInit, AfterViewChecked {
   public showViewMore = false;
   public showCollapse = false;
 
-  protected idProp = 'id';
+  protected idProp = "id";
 
   private TABLE_HEADER_HEIGHT = 48;
   private TABLE_ROW_HEIGHT = 48;
@@ -78,7 +85,7 @@ export class TableComponent implements OnInit, AfterViewInit, AfterViewChecked {
     return this._tableConf;
   }
 
-  @Input('conf') set tableConf(conf: InputTableConf) {
+  @Input("conf") set tableConf(conf: InputTableConf) {
     if (!this._tableConf) {
       this._tableConf = conf;
     } else {
@@ -87,7 +94,11 @@ export class TableComponent implements OnInit, AfterViewInit, AfterViewChecked {
     }
   }
 
-  constructor(private ws: WebSocketService, private tableService: TableService, private matDialog: MatDialog) {}
+  constructor(
+    private ws: WebSocketService,
+    private tableService: TableService,
+    private matDialog: MatDialog
+  ) {}
 
   calculateLimitRows() {
     if (this.table) {
@@ -96,15 +107,19 @@ export class TableComponent implements OnInit, AfterViewInit, AfterViewChecked {
         return;
       }
       this.limitRows = Math.floor(
-        (this.tableHeight - (this._tableConf.hideHeader ? 0 : this.TABLE_HEADER_HEIGHT)) / this.TABLE_ROW_HEIGHT,
+        (this.tableHeight -
+          (this._tableConf.hideHeader ? 0 : this.TABLE_HEADER_HEIGHT)) /
+          this.TABLE_ROW_HEIGHT
       );
       this.limitRows = Math.max(this.limitRows, this.TABLE_MIN_ROWS);
 
       if (this.dataSource) {
         this.displayedDataSource = this.dataSource.slice(0, this.limitRows);
-        this.showViewMore = this.dataSource.length !== this.displayedDataSource.length;
+        this.showViewMore =
+          this.dataSource.length !== this.displayedDataSource.length;
         if (this.showCollapse) {
-          this.showCollapse = this.dataSource.length !== this.displayedDataSource.length;
+          this.showCollapse =
+            this.dataSource.length !== this.displayedDataSource.length;
         }
       }
     }
@@ -124,7 +139,7 @@ export class TableComponent implements OnInit, AfterViewInit, AfterViewChecked {
   }
 
   populateTable() {
-    this.title = this._tableConf.title || '';
+    this.title = this._tableConf.title || "";
     if (this._tableConf.titleHref) {
       this.titleHref = this._tableConf.titleHref;
     }
@@ -142,12 +157,17 @@ export class TableComponent implements OnInit, AfterViewInit, AfterViewChecked {
     this.displayedColumns = this._tableConf.columns.map((col) => col.name);
 
     if (this._tableConf.getActions || this._tableConf.deleteCall) {
-      this.displayedColumns.push('action'); // add action column to table
-      this.actions = this._tableConf.getActions ? this._tableConf.getActions() : []; // get all row actions
+      this.displayedColumns.push("action"); // add action column to table
+      this.actions = this._tableConf.getActions
+        ? this._tableConf.getActions()
+        : []; // get all row actions
     }
     this.getData();
 
-    this.idProp = this._tableConf.deleteMsg === undefined ? 'id' : this._tableConf.deleteMsg.id_prop || 'id';
+    this.idProp =
+      this._tableConf.deleteMsg === undefined
+        ? "id"
+        : this._tableConf.deleteMsg.id_prop || "id";
     this._tableConf.tableComponent = this;
   }
 
@@ -189,11 +209,11 @@ export class TableComponent implements OnInit, AfterViewInit, AfterViewChecked {
     }
     if (element.sent_bytes - element.oldSent > 1024) {
       element.oldSent = element.sent_bytes;
-      this.tableService.updateStateInfoIcon(element[this.idProp], 'sent');
+      this.tableService.updateStateInfoIcon(element[this.idProp], "sent");
     }
     if (element.received_bytes - element.oldReceived > 1024) {
       element.oldReceived = element.received_bytes;
-      this.tableService.updateStateInfoIcon(element[this.idProp], 'received');
+      this.tableService.updateStateInfoIcon(element[this.idProp], "received");
     }
 
     return `Sent: ${element.sent} Received: ${element.received}`;
@@ -215,39 +235,39 @@ export class TableComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
   getButtonClass(state) {
     switch (state) {
-      case 'PENDING':
-      case 'RUNNING':
-      case 'ABORTED':
-        return 'fn-theme-orange';
-      case 'FINISHED':
-      case 'SUCCESS':
-        return 'fn-theme-green';
-      case 'ERROR':
-      case 'FAILED':
-        return 'fn-theme-red';
-      case 'HOLD':
-        return 'fn-theme-yellow';
+      case "PENDING":
+      case "RUNNING":
+      case "ABORTED":
+        return "fn-theme-orange";
+      case "FINISHED":
+      case "SUCCESS":
+        return "fn-theme-green";
+      case "ERROR":
+      case "FAILED":
+        return "fn-theme-red";
+      case "HOLD":
+        return "fn-theme-yellow";
       default:
-        return 'fn-theme-primary';
+        return "fn-theme-primary";
     }
   }
 
   determineColumnType(column) {
     if (column.listview) {
-      return 'listview';
+      return "listview";
     }
 
     if (column.state && column.state.prop && this._tableConf.getInOutInfo) {
-      return 'state-info';
+      return "state-info";
     }
     if (column.state && column.state.icon) {
-      return 'state-icon';
+      return "state-icon";
     }
 
-    if (column.prop === 'state' && column['button'] === true) {
-      return 'state-button';
+    if (column.prop === "state" && column["button"] === true) {
+      return "state-button";
     }
 
-    return 'textview';
+    return "textview";
   }
 }

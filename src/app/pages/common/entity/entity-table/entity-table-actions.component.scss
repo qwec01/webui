@@ -1,25 +1,24 @@
 .ion-android-more-vertical:before {
-    color: black;
+  color: black;
 }
-
 
 .panel_container {
   text-align: center;
 }
 
 .global_volume_based_action_menu {
-    margin-top: 8px; 
-    float: right; 
-    padding-bottom: 20px;
+  margin-top: 8px;
+  float: right;
+  padding-bottom: 20px;
 }
 
-.group-menu-header{
+.group-menu-header {
   min-width: 200px;
   padding-bottom: 16px;
   margin-top: 12px;
 }
 
-.group-menu-header div.title{
+.group-menu-header div.title {
   margin-left: 16px;
   margin-top: 4px;
   opacity: 0.5;
@@ -31,7 +30,7 @@
   opacity: 0.35;
 }
 
-.action-length-1 button{
+.action-length-1 button {
   position: relative;
   right: -16px;
 }

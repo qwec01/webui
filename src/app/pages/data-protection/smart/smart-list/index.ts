@@ -1,1 +1,1 @@
-export { SmartListComponent } from './smart-list.component';
+export { SmartListComponent } from "./smart-list.component";

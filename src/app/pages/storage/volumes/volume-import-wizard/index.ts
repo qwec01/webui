@@ -1,1 +1,1 @@
-export { VolumeImportWizardComponent } from './volume-import-wizard.component';
+export { VolumeImportWizardComponent } from "./volume-import-wizard.component";

@@ -1,1 +1,1 @@
-export { AlertServiceComponent } from './alert-service.component';
+export { AlertServiceComponent } from "./alert-service.component";

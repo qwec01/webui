@@ -1,32 +1,31 @@
 /// <reference lib="webworker" />
 
-
 // Write a bunch of pure functions above
 // and add it to our commands below
-const debug:boolean = true;
+const debug: boolean = true;
 
 const maxDecimals = (input, max?) => {
-  if(!max){ 
-    max = 2; 
+  if (!max) {
+    max = 2;
   }
   const str = input.toString().split(".");
-  if(!str[1]){
+  if (!str[1]) {
     // Not a float
     return input;
   }
   const decimals = str[1].length;
-  const output = decimals > max ? input.toFixed(max): input;
+  const output = decimals > max ? input.toFixed(max) : input;
   return parseFloat(output);
-}
+};
 
-function arrayAvg(input){
+function arrayAvg(input) {
   let sum = input.reduce((acc, cv) => acc + cv);
   let avg = sum / input.length;
   return maxDecimals(avg);
 }
 
-function avgFromReportData(input){
-  let output = []; 
+function avgFromReportData(input) {
+  let output = [];
   input.forEach((item, index) => {
     let avg = arrayAvg(item);
     output.push([avg]);
@@ -34,94 +33,102 @@ function avgFromReportData(input){
   return output;
 }
 
-function inferUnits(label:string){
+function inferUnits(label: string) {
   // Figures out from the label what the unit is
   let units = label;
-  if(label.includes('%')){
-    units = '%';
-  } else if(label.includes('°')){
+  if (label.includes("%")) {
+    units = "%";
+  } else if (label.includes("°")) {
     units = "°";
-  } else if(label.toLowerCase().includes("bytes")){
+  } else if (label.toLowerCase().includes("bytes")) {
     units = "bytes";
-  } else if(label.toLowerCase().includes("bits")){
+  } else if (label.toLowerCase().includes("bits")) {
     units = "bits";
   }
 
-  if(typeof units == 'undefined'){
+  if (typeof units == "undefined") {
     console.warn("Could not infer units from " + label);
   }
 
   return units;
 }
 
-function  convertKMGT(input: number, units: string, fixed?: number){
+function convertKMGT(input: number, units: string, fixed?: number) {
   const kilo = 1024;
   const mega = kilo * 1024;
   const giga = mega * 1024;
   const tera = giga * 1024;
 
-  let prefix: string = '';
-  let shortName: string = '';
+  let prefix: string = "";
+  let shortName: string = "";
   let output: number = input;
 
-  if(input > tera){
+  if (input > tera) {
     prefix = "Tera";
-    shortName = " TiB"
+    shortName = " TiB";
     output = input / tera;
-  } else if(input < tera && input > giga ){
+  } else if (input < tera && input > giga) {
     prefix = "Giga";
-    shortName = " GiB"
+    shortName = " GiB";
     output = input / giga;
-  } else if(input < giga && input > mega){
+  } else if (input < giga && input > mega) {
     prefix = "Mega";
-    shortName = " MiB"
+    shortName = " MiB";
     output = input / mega;
-  } else if(input < mega && input > kilo){
+  } else if (input < mega && input > kilo) {
     prefix = "Kilo";
-    shortName = " KiB"
+    shortName = " KiB";
     output = input / kilo;
   }
 
-  if(units == 'bits'){
-    shortName = shortName.replace(/i/, '').trim();
-    shortName = ` ${shortName.charAt(0).toUpperCase()}${shortName.substr(1).toLowerCase()}`;
+  if (units == "bits") {
+    shortName = shortName.replace(/i/, "").trim();
+    shortName = ` ${shortName.charAt(0).toUpperCase()}${shortName
+      .substr(1)
+      .toLowerCase()}`;
   }
- 
+
   //if(fixed && fixed !== -1){
   //  return [output.toFixed(fixed), prefix];
   //} else {
   //  return [output.toString(), prefix];
   //}
-  
-  return { value: output, prefix: prefix, shortName: shortName }; 
+
+  return { value: output, prefix: prefix, shortName: shortName };
 }
 
-function convertByKilo(input){
-  if(typeof input !== 'number'){return input}
+function convertByKilo(input) {
+  if (typeof input !== "number") {
+    return input;
+  }
   let output = input;
-  let prefix: string = ''; 
-  let suffix = '';
+  let prefix: string = "";
+  let suffix = "";
 
-  if(input >= 1000000){    
+  if (input >= 1000000) {
     output = input / 1000000;
-    suffix = 'm';
-  } else if(input < 1000000 && input >= 1000 ){
+    suffix = "m";
+  } else if (input < 1000000 && input >= 1000) {
     output = input / 1000;
-    suffix = 'k';
-  } 
+    suffix = "k";
+  }
 
-  return { value: output, suffix: suffix , shortName:''};
+  return { value: output, suffix: suffix, shortName: "" };
 }
 
-function formatValue(value: number, units: string, fixed?: number){
+function formatValue(value: number, units: string, fixed?: number) {
   let output = value;
-  if(!fixed){ fixed = -1; }
-  if(typeof value !== 'number'){ return value;}
+  if (!fixed) {
+    fixed = -1;
+  }
+  if (typeof value !== "number") {
+    return value;
+  }
 
   let converted;
-  switch(units.toLowerCase()){
+  switch (units.toLowerCase()) {
     case "bits":
-      converted  = convertKMGT(value, units, fixed);
+      converted = convertKMGT(value, units, fixed);
       output = maxDecimals(converted.value).toString() + converted.shortName;
       break;
     case "bytes":
@@ -132,118 +139,146 @@ function formatValue(value: number, units: string, fixed?: number){
     case "°":
     default:
       converted = convertByKilo(output);
-      return typeof output == 'number' ? maxDecimals(converted.value).toString() + converted.suffix : value ;//[this.limitDecimals(value), ''];
-      //break;
+      return typeof output == "number"
+        ? maxDecimals(converted.value).toString() + converted.suffix
+        : value; //[this.limitDecimals(value), ''];
+    //break;
   }
 
   return output; //? output : value;
 }
 
-function convertAggregations(input, labelY?){
+function convertAggregations(input, labelY?) {
   let output = Object.assign({}, input);
   const units = inferUnits(labelY);
   const keys = Object.keys(output.aggregations);
 
   keys.forEach((key) => {
     //output.aggregations[key].map((v) => formatValue(v , units) )
-    output.aggregations[key].forEach((v, index) => { 
-      output.aggregations[key][index] = formatValue(v , units) ;
+    output.aggregations[key].forEach((v, index) => {
+      output.aggregations[key][index] = formatValue(v, units);
     });
   });
   return output;
 }
 
-function optimizeLegend(input){
+function optimizeLegend(input) {
   let output = input;
   // Do stuff
-  switch(input.name){
-    case 'upsbatterycharge':
+  switch (input.name) {
+    case "upsbatterycharge":
       output.legend = ["Percent Charge"];
       break;
-    case 'upsremainingbattery':
+    case "upsremainingbattery":
       output.legend = ["Time remaining (Minutes)"];
       break;
-    case 'load':
-      output.legend = output.legend.map((label) => label.replace(/load_/, ''))
+    case "load":
+      output.legend = output.legend.map((label) => label.replace(/load_/, ""));
       break;
-    case 'disktemp':
-      output.legend = ['temperature'];
+    case "disktemp":
+      output.legend = ["temperature"];
       break;
-    case 'memory':
-      output.legend = output.legend.map((label) => label.replace(/memory-/, ''))
-      output.legend = output.legend.map((label) => label.replace(/_value/, ''))
+    case "memory":
+      output.legend = output.legend.map((label) =>
+        label.replace(/memory-/, "")
+      );
+      output.legend = output.legend.map((label) => label.replace(/_value/, ""));
       break;
-    case 'swap':
-      output.legend = output.legend.map((label) => label.replace(/swap-/, ''))
-      output.legend = output.legend.map((label) => label.replace(/_value/, ''))
+    case "swap":
+      output.legend = output.legend.map((label) => label.replace(/swap-/, ""));
+      output.legend = output.legend.map((label) => label.replace(/_value/, ""));
       break;
-    case 'interface':
-      output.legend = output.legend.map((label) => label.replace(/if_/, ''))
-      output.legend = output.legend.map((label) => label.replace(/octets_/, 'octets '))
+    case "interface":
+      output.legend = output.legend.map((label) => label.replace(/if_/, ""));
+      output.legend = output.legend.map((label) =>
+        label.replace(/octets_/, "octets ")
+      );
       break;
-    case 'nfsstat':
-      output.legend = output.legend.map((label) => label.replace(/nfsstat-/, ''))
-      output.legend = output.legend.map((label) => label.replace(/_value/, ''))
+    case "nfsstat":
+      output.legend = output.legend.map((label) =>
+        label.replace(/nfsstat-/, "")
+      );
+      output.legend = output.legend.map((label) => label.replace(/_value/, ""));
       break;
-    case 'nfsstatbytes':
-      output.legend = output.legend.map((label) => label.replace(/nfsstat-/, ''))
-      output.legend = output.legend.map((label) => label.replace(/_bytes_value/, ''))
+    case "nfsstatbytes":
+      output.legend = output.legend.map((label) =>
+        label.replace(/nfsstat-/, "")
+      );
+      output.legend = output.legend.map((label) =>
+        label.replace(/_bytes_value/, "")
+      );
       break;
-    case 'df':
-      output.legend = output.legend.map((label) => label.replace(/df_complex-/, ''))
-      output.legend = output.legend.map((label) => label.replace(/_value/, ''))
+    case "df":
+      output.legend = output.legend.map((label) =>
+        label.replace(/df_complex-/, "")
+      );
+      output.legend = output.legend.map((label) => label.replace(/_value/, ""));
       break;
-    case 'processes':
-      output.legend = output.legend.map((label) => label.replace(/ps_state-/, ''))
-      output.legend = output.legend.map((label) => label.replace(/_value/, ''))
+    case "processes":
+      output.legend = output.legend.map((label) =>
+        label.replace(/ps_state-/, "")
+      );
+      output.legend = output.legend.map((label) => label.replace(/_value/, ""));
       break;
-    case 'uptime':
-      output.legend = output.legend.map((label) => label.replace(/_value/, ''))
+    case "uptime":
+      output.legend = output.legend.map((label) => label.replace(/_value/, ""));
       break;
-    case 'ctl':
-    case 'disk':
-      output.legend = output.legend.map((label) => label.replace(/disk_octets_/, ''))
+    case "ctl":
+    case "disk":
+      output.legend = output.legend.map((label) =>
+        label.replace(/disk_octets_/, "")
+      );
       break;
-    case 'diskgeombusy':
-      output.legend = output.legend.map((label) => 'busy')
+    case "diskgeombusy":
+      output.legend = output.legend.map((label) => "busy");
       break;
-    case 'diskgeomlatency':
-      output.legend = output.legend.map((label) => label.replace(/geom_latency-/, ''));
+    case "diskgeomlatency":
+      output.legend = output.legend.map((label) =>
+        label.replace(/geom_latency-/, "")
+      );
       output.legend = output.legend.map((label) => {
-        let spl = label.split('_');
-        return spl[1]
-      })
+        let spl = label.split("_");
+        return spl[1];
+      });
       break;
-    case 'diskgeomopsrwd':
-      output.legend = output.legend.map((label) => label.replace(/geom_ops_rwd-/, ''));
+    case "diskgeomopsrwd":
+      output.legend = output.legend.map((label) =>
+        label.replace(/geom_ops_rwd-/, "")
+      );
       output.legend = output.legend.map((label) => {
-        let spl = label.split('_');
-        return spl[1]
-      })
+        let spl = label.split("_");
+        return spl[1];
+      });
       break;
-    case 'diskgeomqueue':
-      output.legend = output.legend.map((label) => label.replace(/geom_queue-/, ''));
+    case "diskgeomqueue":
+      output.legend = output.legend.map((label) =>
+        label.replace(/geom_queue-/, "")
+      );
       output.legend = output.legend.map((label) => {
-        let spl = label.split('_');
-        return spl[1]
-      })
+        let spl = label.split("_");
+        return spl[1];
+      });
       break;
-    case 'arcsize':
-      output.legend = output.legend.map((label) => label.replace(/cache_size-/, ''))
-      output.legend = output.legend.map((label) => label.replace(/_value/, ''))
+    case "arcsize":
+      output.legend = output.legend.map((label) =>
+        label.replace(/cache_size-/, "")
+      );
+      output.legend = output.legend.map((label) => label.replace(/_value/, ""));
       break;
-    case 'arcratio':
-      output.legend = output.legend.map((label) => label.replace(/cache_ratio-/, ''))
-      output.legend = output.legend.map((label) => label.replace(/_value/, ''))
+    case "arcratio":
+      output.legend = output.legend.map((label) =>
+        label.replace(/cache_ratio-/, "")
+      );
+      output.legend = output.legend.map((label) => label.replace(/_value/, ""));
       break;
-    case 'arcresult':
+    case "arcresult":
       output.legend = output.legend.map((label) => {
-        let noPrefix = label.replace(/cache_result-/, '');
-        let noSuffix = noPrefix.replace(/_value/, '');
-        if(noSuffix == 'total'){
+        let noPrefix = label.replace(/cache_result-/, "");
+        let noSuffix = noPrefix.replace(/_value/, "");
+        if (noSuffix == "total") {
           return noSuffix;
         } else {
-          let spl = noSuffix.split('-');
+          let spl = noSuffix.split("-");
           return spl[1];
         }
       });
@@ -252,7 +287,7 @@ function optimizeLegend(input){
   return output;
 }
 
-function avgCpuTempReport(report){
+function avgCpuTempReport(report) {
   let output = Object.assign({}, report);
   // Handle Data
   output.data = avgFromReportData(report.data);
@@ -262,10 +297,10 @@ function avgCpuTempReport(report){
 
   //Handle Aggregations
   const keys = Object.keys(output.aggregations);
-  keys.forEach((key, index) =>{ 
+  keys.forEach((key, index) => {
     output.aggregations[key] = [arrayAvg(output.aggregations[key])];
   });
-  
+
   return output;
 }
 
@@ -298,8 +333,10 @@ const commands = {
   },
   convertAggregations: (input, options?) => {
     let output = options ? convertAggregations(input, ...options) : input;
-    if(!options) {
-      console.warn("You must specify a label to parse. (Usually the Y axis label). Returning input value instead");
+    if (!options) {
+      console.warn(
+        "You must specify a label to parse. (Usually the Y axis label). Returning input value instead"
+      );
     }
     return output;
   },
@@ -315,44 +352,46 @@ const commands = {
     let output = options ? maxDecimals(input, ...options) : maxDecimals(input);
     return output;
   },
-}
+};
 
-function processCommands(list){
+function processCommands(list) {
   let output;
   list.forEach((item, index) => {
-    let input = item.input == '--pipe' || item.input == '|' ? output : item.input;
-    output = item.options ? commands[item.command](input, item.options) : commands[item.command](input);
-
+    let input =
+      item.input == "--pipe" || item.input == "|" ? output : item.input;
+    output = item.options
+      ? commands[item.command](input, item.options)
+      : commands[item.command](input);
   });
 
   return output;
 }
 
-function emit(evt){
-//@ts-ignore
+function emit(evt) {
+  //@ts-ignore
   postMessage(evt);
 }
 
-addEventListener('message', ({ data }) => {
+addEventListener("message", ({ data }) => {
   let evt = data;
   let output;
-  if(debug){
+  if (debug) {
     //console.warn("RCVD");
     //console.warn(evt);
   }
 
-  switch(evt.name){
-    case 'SayHello':
+  switch (evt.name) {
+    case "SayHello":
       const response = evt.data + " World!";
-      emit({name: 'Response', data: response});
-    break;
-    case 'ProcessCommands':
+      emit({ name: "Response", data: response });
+      break;
+    case "ProcessCommands":
       output = processCommands(evt.data);
-      emit({name: 'Response', data: output, sender: evt.sender });
-    break;
-    case 'ProcessCommandsAsReportData':
+      emit({ name: "Response", data: output, sender: evt.sender });
+      break;
+    case "ProcessCommandsAsReportData":
       output = processCommands(evt.data);
-      emit({name: 'ReportData', data: output, sender: evt.sender });
-    break;
+      emit({ name: "ReportData", data: output, sender: evt.sender });
+      break;
   }
 });

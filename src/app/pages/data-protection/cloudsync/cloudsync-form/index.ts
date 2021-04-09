@@ -1,1 +1,1 @@
-export { CloudsyncFormComponent } from './cloudsync-form.component';
+export { CloudsyncFormComponent } from "./cloudsync-form.component";

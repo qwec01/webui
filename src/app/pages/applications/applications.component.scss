@@ -18,68 +18,66 @@ mat-tab-group {
 }
 
 .catalog-item {
-    height: 160px;
-    width: 350px;
+  height: 160px;
+  width: 350px;
 
-    .content-wrapper {
-        .logo-container {
-          height: 160px;
-          width: 160px;
-          background-color: var(--contrast-lighter);
-          display: flex;
-          flex-direction: column;
+  .content-wrapper {
+    .logo-container {
+      height: 160px;
+      width: 160px;
+      background-color: var(--contrast-lighter);
+      display: flex;
+      flex-direction: column;
 
-          .logo {
-            width: calc(100% - 32px);
-            flex: 1;
-            background-position: center;
-            background-size: contain;
-            background-repeat: no-repeat;
-            margin-left: 16px;
-          }
-  
-          .badge-area {
-            margin: 0 16px 16px;
-            text-align: center;
-            color: rgba($color: #000000, $alpha: 1.0);
-            background-color: var(--yellow);              
-            
-            .partner-badge {
-              background-color: var(--yellow);              
-            }
+      .logo {
+        width: calc(100% - 32px);
+        flex: 1;
+        background-position: center;
+        background-size: contain;
+        background-repeat: no-repeat;
+        margin-left: 16px;
+      }
 
-            .train-badge {
-              background-color: #00000052;
-            }
-          }
+      .badge-area {
+        margin: 0 16px 16px;
+        text-align: center;
+        color: rgba($color: #000000, $alpha: 1);
+        background-color: var(--yellow);
+
+        .partner-badge {
+          background-color: var(--yellow);
         }
 
-        .content {
-            text-align: center;
-            padding: 1rem;
-            position: relative;
-            left: 15px;
-            width: 140px;
-
-            .button-row {
-              position: relative;
-            }
+        .train-badge {
+          background-color: #00000052;
         }
+      }
     }
 
-    .content-wrapper:hover {
-        cursor: pointer;
-        background-color: var(--contrast-lighter);
+    .content {
+      text-align: center;
+      padding: 1rem;
+      position: relative;
+      left: 15px;
+      width: 140px;
+
+      .button-row {
+        position: relative;
+      }
     }
+  }
 
+  .content-wrapper:hover {
+    cursor: pointer;
+    background-color: var(--contrast-lighter);
+  }
 
-    .more-info {
-      position: absolute;
-      top: 0;
-      right: 0;
-      margin: 10px;
-    } 
-
+  .more-info {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 10px;
+  }
 }
 
 .chart-item {
@@ -106,11 +104,11 @@ mat-tab-group {
       .badge-area {
         margin: 0 16px 16px;
         text-align: center;
-        color: rgba($color: #000000, $alpha: 1.0);
-        background-color: var(--yellow);              
-        
+        color: rgba($color: #000000, $alpha: 1);
+        background-color: var(--yellow);
+
         .partner-badge {
-          background-color: var(--yellow);              
+          background-color: var(--yellow);
         }
 
         .train-badge {
@@ -124,7 +122,6 @@ mat-tab-group {
         left: 2px;
       }
     }
-
 
     .content-box {
       width: 340px;
@@ -157,23 +154,23 @@ mat-tab-group {
       position: absolute;
       bottom: 5px;
       right: 15px;
-    } 
+    }
   }
 
   .content-box:hover {
-      cursor: pointer;
-      background-color: var(--contrast-lighter);
+    cursor: pointer;
+    background-color: var(--contrast-lighter);
   }
 
   .more-info {
     position: absolute;
     top: 10px;
     right: 0;
-  } 
+  }
 
   .docker-info {
     font-size: smaller;
-    opacity: .7;
+    opacity: 0.7;
   }
 
   .status {
@@ -200,7 +197,6 @@ mat-tab-group {
     bottom: 20px;
     left: 170px;
   }
-
 }
 
 .charts-info {

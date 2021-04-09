@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { ViewChartComponent, ViewChartMetadata } from 'app/core/components/viewchart/viewchart.component';
-import * as d3 from 'd3';
+import { Component, OnInit } from "@angular/core";
+import {
+  ViewChartComponent,
+  ViewChartMetadata,
+} from "app/core/components/viewchart/viewchart.component";
+import * as d3 from "d3";
 
 interface TimeData {
   start: number;
@@ -10,61 +13,71 @@ interface TimeData {
 }
 
 @Component({
-  selector: 'viewchartline',
-  template:ViewChartMetadata.template
+  selector: "viewchartline",
+  template: ViewChartMetadata.template,
 })
-export class ViewChartLineComponent extends ViewChartComponent implements OnInit {
-
+export class ViewChartLineComponent
+  extends ViewChartComponent
+  implements OnInit {
   //public chartType: string;
   public timeSeries: boolean;
   public timeFormat: string;
   //public timeData: TimeData;
 
-  protected _tooltipHeight:string;
+  protected _tooltipHeight: string;
   protected _chartType: string;
   protected _timeData: TimeData;
 
-  constructor() { 
+  constructor() {
     super();
     this.chartType = "line";
-    this.timeFormat = '%m/%d/%Y'
+    this.timeFormat = "%m/%d/%Y";
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
-  get chartType(){
+  get chartType() {
     return this._chartType;
   }
 
-  set chartType(str: string){
-    if(str == 'line' || str == 'area' || str == 'spline' || str == 'area-spline' || !str){
+  set chartType(str: string) {
+    if (
+      str == "line" ||
+      str == "area" ||
+      str == "spline" ||
+      str == "area-spline" ||
+      !str
+    ) {
       this._chartType = str;
     } else {
-      console.warn("chartType must be a valid line chart type (line, area, spline or area-spline)")
+      console.warn(
+        "chartType must be a valid line chart type (line, area, spline or area-spline)"
+      );
     }
   }
 
-  get tooltipHeight(){
+  get tooltipHeight() {
     return this._tooltipHeight;
   }
 
-  set tooltipHeight(tth:string){
-    this._tooltipHeight = tth + 'px';
+  set tooltipHeight(tth: string) {
+    this._tooltipHeight = tth + "px";
   }
 
-  get timeData(){
+  get timeData() {
     return this._timeData;
   }
 
-  set timeData(td: TimeData){
+  set timeData(td: TimeData) {
     this._timeData = td;
   }
 
-  protected makeTimeAxis(td:TimeData, axis?: string):any[]{
-    if(!axis){ axis = 'x';}
-      let labels: any[] = [axis];
-    this._data[0].forEach((item, index) =>{
+  protected makeTimeAxis(td: TimeData, axis?: string): any[] {
+    if (!axis) {
+      axis = "x";
+    }
+    let labels: any[] = [axis];
+    this._data[0].forEach((item, index) => {
       let date = new Date(td.start * 1000 + index * td.step * 1000);
       labels.push(date);
     });
@@ -72,63 +85,62 @@ export class ViewChartLineComponent extends ViewChartComponent implements OnInit
     return labels;
   }
 
-  makeConfig(){
-
+  makeConfig() {
     this.chartConfig = {
-      bindto: '#' + this._chartId,
+      bindto: "#" + this._chartId,
       grid: {
         x: {
-          show: false
+          show: false,
         },
         y: {
-          show: true
-        }
+          show: true,
+        },
       },
       axis: {
         x: {
-          padding:{
-            left:0,
-            right:0
+          padding: {
+            left: 0,
+            right: 0,
           },
           tick: {
-            format: '%H:%M:%S',
+            format: "%H:%M:%S",
             fit: true,
             culling: {
-              max: 5
-            }
-          }
+              max: 5,
+            },
+          },
         },
-        y:{
-          inner:false,
+        y: {
+          inner: false,
           /*tick:{
             format: d3.format(this.units)
           }*/
-        }
+        },
       },
       data: {
-        type: this.chartType, 
-        columns: this._data
+        type: this.chartType,
+        columns: this._data,
       },
-      size:{
+      size: {
         //width: this.width,
         //height: this.height
-        },
+      },
       subchart: {
         show: false,
-        size:{
-          height:24
-        }
+        size: {
+          height: 24,
+        },
       },
-      zoom:{
-        enabled: true
+      zoom: {
+        enabled: true,
       },
-      legend:{
-        position:'top',
-        show:false
+      legend: {
+        position: "top",
+        show: false,
       },
-      tooltip:{
+      tooltip: {
         //show:false,
-        grouped:true,
+        grouped: true,
         /*position:(data, width, height, element) => {
           let x = (parseInt(element.getAttribute('x')));
           let y = 0;
@@ -160,24 +172,24 @@ export class ViewChartLineComponent extends ViewChartComponent implements OnInit
           }
           //let focus = defaultTitleFormat(d);
           return preList + list + postList;*/
-          return '<div style="display:none;">tooltips disabled</div>'
+          return '<div style="display:none;">tooltips disabled</div>';
         },
         format: {
           value: (value, ratio, id, index) => {
-            if(this.units){
-              console.log("Units = " + this.units)
-              return value + this.units; 
+            if (this.units) {
+              console.log("Units = " + this.units);
+              return value + this.units;
             } else {
               return value;
             }
-          }
-        }
-      }
-    }
+          },
+        },
+      },
+    };
 
-    if(this.timeSeries && this.timeData){
-      this.chartConfig.data.x = 'x';
-      this.chartConfig.axis.x.type = 'timeseries';
+    if (this.timeSeries && this.timeData) {
+      this.chartConfig.data.x = "x";
+      this.chartConfig.axis.x.type = "timeseries";
       this.chartConfig.axis.x.tick.format = this.timeFormat;
       let xAxis = this.makeTimeAxis(this.timeData);
       this._data.unshift(xAxis);
@@ -190,5 +202,4 @@ export class ViewChartLineComponent extends ViewChartComponent implements OnInit
     //DEBUG: console.log(this._data);
     return this.chartConfig;
   }
-
 }

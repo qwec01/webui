@@ -2,22 +2,22 @@ import { Validators } from "@angular/forms";
 import { T } from "app/translate-marker";
 
 export const helptext_sharing_afp = {
-  fieldset_general: T('General Options'),
-  fieldset_permissions: ('Permissions'),
-  fieldset_allow: T('Allow'),
-  fieldset_deny: T('Deny'),
-  fieldset_ro: T('Read Only'),
-  fieldset_rw: T('Read/Write'),
-  fieldset_hostsallow: T('Allow Hosts'),
-  fieldset_hostsdeny: T('Deny Hosts'),
-  fieldset_other: T('Other Options'),
+  fieldset_general: T("General Options"),
+  fieldset_permissions: "Permissions",
+  fieldset_allow: T("Allow"),
+  fieldset_deny: T("Deny"),
+  fieldset_ro: T("Read Only"),
+  fieldset_rw: T("Read/Write"),
+  fieldset_hostsallow: T("Allow Hosts"),
+  fieldset_hostsdeny: T("Deny Hosts"),
+  fieldset_other: T("Other Options"),
 
-  placeholder_user_or_group: T('User or Group'),
+  placeholder_user_or_group: T("User or Group"),
 
-  column_name: T('Name'),
-  column_path: T('Path'),
-  column_comment: T('Description'),
-  column_enabled: T('Enabled'),
+  column_name: T("Name"),
+  column_path: T("Path"),
+  column_comment: T("Description"),
+  column_enabled: T("Enabled"),
 
   placeholder_path: T("Path"),
   tooltip_path: T(
@@ -89,9 +89,11 @@ export const helptext_sharing_afp = {
  share."
   ),
 
-  placeholder_enabled: T('Enabled'),
-  tooltip_enabled: T('Enable this AFP share. Unset to disable this AFP share \
- without deleting it.'),
+  placeholder_enabled: T("Enabled"),
+  tooltip_enabled: T(
+    "Enable this AFP share. Unset to disable this AFP share \
+ without deleting it."
+  ),
 
   placeholder_nodev: T("Zero Device Numbers"),
   tooltip_nodev: T(
@@ -134,7 +136,8 @@ export const helptext_sharing_afp = {
  (anyone can read, write, and execute)."
   ),
 
-  tooltip_hostsallow: T( "Allow hostnames or IP addresses to connect to the \
+  tooltip_hostsallow: T(
+    "Allow hostnames or IP addresses to connect to the \
  share. Click <i>ADD</i> to add multiple entries. <br><br> \
  If neither *Allow Hosts* or *Deny Hosts* contains \
  an entry, then AFP share access is allowed for any host. <br><br> \
@@ -145,9 +148,11 @@ export const helptext_sharing_afp = {
  If there is both a *Allow Hosts* and *Deny Hosts* list, then allow all hosts \
  that are on the *Allow Hosts* list. <br><br> \
  If there is a host not on the *Allow Hosts* and not on the *Deny Hosts* list, \
- then allow it."),
+ then allow it."
+  ),
 
-  tooltip_hostsdeny: T("Deny hostnames or IP addresses access to the share. \
+  tooltip_hostsdeny: T(
+    "Deny hostnames or IP addresses access to the share. \
   Click <i>ADD</i> to add multiple entries. <br><br> \
   If neither *Allow Hosts* or *Deny Hosts* contains \
   an entry, then AFP share access is allowed for any host. <br><br> \
@@ -158,7 +163,8 @@ export const helptext_sharing_afp = {
   If there is both a *Allow Hosts* and *Deny Hosts* list, then allow all hosts \
   that are on the *Allow Hosts* list. <br><br> \
   If there is a host not on the *Allow Hosts* and not on the *Deny Hosts* list, \
-  then allow it."),
+  then allow it."
+  ),
 
   tooltip_auxparams: T(
     'Additional\
@@ -168,14 +174,15 @@ export const helptext_sharing_afp = {
   ),
 
   smb_dialog: {
-    title: T('Recommendation'),
-    message: T('Beginning in 2013, Apple began using the SMB sharing protocol as the default option \
+    title: T("Recommendation"),
+    message: T(
+      "Beginning in 2013, Apple began using the SMB sharing protocol as the default option \
    for file sharing and ceased development of the AFP sharing protocol. It is recommended to use \
-   SMB sharing over AFP unless files will be shared with legacy Apple products.'),
-    button: T('Continue with AFP Setup'),
-    custBtn: T('Create an SMB Share')
+   SMB sharing over AFP unless files will be shared with legacy Apple products."
+    ),
+    button: T("Continue with AFP Setup"),
+    custBtn: T("Create an SMB Share"),
   },
 
-  formTitle: T('AFP (Apple File Protocol)')
-
+  formTitle: T("AFP (Apple File Protocol)"),
 };

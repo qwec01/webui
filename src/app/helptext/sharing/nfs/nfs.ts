@@ -8,11 +8,11 @@ export const helptext_sharing_nfs = {
   column_enabled: T("Enabled"),
 
   // NFSFormComponent
-  fieldset_paths: T('Paths'),
-  fieldset_general: T('General Options'),
-  fieldset_access: T('Access'),
-  fieldset_networks: T('Networks'),
-  fieldset_hosts: T('Hosts'),
+  fieldset_paths: T("Paths"),
+  fieldset_general: T("General Options"),
+  fieldset_access: T("Access"),
+  fieldset_networks: T("Networks"),
+  fieldset_hosts: T("Hosts"),
 
   placeholder_path: T("Path"),
   tooltip_path: T(
@@ -23,14 +23,18 @@ export const helptext_sharing_nfs = {
   validators_path: [Validators.required],
 
   placeholder_alias: T("Alias"),
-  tooltip_alias: T('To define a custom shortcut for the <i>Path</i>, \
+  tooltip_alias: T(
+    "To define a custom shortcut for the <i>Path</i>, \
  enter a memorable name. Example: <i>/nfsshare</i>. NFS clients \
  can connect using the <i>Alias</i> instead of the <i>Path</i> \
  when the share is active. A share with multiple paths requires \
  either not using aliases or defining an alias for each path in \
- the share.'),
-  error_alias: T('The <i>Alias</i> field can either be left empty or \
- have an alias defined for each path in the share.'),
+ the share."
+  ),
+  error_alias: T(
+    "The <i>Alias</i> field can either be left empty or \
+ have an alias defined for each path in the share."
+  ),
 
   placeholder_delete: T("Delete Path"),
   tooltip_delete: T("Delete this path."),
@@ -58,9 +62,11 @@ export const helptext_sharing_nfs = {
  target="_blank">exports(5)</a> for examples.'
   ),
 
-  placeholder_enabled: T('Enabled'),
-  tooltip_enabled: T('Enable this NFS share. Unset to disable this NFS share \
- without deleting it.'),
+  placeholder_enabled: T("Enabled"),
+  tooltip_enabled: T(
+    "Enable this NFS share. Unset to disable this NFS share \
+ without deleting it."
+  ),
 
   placeholder_network: T("Authorized Networks"),
   tooltip_network: T(
@@ -105,5 +111,4 @@ export const helptext_sharing_nfs = {
 
   actions_add_path: T("Add Additional Path"),
   actions_remove_path: T("Remove Additional Path"),
-
 };

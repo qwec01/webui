@@ -1,1 +1,1 @@
-export { DiskFormComponent } from './disk-form.component';
+export { DiskFormComponent } from "./disk-form.component";

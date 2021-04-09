@@ -1,4 +1,4 @@
-export interface Control{
-  name:string;
-  value?:any;
+export interface Control {
+  name: string;
+  value?: any;
 }

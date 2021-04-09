@@ -1,15 +1,18 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormArray, FormBuilder } from '@angular/forms';
-import * as _ from 'lodash';
+import { Component, OnInit } from "@angular/core";
+import { FormGroup, FormArray, FormBuilder } from "@angular/forms";
+import * as _ from "lodash";
 
-import { FieldConfig } from '../../models/field-config.interface';
-import { Field } from '../../models/field.interface';
-import { EntityFormService } from '../../services/entity-form.service';
+import { FieldConfig } from "../../models/field-config.interface";
+import { Field } from "../../models/field.interface";
+import { EntityFormService } from "../../services/entity-form.service";
 
 @Component({
-  selector: 'entity-form-list',
-  templateUrl: './form-list.component.html',
-  styleUrls: ['./form-list.component.css', '../dynamic-field/dynamic-field.css'],
+  selector: "entity-form-list",
+  templateUrl: "./form-list.component.html",
+  styleUrls: [
+    "./form-list.component.css",
+    "../dynamic-field/dynamic-field.css",
+  ],
 })
 export class FormListComponent implements Field, OnInit {
   config: FieldConfig;
@@ -18,7 +21,10 @@ export class FormListComponent implements Field, OnInit {
 
   public listsFromArray: FormArray;
 
-  constructor(private entityFormService: EntityFormService, private formBuilder: FormBuilder) {}
+  constructor(
+    private entityFormService: EntityFormService,
+    private formBuilder: FormBuilder
+  ) {}
 
   ngOnInit() {
     setTimeout(() => {
@@ -31,7 +37,9 @@ export class FormListComponent implements Field, OnInit {
 
   add() {
     const templateListField = _.cloneDeep(this.config.templateListField);
-    this.listsFromArray.push(this.entityFormService.createFormGroup(templateListField));
+    this.listsFromArray.push(
+      this.entityFormService.createFormGroup(templateListField)
+    );
     this.config.listFields.push(templateListField);
     if (this.config.customEventMethod) {
       this.config.customEventMethod(this);
