@@ -46,9 +46,7 @@
       </p>
     </div>
     <div class="input-container">
-      <span *ngIf="config.searchable" class="searchable"
-        ><mat-icon>search</mat-icon></span
-      >
+      <span *ngIf="config.searchable" class="searchable"><mat-icon>search</mat-icon></span>
       <input
         [ngStyle]="{
           'padding-left': config.searchable ? '2rem' : '',
@@ -90,33 +88,20 @@
       ix-auto-type="button"
       ix-auto-identifier="{{ config.name }}_toggle-pw"
     >
-      <i class="material-icons" matTooltip="Hide" *ngIf="showPassword"
-        >visibility</i
-      >
-      <i class="material-icons" matTooltip="Show" *ngIf="!showPassword"
-        >visibility_off</i
-      >
+      <i class="material-icons" matTooltip="Hide" *ngIf="showPassword">visibility</i>
+      <i class="material-icons" matTooltip="Show" *ngIf="!showPassword">visibility_off</i>
     </button>
   </div>
   <ng-template #elseBlock>
-    <span [style.margin-right.px]="10">{{
-      config.placeholder | translate
-    }}</span>
+    <span [style.margin-right.px]="10">{{ config.placeholder | translate }}</span>
     <input type="file" id="fileInput" (change)="changeListener($event)" />
   </ng-template>
   <div class="margin-for-error">
-    <form-errors
-      [control]="group.controls[config.name]"
-      [config]="config"
-    ></form-errors>
-    <mat-error *ngIf="config['hasErrors']"
-      ><div [innerHTML]="config['errors']"></div
-    ></mat-error>
+    <form-errors [control]="group.controls[config.name]" [config]="config"></form-errors>
+    <mat-error *ngIf="config['hasErrors']"><div [innerHTML]="config['errors']"></div></mat-error>
     <mat-error *ngIf="config.warnings"
       ><div [innerHTML]="config.warnings | translate"></div
     ></mat-error>
-    <mat-hint *ngIf="config.hint"
-      ><div [innerHTML]="config.hint | translate"></div
-    ></mat-hint>
+    <mat-hint *ngIf="config.hint"><div [innerHTML]="config.hint | translate"></div></mat-hint>
   </div>
 </div>

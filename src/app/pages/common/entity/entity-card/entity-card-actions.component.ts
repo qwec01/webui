@@ -34,9 +34,10 @@ export class EntityCardActionsComponent implements OnInit {
     let removeIds = [];
     for (let i = 0; i < this.actions.length; i++) {
       if (this.entity.conf.isActionVisible) {
-        this.actions[i].visible = this.entity.conf.isActionVisible.bind(
-          this.entity.conf
-        )(this.actions[i].id, this.row);
+        this.actions[i].visible = this.entity.conf.isActionVisible.bind(this.entity.conf)(
+          this.actions[i].id,
+          this.row
+        );
       } else {
         this.actions[i].visible = true;
       }

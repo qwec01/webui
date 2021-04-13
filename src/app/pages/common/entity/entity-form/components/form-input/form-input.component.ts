@@ -10,10 +10,7 @@ import globalHelptext from "../../../../../../helptext/global-helptext";
 @Component({
   selector: "form-input",
   templateUrl: "./form-input.component.html",
-  styleUrls: [
-    "./form-input.component.scss",
-    "../dynamic-field/dynamic-field.css",
-  ],
+  styleUrls: ["./form-input.component.scss", "../dynamic-field/dynamic-field.css"],
 })
 export class FormInputComponent implements Field {
   @ViewChild("fileInput", { static: true }) fileInput;
@@ -24,10 +21,7 @@ export class FormInputComponent implements Field {
   public showPassword = false;
   private hasPasteEvent = false;
 
-  constructor(
-    public translate: TranslateService,
-    private formService: EntityFormService
-  ) {}
+  constructor(public translate: TranslateService, private formService: EntityFormService) {}
 
   changeListener($event): void {
     this.readFile($event.target);
@@ -63,8 +57,7 @@ export class FormInputComponent implements Field {
   }
 
   togglePW() {
-    this.config.inputType =
-      this.config.inputType === "password" ? "" : "password";
+    this.config.inputType = this.config.inputType === "password" ? "" : "password";
     this.showPassword = !this.showPassword;
   }
 
@@ -91,16 +84,14 @@ export class FormInputComponent implements Field {
       if (this.config.min !== undefined && numberValue < this.config.min) {
         this.group.controls[this.config.name].setErrors({
           manualValidateError: true,
-          manualValidateErrorMsg:
-            globalHelptext.invalidInputValueWithMin + this.config.min,
+          manualValidateErrorMsg: globalHelptext.invalidInputValueWithMin + this.config.min,
         });
       }
 
       if (this.config.max !== undefined && numberValue > this.config.max) {
         this.group.controls[this.config.name].setErrors({
           manualValidateError: true,
-          manualValidateErrorMsg:
-            globalHelptext.invalidInputValueWithMax + this.config.max,
+          manualValidateErrorMsg: globalHelptext.invalidInputValueWithMax + this.config.max,
         });
       }
     }

@@ -16,8 +16,5 @@ export class FormLabelComponent implements Field {
   group: FormGroup;
   fieldShow: string;
 
-  constructor(
-    public translate: TranslateService,
-    private formService: EntityFormService
-  ) {}
+  constructor(public translate: TranslateService, private formService: EntityFormService) {}
 }

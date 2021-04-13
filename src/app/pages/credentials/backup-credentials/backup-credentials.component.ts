@@ -19,11 +19,7 @@ import { T } from "../../../translate-marker";
 @Component({
   selector: "app-backup-credentials",
   templateUrl: "./backup-credentials.component.html",
-  providers: [
-    KeychainCredentialService,
-    ReplicationService,
-    CloudCredentialService,
-  ],
+  providers: [KeychainCredentialService, ReplicationService, CloudCredentialService],
 })
 export class BackupCredentialsComponent implements OnInit, OnDestroy {
   cards: any;
@@ -76,17 +72,10 @@ export class BackupCredentialsComponent implements OnInit, OnDestroy {
           hideHeader: false,
           parent: this,
           add: function (row) {
-            this.parent.modalService.open(
-              "slide-in-form",
-              this.parent.cloudCredentials
-            );
+            this.parent.modalService.open("slide-in-form", this.parent.cloudCredentials);
           },
           edit: function (row) {
-            this.parent.modalService.open(
-              "slide-in-form",
-              this.parent.cloudCredentials,
-              row.id
-            );
+            this.parent.modalService.open("slide-in-form", this.parent.cloudCredentials, row.id);
           },
         },
       },
@@ -103,17 +92,10 @@ export class BackupCredentialsComponent implements OnInit, OnDestroy {
           hideHeader: true,
           parent: this,
           add: function (row) {
-            this.parent.modalService.open(
-              "slide-in-form",
-              this.parent.sshConnections
-            );
+            this.parent.modalService.open("slide-in-form", this.parent.sshConnections);
           },
           edit: function (row) {
-            this.parent.modalService.open(
-              "slide-in-form",
-              this.parent.sshConnections,
-              row.id
-            );
+            this.parent.modalService.open("slide-in-form", this.parent.sshConnections, row.id);
           },
         },
       },
@@ -131,17 +113,10 @@ export class BackupCredentialsComponent implements OnInit, OnDestroy {
           hideHeader: true,
           parent: this,
           add: function (row) {
-            this.parent.modalService.open(
-              "slide-in-form",
-              this.parent.sshKeypairs
-            );
+            this.parent.modalService.open("slide-in-form", this.parent.sshKeypairs);
           },
           edit: function (row) {
-            this.parent.modalService.open(
-              "slide-in-form",
-              this.parent.sshKeypairs,
-              row.id
-            );
+            this.parent.modalService.open("slide-in-form", this.parent.sshKeypairs, row.id);
           },
         },
       },

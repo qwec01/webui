@@ -39,17 +39,14 @@ export class GlobalconfigurationComponent {
         {
           type: "chip",
           name: "isns_servers",
-          placeholder:
-            helptext_sharing_iscsi.globalconf_placeholder_isns_servers,
+          placeholder: helptext_sharing_iscsi.globalconf_placeholder_isns_servers,
           tooltip: helptext_sharing_iscsi.globalconf_tooltip_isns_servers,
         },
         {
           type: "input",
           name: "pool_avail_threshold",
-          placeholder:
-            helptext_sharing_iscsi.globalconf_placeholder_pool_avail_threshold,
-          tooltip:
-            helptext_sharing_iscsi.globalconf_tooltip_pool_avail_threshold,
+          placeholder: helptext_sharing_iscsi.globalconf_placeholder_pool_avail_threshold,
+          tooltip: helptext_sharing_iscsi.globalconf_tooltip_pool_avail_threshold,
           inputType: "number",
         },
         {
@@ -75,14 +72,12 @@ export class GlobalconfigurationComponent {
 
   afterInit(entityForm) {
     entityForm.submitFunction = entityForm.editCall;
-    this.getProdType = this.sysGeneralService.getProductType.subscribe(
-      (res) => {
-        if (res === "ENTERPRISE") {
-          entityForm.setDisabled("alua", false, false);
-        }
-        this.getProdType.unsubscribe();
+    this.getProdType = this.sysGeneralService.getProductType.subscribe((res) => {
+      if (res === "ENTERPRISE") {
+        entityForm.setDisabled("alua", false, false);
       }
-    );
+      this.getProdType.unsubscribe();
+    });
   }
 
   beforeSubmit(value) {
@@ -96,47 +91,32 @@ export class GlobalconfigurationComponent {
       const service = _.find(service_res, { service: "iscsitarget" });
       if (!service["enable"]) {
         this.dialogService
-          .confirm(
-            shared.dialog_title,
-            shared.dialog_message,
-            true,
-            shared.dialog_button
-          )
+          .confirm(shared.dialog_title, shared.dialog_message, true, shared.dialog_button)
           .subscribe((dialogRes) => {
             if (dialogRes) {
               this.loader.open();
-              this.ws
-                .call("service.update", [service["id"], { enable: true }])
-                .subscribe(
-                  (updateRes) => {
-                    this.ws.call("service.start", [service.service]).subscribe(
-                      (startRes) => {
-                        this.loader.close();
-                        this.dialogService.Info(
-                          T("iSCSI") + shared.dialog_started_title,
-                          T("The iSCSI") + shared.dialog_started_message,
-                          "250px"
-                        );
-                      },
-                      (err) => {
-                        this.loader.close();
-                        this.dialogService.errorReport(
-                          err.error,
-                          err.reason,
-                          err.trace.formatted
-                        );
-                      }
-                    );
-                  },
-                  (err) => {
-                    this.loader.close();
-                    this.dialogService.errorReport(
-                      err.error,
-                      err.reason,
-                      err.trace.formatted
-                    );
-                  }
-                );
+              this.ws.call("service.update", [service["id"], { enable: true }]).subscribe(
+                (updateRes) => {
+                  this.ws.call("service.start", [service.service]).subscribe(
+                    (startRes) => {
+                      this.loader.close();
+                      this.dialogService.Info(
+                        T("iSCSI") + shared.dialog_started_title,
+                        T("The iSCSI") + shared.dialog_started_message,
+                        "250px"
+                      );
+                    },
+                    (err) => {
+                      this.loader.close();
+                      this.dialogService.errorReport(err.error, err.reason, err.trace.formatted);
+                    }
+                  );
+                },
+                (err) => {
+                  this.loader.close();
+                  this.dialogService.errorReport(err.error, err.reason, err.trace.formatted);
+                }
+              );
             }
           });
       }

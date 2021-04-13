@@ -97,49 +97,42 @@ export class StorageListComponent {
   }
 
   doDelete(item) {
-    this.ws
-      .call("jail.query", [[["host_hostuuid", "=", this.jailId]]])
-      .subscribe((res) => {
-        if (res[0] && res[0].state == "up") {
-          this.dialog.Info(
-            T("Delete Mountpoint"),
-            "<i>" +
-              this.jailId +
-              T("</i> cannot be running when deleting a mountpoint."),
-            "500px",
-            "info",
-            true
-          );
-        } else {
-          let deleteMsg = "Delete Mount Point <b>" + item["source"] + "</b>?";
-          this.translate.get(deleteMsg).subscribe((res) => {
-            deleteMsg = res;
+    this.ws.call("jail.query", [[["host_hostuuid", "=", this.jailId]]]).subscribe((res) => {
+      if (res[0] && res[0].state == "up") {
+        this.dialog.Info(
+          T("Delete Mountpoint"),
+          "<i>" + this.jailId + T("</i> cannot be running when deleting a mountpoint."),
+          "500px",
+          "info",
+          true
+        );
+      } else {
+        let deleteMsg = "Delete Mount Point <b>" + item["source"] + "</b>?";
+        this.translate.get(deleteMsg).subscribe((res) => {
+          deleteMsg = res;
+        });
+        this.dialog
+          .confirm(T("Delete"), deleteMsg, false, T("Delete Mount Point"))
+          .subscribe((res) => {
+            if (res) {
+              this.entityList.loader.open();
+              this.entityList.loaderOpen = true;
+              let data = {};
+              this.busy = this.ws
+                .call("jail.fstab", [this.jailId, { action: "REMOVE", index: item.id }])
+                .subscribe(
+                  (res) => {
+                    this.entityList.getData();
+                  },
+                  (res) => {
+                    new EntityUtils().handleWSError(this, res, this.dialog);
+                    this.entityList.loader.close();
+                  }
+                );
+            }
           });
-          this.dialog
-            .confirm(T("Delete"), deleteMsg, false, T("Delete Mount Point"))
-            .subscribe((res) => {
-              if (res) {
-                this.entityList.loader.open();
-                this.entityList.loaderOpen = true;
-                let data = {};
-                this.busy = this.ws
-                  .call("jail.fstab", [
-                    this.jailId,
-                    { action: "REMOVE", index: item.id },
-                  ])
-                  .subscribe(
-                    (res) => {
-                      this.entityList.getData();
-                    },
-                    (res) => {
-                      new EntityUtils().handleWSError(this, res, this.dialog);
-                      this.entityList.loader.close();
-                    }
-                  );
-              }
-            });
-        }
-      });
+      }
+    });
   }
 
   getAddActions() {
@@ -154,23 +147,19 @@ export class StorageListComponent {
   }
 
   doAdd() {
-    this.ws
-      .call("jail.query", [[["host_hostuuid", "=", this.jailId]]])
-      .subscribe((res) => {
-        if (res[0] && res[0].state == "up") {
-          this.dialog.Info(
-            T("Add Mountpoint"),
-            "<i>" +
-              this.jailId +
-              "</i> cannot be running when adding a mountpoint.",
-            "500px",
-            "info",
-            true
-          );
-        } else {
-          this.router.navigate(new Array("/").concat(this.route_add));
-        }
-      });
+    this.ws.call("jail.query", [[["host_hostuuid", "=", this.jailId]]]).subscribe((res) => {
+      if (res[0] && res[0].state == "up") {
+        this.dialog.Info(
+          T("Add Mountpoint"),
+          "<i>" + this.jailId + "</i> cannot be running when adding a mountpoint.",
+          "500px",
+          "info",
+          true
+        );
+      } else {
+        this.router.navigate(new Array("/").concat(this.route_add));
+      }
+    });
   }
 
   getActions(row) {
@@ -198,15 +187,7 @@ export class StorageListComponent {
         onClick: (rowinner) => {
           const datasetId = rowName;
           this.router.navigate(
-            ["/"].concat([
-              "storage",
-              "pools",
-              "id",
-              poolName,
-              "dataset",
-              "acl",
-              datasetId,
-            ])
+            ["/"].concat(["storage", "pools", "id", poolName, "dataset", "acl", datasetId])
           );
         },
       },

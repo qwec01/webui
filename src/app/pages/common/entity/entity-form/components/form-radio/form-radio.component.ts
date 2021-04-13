@@ -9,10 +9,7 @@ import { TooltipComponent } from "../tooltip/tooltip.component";
 
 @Component({
   selector: "form-radio",
-  styleUrls: [
-    "form-radio.component.scss",
-    "../dynamic-field/dynamic-field.css",
-  ],
+  styleUrls: ["form-radio.component.scss", "../dynamic-field/dynamic-field.css"],
   templateUrl: "./form-radio.component.html",
 })
 export class FormRadioComponent implements Field {
@@ -24,9 +21,9 @@ export class FormRadioComponent implements Field {
 
   constructor(public translate: TranslateService) {}
   ngOnInit() {
-    this.valueChangesSubscription = this.group.controls[
-      this.config.name
-    ].valueChanges.subscribe((res) => (this.radioValue = res));
+    this.valueChangesSubscription = this.group.controls[this.config.name].valueChanges.subscribe(
+      (res) => (this.radioValue = res)
+    );
   }
 
   ngOnDestroy() {

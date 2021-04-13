@@ -138,9 +138,7 @@ export default {
  on the other TrueNAS controller. The alias can be an IPv4 or IPv6 address."
   ),
 
-  failover_virtual_alias_address_placeholder: T(
-    "Virtual IP Address (Failover Address)"
-  ),
+  failover_virtual_alias_address_placeholder: T("Virtual IP Address (Failover Address)"),
   failover_virtual_alias_address_tooltip: T(
     "Define an alias that can \
  connect to the interface on either TrueNAS controller. This address \
@@ -162,9 +160,7 @@ export default {
   vlan_pint_validation: [Validators.required],
 
   vlan_tag_placeholder: T("Vlan Tag"),
-  vlan_tag_tooltip: T(
-    "Enter the numeric tag configured in the switched network."
-  ),
+  vlan_tag_tooltip: T("Enter the numeric tag configured in the switched network."),
   vlan_tag_validation: [rangeValidator(1, 4095), Validators.required],
 
   vlan_pcp_placeholder: T("Priority Code Point"),

@@ -10,6 +10,4 @@ export const routes: Routes = [
     pathMatch: "full",
   },
 ];
-export const routing: ModuleWithProviders<RouterModule> = RouterModule.forChild(
-  routes
-);
+export const routing: ModuleWithProviders<RouterModule> = RouterModule.forChild(routes);

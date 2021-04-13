@@ -14,16 +14,13 @@ export class MINIXLPLUS extends Chassis {
     this.front.container = new PIXI.Container();
     this.front.chassisPath = "assets/images/hardware/mini_xl/mini_xl_768w.png";
 
-    this.front.driveTrayBackgroundPath =
-      "assets/images/hardware/mini_xl/mini_hdd_drivetray_bg.png";
-    this.front.driveTrayHandlePath =
-      "assets/images/hardware/mini_xl/mini_hdd_drivetray_handle.png";
+    this.front.driveTrayBackgroundPath = "assets/images/hardware/mini_xl/mini_hdd_drivetray_bg.png";
+    this.front.driveTrayHandlePath = "assets/images/hardware/mini_xl/mini_hdd_drivetray_handle.png";
 
     this.front.altDriveTraySlots = [1];
     this.front.altDriveTrayBackgroundPath =
       "assets/images/hardware/mini_xl/mini_ssd_drivetray_bg.png";
-    this.front.altDriveTrayHandlePath =
-      "assets/images/hardware/mini_xl/mini_ssd_drivetray_bg.png";
+    this.front.altDriveTrayHandlePath = "assets/images/hardware/mini_xl/mini_ssd_drivetray_bg.png";
 
     this.front.vertical = false;
     this.front.disabledOpacity = 0.5;

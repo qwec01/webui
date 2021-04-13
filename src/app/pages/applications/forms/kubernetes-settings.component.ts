@@ -88,8 +88,7 @@ export class KubernetesSettingsComponent {
         {
           type: "checkbox",
           name: "enable_container_image_update",
-          placeholder:
-            helptext.kubForm.enable_container_image_update.placeholder,
+          placeholder: helptext.kubForm.enable_container_image_update.placeholder,
           tooltip: helptext.kubForm.enable_container_image_update.tooltip,
           value: true,
         },
@@ -134,9 +133,9 @@ export class KubernetesSettingsComponent {
   afterInit(entityEdit: any) {
     this.appService.getContainerConfig().subscribe((res) => {
       if (res) {
-        this.entityEdit.formGroup.controls[
-          "enable_container_image_update"
-        ].setValue(res.enable_image_updates);
+        this.entityEdit.formGroup.controls["enable_container_image_update"].setValue(
+          res.enable_image_updates
+        );
       }
     });
   }
@@ -159,9 +158,7 @@ export class KubernetesSettingsComponent {
     const promises = [];
     promises.push(this.ws.job(this.editCall, [data]).toPromise());
     promises.push(
-      this.appService
-        .updateContainerConfig(this.newEnableContainerImageUpdate)
-        .toPromise()
+      this.appService.updateContainerConfig(this.newEnableContainerImageUpdate).toPromise()
     );
 
     Promise.all(promises).then(

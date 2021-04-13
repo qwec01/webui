@@ -152,8 +152,7 @@ const tableUtils = {
 function processTableCommands(list) {
   let output;
   list.forEach((item, index) => {
-    let input =
-      item.input == "--pipe" || item.input == "|" ? output : item.input;
+    let input = item.input == "--pipe" || item.input == "|" ? output : item.input;
     output = item.options
       ? tableUtils[item.command](input, item.options)
       : tableUtils[item.command](input);

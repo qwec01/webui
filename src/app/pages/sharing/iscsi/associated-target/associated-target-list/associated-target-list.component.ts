@@ -8,28 +8,16 @@ import { EntityUtils } from "../../../../common/entity/utils";
 
 @Component({
   selector: "app-iscsi-associated-target-list",
-  template: `
-    <entity-table [conf]="this" [title]="tableTitle"></entity-table>
-  `,
+  template: ` <entity-table [conf]="this" [title]="tableTitle"></entity-table> `,
   providers: [IscsiService],
 })
 export class AssociatedTargetListComponent {
   public tableTitle = "Associated Targets";
   protected queryCall = "iscsi.targetextent.query";
   protected wsDelete = "iscsi.targetextent.delete";
-  protected route_add: string[] = [
-    "sharing",
-    "iscsi",
-    "associatedtarget",
-    "add",
-  ];
+  protected route_add: string[] = ["sharing", "iscsi", "associatedtarget", "add"];
   protected route_add_tooltip: string = "Add Target/Extent";
-  protected route_edit: string[] = [
-    "sharing",
-    "iscsi",
-    "associatedtarget",
-    "edit",
-  ];
+  protected route_edit: string[] = ["sharing", "iscsi", "associatedtarget", "edit"];
 
   public columns: Array<any> = [
     {
@@ -103,8 +91,7 @@ export class AssociatedTargetListComponent {
             for (let i = 0; i < res.length; i++) {
               if (res[i].target.split(":")[1] == rowinner.target) {
                 warningMsg =
-                  '<font color="red">' +
-                  T("Warning: iSCSI Target is already in use.</font><br>");
+                  '<font color="red">' + T("Warning: iSCSI Target is already in use.</font><br>");
               }
             }
             deleteMsg = warningMsg + deleteMsg;
@@ -115,17 +102,15 @@ export class AssociatedTargetListComponent {
                 if (dialres) {
                   this.entityList.loader.open();
                   this.entityList.loaderOpen = true;
-                  this.entityList.ws
-                    .call(this.wsDelete, [rowinner.id, true])
-                    .subscribe(
-                      (resinner) => {
-                        this.entityList.getData();
-                      },
-                      (resinner) => {
-                        new EntityUtils().handleError(this, resinner);
-                        this.entityList.loader.close();
-                      }
-                    );
+                  this.entityList.ws.call(this.wsDelete, [rowinner.id, true]).subscribe(
+                    (resinner) => {
+                      this.entityList.getData();
+                    },
+                    (resinner) => {
+                      new EntityUtils().handleError(this, resinner);
+                      this.entityList.loader.close();
+                    }
+                  );
                 }
               });
           });

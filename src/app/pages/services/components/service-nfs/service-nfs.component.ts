@@ -4,11 +4,7 @@ import { EntityFormComponent } from "app/pages/common/entity/entity-form";
 import { FieldSet } from "app/pages/common/entity/entity-form/models/fieldset.interface";
 import { map } from "rxjs/operators";
 import helptext from "../../../../helptext/services/components/service-nfs";
-import {
-  RestService,
-  WebSocketService,
-  DialogService,
-} from "../../../../services/";
+import { RestService, WebSocketService, DialogService } from "../../../../services/";
 import { FieldConfig } from "../../../common/entity/entity-form/models/field-config.interface";
 import { rangeValidator } from "app/pages/common/entity/entity-form/validators/range-validation";
 
@@ -237,13 +233,11 @@ export class ServiceNFSComponent {
         .config.find((config) => config.name === "bindip").options = ipChoices;
     });
 
-    entityForm.formGroup.controls["v4_v3owner"].valueChanges.subscribe(
-      (value) => {
-        if (value) {
-          entityForm.formGroup.controls["userd_manage_gids"].setValue(false);
-        }
+    entityForm.formGroup.controls["v4_v3owner"].valueChanges.subscribe((value) => {
+      if (value) {
+        entityForm.formGroup.controls["userd_manage_gids"].setValue(false);
       }
-    );
+    });
 
     entityForm.formGroup.controls["v4_krb"].valueChanges.subscribe((value) => {
       value ? (this.v4krbValue = true) : (this.v4krbValue = false);
@@ -252,11 +246,9 @@ export class ServiceNFSComponent {
     this.ws.call("kerberos.keytab.has_nfs_principal").subscribe((res) => {
       this.hasNfsStatus = res;
       if (!this.hasNfsStatus) {
-        this.ws
-          .call("directoryservices.get_state")
-          .subscribe(({ activedirectory }) => {
-            this.adHealth = activedirectory;
-          });
+        this.ws.call("directoryservices.get_state").subscribe(({ activedirectory }) => {
+          this.adHealth = activedirectory;
+        });
       }
     });
   }
@@ -331,10 +323,7 @@ export class ServiceNFSComponent {
                     () => {
                       self.loader.close();
                       self.dialogRef.close(true);
-                      that.dialog.Info(
-                        helptext.addSPN.success,
-                        helptext.addSPN.success_msg
-                      );
+                      that.dialog.Info(helptext.addSPN.success, helptext.addSPN.success_msg);
                     },
                     (err) => {
                       self.loader.close();

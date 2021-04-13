@@ -2,9 +2,7 @@
 
 var program = require("commander");
 
-program
-  .option("-i, --ip <ip_address>", "IP address of your server")
-  .parse(process.argv);
+program.option("-i, --ip <ip_address>", "IP address of your server").parse(process.argv);
 
 var proxy_config_json = "./proxy.config.json";
 var environment_ts = "./src/environments/environment.ts";

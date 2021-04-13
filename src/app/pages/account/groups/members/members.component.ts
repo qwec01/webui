@@ -31,9 +31,7 @@ export class MembersComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.activatedRoute.params.subscribe(
-      (res: Params) => (this.group.id = res.pk)
-    );
+    this.activatedRoute.params.subscribe((res: Params) => (this.group.id = res.pk));
     this.getGroupDetails();
   }
 

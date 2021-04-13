@@ -1,10 +1,4 @@
-import {
-  Component,
-  Input,
-  ViewChild,
-  ElementRef,
-  ViewEncapsulation,
-} from "@angular/core";
+import { Component, Input, ViewChild, ElementRef, ViewEncapsulation } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { TranslateService } from "@ngx-translate/core";
 import { iXAbstractObject } from "app/core/classes/ix-abstractobject";
@@ -74,9 +68,7 @@ export class ToolbarInputComponent extends iXAbstractObject {
   }
 
   onChange() {
-    this.filterValue = this.filter.nativeElement.value
-      ? this.filter.nativeElement.value
-      : "";
+    this.filterValue = this.filter.nativeElement.value ? this.filter.nativeElement.value : "";
     this.send();
   }
 

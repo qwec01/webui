@@ -172,9 +172,5 @@ export class SystemProcessesComponent implements OnInit, OnDestroy {
     this.resizeTerm();
   }
 
-  constructor(
-    private ws: WebSocketService,
-    public ss: ShellService,
-    private dialog: MatDialog
-  ) {}
+  constructor(private ws: WebSocketService, public ss: ShellService, private dialog: MatDialog) {}
 }

@@ -149,11 +149,9 @@ export class GuiFormComponent implements OnDestroy {
     private modalService: ModalService,
     private adminLayout: AdminLayoutComponent
   ) {
-    this.getDataFromDash = this.sysGeneralService.sendConfigData$.subscribe(
-      (res) => {
-        this.configData = res;
-      }
-    );
+    this.getDataFromDash = this.sysGeneralService.sendConfigData$.subscribe((res) => {
+      this.configData = res;
+    });
   }
 
   IPValidator(name: string, wildcard: string) {
@@ -164,9 +162,7 @@ export class GuiFormComponent implements OnDestroy {
         .config.find((c) => c.name === name);
 
       const errors =
-        control.value &&
-        control.value.length > 1 &&
-        _.indexOf(control.value, wildcard) !== -1
+        control.value && control.value.length > 1 && _.indexOf(control.value, wildcard) !== -1
           ? { validIPs: true }
           : null;
 
@@ -186,13 +182,8 @@ export class GuiFormComponent implements OnDestroy {
     this.http_port = this.configData["ui_port"];
     this.https_port = this.configData["ui_httpsport"];
     this.redirect = this.configData["ui_httpsredirect"];
-    if (
-      this.configData["ui_certificate"] &&
-      this.configData["ui_certificate"].id
-    ) {
-      this.configData["ui_certificate"] = this.configData[
-        "ui_certificate"
-      ].id.toString();
+    if (this.configData["ui_certificate"] && this.configData["ui_certificate"].id) {
+      this.configData["ui_certificate"] = this.configData["ui_certificate"].id.toString();
       this.guicertificate = this.configData["ui_certificate"];
     }
     this.addresses = this.configData["ui_address"];
@@ -218,70 +209,48 @@ export class GuiFormComponent implements OnDestroy {
       .find((set) => set.name === helptext.stg_fieldset_gui)
       .config.find((config) => config.name === "ui_certificate");
 
-    entityEdit.ws
-      .call("system.general.ui_certificate_choices")
-      .subscribe((res) => {
-        this.ui_certificate.options = [{ label: "---", value: null }];
-        for (const id in res) {
-          this.ui_certificate.options.push({ label: res[id], value: id });
-        }
-        entityEdit.formGroup.controls["ui_certificate"].setValue(
-          this.configData.ui_certificate
-        );
-      });
+    entityEdit.ws.call("system.general.ui_certificate_choices").subscribe((res) => {
+      this.ui_certificate.options = [{ label: "---", value: null }];
+      for (const id in res) {
+        this.ui_certificate.options.push({ label: res[id], value: id });
+      }
+      entityEdit.formGroup.controls["ui_certificate"].setValue(this.configData.ui_certificate);
+    });
 
     const httpsprotocolsField = this.fieldSets
       .find((set) => set.name === helptext.stg_fieldset_gui)
       .config.find((config) => config.name === "ui_httpsprotocols");
 
-    entityEdit.ws
-      .call("system.general.ui_httpsprotocols_choices")
-      .subscribe((res) => {
-        httpsprotocolsField.options = [];
-        for (const key in res) {
-          httpsprotocolsField.options.push({ label: res[key], value: key });
-        }
-        entityEdit.formGroup.controls["ui_httpsprotocols"].setValue(
-          this.configData.ui_httpsprotocols
-        );
-      });
+    entityEdit.ws.call("system.general.ui_httpsprotocols_choices").subscribe((res) => {
+      httpsprotocolsField.options = [];
+      for (const key in res) {
+        httpsprotocolsField.options.push({ label: res[key], value: key });
+      }
+      entityEdit.formGroup.controls["ui_httpsprotocols"].setValue(
+        this.configData.ui_httpsprotocols
+      );
+    });
 
     this.sysGeneralService.ipChoicesv4().subscribe((ips) => {
       this.fieldSets
         .find((set) => set.name === helptext.stg_fieldset_gui)
         .config.find((config) => config.name === "ui_address").options = ips;
-      entityEdit.formGroup.controls["ui_address"].setValue(
-        this.configData.ui_address
-      );
+      entityEdit.formGroup.controls["ui_address"].setValue(this.configData.ui_address);
     });
 
     this.sysGeneralService.ipChoicesv6().subscribe((v6Ips) => {
       this.fieldSets
         .find((set) => set.name === helptext.stg_fieldset_gui)
-        .config.find(
-          (config) => config.name === "ui_v6address"
-        ).options = v6Ips;
-      entityEdit.formGroup.controls["ui_v6address"].setValue(
-        this.configData.ui_v6address
-      );
+        .config.find((config) => config.name === "ui_v6address").options = v6Ips;
+      entityEdit.formGroup.controls["ui_v6address"].setValue(this.configData.ui_v6address);
     });
 
     entityEdit.formGroup.controls["ui_port"].setValue(this.configData.ui_port);
-    entityEdit.formGroup.controls["ui_httpsport"].setValue(
-      this.configData.ui_httpsport
-    );
-    entityEdit.formGroup.controls["ui_httpsredirect"].setValue(
-      this.configData.ui_httpsredirect
-    );
-    entityEdit.formGroup.controls["crash_reporting"].setValue(
-      this.configData.crash_reporting
-    );
-    entityEdit.formGroup.controls["usage_collection"].setValue(
-      this.configData.usage_collection
-    );
-    entityEdit.formGroup.controls["ui_consolemsg"].setValue(
-      this.configData.ui_consolemsg
-    );
+    entityEdit.formGroup.controls["ui_httpsport"].setValue(this.configData.ui_httpsport);
+    entityEdit.formGroup.controls["ui_httpsredirect"].setValue(this.configData.ui_httpsredirect);
+    entityEdit.formGroup.controls["crash_reporting"].setValue(this.configData.crash_reporting);
+    entityEdit.formGroup.controls["usage_collection"].setValue(this.configData.usage_collection);
+    entityEdit.formGroup.controls["ui_consolemsg"].setValue(this.configData.ui_consolemsg);
   }
 
   beforeSubmit(value) {
@@ -321,20 +290,11 @@ export class GuiFormComponent implements OnDestroy {
 
             if (new_http_port !== this.http_port && protocol == "http:") {
               port = new_http_port;
-            } else if (
-              new_https_port !== this.https_port &&
-              protocol == "https:"
-            ) {
+            } else if (new_https_port !== this.https_port && protocol == "https:") {
               port = new_https_port;
             }
 
-            href =
-              protocol +
-              "//" +
-              hostname +
-              ":" +
-              port +
-              window.location.pathname;
+            href = protocol + "//" + hostname + ":" + port + window.location.pathname;
 
             this.loader.open();
             this.entityForm.ws.shuttingdown = true; // not really shutting down, just stop websocket detection temporarily

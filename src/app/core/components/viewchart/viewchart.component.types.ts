@@ -368,10 +368,7 @@ export interface Data {
    * - j is the sub index of the data point where the label is shown.
    * Formatter function can be defined for each data by specifying as an object and D3 formatter function can be set (e.g. d3.format('$'))
    */
-  labels?:
-    | boolean
-    | { format: FormatFunction }
-    | { format: { [key: string]: FormatFunction } };
+  labels?: boolean | { format: FormatFunction } | { format: { [key: string]: FormatFunction } };
   /**
    * Define the order of the data.
    * This option changes the order of stacking the data and pieces of pie/donut. If null specified, it will be the order the data loaded. If function specified, it will be used to sort the data
@@ -740,22 +737,12 @@ export interface TooltipOptions {
   /**
    * Set custom position for the tooltip. This option can be used to modify the tooltip position by returning object that has top and left.
    */
-  position?(
-    data: any,
-    width: number,
-    height: number,
-    element: any
-  ): { top: number; left: number };
+  position?(data: any, width: number, height: number, element: any): { top: number; left: number };
   /**
    * Set custom HTML for the tooltip.
    * Specified function receives data, defaultTitleFormat, defaultValueFormat and color of the data point to show. If tooltip.grouped is true, data includes multiple data points.
    */
-  contents?(
-    data: any,
-    defaultTitleFormat: string,
-    defaultValueFormat: string,
-    color: any
-  ): string;
+  contents?(data: any, defaultTitleFormat: string, defaultValueFormat: string, color: any): string;
   /**
    * Set tooltip values order
    */

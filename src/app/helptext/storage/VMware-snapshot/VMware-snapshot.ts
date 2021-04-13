@@ -19,15 +19,11 @@ export default {
   VMware_snapshot_form_username_validation: [Validators.required],
 
   VMware_snapshot_form_password_placeholder: T("Password"),
-  VMware_snapshot_form_password_tooltip: T(
-    "Enter the password associated with <b>Username</b>."
-  ),
+  VMware_snapshot_form_password_tooltip: T("Enter the password associated with <b>Username</b>."),
   VMware_snapshot_form_password_validation: [Validators.required],
 
   VMware_snapshot_form_filesystem_placeholder: T("ZFS Filesystem"),
-  VMware_snapshot_form_filesystem_tooltip: T(
-    "Enter the filesystem to snapshot."
-  ),
+  VMware_snapshot_form_filesystem_tooltip: T("Enter the filesystem to snapshot."),
   VMware_snapshot_form_filesystem_validation: [Validators.required],
 
   VMware_snapshot_form_datastore_placeholder: T("Datastore"),

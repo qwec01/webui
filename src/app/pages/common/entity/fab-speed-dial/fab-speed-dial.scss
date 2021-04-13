@@ -114,14 +114,7 @@ smd-fab-speed-dial {
       }
 
       & smd-fab-actions {
-        @include smd-fab-speed-dial-actions(
-          vertical,
-          normal,
-          column,
-          3,
-          2,
-          top
-        );
+        @include smd-fab-speed-dial-actions(vertical, normal, column, 3, 2, top);
       }
     }
   }
@@ -135,14 +128,7 @@ smd-fab-speed-dial {
       }
 
       & smd-fab-actions {
-        @include smd-fab-speed-dial-actions(
-          vertical,
-          reverse,
-          column-reverse,
-          2,
-          1,
-          bottom
-        );
+        @include smd-fab-speed-dial-actions(vertical, reverse, column-reverse, 2, 1, bottom);
       }
     }
   }
@@ -156,14 +142,7 @@ smd-fab-speed-dial {
       }
 
       & smd-fab-actions {
-        @include smd-fab-speed-dial-actions(
-          horizontal,
-          normal,
-          row-reverse,
-          2,
-          1,
-          right
-        );
+        @include smd-fab-speed-dial-actions(horizontal, normal, row-reverse, 2, 1, right);
       }
     }
   }
@@ -177,14 +156,7 @@ smd-fab-speed-dial {
       }
 
       & smd-fab-actions {
-        @include smd-fab-speed-dial-actions(
-          horizontal,
-          normal,
-          row,
-          3,
-          2,
-          left
-        );
+        @include smd-fab-speed-dial-actions(horizontal, normal, row, 3, 2, left);
       }
     }
   }

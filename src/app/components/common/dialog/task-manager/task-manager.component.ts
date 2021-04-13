@@ -5,13 +5,7 @@ import { MatTableDataSource, MatTable } from "@angular/material/table";
 import { TranslateService } from "@ngx-translate/core";
 import { LocaleService } from "app/services/locale.service";
 import { Observable, Subscription } from "rxjs";
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger,
-} from "@angular/animations";
+import { animate, state, style, transition, trigger } from "@angular/animations";
 import { HttpClient } from "@angular/common/http";
 
 import {
@@ -31,19 +25,10 @@ import * as _ from "lodash";
   styleUrls: ["./task-manager.component.css"],
   animations: [
     trigger("detailExpand", [
-      state(
-        "collapsed, void",
-        style({ height: "0px", minHeight: "0", display: "none" })
-      ),
+      state("collapsed, void", style({ height: "0px", minHeight: "0", display: "none" })),
       state("expanded", style({ height: "*" })),
-      transition(
-        "expanded <=> collapsed",
-        animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)")
-      ),
-      transition(
-        "expanded <=> void",
-        animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)")
-      ),
+      transition("expanded <=> collapsed", animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)")),
+      transition("expanded <=> void", animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)")),
     ]),
   ],
 })
@@ -74,15 +59,13 @@ export class TaskManagerComponent implements OnInit, OnDestroy {
     this.sysGeneralService.getSysInfo().subscribe((res) => {
       this.timeZone = res.timezone;
     });
-    this.ws
-      .call("core.get_jobs", [[], { order_by: ["-id"], limit: 50 }])
-      .subscribe(
-        (res) => {
-          this.dataSource.data = res;
-          this.dataSource.sort = this.sort;
-        },
-        (err) => {}
-      );
+    this.ws.call("core.get_jobs", [[], { order_by: ["-id"], limit: 50 }]).subscribe(
+      (res) => {
+        this.dataSource.data = res;
+        this.dataSource.sort = this.sort;
+      },
+      (err) => {}
+    );
 
     this.getData().subscribe((res) => {
       // only update exist jobs or add latest jobs
@@ -119,10 +102,7 @@ export class TaskManagerComponent implements OnInit, OnDestroy {
 
   getReadableDate(data: any) {
     if (data != null) {
-      return this.localeService.formatDateTime(
-        new Date(data.$date),
-        this.timeZone
-      );
+      return this.localeService.formatDateTime(new Date(data.$date), this.timeZone);
     }
     return;
   }
@@ -146,29 +126,17 @@ export class TaskManagerComponent implements OnInit, OnDestroy {
       .subscribe((dialog_res) => {
         if (dialog_res) {
           this.ws
-            .call("core.download", [
-              "filesystem.get",
-              [element.logs_path],
-              element.id + ".log",
-            ])
+            .call("core.download", ["filesystem.get", [element.logs_path], element.id + ".log"])
             .subscribe(
               (snack_res) => {
                 const url = snack_res[1];
                 const mimetype = "text/plain";
                 let failed = false;
                 this.storageService
-                  .streamDownloadFile(
-                    this.http,
-                    url,
-                    element.id + ".log",
-                    mimetype
-                  )
+                  .streamDownloadFile(this.http, url, element.id + ".log", mimetype)
                   .subscribe(
                     (file) => {
-                      this.storageService.downloadBlob(
-                        file,
-                        element.id + ".log"
-                      );
+                      this.storageService.downloadBlob(file, element.id + ".log");
                     },
                     (err) => {
                       failed = true;

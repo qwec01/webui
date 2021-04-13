@@ -69,8 +69,7 @@ export class EncryptionService {
       disableClose: true,
     });
     dialogRef.componentInstance.volumeId = row;
-    dialogRef.componentInstance.fileName =
-      "pool_" + poolName + "_encryption.key";
+    dialogRef.componentInstance.fileName = "pool_" + poolName + "_encryption.key";
     dialogRef.afterClosed().subscribe((result) => {
       if (addRecoveryKey) {
         this.makeRecoveryKey(row, poolName, route_success);
@@ -83,57 +82,49 @@ export class EncryptionService {
   makeRecoveryKey(row, poolName, route_success) {
     this.loader.open();
     const fileName = "pool_" + poolName + "_recovery.key";
-    this.ws
-      .call("core.download", [
-        "pool.recoverykey_add",
-        [parseInt(row)],
-        fileName,
-      ])
-      .subscribe(
-        (res) => {
-          this.loader.close();
-          this.dialogService
-            .confirm(
-              helptext.set_recoverykey_dialog_title,
-              helptext.set_recoverykey_dialog_message,
-              true,
-              helptext.set_recoverykey_dialog_button,
-              false,
-              "",
-              "",
-              "",
-              "",
-              true
-            )
-            .subscribe(() => {
-              const url = res[1];
-              const mimetype = "application/octet-stream";
-              this.storage
-                .streamDownloadFile(this.http, url, fileName, mimetype)
-                .subscribe(
-                  (file) => {
-                    this.storage.downloadBlob(file, fileName);
-                    this.router.navigate(new Array("/").concat(route_success));
-                  },
-                  (err) => {
-                    this.dialogService.errorReport(
-                      helptext.addkey_download_failed_title,
-                      helptext.addkey_download_failed_message,
-                      err
-                    );
-                  }
+    this.ws.call("core.download", ["pool.recoverykey_add", [parseInt(row)], fileName]).subscribe(
+      (res) => {
+        this.loader.close();
+        this.dialogService
+          .confirm(
+            helptext.set_recoverykey_dialog_title,
+            helptext.set_recoverykey_dialog_message,
+            true,
+            helptext.set_recoverykey_dialog_button,
+            false,
+            "",
+            "",
+            "",
+            "",
+            true
+          )
+          .subscribe(() => {
+            const url = res[1];
+            const mimetype = "application/octet-stream";
+            this.storage.streamDownloadFile(this.http, url, fileName, mimetype).subscribe(
+              (file) => {
+                this.storage.downloadBlob(file, fileName);
+                this.router.navigate(new Array("/").concat(route_success));
+              },
+              (err) => {
+                this.dialogService.errorReport(
+                  helptext.addkey_download_failed_title,
+                  helptext.addkey_download_failed_message,
+                  err
                 );
-            });
-        },
-        (err) => {
-          this.loader.close();
-          this.dialogService.errorReport(
-            T(`Error adding recovery key to pool ${poolName}`),
-            err.reason,
-            err.trace.formatted
-          );
-        }
-      );
+              }
+            );
+          });
+      },
+      (err) => {
+        this.loader.close();
+        this.dialogService.errorReport(
+          T(`Error adding recovery key to pool ${poolName}`),
+          err.reason,
+          err.trace.formatted
+        );
+      }
+    );
   }
 
   deleteRecoveryKey(row, adminPassphrase, poolName, route_success) {
@@ -148,10 +139,7 @@ export class EncryptionService {
         if (res) {
           this.loader.open();
           this.ws
-            .call("pool.recoverykey_rm", [
-              parseInt(row),
-              { admin_password: adminPassphrase },
-            ])
+            .call("pool.recoverykey_rm", [parseInt(row), { admin_password: adminPassphrase }])
             .subscribe(
               () => {
                 this.loader.close();

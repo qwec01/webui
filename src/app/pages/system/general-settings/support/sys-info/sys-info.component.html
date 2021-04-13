@@ -38,10 +38,7 @@
     <div class="sys-info-line">
       <span class="label">{{ "Expiration Date" | translate }}:</span>
       <span class="sys-info-text"> {{ expiration_date }}</span>
-      <span
-        *ngIf="daysLeftinContract && daysLeftinContract > 0"
-        class="sys-info-text"
-      >
+      <span *ngIf="daysLeftinContract && daysLeftinContract > 0" class="sys-info-text">
         ({{ "expires in" | translate }} {{ daysLeftinContract }}
         {{ daysLeftinContract == 1 ? "day" : ("days" | translate) }})</span
       >

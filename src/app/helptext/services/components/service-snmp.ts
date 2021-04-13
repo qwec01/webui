@@ -116,9 +116,7 @@ export default {
   ),
 
   zilstat_placeholder: T("Expose zilstat via SNMP"),
-  zilstat_tooltip: T(
-    "Enabling this option may have performance implications on your pools."
-  ),
+  zilstat_tooltip: T("Enabling this option may have performance implications on your pools."),
 
   loglevel_placeholder: T("Log Level"),
   loglevel_tooltip: T(
@@ -144,8 +142,6 @@ export default {
 
   iftop: {
     placeholder: T("Enable Network Performance Statistics"),
-    tooltip: T(
-      "Include iftop network performance statistics in SNMP messages."
-    ),
+    tooltip: T("Include iftop network performance statistics in SNMP messages."),
   },
 };

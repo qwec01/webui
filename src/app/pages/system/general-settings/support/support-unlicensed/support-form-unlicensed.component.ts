@@ -159,38 +159,32 @@ export class SupportFormUnlicensedComponent {
       if (this.category.options.length > 0) {
         this.category.options = [];
       }
-      if (
-        this.category.options.length === 0 &&
-        this.username !== "" &&
-        this.password !== ""
-      ) {
+      if (this.category.options.length === 0 && this.username !== "" && this.password !== "") {
         this.category.isLoading = true;
-        parent.ws
-          .call("support.fetch_categories", [this.username, this.password])
-          .subscribe(
-            (res) => {
-              this.category.isLoading = false;
-              parent.entityEdit.setDisabled("category", false);
-              let options = [];
-              for (const property in res) {
-                if (res.hasOwnProperty(property)) {
-                  options.push({ label: property, value: res[property] });
-                }
-                this.category.options = _.sortBy(options, ["label"]);
+        parent.ws.call("support.fetch_categories", [this.username, this.password]).subscribe(
+          (res) => {
+            this.category.isLoading = false;
+            parent.entityEdit.setDisabled("category", false);
+            let options = [];
+            for (const property in res) {
+              if (res.hasOwnProperty(property)) {
+                options.push({ label: property, value: res[property] });
               }
-            },
-            (error) => {
-              if (error.reason[0] === "[") {
-                while (error.reason[0] !== " ") {
-                  error.reason = error.reason.slice(1);
-                }
-              }
-              parent.entityEdit.setDisabled("category", true);
-              this.category.isLoading = false;
-              this.password_fc["hasErrors"] = true;
-              this.password_fc["errors"] = error.reason;
+              this.category.options = _.sortBy(options, ["label"]);
             }
-          );
+          },
+          (error) => {
+            if (error.reason[0] === "[") {
+              while (error.reason[0] !== " ") {
+                error.reason = error.reason.slice(1);
+              }
+            }
+            parent.entityEdit.setDisabled("category", true);
+            this.category.isLoading = false;
+            this.password_fc["hasErrors"] = true;
+            this.password_fc["errors"] = error.reason;
+          }
+        );
       }
     }
   }
@@ -220,11 +214,7 @@ export class SupportFormUnlicensedComponent {
       if (res.result) {
         url = `<a href="${res.result.url}" target="_blank" style="text-decoration:underline;">${res.result.url}</a>`;
       }
-      if (
-        res.method === "support.new_ticket" &&
-        this.subs &&
-        this.subs.length > 0
-      ) {
+      if (res.method === "support.new_ticket" && this.subs && this.subs.length > 0) {
         this.subs.forEach((item) => {
           const formData: FormData = new FormData();
           formData.append(

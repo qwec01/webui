@@ -13,10 +13,7 @@ export class DynamicComponentDirective implements OnInit {
   @Input() config;
   @Input() parent;
 
-  constructor(
-    private resolver: ComponentFactoryResolver,
-    private container: ViewContainerRef
-  ) {}
+  constructor(private resolver: ComponentFactoryResolver, private container: ViewContainerRef) {}
 
   ngOnInit() {
     const tempComponent = this.resolver.resolveComponentFactory(this.component);

@@ -270,18 +270,10 @@ export class DisplayObject {
     if (value) {
       this.rawTarget.classList.add("resizeable");
       //if(!this._interactive){this._interactive = true;}
-      this.resizeHandleTop = this.rawElement.parentNode.querySelector(
-        ".resize-handle-top"
-      );
-      this.resizeHandleBottom = this.rawElement.parentNode.querySelector(
-        ".resize-handle-bottom"
-      );
-      this.resizeHandleLeft = this.rawElement.parentNode.querySelector(
-        ".resize-handle-left"
-      );
-      this.resizeHandleRight = this.rawElement.parentNode.querySelector(
-        ".resize-handle-right"
-      );
+      this.resizeHandleTop = this.rawElement.parentNode.querySelector(".resize-handle-top");
+      this.resizeHandleBottom = this.rawElement.parentNode.querySelector(".resize-handle-bottom");
+      this.resizeHandleLeft = this.rawElement.parentNode.querySelector(".resize-handle-left");
+      this.resizeHandleRight = this.rawElement.parentNode.querySelector(".resize-handle-right");
 
       //console.log(this.resizeHandleTop);
       listen(this.resizeHandleTop, "mousedown touchstart")
@@ -436,8 +428,7 @@ export class DisplayObject {
     }
     //document.querySelector('.wallpaper').style.filter = "blur(" + blurValue + "px)";
     //document.querySelector('.panel').style.filter = "blur(" + blurValue + "px)";
-    (<any>document).querySelector(".desktop").style.filter =
-      "blur(" + blurValue + "px)";
+    (<any>document).querySelector(".desktop").style.filter = "blur(" + blurValue + "px)";
   }
   refocus() {}
 

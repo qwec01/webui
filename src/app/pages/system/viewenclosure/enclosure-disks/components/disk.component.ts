@@ -18,12 +18,7 @@ import { MaterialModule } from "app/appMaterial.module";
         {{ data.type ? data.type : "HDD" }}
       </div>
       <div class="disk-ui-icon">
-        <mat-icon
-          class="disk-icon"
-          role="img"
-          fontSet="mdi-set"
-          fontIcon="mdi-harddisk"
-        ></mat-icon>
+        <mat-icon class="disk-icon" role="img" fontSet="mdi-set" fontIcon="mdi-harddisk"></mat-icon>
       </div>
       <div class="disk-ui-name">
         {{ data.name }}

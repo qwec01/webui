@@ -8,19 +8,13 @@ export default {
   activedirectory_custactions_edit_imap_id: "edit_idmap",
   activedirectory_custactions_edit_imap_name: T("Edit Idmap"),
   activedirectory_custactions_clearcache_id: "ds_clearcache",
-  activedirectory_custactions_clearcache_name: T(
-    "Rebuild Directory Service Cache"
-  ),
+  activedirectory_custactions_clearcache_name: T("Rebuild Directory Service Cache"),
   activedirectory_custactions_clearcache_dialog_title: T("Active Directory"),
-  activedirectory_custactions_clearcache_dialog_message: T(
-    "The cache is being rebuilt."
-  ),
+  activedirectory_custactions_clearcache_dialog_message: T("The cache is being rebuilt."),
   activedirectory_custactions_leave_domain: T("Leave Domain"),
 
   ad_leave_domain_dialog: {
-    message: T(
-      "Leaving the domain requires sufficient privileges. Enter your credentials below."
-    ),
+    message: T("Leaving the domain requires sufficient privileges. Enter your credentials below."),
     username: T("Username"),
     pw: T("Password"),
     error: T("Error"),
@@ -45,9 +39,7 @@ export default {
 
   activedirectory_bindname_name: "bindname",
   activedirectory_bindname_placeholder: T("Domain Account Name"),
-  activedirectory_bindname_tooltip: T(
-    "Enter the Active Directory administrator account name."
-  ),
+  activedirectory_bindname_tooltip: T("Enter the Active Directory administrator account name."),
   activedirectory_bindname_validation: [Validators.required],
 
   activedirectory_bindpw_name: "bindpw",
@@ -167,9 +159,7 @@ export default {
   ),
 
   activedirectory_enable_name: "enable",
-  activedirectory_enable_placeholder: T(
-    "Enable (requires password or Kerberos principal)"
-  ),
+  activedirectory_enable_placeholder: T("Enable (requires password or Kerberos principal)"),
   activedirectory_enable_tooltip: T(
     "Enable the Active Directory service.\
  The first time this option is set, the Domain Account Password must be entered."
@@ -181,23 +171,15 @@ export default {
     "Netbios Name of this NAS. This name must differ from\
  the <i>Workgroup</i> name and be no greater than 15 characters."
   ),
-  activedirectory_netbiosname_a_validation: [
-    Validators.required,
-    Validators.maxLength(15),
-  ],
+  activedirectory_netbiosname_a_validation: [Validators.required, Validators.maxLength(15)],
 
   activedirectory_netbiosname_b_name: "netbiosname_b",
-  activedirectory_netbiosname_b_placeholder: T(
-    `Netbios Name (${globalHelptext.Ctrlr} 2)`
-  ),
+  activedirectory_netbiosname_b_placeholder: T(`Netbios Name (${globalHelptext.Ctrlr} 2)`),
   activedirectory_netbiosname_b_tooltip: T(
     "Netbios Name of this NAS. This name must differ from\
  the <i>Workgroup</i> name and be no greater than 15 characters."
   ),
-  activedirectory_netbiosname_b_validation: [
-    Validators.required,
-    Validators.maxLength(15),
-  ],
+  activedirectory_netbiosname_b_validation: [Validators.required, Validators.maxLength(15)],
 
   activedirectory_netbiosalias_name: "netbiosalias",
   activedirectory_netbiosalias_placeholder: T("NetBIOS alias"),
@@ -229,9 +211,7 @@ export default {
     "netbiosalias",
   ],
 
-  activedirectory_idmap_change_dialog_title: T(
-    "Active Directory IDMAP change!"
-  ),
+  activedirectory_idmap_change_dialog_title: T("Active Directory IDMAP change!"),
   activedirectory_idmap_change_dialog_message: T(
     '<font color="red">WARNING</font>: use <i>rid</i> or\
  <i>autorid</i> for networks with only Windows computers,\

@@ -7,11 +7,7 @@ import { FieldSet } from "../../../common/entity/entity-form/models/fieldset.int
 import helptext from "app/helptext/system/ssh-keypairs";
 import { AppLoaderService } from "../../../../services/app-loader/app-loader.service";
 import { EntityUtils } from "../../../common/entity/utils";
-import {
-  WebSocketService,
-  DialogService,
-  StorageService,
-} from "../../../../services";
+import { WebSocketService, DialogService, StorageService } from "../../../../services";
 import { ModalService } from "app/services/modal.service";
 import { atLeastOne } from "app/pages/common/entity/entity-form/validators/at-least-one-validation";
 
@@ -159,12 +155,8 @@ export class SshKeypairsFormComponent {
     this.ws.call("keychaincredential.generate_ssh_key_pair").subscribe(
       (res) => {
         this.loader.close();
-        this.entityForm.formGroup.controls["private_key"].setValue(
-          res.private_key
-        );
-        this.entityForm.formGroup.controls["public_key"].setValue(
-          res.public_key
-        );
+        this.entityForm.formGroup.controls["private_key"].setValue(res.private_key);
+        this.entityForm.formGroup.controls["public_key"].setValue(res.public_key);
       },
       (err) => {
         this.loader.close();
@@ -184,16 +176,12 @@ export class SshKeypairsFormComponent {
   afterInit(entityForm) {
     this.entityForm = entityForm;
     this.fieldConfig = entityForm.fieldConfig;
-    this.entityForm.formGroup.controls["private_key"].valueChanges.subscribe(
-      (res) => {
-        this.clearPreviousErrors();
-      }
-    );
-    this.entityForm.formGroup.controls["public_key"].valueChanges.subscribe(
-      (res) => {
-        this.clearPreviousErrors();
-      }
-    );
+    this.entityForm.formGroup.controls["private_key"].valueChanges.subscribe((res) => {
+      this.clearPreviousErrors();
+    });
+    this.entityForm.formGroup.controls["public_key"].valueChanges.subscribe((res) => {
+      this.clearPreviousErrors();
+    });
   }
 
   clearPreviousErrors() {

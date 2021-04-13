@@ -10,9 +10,7 @@ export default {
   ),
 
   https_placeholder: T("Fetch Method"),
-  https_tooltip: T(
-    "Use encrypted connection for increased security (preferred)."
-  ),
+  https_tooltip: T("Use encrypted connection for increased security (preferred)."),
   http_tooltip: T("Use unencrypted connection."),
 
   dhcp_placeholder: T("DHCP"),

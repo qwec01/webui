@@ -1,10 +1,6 @@
 import { Component } from "@angular/core";
 import { Router } from "@angular/router";
-import {
-  RestService,
-  WebSocketService,
-  DialogService,
-} from "../../../../services";
+import { RestService, WebSocketService, DialogService } from "../../../../services";
 import { FormGroup, Validators } from "@angular/forms";
 import { Wizard } from "../../../common/entity/entity-form/models/wizard.interface";
 import { EntityWizardComponent } from "../../../common/entity/entity-wizard/entity-wizard.component";
@@ -267,11 +263,7 @@ export class VolumeImportWizardComponent {
     }),
       dialogRef.componentInstance.failure.subscribe((res) => {
         dialogRef.close(false);
-        this.dialogService.errorReport(
-          T("Error decrypting disks"),
-          res.error,
-          res.exception
-        );
+        this.dialogService.errorReport(T("Error decrypting disks"), res.error, res.exception);
       });
   }
 
@@ -297,11 +289,7 @@ export class VolumeImportWizardComponent {
       dialogRef.close(false);
     });
     dialogRef.componentInstance.failure.subscribe((res) => {
-      new EntityUtils().handleWSError(
-        this.entityWizard,
-        res,
-        this.dialogService
-      );
+      new EntityUtils().handleWSError(this.entityWizard, res, this.dialogService);
       dialogRef.close(false);
     });
   }
@@ -325,34 +313,26 @@ export class VolumeImportWizardComponent {
     this.entityWizard = entityWizard;
 
     if (!this.productType.includes("SCALE")) {
-      this.encrypted = <FormGroup>(
-        entityWizard.formArray.get([1]).get("encrypted")
-      );
+      this.encrypted = <FormGroup>entityWizard.formArray.get([1]).get("encrypted");
       this.devices = _.find(this.wizardConfig[1].fieldConfig, {
         name: "devices",
       });
-      this.devices_fg = <FormGroup>(
-        entityWizard.formArray.get([1]).get("devices")
-      );
+      this.devices_fg = <FormGroup>entityWizard.formArray.get([1]).get("devices");
       this.key = _.find(this.wizardConfig[1].fieldConfig, { name: "key" });
       this.key_fg = <FormGroup>entityWizard.formArray.get([1]).get("key");
       this.passphrase = _.find(this.wizardConfig[1].fieldConfig, {
         name: "passphrase",
       });
-      this.passphrase_fg = <FormGroup>(
-        entityWizard.formArray.get([1]).get("passphrase")
-      );
+      this.passphrase_fg = <FormGroup>entityWizard.formArray.get([1]).get("passphrase");
 
-      this.ws
-        .call("disk.get_encrypted", [{ unused: true }])
-        .subscribe((res) => {
-          for (let i = 0; i < res.length; i++) {
-            this.devices.options.push({
-              label: res[i].name,
-              value: res[i].dev,
-            });
-          }
-        });
+      this.ws.call("disk.get_encrypted", [{ unused: true }]).subscribe((res) => {
+        for (let i = 0; i < res.length; i++) {
+          this.devices.options.push({
+            label: res[i].name,
+            value: res[i].dev,
+          });
+        }
+      });
     }
 
     this.guid = _.find(this.wizardConfig[this.importIndex].fieldConfig, {
@@ -413,9 +393,7 @@ export class VolumeImportWizardComponent {
         disableClose: true,
       });
       dialogRef.componentInstance.setDescription(T("Importing Pool..."));
-      dialogRef.componentInstance.setCall("pool.import_pool", [
-        { guid: value.guid },
-      ]);
+      dialogRef.componentInstance.setCall("pool.import_pool", [{ guid: value.guid }]);
       dialogRef.componentInstance.submit();
       dialogRef.componentInstance.success.subscribe((res) => {
         dialogRef.close(false);
@@ -435,17 +413,9 @@ export class VolumeImportWizardComponent {
 
   errorReport(res) {
     if (res.reason && res.trace) {
-      this.dialogService.errorReport(
-        T("Error importing pool"),
-        res.reason,
-        res.trace.formatted
-      );
+      this.dialogService.errorReport(T("Error importing pool"), res.reason, res.trace.formatted);
     } else if (res.error && res.exception) {
-      this.dialogService.errorReport(
-        T("Error importing pool"),
-        res.error,
-        res.exception
-      );
+      this.dialogService.errorReport(T("Error importing pool"), res.error, res.exception);
     } else {
       console.log(res);
     }

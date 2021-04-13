@@ -51,9 +51,7 @@ export interface DashConfigItem {
   templateUrl: "./widgetcontroller.component.html",
   styleUrls: ["./widgetcontroller.component.css"],
 })
-export class WidgetControllerComponent
-  extends WidgetComponent
-  implements AfterViewInit {
+export class WidgetControllerComponent extends WidgetComponent implements AfterViewInit {
   @Input() dashState: DashConfigItem[] = [];
   @Input() renderedWidgets?: number[] = [];
   @Input() hiddenWidgets?: number[] = [];

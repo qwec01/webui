@@ -7,11 +7,7 @@ import * as _ from "lodash";
 
 import { FieldConfig } from "../../../common/entity/entity-form/models/field-config.interface";
 import helptext from "../../../../helptext/services/components/service-lldp";
-import {
-  RestService,
-  WebSocketService,
-  ServicesService,
-} from "../../../../services/";
+import { RestService, WebSocketService, ServicesService } from "../../../../services/";
 
 @Component({
   selector: "lldp-edit",

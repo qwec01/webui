@@ -9,11 +9,7 @@ import { EntityJobComponent } from "../../common/entity/entity-job/entity-job.co
 import { EntityToolbarComponent } from "app/pages/common/entity/entity-toolbar/entity-toolbar.component";
 import { EntityUtils } from "../../common/entity/utils";
 import { DialogFormConfiguration } from "../../common/entity/entity-dialog/dialog-form-configuration.interface";
-import {
-  DialogService,
-  WebSocketService,
-  SystemGeneralService,
-} from "../../../services/index";
+import { DialogService, WebSocketService, SystemGeneralService } from "../../../services/index";
 import { ModalService } from "../../../services/modal.service";
 import { ApplicationsService } from "../applications.service";
 import { AppLoaderService } from "../../../services/app-loader/app-loader.service";
@@ -113,9 +109,7 @@ export class CatalogComponent implements OnInit {
               }
             });
 
-            let sorted_version_labels = versionKeys.sort(
-              this.utils.versionCompare
-            );
+            let sorted_version_labels = versionKeys.sort(this.utils.versionCompare);
 
             latest = sorted_version_labels[0];
             latestDetails = versions[latest];
@@ -127,9 +121,7 @@ export class CatalogComponent implements OnInit {
                 label: catalog.label,
                 train: train,
               },
-              icon_url: item.icon_url
-                ? item.icon_url
-                : "/assets/images/ix-original.png",
+              icon_url: item.icon_url ? item.icon_url : "/assets/images/ix-original.png",
               latest_version: latestDetails.human_version,
               info: latestDetails.app_readme,
               categories: item.categories,
@@ -218,12 +210,7 @@ export class CatalogComponent implements OnInit {
     this.appService.getPoolList().subscribe((res) => {
       if (res.length === 0) {
         this.dialogService
-          .confirm(
-            helptext.noPool.title,
-            helptext.noPool.message,
-            true,
-            helptext.noPool.action
-          )
+          .confirm(helptext.noPool.title, helptext.noPool.message, true, helptext.noPool.action)
           .subscribe((res) => {
             if (res) {
               this.router.navigate(["storage", "manager"]);
@@ -244,22 +231,14 @@ export class CatalogComponent implements OnInit {
       data: { title: helptext.choosePool.jobTitle },
       disableClose: true,
     });
-    this.dialogRef.componentInstance.setCall("kubernetes.update", [
-      { pool: null },
-    ]);
+    this.dialogRef.componentInstance.setCall("kubernetes.update", [{ pool: null }]);
     this.dialogRef.componentInstance.submit();
     this.dialogRef.componentInstance.success.subscribe((res) => {
       this.dialogService.closeAllDialogs();
       this.selectedPool = null;
       this.refreshToolbarMenus();
       this.translate.get(helptext.choosePool.unsetPool).subscribe((msg) => {
-        this.dialogService.Info(
-          helptext.choosePool.success,
-          msg,
-          "500px",
-          "info",
-          true
-        );
+        this.dialogService.Info(helptext.choosePool.success, msg, "500px", "info", true);
       });
     });
 
@@ -275,9 +254,7 @@ export class CatalogComponent implements OnInit {
       data: { title: helptext.choosePool.jobTitle },
       disableClose: true,
     });
-    self.dialogRef.componentInstance.setCall("kubernetes.update", [
-      { pool: pool },
-    ]);
+    self.dialogRef.componentInstance.setCall("kubernetes.update", [{ pool: pool }]);
     self.dialogRef.componentInstance.submit();
     self.dialogRef.componentInstance.success.subscribe((res) => {
       self.selectedPool = pool;
@@ -298,16 +275,9 @@ export class CatalogComponent implements OnInit {
     });
   }
 
-  doInstall(
-    name: string,
-    catalog: string = "OFFICIAL",
-    train: string = "charts"
-  ) {
+  doInstall(name: string, catalog: string = "OFFICIAL", train: string = "charts") {
     const catalogApp = this.catalogApps.find(
-      (app) =>
-        app.name == name &&
-        app.catalog.id == catalog &&
-        app.catalog.train == train
+      (app) => app.name == name && app.catalog.id == catalog && app.catalog.train == train
     );
     if (catalogApp && catalogApp.name != "ix-chart") {
       const chartWizardComponent = new ChartWizardComponent(
@@ -333,10 +303,7 @@ export class CatalogComponent implements OnInit {
   filerApps() {
     if (this.filterString) {
       this.filteredCatalogApps = this.catalogApps.filter(
-        (app) =>
-          app.name
-            .toLowerCase()
-            .indexOf(this.filterString.toLocaleLowerCase()) > -1
+        (app) => app.name.toLowerCase().indexOf(this.filterString.toLocaleLowerCase()) > -1
       );
     } else {
       this.filteredCatalogApps = this.catalogApps;
@@ -348,21 +315,12 @@ export class CatalogComponent implements OnInit {
       );
     }
 
-    this.filteredCatalogApps = this.filteredCatalogApps.filter(
-      (app) => app.name !== "ix-chart"
-    );
+    this.filteredCatalogApps = this.filteredCatalogApps.filter((app) => app.name !== "ix-chart");
   }
 
-  showSummaryDialog(
-    name: string,
-    catalog: string = "OFFICIAL",
-    train: string = "charts"
-  ) {
+  showSummaryDialog(name: string, catalog: string = "OFFICIAL", train: string = "charts") {
     const catalogApp = this.catalogApps.find(
-      (app) =>
-        app.name == name &&
-        app.catalog.id == catalog &&
-        app.catalog.train == train
+      (app) => app.name == name && app.catalog.id == catalog && app.catalog.train == train
     );
     if (catalogApp) {
       let dialogRef = this.mdDialog.open(CatalogSummaryDialog, {

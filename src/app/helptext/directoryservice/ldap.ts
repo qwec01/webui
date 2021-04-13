@@ -130,9 +130,7 @@ export default {
   ),
 
   ldap_has_samba_schema_name: "has_samba_schema",
-  ldap_has_samba_schema_placeholder: T(
-    "Samba Schema (DEPRECATED - see help text)"
-  ),
+  ldap_has_samba_schema_placeholder: T("Samba Schema (DEPRECATED - see help text)"),
   ldap_has_samba_schema_tooltip: T(
     'Only set LDAP authentication for\
  SMB shares is required and the LDAP server is already configured with Samba attributes. DEPRECATED: \

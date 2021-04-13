@@ -56,9 +56,7 @@ export const helptext_system_kmip = {
 
   enabled: {
     placeholder: T("Enabled"),
-    tooltip: T(
-      "Activate KMIP configuration and begin syncing keys with the KMIP server."
-    ),
+    tooltip: T("Activate KMIP configuration and begin syncing keys with the KMIP server."),
   },
 
   change_server: {
@@ -96,8 +94,6 @@ export const helptext_system_kmip = {
 
   clearSyncKeyInfoDialog: {
     title: T("Clear Pending Sync Keys"),
-    info: T(
-      "Clear all keys which are pending to be synced between KMIP server and TN database."
-    ),
+    info: T("Clear all keys which are pending to be synced between KMIP server and TN database."),
   },
 };

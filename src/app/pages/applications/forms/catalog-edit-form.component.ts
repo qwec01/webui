@@ -54,10 +54,7 @@ export class CatalogEditFormComponent {
     private modalService: ModalService
   ) {
     this.modalService.getRow$.subscribe((label: string) => {
-      this.customFilter = [
-        [["id", "=", label]],
-        { extra: { item_details: true } },
-      ];
+      this.customFilter = [[["id", "=", label]], { extra: { item_details: true } }];
     });
   }
 

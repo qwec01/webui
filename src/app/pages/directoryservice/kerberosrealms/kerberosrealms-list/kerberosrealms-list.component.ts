@@ -14,11 +14,7 @@ export class KerberosRealmsListComponent {
   protected wsDelete = "kerberos.realm.delete";
   protected route_add: string[] = ["directoryservice", "kerberosrealms", "add"];
   protected route_add_tooltip: string = "Add Kerberos Realm";
-  protected route_edit: string[] = [
-    "directoryservice",
-    "kerberosrealms",
-    "edit",
-  ];
+  protected route_edit: string[] = ["directoryservice", "kerberosrealms", "edit"];
   public keyList = ["admin_server", "kdc", "kpasswd_server"];
 
   public columns: Array<any> = [

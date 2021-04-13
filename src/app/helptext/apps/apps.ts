@@ -164,9 +164,7 @@ export default {
       },
       force: {
         placeholder: T("Force"),
-        tooltip: T(
-          "Used for rollback of a chart release and snapshots of ix_volumes"
-        ),
+        tooltip: T("Used for rollback of a chart release and snapshots of ix_volumes"),
       },
       action: T("Roll back"),
 
@@ -290,9 +288,7 @@ export default {
       },
       args: {
         placeholder: T("Container Args"),
-        tooltip: T(
-          "Specify arguments for container command. Use <i>ENTER</i> after each entry."
-        ),
+        tooltip: T("Specify arguments for container command. Use <i>ENTER</i> after each entry."),
       },
       env_vars: {
         title: T("Container Environment Variables"),
@@ -396,11 +392,7 @@ export default {
       nodePort: {
         placeholder: T("Node Port"),
         tooltip: T("The range of valid ports is 9000-65535."),
-        validation: [
-          Validators.pattern("^[0-9]*$"),
-          Validators.min(9000),
-          Validators.max(65535),
-        ],
+        validation: [Validators.pattern("^[0-9]*$"), Validators.min(9000), Validators.max(65535)],
       },
       protocol: {
         placeholder: T("Protocol"),
@@ -571,9 +563,7 @@ export default {
     },
     branch: {
       placeholder: T("Branch"),
-      tooltip: T(
-        "Please specify branch of git repository to use for the catalog."
-      ),
+      tooltip: T("Please specify branch of git repository to use for the catalog."),
     },
   },
 

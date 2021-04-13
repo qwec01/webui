@@ -1,8 +1,6 @@
 <mat-card
   class="view-card {{
-    chassis && chassis.front && chassis.front.totalDriveTrays > 7
-      ? 'mini mini-xl'
-      : 'mini'
+    chassis && chassis.front && chassis.front.totalDriveTrays > 7 ? 'mini mini-xl' : 'mini'
   }}"
   [ngClass]="{
     'multiple-enclosures': system && system.profile && system.profile.length > 1
@@ -19,19 +17,14 @@
       {{ currentTab.alias }} on
       {{
         selectedEnclosure
-          ? selectedEnclosure.model +
-            " (" +
-            selectedEnclosure.enclosureKey +
-            ")"
+          ? selectedEnclosure.model + " (" + selectedEnclosure.enclosureKey + ")"
           : "..."
       }}
     </div>
     <div *ngIf="selectedEnclosure.enclosureKey < 1" class="mat-card-title-text">
       {{ currentTab.alias }} on
       {{
-        selectedEnclosure
-          ? system.platform + " (" + selectedEnclosure.enclosureKey + ")"
-          : "..."
+        selectedEnclosure ? system.platform + " (" + selectedEnclosure.enclosureKey + ")" : "..."
       }}
     </div>
 
@@ -49,24 +42,14 @@
       <div class="header-container" id="legend">
         <h3 class="header">Pools</h3>
         <div *ngIf="enclosurePools.length > 0; else noPools" class="legend">
-          <div
-            class="legend-item"
-            *ngFor="let pool of enclosurePools; let i = index"
-          >
+          <div class="legend-item" *ngFor="let pool of enclosurePools; let i = index">
             <div
               class="swatch"
-              [style.background]="
-                theme[theme.accentColors[selectedEnclosure.poolKeys[pool]]]
-              "
+              [style.background]="theme[theme.accentColors[selectedEnclosure.poolKeys[pool]]]"
             ></div>
             {{ pool }}
-            <span
-              *ngIf="!system.pools[selectedEnclosure.poolKeys[pool]].healthy"
-              ><mat-icon
-                fontSet="mdi-set"
-                role="img"
-                fontIcon="mdi-alert"
-              ></mat-icon
+            <span *ngIf="!system.pools[selectedEnclosure.poolKeys[pool]].healthy"
+              ><mat-icon fontSet="mdi-set" role="img" fontIcon="mdi-alert"></mat-icon
             ></span>
           </div>
         </div>
@@ -83,13 +66,8 @@
         <div #visualizer class="visualizer dom-overlay" id="visualizer"></div>
 
         <!-- DISK NAMES -->
-        <div
-          class="overlay names"
-          *ngIf="enclosure && enclosure.driveTrayObjects"
-        >
-          <ng-container
-            *ngFor="let dt of enclosure.driveTrayObjects; let i = index"
-          >
+        <div class="overlay names" *ngIf="enclosure && enclosure.driveTrayObjects">
+          <ng-container *ngFor="let dt of enclosure.driveTrayObjects; let i = index">
             <div
               class="slot-label fn-theme-primary"
               style="position:absolute; z-index:12; left:calc(48% - 24px); top:calc({{
@@ -103,20 +81,14 @@
                 stackPositions()[i].y
               }}px + 8px);"
             >
-              {{
-                findDiskBySlotNumber(i + 1)
-                  ? findDiskBySlotNumber(i + 1).name
-                  : "Empty"
-              }}
+              {{ findDiskBySlotNumber(i + 1) ? findDiskBySlotNumber(i + 1).name : "Empty" }}
             </div>
           </ng-container>
         </div>
 
         <!-- DISK STATUS -->
         <div *ngIf="enclosure" class="overlay status" style="right: 0">
-          <ng-container
-            *ngFor="let dt of enclosure.driveTrayObjects; let i = index"
-          >
+          <ng-container *ngFor="let dt of enclosure.driveTrayObjects; let i = index">
             <div
               *ngIf="findDiskBySlotNumber(i + 1)"
               style="position:absolute; z-index:12; left:12.5%; top:calc({{
@@ -135,9 +107,7 @@
                 check_circle
               </mat-icon>
               &nbsp;
-              <span class="status-text">{{
-                findDiskBySlotNumber(i + 1).status
-              }}</span>
+              <span class="status-text">{{ findDiskBySlotNumber(i + 1).status }}</span>
             </div>
           </ng-container>
         </div>
@@ -157,9 +127,7 @@
             <ul>
               <li>
                 <strong>Pool:</strong> &nbsp;&nbsp;&nbsp;{{
-                  selectedDisk.vdev
-                    ? selectedDisk.vdev.pool
-                    : "Disk not attached to any pools."
+                  selectedDisk.vdev ? selectedDisk.vdev.pool : "Disk not attached to any pools."
                 }}
               </li>
 
@@ -179,20 +147,10 @@
                 >
               </li>
 
+              <li><strong>Serial:</strong> &nbsp;&nbsp;&nbsp;{{ selectedDisk.serial }}</li>
+              <li><strong>Status:</strong> &nbsp;&nbsp;&nbsp;{{ selectedDisk.status }}</li>
               <li>
-                <strong>Serial:</strong> &nbsp;&nbsp;&nbsp;{{
-                  selectedDisk.serial
-                }}
-              </li>
-              <li>
-                <strong>Status:</strong> &nbsp;&nbsp;&nbsp;{{
-                  selectedDisk.status
-                }}
-              </li>
-              <li>
-                <strong>Acoustic Level:</strong> &nbsp;&nbsp;&nbsp;{{
-                  selectedDisk.acousticlevel
-                }}
+                <strong>Acoustic Level:</strong> &nbsp;&nbsp;&nbsp;{{ selectedDisk.acousticlevel }}
               </li>
               <li>
                 <strong>Advanced Power Management:</strong> &nbsp;&nbsp;&nbsp;{{
@@ -210,23 +168,13 @@
                 }}
               </li>
               <li>
-                <strong>Transfer Mode:</strong> &nbsp;&nbsp;&nbsp;{{
-                  selectedDisk.transfermode
-                }}
+                <strong>Transfer Mode:</strong> &nbsp;&nbsp;&nbsp;{{ selectedDisk.transfermode }}
               </li>
-              <li>
-                <strong>HDD Standby:</strong> &nbsp;&nbsp;&nbsp;{{
-                  selectedDisk.hddstandby
-                }}
-              </li>
+              <li><strong>HDD Standby:</strong> &nbsp;&nbsp;&nbsp;{{ selectedDisk.hddstandby }}</li>
             </ul>
 
             <h3 class="header" style="margin-top: 24px">Stats</h3>
-            <div
-              class="disk-basic-details"
-              fxLayout="row wrap"
-              fxLayoutAlign="center center"
-            >
+            <div class="disk-basic-details" fxLayout="row wrap" fxLayoutAlign="center center">
               <div>
                 <disk-ui [data]="selectedDisk"></disk-ui
                 ><!-- disk icon + labels -->
@@ -235,9 +183,7 @@
               <div class="disk-stats-wrapper" fxFlex>
                 <ul class="disk-stats" *ngIf="selectedDisk.stats; else nostats">
                   <li>
-                    <strong>Read Errors: </strong> &nbsp;&nbsp;{{
-                      selectedDisk.stats.read_errors
-                    }}
+                    <strong>Read Errors: </strong> &nbsp;&nbsp;{{ selectedDisk.stats.read_errors }}
                   </li>
                   <li>
                     <strong>Write Errors: </strong> &nbsp;&nbsp;{{
@@ -252,9 +198,7 @@
                 </ul>
                 <ng-template #nostats>
                   <div style="padding: 48px; text-align: center">
-                    <mat-icon
-                      role="img"
-                      style="margin: 6px; position: relative; top: 5px"
+                    <mat-icon role="img" style="margin: 6px; position: relative; top: 5px"
                       >info_icon</mat-icon
                     >
                     <strong>Must be part of a pool to check errors</strong>
@@ -269,35 +213,24 @@
         </div>
       </ng-container>
 
-      <ng-container
-        *ngIf="currentView == 'pools' || currentView == 'status'"
-        #overview
-      >
+      <ng-container *ngIf="currentView == 'pools' || currentView == 'status'" #overview>
         <!-- DISK NOT SELECTED -->
         <div class="header-container half-height" id="general-overview">
           <h3 class="header">Disks Overview</h3>
           <div>
             <ul>
               <li>
-                <strong>Pools:</strong> &nbsp;&nbsp;&nbsp;{{
-                  count(selectedEnclosure.poolKeys)
-                }}
+                <strong>Pools:</strong> &nbsp;&nbsp;&nbsp;{{ count(selectedEnclosure.poolKeys) }}
               </li>
               <li>
-                <strong>Total Disks:</strong> &nbsp;&nbsp;&nbsp;{{
-                  count(selectedEnclosure.disks)
-                }}
+                <strong>Total Disks:</strong> &nbsp;&nbsp;&nbsp;{{ count(selectedEnclosure.disks) }}
               </li>
               <li>
                 <strong>Estimated Raw Capacity:</strong> &nbsp;&nbsp;&nbsp;{{
                   converter(system.rawCapacity())
                 }}
               </li>
-              <li>
-                <strong>Failed Disks:</strong> &nbsp;&nbsp;&nbsp;{{
-                  failedDisks.length
-                }}
-              </li>
+              <li><strong>Failed Disks:</strong> &nbsp;&nbsp;&nbsp;{{ failedDisks.length }}</li>
             </ul>
           </div>
         </div>
@@ -309,11 +242,7 @@
               <ng-container *ngFor="let diskName of temperatures.keys">
                 <temperature-meter
                   *ngIf="temperatures.values[diskName]; else notemps"
-                  [fxFlex]="
-                    temperatures && temperatures.keys.length >= 4
-                      ? '40%'
-                      : '100%'
-                  "
+                  [fxFlex]="temperatures && temperatures.keys.length >= 4 ? '40%' : '100%'"
                   [source]="diskName"
                   [value]="temperatures.values[diskName]"
                   [unit]="temperatures.unit"
@@ -322,15 +251,9 @@
                 <ng-template #notemps>
                   <div
                     class="no-temp"
-                    [fxFlex]="
-                      temperatures && temperatures.keys.length >= 4
-                        ? '40%'
-                        : '100%'
-                    "
+                    [fxFlex]="temperatures && temperatures.keys.length >= 4 ? '40%' : '100%'"
                   >
-                    <strong>{{ diskName }}:</strong> Unknown{{
-                      temperatures.symbolText
-                    }}
+                    <strong>{{ diskName }}:</strong> Unknown{{ temperatures.symbolText }}
                     <tooltip
                       style="position: relative; top: 5px"
                       position="above"
@@ -352,11 +275,7 @@
                       ? temperatures.values[diskName]
                       : "Temperature not available."
                   }}
-                  {{
-                    temperatures.values[diskName]
-                      ? temperatures.symbolText + "C"
-                      : ""
-                  }}
+                  {{ temperatures.values[diskName] ? temperatures.symbolText + "C" : "" }}
                   <tooltip
                     *ngIf="!temperatures.values[diskName]"
                     style="position: relative; top: 5px"

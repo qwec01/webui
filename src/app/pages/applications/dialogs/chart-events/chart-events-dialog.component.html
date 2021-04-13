@@ -1,9 +1,6 @@
 <div mat-dialog-content>
   <div class="logo-container" fxLayout="row" fxLayoutAlign="start center">
-    <div
-      class="logo"
-      style="background-image: url('{{ catalogApp.icon }}');"
-    ></div>
+    <div class="logo" style="background-image: url('{{ catalogApp.icon }}');"></div>
     <div fxLayout="row" fxLayoutAlign="start center">
       <strong class="chart-name">{{ catalogApp.name }}</strong>
       <span class="version"> {{ catalogApp.human_version }}</span>
@@ -18,9 +15,7 @@
   </div>
   <div class="ports">
     <span>{{ "Used Ports" | translate }}:</span
-    ><span class="value" textLimiter threshold="70">{{
-      catalogApp.used_ports | translate
-    }}</span>
+    ><span class="value" textLimiter threshold="70">{{ catalogApp.used_ports | translate }}</span>
   </div>
   <div class="resource" fxLayout="row" fxLayoutAlign="space-between center">
     <div>
@@ -28,8 +23,7 @@
       ><span class="value">{{ catalogApp.status | translate }}</span>
     </div>
     <div>
-      <span>{{ "Pods" | translate }}:</span
-      ><span class="value">{{ pods.length }}</span>
+      <span>{{ "Pods" | translate }}:</span><span class="value">{{ pods.length }}</span>
     </div>
     <div>
       <span>{{ "Deployments" | translate }}:</span
@@ -44,24 +38,18 @@
     <div>
       <span>{{ "Catalog" | translate }}:</span>
       <div class="inline-block capitalized-text">
-        <span class="value" textLimiter threshold="14">{{
-          catalogApp.catalog
-        }}</span>
+        <span class="value" textLimiter threshold="14">{{ catalogApp.catalog }}</span>
       </div>
     </div>
     <div>
       <span>{{ "Train" | translate }}:</span>
       <div class="inline-block capitalized-text">
-        <span class="value" textLimiter threshold="14">{{
-          catalogApp.catalog_train
-        }}</span>
+        <span class="value" textLimiter threshold="14">{{ catalogApp.catalog_train }}</span>
       </div>
     </div>
     <div>
       <span>{{ "Item Name" | translate }}:</span
-      ><span class="value" textLimiter threshold="14">{{
-        catalogApp.chart_name
-      }}</span>
+      ><span class="value" textLimiter threshold="14">{{ catalogApp.chart_name }}</span>
     </div>
   </div>
   <mat-accordion>
@@ -73,10 +61,7 @@
       </mat-expansion-panel-header>
       <div class="expansion-content">
         <div
-          *ngFor="
-            let containerImage of containerImages | keyvalue;
-            let i = index
-          "
+          *ngFor="let containerImage of containerImages | keyvalue; let i = index"
           class="detail-row"
           [ngClass]="{ 'row-dark': i % 2 == 0 }"
         >
@@ -112,11 +97,7 @@
           </div>
         </div>
         <ng-template #no_event>
-          <div
-            fxLayout="row"
-            fxLayoutAlign="start start"
-            class="detail-row row-dark"
-          >
+          <div fxLayout="row" fxLayoutAlign="start start" class="detail-row row-dark">
             {{ "No Recent Events" | translate }}
           </div>
         </ng-template>

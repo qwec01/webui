@@ -142,17 +142,10 @@ export class DataProtectionDashboardComponent implements OnInit, OnDestroy {
           },
           parent: this,
           add: function () {
-            this.parent.modalService.open(
-              "slide-in-form",
-              this.parent.scrubFormComponent
-            );
+            this.parent.modalService.open("slide-in-form", this.parent.scrubFormComponent);
           },
           edit: function (row) {
-            this.parent.modalService.open(
-              "slide-in-form",
-              this.parent.scrubFormComponent,
-              row.id
-            );
+            this.parent.modalService.open("slide-in-form", this.parent.scrubFormComponent, row.id);
           },
         },
       },
@@ -183,10 +176,7 @@ export class DataProtectionDashboardComponent implements OnInit, OnDestroy {
           isActionVisible: this.isActionVisible,
           parent: this,
           add: function () {
-            this.parent.modalService.open(
-              "slide-in-form",
-              this.parent.snapshotFormComponent
-            );
+            this.parent.modalService.open("slide-in-form", this.parent.snapshotFormComponent);
           },
           edit: function (row) {
             this.parent.modalService.open(
@@ -227,10 +217,7 @@ export class DataProtectionDashboardComponent implements OnInit, OnDestroy {
           ],
           parent: this,
           add: function () {
-            this.parent.modalService.open(
-              "slide-in-form",
-              this.parent.replicationFormComponent
-            );
+            this.parent.modalService.open("slide-in-form", this.parent.replicationFormComponent);
           },
           edit: function (row) {
             this.parent.modalService.open(
@@ -276,10 +263,7 @@ export class DataProtectionDashboardComponent implements OnInit, OnDestroy {
           ],
           parent: this,
           add: function () {
-            this.parent.modalService.open(
-              "slide-in-form",
-              this.parent.cloudsyncFormComponent
-            );
+            this.parent.modalService.open("slide-in-form", this.parent.cloudsyncFormComponent);
           },
           edit: function (row) {
             this.parent.modalService.open(
@@ -315,17 +299,10 @@ export class DataProtectionDashboardComponent implements OnInit, OnDestroy {
           isActionVisible: this.isActionVisible,
           parent: this,
           add: function () {
-            this.parent.modalService.open(
-              "slide-in-form",
-              this.parent.rsyncFormComponent
-            );
+            this.parent.modalService.open("slide-in-form", this.parent.rsyncFormComponent);
           },
           edit: function (row) {
-            this.parent.modalService.open(
-              "slide-in-form",
-              this.parent.rsyncFormComponent,
-              row.id
-            );
+            this.parent.modalService.open("slide-in-form", this.parent.rsyncFormComponent, row.id);
           },
           onButtonClick: function (row) {
             this.parent.stateButton(row);
@@ -361,17 +338,10 @@ export class DataProtectionDashboardComponent implements OnInit, OnDestroy {
             },
           ],
           add: function () {
-            this.parent.modalService.open(
-              "slide-in-form",
-              this.parent.smartFormComponent
-            );
+            this.parent.modalService.open("slide-in-form", this.parent.smartFormComponent);
           },
           edit: function (row) {
-            this.parent.modalService.open(
-              "slide-in-form",
-              this.parent.smartFormComponent,
-              row.id
-            );
+            this.parent.modalService.open("slide-in-form", this.parent.smartFormComponent, row.id);
           },
         },
       },
@@ -387,10 +357,7 @@ export class DataProtectionDashboardComponent implements OnInit, OnDestroy {
   }
 
   refreshForms() {
-    this.scrubFormComponent = new ScrubFormComponent(
-      this.taskService,
-      this.modalService
-    );
+    this.scrubFormComponent = new ScrubFormComponent(this.taskService, this.modalService);
     this.snapshotFormComponent = new SnapshotFormComponent(
       this.taskService,
       this.storage,
@@ -423,10 +390,7 @@ export class DataProtectionDashboardComponent implements OnInit, OnDestroy {
       this.userService,
       this.modalService
     );
-    this.smartFormComponent = new SmartFormComponent(
-      this.ws,
-      this.modalService
-    );
+    this.smartFormComponent = new SmartFormComponent(this.ws, this.modalService);
   }
 
   scrubDataSourceHelper(data: any) {
@@ -477,9 +441,7 @@ export class DataProtectionDashboardComponent implements OnInit, OnDestroy {
   replicationDataSourceHelper(data: any) {
     return data.map((task) => {
       task.state = task.state.state;
-      task.ssh_connection = task.ssh_credentials
-        ? task.ssh_credentials.name
-        : "-";
+      task.ssh_connection = task.ssh_credentials ? task.ssh_credentials.name : "-";
       task.task_last_snapshot = task.state.last_snapshot
         ? task.state.last_snapshot
         : T("No snapshots sent yet");
@@ -495,9 +457,7 @@ export class DataProtectionDashboardComponent implements OnInit, OnDestroy {
       } else if (test.disks.length) {
         test.disks = test.disks
           .map((identifier) => {
-            const fullDisk = this.parent.disks.find(
-              (item) => item.identifier === identifier
-            );
+            const fullDisk = this.parent.disks.find((item) => item.identifier === identifier);
             if (fullDisk) {
               identifier = fullDisk.devname;
             }
@@ -551,11 +511,7 @@ export class DataProtectionDashboardComponent implements OnInit, OnDestroy {
         matTooltip: T("Run Now"),
         onClick: (row) => {
           this.dialog
-            .confirm(
-              T("Run Now"),
-              T("Replicate <i>") + row.name + T("</i> now?"),
-              true
-            )
+            .confirm(T("Run Now"), T("Replicate <i>") + row.name + T("</i> now?"), true)
             .subscribe((res) => {
               if (res) {
                 row.state = "RUNNING";
@@ -610,27 +566,20 @@ export class DataProtectionDashboardComponent implements OnInit, OnDestroy {
                 required: true,
               },
             ],
-            saveButtonText:
-              helptext_replication.replication_restore_dialog.saveButton,
+            saveButtonText: helptext_replication.replication_restore_dialog.saveButton,
             customSubmit: function (entityDialog) {
               parent.loader.open();
-              parent.ws
-                .call("replication.restore", [row.id, entityDialog.formValue])
-                .subscribe(
-                  (res) => {
-                    entityDialog.dialogRef.close(true);
-                    parent.loader.close();
-                    parent.refreshTables();
-                  },
-                  (err) => {
-                    parent.loader.close();
-                    new EntityUtils().handleWSError(
-                      entityDialog,
-                      err,
-                      parent.dialog
-                    );
-                  }
-                );
+              parent.ws.call("replication.restore", [row.id, entityDialog.formValue]).subscribe(
+                (res) => {
+                  entityDialog.dialogRef.close(true);
+                  parent.loader.close();
+                  parent.refreshTables();
+                },
+                (err) => {
+                  parent.loader.close();
+                  new EntityUtils().handleWSError(entityDialog, err, parent.dialog);
+                }
+              );
             },
           };
           this.dialog.dialogFormWide(conf);
@@ -657,9 +606,7 @@ export class DataProtectionDashboardComponent implements OnInit, OnDestroy {
                   (res) => {
                     this.dialog.Info(
                       T("Task Started"),
-                      T("Cloud sync <i>") +
-                        row.description +
-                        T("</i> has started."),
+                      T("Cloud sync <i>") + row.description + T("</i> has started."),
                       "500px",
                       "info",
                       true
@@ -684,28 +631,24 @@ export class DataProtectionDashboardComponent implements OnInit, OnDestroy {
         matTooltip: T("Stop"),
         name: "stop",
         onClick: (row) => {
-          this.dialog
-            .confirm(T("Stop"), T("Stop this cloud sync?"), true)
-            .subscribe((res) => {
-              if (res) {
-                this.ws.call("cloudsync.abort", [row.id]).subscribe(
-                  () => {
-                    this.dialog.Info(
-                      T("Task Stopped"),
-                      T("Cloud sync <i>") +
-                        row.description +
-                        T("</i> stopped."),
-                      "500px",
-                      "info",
-                      true
-                    );
-                  },
-                  (wsErr) => {
-                    new EntityUtils().handleWSError(this.entityForm, wsErr);
-                  }
-                );
-              }
-            });
+          this.dialog.confirm(T("Stop"), T("Stop this cloud sync?"), true).subscribe((res) => {
+            if (res) {
+              this.ws.call("cloudsync.abort", [row.id]).subscribe(
+                () => {
+                  this.dialog.Info(
+                    T("Task Stopped"),
+                    T("Cloud sync <i>") + row.description + T("</i> stopped."),
+                    "500px",
+                    "info",
+                    true
+                  );
+                },
+                (wsErr) => {
+                  new EntityUtils().handleWSError(this.entityForm, wsErr);
+                }
+              );
+            }
+          });
         },
       },
       {
@@ -716,35 +659,27 @@ export class DataProtectionDashboardComponent implements OnInit, OnDestroy {
         name: "dry_run",
         onClick: (row) => {
           this.dialog
-            .confirm(
-              helptext_cloudsync.dry_run_title,
-              helptext_cloudsync.dry_run_dialog,
-              true
-            )
+            .confirm(helptext_cloudsync.dry_run_title, helptext_cloudsync.dry_run_dialog, true)
             .subscribe((dialog_res) => {
               if (dialog_res) {
-                this.ws
-                  .call("cloudsync.sync", [row.id, { dry_run: true }])
-                  .subscribe(
-                    (res) => {
-                      this.dialog.Info(
-                        T("Task Started"),
-                        T("Cloud sync <i>") +
-                          row.description +
-                          T("</i> has started."),
-                        "500px",
-                        "info",
-                        true
-                      );
-                      this.job.getJobStatus(res).subscribe((task) => {
-                        row.state = task.state;
-                        row.job = task;
-                      });
-                    },
-                    (err) => {
-                      new EntityUtils().handleWSError(this.entityForm, err);
-                    }
-                  );
+                this.ws.call("cloudsync.sync", [row.id, { dry_run: true }]).subscribe(
+                  (res) => {
+                    this.dialog.Info(
+                      T("Task Started"),
+                      T("Cloud sync <i>") + row.description + T("</i> has started."),
+                      "500px",
+                      "info",
+                      true
+                    );
+                    this.job.getJobStatus(res).subscribe((task) => {
+                      row.state = task.state;
+                      row.job = task;
+                    });
+                  },
+                  (err) => {
+                    new EntityUtils().handleWSError(this.entityForm, err);
+                  }
+                );
               }
             });
         },
@@ -800,44 +735,34 @@ export class DataProtectionDashboardComponent implements OnInit, OnDestroy {
             ],
             saveButtonText: "Restore",
             afterInit: function (entityDialog) {
-              entityDialog.formGroup
-                .get("transfer_mode")
-                .valueChanges.subscribe((mode) => {
-                  const paragraph = conf.fieldConfig.find(
-                    (config) => config.name === "transfer_mode_warning"
-                  );
-                  switch (mode) {
-                    case "SYNC":
-                      paragraph.paraText =
-                        helptext_cloudsync.transfer_mode_warning_sync;
-                      paragraph.paragraphIcon = "sync";
-                      break;
-                    default:
-                      paragraph.paraText =
-                        helptext_cloudsync.transfer_mode_warning_copy;
-                      paragraph.paragraphIcon = "add_to_photos";
-                  }
-                });
+              entityDialog.formGroup.get("transfer_mode").valueChanges.subscribe((mode) => {
+                const paragraph = conf.fieldConfig.find(
+                  (config) => config.name === "transfer_mode_warning"
+                );
+                switch (mode) {
+                  case "SYNC":
+                    paragraph.paraText = helptext_cloudsync.transfer_mode_warning_sync;
+                    paragraph.paragraphIcon = "sync";
+                    break;
+                  default:
+                    paragraph.paraText = helptext_cloudsync.transfer_mode_warning_copy;
+                    paragraph.paragraphIcon = "add_to_photos";
+                }
+              });
             },
             customSubmit: function (entityDialog) {
               parent.loader.open();
-              parent.ws
-                .call("cloudsync.restore", [row.id, entityDialog.formValue])
-                .subscribe(
-                  (res) => {
-                    entityDialog.dialogRef.close(true);
-                    parent.loader.close();
-                    parent.refreshTables();
-                  },
-                  (err) => {
-                    parent.loader.close();
-                    new EntityUtils().handleWSError(
-                      entityDialog,
-                      err,
-                      parent.dialog
-                    );
-                  }
-                );
+              parent.ws.call("cloudsync.restore", [row.id, entityDialog.formValue]).subscribe(
+                (res) => {
+                  entityDialog.dialogRef.close(true);
+                  parent.loader.close();
+                  parent.refreshTables();
+                },
+                (err) => {
+                  parent.loader.close();
+                  new EntityUtils().handleWSError(entityDialog, err, parent.dialog);
+                }
+              );
             },
           };
           this.dialog.dialogFormWide(conf);
@@ -855,35 +780,29 @@ export class DataProtectionDashboardComponent implements OnInit, OnDestroy {
         matTooltip: T("Run Now"),
         name: "run",
         onClick: (row) => {
-          this.dialog
-            .confirm(T("Run Now"), T("Run this rsync now?"), true)
-            .subscribe((run) => {
-              if (run) {
-                row.state = "RUNNING";
-                this.ws.call("rsynctask.run", [row.id]).subscribe(
-                  (res) => {
-                    this.dialog.Info(
-                      T("Task Started"),
-                      "Rsync task <i>" +
-                        row.remotehost +
-                        " - " +
-                        row.remotemodule +
-                        "</i> started.",
-                      "500px",
-                      "info",
-                      true
-                    );
-                    this.job.getJobStatus(res).subscribe((task) => {
-                      row.state = task.state;
-                      row.job = task;
-                    });
-                  },
-                  (err) => {
-                    new EntityUtils().handleWSError(this, err);
-                  }
-                );
-              }
-            });
+          this.dialog.confirm(T("Run Now"), T("Run this rsync now?"), true).subscribe((run) => {
+            if (run) {
+              row.state = "RUNNING";
+              this.ws.call("rsynctask.run", [row.id]).subscribe(
+                (res) => {
+                  this.dialog.Info(
+                    T("Task Started"),
+                    "Rsync task <i>" + row.remotehost + " - " + row.remotemodule + "</i> started.",
+                    "500px",
+                    "info",
+                    true
+                  );
+                  this.job.getJobStatus(res).subscribe((task) => {
+                    row.state = task.state;
+                    row.job = task;
+                  });
+                },
+                (err) => {
+                  new EntityUtils().handleWSError(this, err);
+                }
+              );
+            }
+          });
         },
       },
     ];
@@ -892,10 +811,7 @@ export class DataProtectionDashboardComponent implements OnInit, OnDestroy {
   isActionVisible(name: string, row: any) {
     if (name === "run" && row.job && row.state === "RUNNING") {
       return false;
-    } else if (
-      name === "stop" &&
-      (row.job ? row.job && row.state !== "RUNNING" : true)
-    ) {
+    } else if (name === "stop" && (row.job ? row.job && row.state !== "RUNNING" : true)) {
       return false;
     }
     return true;
@@ -905,13 +821,7 @@ export class DataProtectionDashboardComponent implements OnInit, OnDestroy {
     if (row.state === "RUNNING") {
       // this.runningStateButton(row.job.id)
     } else if (row.state === "HOLD") {
-      this.dialog.Info(
-        T("Task is on hold"),
-        row.state.reason,
-        "500px",
-        "info",
-        true
-      );
+      this.dialog.Info(T("Task is on hold"), row.state.reason, "500px", "info", true);
     } else {
       const error = row.job && row.state === "ERROR" ? row.job.error : null;
       const log = row.job && row.job.logs_excerpt ? row.job.logs_excerpt : null;
@@ -950,21 +860,15 @@ export class DataProtectionDashboardComponent implements OnInit, OnDestroy {
             if (dialog_res) {
               const filename = `${row.job.id}.log`;
               this.ws
-                .call("core.download", [
-                  "filesystem.get",
-                  [row.job.logs_path],
-                  filename,
-                ])
+                .call("core.download", ["filesystem.get", [row.job.logs_path], filename])
                 .subscribe(
                   (res) => {
                     const url = res[1];
                     const mimetype = "text/plain";
-                    this.storage
-                      .streamDownloadFile(this.http, url, filename, mimetype)
-                      .subscribe(
-                        (blob) => this.storage.downloadBlob(blob, filename),
-                        (err) => new EntityUtils().handleWSError(this, err)
-                      );
+                    this.storage.streamDownloadFile(this.http, url, filename, mimetype).subscribe(
+                      (blob) => this.storage.downloadBlob(blob, filename),
+                      (err) => new EntityUtils().handleWSError(this, err)
+                    );
                   },
                   (err) => new EntityUtils().handleWSError(this, err)
                 );

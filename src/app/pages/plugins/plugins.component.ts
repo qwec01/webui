@@ -5,11 +5,7 @@ import { Router } from "@angular/router";
 import * as myIP from "what-is-my-ip-address";
 
 import { AvailablePluginsComponent } from "./available-plugins/available-plugins.component";
-import {
-  AppLoaderService,
-  WebSocketService,
-  DialogService,
-} from "../../services";
+import { AppLoaderService, WebSocketService, DialogService } from "../../services";
 import { EntityUtils } from "../common/entity/utils";
 import { T } from "../../translate-marker";
 import * as _ from "lodash";
@@ -90,25 +86,19 @@ export class PluginsComponent {
       onClick: (selected) => {
         const selectedJails = this.getSelectedNames(selected);
         this.loader.open();
-        this.entityList.busy = this.ws
-          .job("core.bulk", ["jail.start", selectedJails])
-          .subscribe(
-            (res) => {
-              this.updateRows(selected).then(() => {
-                this.entityList.table.rowDetail.collapseAllRows();
-                this.updateMultiAction(selected);
-                this.loader.close();
-              });
-            },
-            (res) => {
-              new EntityUtils().handleWSError(
-                this.entityList,
-                res,
-                this.dialogService
-              );
+        this.entityList.busy = this.ws.job("core.bulk", ["jail.start", selectedJails]).subscribe(
+          (res) => {
+            this.updateRows(selected).then(() => {
+              this.entityList.table.rowDetail.collapseAllRows();
+              this.updateMultiAction(selected);
               this.loader.close();
-            }
-          );
+            });
+          },
+          (res) => {
+            new EntityUtils().handleWSError(this.entityList, res, this.dialogService);
+            this.loader.close();
+          }
+        );
       },
     },
     {
@@ -120,25 +110,19 @@ export class PluginsComponent {
       onClick: (selected) => {
         const selectedJails = this.getSelectedNames(selected);
         this.loader.open();
-        this.entityList.busy = this.ws
-          .job("core.bulk", ["jail.stop", selectedJails])
-          .subscribe(
-            (res) => {
-              this.updateRows(selected).then(() => {
-                this.entityList.table.rowDetail.collapseAllRows();
-                this.updateMultiAction(selected);
-                this.loader.close();
-              });
-            },
-            (res) => {
-              new EntityUtils().handleWSError(
-                this.entityList,
-                res,
-                this.dialogService
-              );
+        this.entityList.busy = this.ws.job("core.bulk", ["jail.stop", selectedJails]).subscribe(
+          (res) => {
+            this.updateRows(selected).then(() => {
+              this.entityList.table.rowDetail.collapseAllRows();
+              this.updateMultiAction(selected);
               this.loader.close();
-            }
-          );
+            });
+          },
+          (res) => {
+            new EntityUtils().handleWSError(this.entityList, res, this.dialogService);
+            this.loader.close();
+          }
+        );
       },
     },
     {
@@ -161,12 +145,7 @@ export class PluginsComponent {
               for (let i = 0; i < res.result.length; i++) {
                 if (res.result[i].error != null) {
                   message =
-                    message +
-                    "<li>" +
-                    selectedJails[i] +
-                    ": " +
-                    res.result[i].error +
-                    "</li>";
+                    message + "<li>" + selectedJails[i] + ": " + res.result[i].error + "</li>";
                 }
               }
               this.updateRows(selected).then(() => {
@@ -178,19 +157,12 @@ export class PluginsComponent {
                   );
                 } else {
                   message = "<ul>" + message + "</ul>";
-                  this.dialogService.errorReport(
-                    T("Plugin Update Failed"),
-                    message
-                  );
+                  this.dialogService.errorReport(T("Plugin Update Failed"), message);
                 }
               });
             },
             (res) => {
-              new EntityUtils().handleWSError(
-                this.entityList,
-                res,
-                this.dialogService
-              );
+              new EntityUtils().handleWSError(this.entityList, res, this.dialogService);
             }
           );
       },
@@ -247,11 +219,7 @@ export class PluginsComponent {
           },
           (err) => {
             resolve(false);
-            new EntityUtils().handleWSError(
-              this.entityList,
-              err,
-              this.dialogService
-            );
+            new EntityUtils().handleWSError(this.entityList, err, this.dialogService);
           }
         );
 
@@ -290,9 +258,7 @@ export class PluginsComponent {
 
     dialogRef.subscribe((res) => {
       if (res) {
-        this.router.navigate(
-          new Array("/").concat(["storage", "pools", "manager"])
-        );
+        this.router.navigate(new Array("/").concat(["storage", "pools", "manager"]));
       }
     });
   }
@@ -337,8 +303,7 @@ export class PluginsComponent {
             self.entityList.getData();
             self.dialogService.Info(
               jailHelptext.activatePoolDialog.successInfoDialog.title,
-              jailHelptext.activatePoolDialog.successInfoDialog.message +
-                value["selectedPool"],
+              jailHelptext.activatePoolDialog.successInfoDialog.message + value["selectedPool"],
               "500px",
               "info",
               true
@@ -346,11 +311,7 @@ export class PluginsComponent {
           },
           (res) => {
             self.entityList.loader.close();
-            new EntityUtils().handleWSError(
-              self.entityList,
-              res,
-              self.dialogService
-            );
+            new EntityUtils().handleWSError(self.entityList, res, self.dialogService);
           }
         );
       },
@@ -415,9 +376,7 @@ export class PluginsComponent {
                   ? res[targetIndex][i]
                       .split(",")
                       .map(function (e) {
-                        return _.split(e, "|").length > 1
-                          ? _.split(e, "|")[1]
-                          : e;
+                        return _.split(e, "|").length > 1 ? _.split(e, "|")[1] : e;
                       })
                       .join(",")
                   : i === "boot"
@@ -538,17 +497,12 @@ export class PluginsComponent {
             disableClose: true,
           });
           dialogRef.componentInstance.disableProgressValue(true);
-          dialogRef.componentInstance.setCall("jail.update_to_latest_patch", [
-            row.name,
-          ]);
+          dialogRef.componentInstance.setCall("jail.update_to_latest_patch", [row.name]);
           dialogRef.componentInstance.submit();
           dialogRef.componentInstance.success.subscribe((res) => {
             dialogRef.close(true);
             this.updateRows([row]);
-            this.dialogService.Info(
-              T("Plugin Updated"),
-              T("Plugin ") + row.name + T(" updated.")
-            );
+            this.dialogService.Info(T("Plugin Updated"), T("Plugin ") + row.name + T(" updated."));
           });
         },
       },
@@ -558,9 +512,7 @@ export class PluginsComponent {
         id: "mount",
         label: T("Mount points"),
         onClick: (row) => {
-          this.router.navigate(
-            new Array("").concat(["jails", "storage", row.name])
-          );
+          this.router.navigate(new Array("").concat(["jails", "storage", row.name]));
         },
       },
       {
@@ -646,8 +598,7 @@ export class PluginsComponent {
   }
 
   getRegistrationLink() {
-    const url =
-      "https://licenseportal.asigra.com/licenseportal/user-registration.do";
+    const url = "https://licenseportal.asigra.com/licenseportal/user-registration.do";
     const form = document.createElement("form");
     form.action = url;
     form.method = "POST";
@@ -689,20 +640,18 @@ export class PluginsComponent {
   onCheckboxChange(row) {
     this.loader.open();
     row.boot = !row.boot;
-    this.ws
-      .call("plugin.update", [row.id, { boot: row.boot ? "on" : "off" }])
-      .subscribe(
-        (res) => {
-          if (!res) {
-            row.boot = !row.boot;
-          }
-          this.loader.close();
-        },
-        (err) => {
-          this.loader.close();
-          new EntityUtils().handleWSError(this, err, this.dialogService);
+    this.ws.call("plugin.update", [row.id, { boot: row.boot ? "on" : "off" }]).subscribe(
+      (res) => {
+        if (!res) {
+          row.boot = !row.boot;
         }
-      );
+        this.loader.close();
+      },
+      (err) => {
+        this.loader.close();
+        new EntityUtils().handleWSError(this, err, this.dialogService);
+      }
+    );
   }
 
   gotoAdminPortal(row) {

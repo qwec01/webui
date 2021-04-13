@@ -2,11 +2,7 @@ import { Component, OnDestroy } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import * as _ from "lodash";
 
-import {
-  WebSocketService,
-  StorageService,
-  DialogService,
-} from "../../../../../services/";
+import { WebSocketService, StorageService, DialogService } from "../../../../../services/";
 import { MessageService } from "../../../../common/entity/entity-form/services/message.service";
 import { FieldConfig } from "../../../../common/entity/entity-form/models/field-config.interface";
 import { AppLoaderService } from "../../../../../services/app-loader/app-loader.service";
@@ -200,12 +196,8 @@ export class DatasetUnlockComponent implements OnDestroy {
         if (res.result && res.result.length > 0) {
           for (let i = 0; i < res.result.length; i++) {
             if (this.datasets.controls[i] === undefined) {
-              const templateListField = _.cloneDeep(
-                this.datasets_fc.templateListField
-              );
-              const newfg = entityEdit.entityFormService.createFormGroup(
-                templateListField
-              );
+              const templateListField = _.cloneDeep(this.datasets_fc.templateListField);
+              const newfg = entityEdit.entityFormService.createFormGroup(templateListField);
               newfg.setParent(this.datasets);
               this.datasets.controls.push(newfg);
               this.datasets_fc.listFields.push(templateListField);
@@ -216,8 +208,7 @@ export class DatasetUnlockComponent implements OnDestroy {
             const result = res.result[i];
 
             this.datasets.controls[i].controls["name"].setValue(result["name"]);
-            name_text_fc.paraText =
-              helptext.dataset_name_paratext + result["name"];
+            name_text_fc.paraText = helptext.dataset_name_paratext + result["name"];
             const is_passphrase = result.key_format === "PASSPHRASE";
             if (!is_passphrase) {
               // hide key datasets by default
@@ -229,9 +220,7 @@ export class DatasetUnlockComponent implements OnDestroy {
                 this.key_file_fc.width = "50%";
               }
             }
-            this.datasets.controls[i].controls["is_passphrase"].setValue(
-              is_passphrase
-            );
+            this.datasets.controls[i].controls["is_passphrase"].setValue(is_passphrase);
             this.setDisabled(
               passphrase_fc,
               this.datasets.controls[i].controls["passphrase"],
@@ -252,40 +241,28 @@ export class DatasetUnlockComponent implements OnDestroy {
     this.key_file_fg = entityEdit.formGroup.controls["key_file"];
     this.unlock_children_fg = entityEdit.formGroup.controls["unlock_children"];
 
-    this.key_file_subscription = this.key_file_fg.valueChanges.subscribe(
-      (hide_key_datasets) => {
-        for (let i = 0; i < this.datasets.controls.length; i++) {
-          const dataset_controls = this.datasets.controls[i].controls;
-          const controls = listFields[i];
-          const key_fc = _.find(controls, { name: "key" });
-          const name_text_fc = _.find(controls, { name: "name_text" });
+    this.key_file_subscription = this.key_file_fg.valueChanges.subscribe((hide_key_datasets) => {
+      for (let i = 0; i < this.datasets.controls.length; i++) {
+        const dataset_controls = this.datasets.controls[i].controls;
+        const controls = listFields[i];
+        const key_fc = _.find(controls, { name: "key" });
+        const name_text_fc = _.find(controls, { name: "name_text" });
 
-          const is_passphrase = dataset_controls["is_passphrase"].value;
-          const unlock_children = this.unlock_children_fg.value;
-          if (dataset_controls["name"].value === this.pk) {
-            if (!is_passphrase) {
-              name_text_fc.isHidden = hide_key_datasets;
-              this.setDisabled(
-                key_fc,
-                dataset_controls["key"],
-                hide_key_datasets,
-                hide_key_datasets
-              );
-            }
-          } else {
-            if (unlock_children && !is_passphrase) {
-              name_text_fc.isHidden = hide_key_datasets;
-              this.setDisabled(
-                key_fc,
-                dataset_controls["key"],
-                hide_key_datasets,
-                hide_key_datasets
-              );
-            }
+        const is_passphrase = dataset_controls["is_passphrase"].value;
+        const unlock_children = this.unlock_children_fg.value;
+        if (dataset_controls["name"].value === this.pk) {
+          if (!is_passphrase) {
+            name_text_fc.isHidden = hide_key_datasets;
+            this.setDisabled(key_fc, dataset_controls["key"], hide_key_datasets, hide_key_datasets);
+          }
+        } else {
+          if (unlock_children && !is_passphrase) {
+            name_text_fc.isHidden = hide_key_datasets;
+            this.setDisabled(key_fc, dataset_controls["key"], hide_key_datasets, hide_key_datasets);
           }
         }
       }
-    );
+    });
     this.unlock_children_subscription = this.unlock_children_fg.valueChanges.subscribe(
       (unlock_children) => {
         for (let i = 0; i < this.datasets.controls.length; i++) {

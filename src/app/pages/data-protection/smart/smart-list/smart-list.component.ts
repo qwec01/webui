@@ -58,11 +58,9 @@ export class SmartListComponent implements OnDestroy {
     protected taskService: TaskService,
     protected entityFormService: EntityFormService
   ) {
-    this.disksSubscription = this.storageService
-      .listDisks()
-      .subscribe((listDisks) => {
-        this.listDisks = listDisks;
-      });
+    this.disksSubscription = this.storageService.listDisks().subscribe((listDisks) => {
+      this.listDisks = listDisks;
+    });
   }
 
   resourceTransformIncomingRestData(data: any) {
@@ -72,8 +70,7 @@ export class SmartListComponent implements OnDestroy {
         test.disks = [T("All Disks")];
       } else if (test.disks.length) {
         const readableDisks = test.disks.map((disk) => {
-          return this.listDisks.find((item) => item.identifier === disk)
-            .devname;
+          return this.listDisks.find((item) => item.identifier === disk).devname;
         });
         test.disks = readableDisks;
       }
@@ -82,11 +79,7 @@ export class SmartListComponent implements OnDestroy {
   }
 
   doAdd(id?: number) {
-    this.modalService.open(
-      "slide-in-form",
-      new SmartFormComponent(this.ws, this.modalService),
-      id
-    );
+    this.modalService.open("slide-in-form", new SmartFormComponent(this.ws, this.modalService), id);
   }
 
   doEdit(id: number) {

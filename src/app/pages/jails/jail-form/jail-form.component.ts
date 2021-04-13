@@ -911,8 +911,7 @@ export class JailFormComponent implements OnInit, AfterViewInit {
 
   public basicfieldConfig = _.find(this.fieldSets, { class: "basic" }).config;
   public jailfieldConfig = _.find(this.fieldSets, { class: "jail" }).config;
-  public networkfieldConfig = _.find(this.fieldSets, { class: "network" })
-    .config;
+  public networkfieldConfig = _.find(this.fieldSets, { class: "network" }).config;
   public customConfig = _.find(this.fieldSets, { class: "custom" }).config;
   protected formFields = _.concat(
     this.basicfieldConfig,
@@ -1011,8 +1010,7 @@ export class JailFormComponent implements OnInit, AfterViewInit {
   setValuechange() {
     const httpsField = _.find(this.formFields, { name: "https" });
     this.formGroup.controls["release"].valueChanges.subscribe((res) => {
-      httpsField.isHidden =
-        _.indexOf(this.unfetchedRelease, res) > -1 ? false : true;
+      httpsField.isHidden = _.indexOf(this.unfetchedRelease, res) > -1 ? false : true;
     });
 
     this.formGroup.controls["dhcp"].valueChanges.subscribe((res) => {
@@ -1026,12 +1024,7 @@ export class JailFormComponent implements OnInit, AfterViewInit {
           this.wsResponse &&
           this.wsResponse.state !== "up"
         ) {
-          this.jailFromService.setDisabled(
-            this.formGroup,
-            this.formFields,
-            "nat",
-            res
-          );
+          this.jailFromService.setDisabled(this.formGroup, this.formFields, "nat", res);
         }
       });
     });
@@ -1061,36 +1054,24 @@ export class JailFormComponent implements OnInit, AfterViewInit {
       this.ip6_interfaceField.options = res
         ? this.interfaces.vnetEnabled
         : this.interfaces.vnetDisabled;
-      this.jailFromService.updateInterface(
-        this.formGroup,
-        this.basicfieldConfig,
-        res
-      );
+      this.jailFromService.updateInterface(this.formGroup, this.basicfieldConfig, res);
     });
 
     const bpfFieldConfig = _.find(this.basicfieldConfig, { name: "bpf" });
     this.formGroup.controls["bpf"].valueChanges.subscribe((res) => {
-      const hasError =
-        !res && this.formGroup.controls["dhcp"].value ? true : false;
+      const hasError = !res && this.formGroup.controls["dhcp"].value ? true : false;
       bpfFieldConfig.hasErrors = hasError;
       bpfFieldConfig.errors = hasError ? T("BPF is required.") : "";
     });
 
-    this.formGroup.controls["auto_configure_ip6"].valueChanges.subscribe(
-      (res) => {
-        this.formGroup.controls["vnet"].setValue(
-          res ? true : this.formGroup.controls["vnet"].value
-        );
-        _.find(this.basicfieldConfig, { name: "vnet" }).required = res;
-      }
-    );
+    this.formGroup.controls["auto_configure_ip6"].valueChanges.subscribe((res) => {
+      this.formGroup.controls["vnet"].setValue(res ? true : this.formGroup.controls["vnet"].value);
+      _.find(this.basicfieldConfig, { name: "vnet" }).required = res;
+    });
 
     ["ip4_addr", "ip6_addr"].forEach((item) => {
       this.formGroup.controls[item].valueChanges.subscribe((res) => {
-        this.jailFromService.updateInterface(
-          this.formGroup,
-          this.basicfieldConfig
-        );
+        this.jailFromService.updateInterface(this.formGroup, this.basicfieldConfig);
       });
     });
   }
@@ -1128,12 +1109,8 @@ export class JailFormComponent implements OnInit, AfterViewInit {
         this.formGroup.controls[this.formFields[i].name].enable();
       }
     }
-    this.formGroup.controls["dhcp"].setValue(
-      this.formGroup.controls["dhcp"].value
-    );
-    this.formGroup.controls["nat"].setValue(
-      this.formGroup.controls["nat"].value
-    );
+    this.formGroup.controls["dhcp"].setValue(this.formGroup.controls["dhcp"].value);
+    this.formGroup.controls["nat"].setValue(this.formGroup.controls["nat"].value);
   }
   loadFormValue() {
     if (this.pk === undefined) {
@@ -1180,110 +1157,101 @@ export class JailFormComponent implements OnInit, AfterViewInit {
         }
       );
     } else {
-      this.ws
-        .call(this.queryCall, [[["host_hostuuid", "=", this.pk]]])
-        .subscribe(
-          (res) => {
-            this.wsResponse = res[0];
-            if (res[0] && res[0].state == "up") {
-              this.save_button_enabled = false;
-              this.error = T("Jails cannot be changed while running.");
-              for (let i = 0; i < this.formFields.length; i++) {
-                this.jailFromService.setDisabled(
-                  this.formGroup,
-                  this.formFields,
-                  this.formFields[i].name,
-                  true,
-                  this.formFields[i].isHidden
-                );
-              }
-            } else {
-              this.save_button_enabled = true;
-              this.error = "";
-            }
-            const allowMountList = [];
-            for (let i in res[0]) {
-              this.loadInterfaces(res[0], i);
-              if (_.startsWith(i, "allow_mount_") && res[0][i] === 1) {
-                allowMountList.push(i);
-              }
-              if (this.formGroup.controls[i]) {
-                if (i == "ip4_addr" || i == "ip6_addr") {
-                  this.jailFromService.deparseIpaddr(
-                    res[0][i],
-                    i.split("_")[0],
-                    this.formGroup,
-                    this.basicfieldConfig
-                  );
-                  continue;
-                }
-                if (i === "nat_forwards") {
-                  this.jailFromService.deparseNatForwards(
-                    res[0][i],
-                    this.formGroup,
-                    this.networkfieldConfig
-                  );
-                  continue;
-                }
-                if (i == "release") {
-                  _.find(this.basicfieldConfig, {
-                    name: "release",
-                  }).options.push({ label: res[0][i], value: res[0][i] });
-                  this.currentReleaseVersion = Number(
-                    _.split(res[0][i], "-")[0]
-                  );
-                }
-                this.jailFromService.handleTFfiledValues(res[0], i);
-                this.formGroup.controls[i].setValue(res[0][i]);
-              }
-              if (i == "type") {
-                if (res[0][i] == "pluginv2") {
-                  this.jailFromService.setDisabled(
-                    this.formGroup,
-                    this.formFields,
-                    "uuid",
-                    true
-                  );
-                  this.isPlugin = true;
-                }
-                this.jailFromService.setDisabled(
-                  this.formGroup,
-                  this.formFields,
-                  "plugin_name",
-                  true,
-                  !this.isPlugin
-                );
-              }
-            }
-            this.showSpinner = false;
-            if (res[0] && res[0].state === "up") {
-              this.disableForm();
-            } else {
-              for (let i = 0; i < this.formFields.length; i++) {
-                if (
-                  !this.formFields[i].isHidden &&
-                  this.formFields[i].name !== "release" &&
-                  this.formFields[i].name !== "plugin_name" &&
-                  (!this.isPlugin || this.formFields[i].name !== "uuid")
-                ) {
-                  this.formGroup.controls[this.formFields[i].name].enable();
-                }
-              }
-            }
-            this.formGroup.controls["dhcp"].setValue(res[0]["dhcp"]);
-            this.formGroup.controls["nat"].setValue(res[0]["nat"]);
-            this.formGroup.controls["uuid"].setValue(res[0]["host_hostuuid"]);
-            this.formGroup.controls["allow_mount_*"].setValue(allowMountList);
-            if (this.formGroup.controls["auto_configure_ip6"].value) {
-              this.formGroup.controls["auto_configure_ip6"].setValue(
-                this.formGroup.controls["auto_configure_ip6"].value
+      this.ws.call(this.queryCall, [[["host_hostuuid", "=", this.pk]]]).subscribe(
+        (res) => {
+          this.wsResponse = res[0];
+          if (res[0] && res[0].state == "up") {
+            this.save_button_enabled = false;
+            this.error = T("Jails cannot be changed while running.");
+            for (let i = 0; i < this.formFields.length; i++) {
+              this.jailFromService.setDisabled(
+                this.formGroup,
+                this.formFields,
+                this.formFields[i].name,
+                true,
+                this.formFields[i].isHidden
               );
             }
-          },
-          (res) => {
-            new EntityUtils().handleWSError(this, res, this.dialogService);
+          } else {
+            this.save_button_enabled = true;
+            this.error = "";
           }
-        );
+          const allowMountList = [];
+          for (let i in res[0]) {
+            this.loadInterfaces(res[0], i);
+            if (_.startsWith(i, "allow_mount_") && res[0][i] === 1) {
+              allowMountList.push(i);
+            }
+            if (this.formGroup.controls[i]) {
+              if (i == "ip4_addr" || i == "ip6_addr") {
+                this.jailFromService.deparseIpaddr(
+                  res[0][i],
+                  i.split("_")[0],
+                  this.formGroup,
+                  this.basicfieldConfig
+                );
+                continue;
+              }
+              if (i === "nat_forwards") {
+                this.jailFromService.deparseNatForwards(
+                  res[0][i],
+                  this.formGroup,
+                  this.networkfieldConfig
+                );
+                continue;
+              }
+              if (i == "release") {
+                _.find(this.basicfieldConfig, {
+                  name: "release",
+                }).options.push({ label: res[0][i], value: res[0][i] });
+                this.currentReleaseVersion = Number(_.split(res[0][i], "-")[0]);
+              }
+              this.jailFromService.handleTFfiledValues(res[0], i);
+              this.formGroup.controls[i].setValue(res[0][i]);
+            }
+            if (i == "type") {
+              if (res[0][i] == "pluginv2") {
+                this.jailFromService.setDisabled(this.formGroup, this.formFields, "uuid", true);
+                this.isPlugin = true;
+              }
+              this.jailFromService.setDisabled(
+                this.formGroup,
+                this.formFields,
+                "plugin_name",
+                true,
+                !this.isPlugin
+              );
+            }
+          }
+          this.showSpinner = false;
+          if (res[0] && res[0].state === "up") {
+            this.disableForm();
+          } else {
+            for (let i = 0; i < this.formFields.length; i++) {
+              if (
+                !this.formFields[i].isHidden &&
+                this.formFields[i].name !== "release" &&
+                this.formFields[i].name !== "plugin_name" &&
+                (!this.isPlugin || this.formFields[i].name !== "uuid")
+              ) {
+                this.formGroup.controls[this.formFields[i].name].enable();
+              }
+            }
+          }
+          this.formGroup.controls["dhcp"].setValue(res[0]["dhcp"]);
+          this.formGroup.controls["nat"].setValue(res[0]["nat"]);
+          this.formGroup.controls["uuid"].setValue(res[0]["host_hostuuid"]);
+          this.formGroup.controls["allow_mount_*"].setValue(allowMountList);
+          if (this.formGroup.controls["auto_configure_ip6"].value) {
+            this.formGroup.controls["auto_configure_ip6"].setValue(
+              this.formGroup.controls["auto_configure_ip6"].value
+            );
+          }
+        },
+        (res) => {
+          new EntityUtils().handleWSError(this, res, this.dialogService);
+        }
+      );
     }
   }
 
@@ -1296,13 +1264,7 @@ export class JailFormComponent implements OnInit, AfterViewInit {
       this.getReleaseAndInterface();
 
       if (this.pk !== undefined || this.plugin !== undefined) {
-        this.jailFromService.setDisabled(
-          this.formGroup,
-          this.formFields,
-          "jailtype",
-          true,
-          true
-        );
+        this.jailFromService.setDisabled(this.formGroup, this.formFields, "jailtype", true, true);
         this.jailFromService.setDisabled(
           this.formGroup,
           this.formFields,
@@ -1310,13 +1272,7 @@ export class JailFormComponent implements OnInit, AfterViewInit {
           true,
           this.pk !== undefined ? false : true
         );
-        this.jailFromService.setDisabled(
-          this.formGroup,
-          this.formFields,
-          "https",
-          true,
-          true
-        );
+        this.jailFromService.setDisabled(this.formGroup, this.formFields, "https", true, true);
 
         if (this.plugin !== undefined) {
           this.formGroup.controls["plugin_name"].setValue(this.plugin);
@@ -1357,19 +1313,13 @@ export class JailFormComponent implements OnInit, AfterViewInit {
 
     for (const ipType of ["ip4", "ip6"]) {
       const targetPropName = ipType + "_addr";
-      for (
-        let i = 0;
-        i < this.formGroup.controls[targetPropName].controls.length;
-        i++
-      ) {
+      for (let i = 0; i < this.formGroup.controls[targetPropName].controls.length; i++) {
         const subipInterfaceField = _.find(
           _.find(this.basicfieldConfig, { name: targetPropName }).listFields[i],
           { name: ipType + "_interface" }
         );
         subipInterfaceField.options =
-          ipType === "ip4"
-            ? this.ip4_interfaceField.options
-            : this.ip6_interfaceField.options;
+          ipType === "ip4" ? this.ip4_interfaceField.options : this.ip6_interfaceField.options;
       }
     }
   }
@@ -1377,25 +1327,17 @@ export class JailFormComponent implements OnInit, AfterViewInit {
   goBack() {
     this.router.navigate(
       new Array("").concat(
-        this.plugin === undefined
-          ? this.route_success
-          : this.plugin_route_success
+        this.plugin === undefined ? this.route_success : this.plugin_route_success
       )
     );
   }
 
-  openJobDialog(
-    type: "pluginInstall" | "jailInstall" | "jailEdit",
-    wsCall,
-    payload
-  ) {
+  openJobDialog(type: "pluginInstall" | "jailInstall" | "jailEdit", wsCall, payload) {
     const dialogRef = this.dialog.open(EntityJobComponent, {
       data: { title: helptext.jailFormJobDialog[type].title },
       disableClose: true,
     });
-    dialogRef.componentInstance.setDescription(
-      helptext.jailFormJobDialog[type].description
-    );
+    dialogRef.componentInstance.setDescription(helptext.jailFormJobDialog[type].description);
     dialogRef.componentInstance.setCall(wsCall, payload);
     dialogRef.componentInstance.submit();
     return dialogRef;
@@ -1410,11 +1352,7 @@ export class JailFormComponent implements OnInit, AfterViewInit {
     const property: any = [];
     const value = _.cloneDeep(this.formGroup.value);
 
-    this.jailFromService.parseIpaddr(
-      value,
-      this.ip4_interfaceField,
-      this.ip6_interfaceField
-    );
+    this.jailFromService.parseIpaddr(value, this.ip4_interfaceField, this.ip6_interfaceField);
     this.jailFromService.parseNatForwards(value);
 
     if (value["auto_configure_ip6"]) {
@@ -1444,12 +1382,7 @@ export class JailFormComponent implements OnInit, AfterViewInit {
               property.push(i + (value[i] ? "=1" : "=0"));
               delete value[i];
             } else {
-              if (
-                i != "uuid" &&
-                i != "release" &&
-                i != "basejail" &&
-                i != "https"
-              ) {
+              if (i != "uuid" && i != "release" && i != "basejail" && i != "https") {
                 property.push(i + "=" + value[i]);
                 delete value[i];
               }
@@ -1513,15 +1446,9 @@ export class JailFormComponent implements OnInit, AfterViewInit {
       value["jail_name"] = value["uuid"];
       delete value["uuid"];
 
-      const dialogRef = this.openJobDialog(
-        "pluginInstall",
-        this.pluginAddCall,
-        [value]
-      );
+      const dialogRef = this.openJobDialog("pluginInstall", this.pluginAddCall, [value]);
       dialogRef.componentInstance.success.subscribe((res) => {
-        dialogRef.componentInstance.setTitle(
-          T("Plugin Installed Successfully")
-        );
+        dialogRef.componentInstance.setTitle(T("Plugin Installed Successfully"));
         let install_notes = "<p><b>Install Notes:</b></p>";
         for (const msg of res.result.install_notes.split("\n")) {
           install_notes += "<p>" + msg + "</p>";
@@ -1530,15 +1457,11 @@ export class JailFormComponent implements OnInit, AfterViewInit {
         dialogRef.componentInstance.showCloseButton = true;
 
         dialogRef.afterClosed().subscribe((result) => {
-          this.router.navigate(
-            new Array("/").concat(this.plugin_route_success)
-          );
+          this.router.navigate(new Array("/").concat(this.plugin_route_success));
         });
       });
     } else if (this.pk === undefined) {
-      const dialogRef = this.openJobDialog("jailInstall", this.addCall, [
-        value,
-      ]);
+      const dialogRef = this.openJobDialog("jailInstall", this.addCall, [value]);
       dialogRef.componentInstance.success.subscribe((res) => {
         dialogRef.close(true);
         this.router.navigate(new Array("/").concat(this.route_success));
@@ -1569,10 +1492,7 @@ export class JailFormComponent implements OnInit, AfterViewInit {
               release: newRelease,
               plugin: this.isPlugin,
             };
-            const dialogRef = this.openJobDialog("jailEdit", this.upgradeCall, [
-              this.pk,
-              option,
-            ]);
+            const dialogRef = this.openJobDialog("jailEdit", this.upgradeCall, [this.pk, option]);
             dialogRef.componentInstance.success.subscribe((dialogRes) => {
               dialogRef.close(true);
               this.router.navigate(new Array("/").concat(this.route_success));

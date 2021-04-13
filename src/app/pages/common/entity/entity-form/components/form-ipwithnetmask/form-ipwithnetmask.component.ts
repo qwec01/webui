@@ -1,11 +1,4 @@
-import {
-  Component,
-  Output,
-  ViewChild,
-  EventEmitter,
-  OnInit,
-  OnDestroy,
-} from "@angular/core";
+import { Component, Output, ViewChild, EventEmitter, OnInit, OnDestroy } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { TranslateService } from "@ngx-translate/core";
 
@@ -35,10 +28,7 @@ export class FormIpWithNetmaskComponent implements Field, OnInit, OnDestroy {
   private valueSubscription: any;
   private control: any;
 
-  constructor(
-    public translate: TranslateService,
-    private network: NetworkService
-  ) {}
+  constructor(public translate: TranslateService, private network: NetworkService) {}
 
   ngOnInit() {
     this.control = this.group.controls[this.config.name];

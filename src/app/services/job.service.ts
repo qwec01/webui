@@ -50,10 +50,7 @@ export class JobService {
       }
     } else {
       if (job.logs_excerpt === "") {
-        this.dialog.Info(
-          globalHelptext.noLogDilaog.title,
-          globalHelptext.noLogDilaog.message
-        );
+        this.dialog.Info(globalHelptext.noLogDilaog.title, globalHelptext.noLogDilaog.message);
       } else {
         const target_job = job;
         this.dialog
@@ -85,18 +82,10 @@ export class JobService {
                     const mimetype = "text/plain";
                     let failed = false;
                     this.storage
-                      .streamDownloadFile(
-                        this.http,
-                        url,
-                        target_job.id + ".log",
-                        mimetype
-                      )
+                      .streamDownloadFile(this.http, url, target_job.id + ".log", mimetype)
                       .subscribe(
                         (file) => {
-                          this.storage.downloadBlob(
-                            file,
-                            target_job.id + ".log"
-                          );
+                          this.storage.downloadBlob(file, target_job.id + ".log");
                         },
                         (err) => {
                           failed = true;

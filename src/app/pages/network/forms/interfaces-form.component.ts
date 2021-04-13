@@ -2,11 +2,7 @@ import { Component, OnDestroy } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 
 import * as _ from "lodash";
-import {
-  NetworkService,
-  DialogService,
-  WebSocketService,
-} from "../../../services";
+import { NetworkService, DialogService, WebSocketService } from "../../../services";
 import { T } from "../../../translate-marker";
 import { FieldConfig } from "../../common/entity/entity-form/models/field-config.interface";
 import {
@@ -23,9 +19,7 @@ import isCidr, * as ipCidr from "is-cidr";
   selector: "app-interfaces-form",
   template: `<entity-form [conf]="this"></entity-form>`,
 })
-export class InterfacesFormComponent
-  extends ViewControllerComponent
-  implements OnDestroy {
+export class InterfacesFormComponent extends ViewControllerComponent implements OnDestroy {
   protected queryCall = "interface.query";
   protected addCall = "interface.create";
   protected editCall = "interface.update";
@@ -284,11 +278,7 @@ export class InterfacesFormComponent
   private vlan_fields = ["vlan_tag", "vlan_pcp", "vlan_parent_interface"];
   private lagg_fields = ["lag_protocol", "lag_ports"];
   private bridge_fields = ["bridge_members"];
-  private failover_fields = [
-    "failover_critical",
-    "failover_group",
-    "failover_vhid",
-  ];
+  private failover_fields = ["failover_critical", "failover_group", "failover_vhid"];
   private vlan_fieldset;
   private lag_fieldset;
   private bridge_fieldset;
@@ -343,11 +333,7 @@ export class InterfacesFormComponent
       this.entityForm.setDisabled(this.lagg_fields[i], !is_lagg, !is_lagg);
     }
     for (let i = 0; i < this.vlan_fields.length; i++) {
-      this.entityForm.setDisabled(
-        this.bridge_fields[i],
-        !is_bridge,
-        !is_bridge
-      );
+      this.entityForm.setDisabled(this.bridge_fields[i], !is_bridge, !is_bridge);
     }
     this.vlan_fieldset.label = is_vlan;
     this.lag_fieldset.label = is_lagg;
@@ -416,10 +402,9 @@ export class InterfacesFormComponent
       window.localStorage.getItem("product_type").includes("ENTERPRISE") &&
       window.localStorage.getItem("alias_ips") === "show"
     ) {
-      const failover_virtual_address = _.find(
-        this.ipListControl.templateListField,
-        { name: "failover_virtual_address" }
-      );
+      const failover_virtual_address = _.find(this.ipListControl.templateListField, {
+        name: "failover_virtual_address",
+      });
       const failover_address = _.find(this.ipListControl.templateListField, {
         name: "failover_address",
       });
@@ -443,9 +428,7 @@ export class InterfacesFormComponent
             if (confirm) {
               this.offload_warned = true;
             } else {
-              entityForm.formGroup.controls[
-                "disable_offload_capabilities"
-              ].setValue(false);
+              entityForm.formGroup.controls["disable_offload_capabilities"].setValue(false);
             }
           });
       }
@@ -479,11 +462,7 @@ export class InterfacesFormComponent
               ) {
                 mismatch_found = true;
               }
-              if (
-                isCidr.v6(address) ||
-                isCidr.v6(failover_address) ||
-                isCidr.v6(virtual_address)
-              ) {
+              if (isCidr.v6(address) || isCidr.v6(failover_address) || isCidr.v6(virtual_address)) {
                 v6_found = true;
               }
             }
@@ -560,9 +539,7 @@ export class InterfacesFormComponent
           }
         }
         if (!!data.aliases[i]["failover_virtual_address"]) {
-          const fv_strings = data.aliases[i]["failover_virtual_address"].split(
-            "/"
-          );
+          const fv_strings = data.aliases[i]["failover_virtual_address"].split("/");
           if (fv_strings[0]) {
             failover_virtual_aliases.push({
               address: fv_strings[0],

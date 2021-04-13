@@ -1,19 +1,10 @@
-import {
-  AfterViewInit,
-  ApplicationRef,
-  Component,
-  Injector,
-} from "@angular/core";
+import { AfterViewInit, ApplicationRef, Component, Injector } from "@angular/core";
 import { FormControl, ValidatorFn } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { T } from "app/translate-marker";
 import { map } from "rxjs/operators";
 import helptext from "../../../../helptext/storage/snapshots/snapshots";
-import {
-  DialogService,
-  RestService,
-  WebSocketService,
-} from "../../../../services/";
+import { DialogService, RestService, WebSocketService } from "../../../../services/";
 import {
   EntityFormComponent,
   Formconfiguration,
@@ -63,9 +54,7 @@ export class SnapshotAddComponent implements AfterViewInit, Formconfiguration {
           options: [],
           value: "manual-" + moment().format("YYYY-MM-DD_HH-mm"),
           validation: this.nameValidator,
-          errors: T(
-            "Name or Naming Schema is required. Only one field can be used at a time."
-          ),
+          errors: T("Name or Naming Schema is required. Only one field can be used at a time."),
           blurStatus: true,
           blurEvent: this.updateNameValidity.bind(this),
         },
@@ -111,10 +100,7 @@ export class SnapshotAddComponent implements AfterViewInit, Formconfiguration {
         const rows = new EntityUtils().flattenData(res);
 
         rows.forEach((dataItem) => {
-          if (
-            typeof dataItem.name !== "undefined" &&
-            dataItem.name.length > 0
-          ) {
+          if (typeof dataItem.name !== "undefined" && dataItem.name.length > 0) {
             this.fieldConfig[0].options.push({
               label: dataItem.name,
               value: dataItem.name,
@@ -130,9 +116,10 @@ export class SnapshotAddComponent implements AfterViewInit, Formconfiguration {
       .pipe(map(new EntityUtils().array1DToLabelValuePair))
       .subscribe(
         (options) => {
-          this.fieldConfig.find(
-            (config) => config.name === "naming_schema"
-          ).options = [{ label: "---", value: undefined }, ...options];
+          this.fieldConfig.find((config) => config.name === "naming_schema").options = [
+            { label: "---", value: undefined },
+            ...options,
+          ];
         },
         (error) => new EntityUtils().handleWSError(this, error, this.dialog)
       );
@@ -142,20 +129,14 @@ export class SnapshotAddComponent implements AfterViewInit, Formconfiguration {
     this.entityForm = entityForm;
     this.fieldConfig = entityForm.fieldConfig;
     const nameControl = this.entityForm.formGroup.get("name");
-    const nameConfig = this.fieldConfig.find(
-      (config) => config.name === "name"
-    );
+    const nameConfig = this.fieldConfig.find((config) => config.name === "name");
     const namingSchemaControl = this.entityForm.formGroup.get("naming_schema");
 
-    this.nameValidator = (
-      nc: FormControl
-    ): { [error_key: string]: string } | null => {
+    this.nameValidator = (nc: FormControl): { [error_key: string]: string } | null => {
       if (!!nc.value && !!namingSchemaControl.value) {
         nameConfig.hasErrors = nc.touched;
         return {
-          duplicateNames: T(
-            "Name and Naming Schema cannot be provided at the same time."
-          ),
+          duplicateNames: T("Name and Naming Schema cannot be provided at the same time."),
         };
       }
 

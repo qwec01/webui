@@ -1,10 +1,4 @@
-import {
-  Component,
-  ViewContainerRef,
-  AfterViewInit,
-  OnInit,
-  ViewChild,
-} from "@angular/core";
+import { Component, ViewContainerRef, AfterViewInit, OnInit, ViewChild } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { TranslateService } from "@ngx-translate/core";
 
@@ -33,10 +27,7 @@ export class FormTaskComponent implements Field, AfterViewInit, OnInit {
   protected init: boolean;
   @ViewChild("tabGroup", { static: true }) tabGroup;
 
-  constructor(
-    protected entityFormService: EntityFormService,
-    public translate: TranslateService
-  ) {}
+  constructor(protected entityFormService: EntityFormService, public translate: TranslateService) {}
   ngAfterViewInit() {
     this.active_tab = this.config.tabs[this.tabGroup.selectedIndex];
     this.setControlValue();
@@ -45,9 +36,7 @@ export class FormTaskComponent implements Field, AfterViewInit, OnInit {
   ngOnInit() {
     this.init = true;
 
-    this.tabFormGroup = this.entityFormService.createFormGroup(
-      this.config.tabs
-    );
+    this.tabFormGroup = this.entityFormService.createFormGroup(this.config.tabs);
     this.control = this.group.controls[this.config.name];
     for (let item in this.tabFormGroup.controls) {
       this.tabFormGroup.controls[item].valueChanges.subscribe(() => {
@@ -66,9 +55,7 @@ export class FormTaskComponent implements Field, AfterViewInit, OnInit {
         } else {
           this.tabGroup.selectedIndex = 1;
           this.active_tab = this.config.tabs[1];
-          this.tabFormGroup.controls[this.active_tab.name].setValue(
-            this.control.value.split(",")
-          );
+          this.tabFormGroup.controls[this.active_tab.name].setValue(this.control.value.split(","));
         }
       }
     });

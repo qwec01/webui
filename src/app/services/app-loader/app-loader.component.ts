@@ -30,14 +30,12 @@ export class AppLoaderComponent implements OnDestroy {
     private _ws: WebSocketService,
     private sysGeneralService: SystemGeneralService
   ) {
-    this.getAdvancedConfig = this.sysGeneralService.getAdvancedConfig.subscribe(
-      (res) => {
-        if (res.consolemsg) {
-          this.isShowConsole = true;
-          this.dialogRef.updateSize("200px", "248px");
-        }
+    this.getAdvancedConfig = this.sysGeneralService.getAdvancedConfig.subscribe((res) => {
+      if (res.consolemsg) {
+        this.isShowConsole = true;
+        this.dialogRef.updateSize("200px", "248px");
       }
-    );
+    });
   }
 
   onOpenConsole(): void {

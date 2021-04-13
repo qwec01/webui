@@ -19,9 +19,7 @@ export class StatsUtils {
       return null;
     }
 
-    let sum = this.stats.vmstat_summary.cpu.reduce(
-      (accumulator, currentValue) => {}
-    );
+    let sum = this.stats.vmstat_summary.cpu.reduce((accumulator, currentValue) => {});
 
     return {
       coreCount: this.stats.vmstat_summary.cpu.length,
@@ -38,18 +36,15 @@ export class StatsUtils {
     // total cpu load as percentage
     let host = { total: 0 };
     let jails = {};
-    this.stats.process_stats["process-information"].process.forEach(
-      (process, index) => {
-        // Avoid duplicates...
-        if (process["jail-name"] !== "-" && !jails[process["jail-name"]]) {
-          jails[process["jail-name"]] = { total: 0 };
-        }
-
-        let target =
-          process["jail-name"] == "-" ? host : jails[process["jail-name"]];
-        target.total += parseInt(process["percent-cpu"]);
+    this.stats.process_stats["process-information"].process.forEach((process, index) => {
+      // Avoid duplicates...
+      if (process["jail-name"] !== "-" && !jails[process["jail-name"]]) {
+        jails[process["jail-name"]] = { total: 0 };
       }
-    );
+
+      let target = process["jail-name"] == "-" ? host : jails[process["jail-name"]];
+      target.total += parseInt(process["percent-cpu"]);
+    });
 
     let result = {
       host: host,

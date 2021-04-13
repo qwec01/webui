@@ -3,11 +3,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import * as _ from "lodash";
 
 import { DialogService } from "../../../../services/";
-import {
-  RestService,
-  SystemGeneralService,
-  WebSocketService,
-} from "../../../../services/";
+import { RestService, SystemGeneralService, WebSocketService } from "../../../../services/";
 import { FieldConfig } from "../../../common/entity/entity-form/models/field-config.interface";
 import { T } from "../../../../translate-marker";
 import helptext from "../../../../helptext/services/components/service-s3";
@@ -129,21 +125,19 @@ export class ServiceS3Component implements OnDestroy {
 
   afterInit(entityForm: any) {
     this.storage_path = entityForm.formGroup.controls["storage_path"];
-    this.storage_path_subscription = this.storage_path.valueChanges.subscribe(
-      (res) => {
-        if (res && res != this.initial_path && !this.warned) {
-          this.dialog
-            .confirm(helptext.path_warning_title, helptext.path_warning_msg)
-            .subscribe((confirm) => {
-              if (!confirm) {
-                this.storage_path.setValue(this.initial_path);
-              } else {
-                this.warned = true;
-              }
-            });
-        }
+    this.storage_path_subscription = this.storage_path.valueChanges.subscribe((res) => {
+      if (res && res != this.initial_path && !this.warned) {
+        this.dialog
+          .confirm(helptext.path_warning_title, helptext.path_warning_msg)
+          .subscribe((confirm) => {
+            if (!confirm) {
+              this.storage_path.setValue(this.initial_path);
+            } else {
+              this.warned = true;
+            }
+          });
       }
-    );
+    });
     this.systemGeneralService.getCertificates().subscribe((res) => {
       this.certificate = _.find(this.fieldConfig, { name: "certificate" });
       if (res.length > 0) {

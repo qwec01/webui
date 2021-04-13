@@ -131,10 +131,6 @@ export class TaskService {
     /* Nasty type assertions due to type definition error in cron-parser lib */
     return new Array(count)
       .fill(null)
-      .map(
-        () =>
-          ((schedule.next() as unknown) as { value: { _date: Moment } }).value
-            ._date
-      );
+      .map(() => ((schedule.next() as unknown) as { value: { _date: Moment } }).value._date);
   }
 }

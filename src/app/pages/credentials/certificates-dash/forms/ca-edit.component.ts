@@ -154,8 +154,7 @@ export class CertificateAuthorityEditComponent {
         {
           type: "button",
           name: "certificate_view",
-          customEventActionLabel:
-            helptext_system_certificates.viewButton.certificate,
+          customEventActionLabel: helptext_system_certificates.viewButton.certificate,
           customEventMethod: () => {
             this.viewCertificate();
           },
@@ -318,23 +317,17 @@ export class CertificateAuthorityEditComponent {
       name: entityDialog.formGroup.controls.name.value,
     };
     entityDialog.loader.open();
-    entityDialog.ws
-      .call("certificateauthority.ca_sign_csr", [payload])
-      .subscribe(
-        () => {
-          entityDialog.loader.close();
-          self.dialog.closeAllDialogs();
-          self.modalService.refreshTable();
-        },
-        (err) => {
-          entityDialog.loader.close();
-          self.dialog.errorReport(
-            helptext_system_ca.error,
-            err.reason,
-            err.trace.formatted
-          );
-        }
-      );
+    entityDialog.ws.call("certificateauthority.ca_sign_csr", [payload]).subscribe(
+      () => {
+        entityDialog.loader.close();
+        self.dialog.closeAllDialogs();
+        self.modalService.refreshTable();
+      },
+      (err) => {
+        entityDialog.loader.close();
+        self.dialog.errorReport(helptext_system_ca.error, err.reason, err.trace.formatted);
+      }
+    );
   }
 
   viewCertificate() {
@@ -365,30 +358,23 @@ export class CertificateAuthorityEditComponent {
   exportCertificate() {
     const fileName = this.incomingData.name + ".crt";
     this.ws
-      .call("core.download", [
-        "filesystem.get",
-        [this.incomingData.certificate_path],
-        fileName,
-      ])
+      .call("core.download", ["filesystem.get", [this.incomingData.certificate_path], fileName])
       .subscribe(
         (res) => {
           const url = res[1];
           const mimetype = "application/x-x509-ca-cert";
-          this.storage
-            .streamDownloadFile(this.http, url, fileName, mimetype)
-            .subscribe(
-              (file) => {
-                this.storage.downloadBlob(file, fileName);
-              },
-              (err) => {
-                this.dialog.errorReport(
-                  helptext_system_certificates.list.download_error_dialog.title,
-                  helptext_system_certificates.list.download_error_dialog
-                    .cert_message,
-                  `${err.status} - ${err.statusText}`
-                );
-              }
-            );
+          this.storage.streamDownloadFile(this.http, url, fileName, mimetype).subscribe(
+            (file) => {
+              this.storage.downloadBlob(file, fileName);
+            },
+            (err) => {
+              this.dialog.errorReport(
+                helptext_system_certificates.list.download_error_dialog.title,
+                helptext_system_certificates.list.download_error_dialog.cert_message,
+                `${err.status} - ${err.statusText}`
+              );
+            }
+          );
         },
         (err) => {
           new EntityUtils().handleWSError(this, err, this.dialog);
@@ -424,30 +410,23 @@ export class CertificateAuthorityEditComponent {
   exportKey() {
     const fileName = this.incomingData.name + ".key";
     this.ws
-      .call("core.download", [
-        "filesystem.get",
-        [this.incomingData.privatekey_path],
-        fileName,
-      ])
+      .call("core.download", ["filesystem.get", [this.incomingData.privatekey_path], fileName])
       .subscribe(
         (res) => {
           const url = res[1];
           const mimetype = "text/plain";
-          this.storage
-            .streamDownloadFile(this.http, url, fileName, mimetype)
-            .subscribe(
-              (file) => {
-                this.storage.downloadBlob(file, fileName);
-              },
-              (err) => {
-                this.dialog.errorReport(
-                  helptext_system_certificates.list.download_error_dialog.title,
-                  helptext_system_certificates.list.download_error_dialog
-                    .key_message,
-                  `${err.status} - ${err.statusText}`
-                );
-              }
-            );
+          this.storage.streamDownloadFile(this.http, url, fileName, mimetype).subscribe(
+            (file) => {
+              this.storage.downloadBlob(file, fileName);
+            },
+            (err) => {
+              this.dialog.errorReport(
+                helptext_system_certificates.list.download_error_dialog.title,
+                helptext_system_certificates.list.download_error_dialog.key_message,
+                `${err.status} - ${err.statusText}`
+              );
+            }
+          );
         },
         (err) => {
           new EntityUtils().handleWSError(this, err, this.dialog);

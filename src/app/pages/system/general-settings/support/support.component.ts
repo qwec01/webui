@@ -2,11 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import * as _ from "lodash";
 import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
-import {
-  WebSocketService,
-  AppLoaderService,
-  DialogService,
-} from "../../../../services";
+import { WebSocketService, AppLoaderService, DialogService } from "../../../../services";
 import { PreferencesService } from "app/core/services/preferences.service";
 import { ModalService } from "../../../../services/modal.service";
 import { helptext_system_support as helptext } from "app/helptext/system/support";
@@ -85,8 +81,7 @@ export class SupportComponent implements OnInit {
   ngOnInit() {
     this.ws.call("system.info").subscribe((res) => {
       this.systemInfo = res;
-      this.systemInfo.memory =
-        (res.physmem / 1024 / 1024 / 1024).toFixed(0) + " GiB";
+      this.systemInfo.memory = (res.physmem / 1024 / 1024 / 1024).toFixed(0) + " GiB";
       if (res.system_product.includes("MINI")) {
         this.getMiniImage(res.system_product);
       } else {
@@ -98,15 +93,11 @@ export class SupportComponent implements OnInit {
         this.parseLicenseInfo();
         this.ws.call("support.is_available").subscribe((res) => {
           if (res) {
-            this.ws
-              .call("support.is_available_and_enabled")
-              .subscribe((res) => {});
+            this.ws.call("support.is_available_and_enabled").subscribe((res) => {});
           }
         });
       }
-      this.licenseButtonText = this.hasLicense
-        ? helptext.updateTxt
-        : helptext.enterTxt;
+      this.licenseButtonText = this.hasLicense ? helptext.updateTxt : helptext.enterTxt;
     });
     setTimeout(() => {
       this.ws.call("truenas.is_production").subscribe((res) => {
@@ -118,22 +109,16 @@ export class SupportComponent implements OnInit {
   parseLicenseInfo() {
     this.licenseInfo.features.length === 0
       ? (this.licenseInfo.featuresString = "NONE")
-      : (this.licenseInfo.featuresString = this.licenseInfo.features.join(
-          ", "
-        ));
+      : (this.licenseInfo.featuresString = this.licenseInfo.features.join(", "));
     let expDateConverted = new Date(this.licenseInfo.contract_end.$value);
     this.licenseInfo.expiration_date = this.licenseInfo.contract_end.$value;
     this.systemInfo.system_serial_ha
       ? (this.systemInfo.serial =
-          this.systemInfo.system_serial +
-          " / " +
-          this.systemInfo.system_serial_ha)
+          this.systemInfo.system_serial + " / " + this.systemInfo.system_serial_ha)
       : (this.systemInfo.serial = this.systemInfo.system_serial);
     this.licenseInfo.addhw_detail.length === 0
       ? (this.licenseInfo.add_hardware = "NONE")
-      : (this.licenseInfo.add_hardware = this.licenseInfo.addhw_detail.join(
-          ", "
-        ));
+      : (this.licenseInfo.add_hardware = this.licenseInfo.addhw_detail.join(", "));
     const now = new Date(this.systemInfo.datetime.$date);
     const then = expDateConverted;
     this.licenseInfo.daysLeftinContract = this.daysTillExpiration(now, then);
@@ -195,9 +180,7 @@ export class SupportComponent implements OnInit {
   }
 
   fileTicket() {
-    const component = this.hasLicense
-      ? this.supportFormLicensed
-      : this.supportFormUnlicensed;
+    const component = this.hasLicense ? this.supportFormLicensed : this.supportFormUnlicensed;
     this.modalService.open("slide-in-form", component);
   }
 
@@ -258,32 +241,24 @@ export class SupportComponent implements OnInit {
         CloseOnClickOutside: false,
       },
     });
-    dialogRef.componentInstance.setDescription(
-      helptext.is_production_job.message
-    );
+    dialogRef.componentInstance.setDescription(helptext.is_production_job.message);
 
-    self.ws
-      .call(self.conf.method_ws, [true, self.formValue.send_debug])
-      .subscribe(
-        () => {
-          self.loader.close();
-          self.dialogRef.close();
-          dialogRef.componentInstance.setTitle(
-            helptext.is_production_dialog.title
-          );
-          dialogRef.componentInstance.setDescription(
-            helptext.is_production_dialog.message
-          );
-        },
-        (err) => {
-          self.loader.close();
-          self.dialogRef.close();
-          self.dialog.errorReport(
-            helptext.is_production_error_dialog.title,
-            err.error.message,
-            err.error.traceback
-          );
-        }
-      );
+    self.ws.call(self.conf.method_ws, [true, self.formValue.send_debug]).subscribe(
+      () => {
+        self.loader.close();
+        self.dialogRef.close();
+        dialogRef.componentInstance.setTitle(helptext.is_production_dialog.title);
+        dialogRef.componentInstance.setDescription(helptext.is_production_dialog.message);
+      },
+      (err) => {
+        self.loader.close();
+        self.dialogRef.close();
+        self.dialog.errorReport(
+          helptext.is_production_error_dialog.title,
+          err.error.message,
+          err.error.traceback
+        );
+      }
+    );
   }
 }

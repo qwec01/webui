@@ -1,11 +1,4 @@
-import {
-  Component,
-  ElementRef,
-  ViewChild,
-  Input,
-  OnInit,
-  AfterViewInit,
-} from "@angular/core";
+import { Component, ElementRef, ViewChild, Input, OnInit, AfterViewInit } from "@angular/core";
 import { MatTableModule, MatTable } from "@angular/material/table";
 import { DialogService, WebSocketService } from "../../../../services";
 import { EntityUtils } from "../../entity/utils";
@@ -74,9 +67,7 @@ export class EntityTreeTableComponent implements OnInit, AfterViewInit {
   }
 
   fillTable() {
-    let cols = this._conf.columns.filter(
-      (col) => !col.hidden || col.always_display == true
-    );
+    let cols = this._conf.columns.filter((col) => !col.hidden || col.always_display == true);
     this.displayedColumns = cols.map((col) => col.prop);
 
     const mutated = Object.assign([], this._conf.tableData);
@@ -90,9 +81,7 @@ export class EntityTreeTableComponent implements OnInit, AfterViewInit {
     if (!sort.active || sort.direction === "") {
       return;
     }
-    const col = this._conf.columns[
-      this._conf.columns.findIndex((c) => c.prop === sort.active)
-    ];
+    const col = this._conf.columns[this._conf.columns.findIndex((c) => c.prop === sort.active)];
     this._conf.tableData = this.sortData(
       { ...sort, sortBy: col.sortBy ? col.sortBy : col.prop },
       this._conf.tableData
@@ -180,9 +169,7 @@ export class EntityTreeTableComponent implements OnInit, AfterViewInit {
         true
       );
     } else {
-      this.tableDataSource = this.treeTableService.buildTable(
-        this.treeDataSource
-      );
+      this.tableDataSource = this.treeTableService.buildTable(this.treeDataSource);
     }
 
     this.table.renderRows();
@@ -190,15 +177,9 @@ export class EntityTreeTableComponent implements OnInit, AfterViewInit {
 
   filterNodes(key: string, value: any) {
     if (value.length > 0) {
-      this.tableDataSource = this.treeTableService.filteredTable(
-        key,
-        value,
-        this.treeDataSource
-      );
+      this.tableDataSource = this.treeTableService.filteredTable(key, value, this.treeDataSource);
     } else {
-      this.tableDataSource = this.treeTableService.buildTable(
-        this.treeDataSource
-      );
+      this.tableDataSource = this.treeTableService.buildTable(this.treeDataSource);
     }
     this.filter = { column: key, value: value };
     this.table.renderRows();
@@ -211,10 +192,7 @@ export class EntityTreeTableComponent implements OnInit, AfterViewInit {
     for (let i = 0; i < cells.length; i++) {
       const cell = cells[i];
 
-      if (
-        cell.classList.contains("mat-table-sticky") ||
-        cell.classList.contains("action-cell")
-      ) {
+      if (cell.classList.contains("mat-table-sticky") || cell.classList.contains("action-cell")) {
         if (over) {
           cell.classList.add("hover");
         } else {

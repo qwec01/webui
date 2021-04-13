@@ -1,15 +1,5 @@
-import {
-  Component,
-  OnInit,
-  Input,
-  OnDestroy,
-  Output,
-  EventEmitter,
-} from "@angular/core";
-import {
-  NotificationsService,
-  NotificationAlert,
-} from "app/services/notifications.service";
+import { Component, OnInit, Input, OnDestroy, Output, EventEmitter } from "@angular/core";
+import { NotificationsService, NotificationAlert } from "app/services/notifications.service";
 import { LocaleService } from "app/services/locale.service";
 import { Subscription } from "rxjs";
 import * as _ from "lodash";
@@ -55,11 +45,9 @@ export class NotificationsComponent implements OnInit, OnDestroy {
         });
       }, -1);
     });
-    this.dateFormatSubscription = this.localeService.dateTimeFormatChange$.subscribe(
-      () => {
-        this.ngDateFormat = `${this.localeService.getAngularFormat()}`;
-      }
-    );
+    this.dateFormatSubscription = this.localeService.dateTimeFormatChange$.subscribe(() => {
+      this.ngDateFormat = `${this.localeService.getAngularFormat()}`;
+    });
   }
 
   initData() {

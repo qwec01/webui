@@ -15,9 +15,7 @@ export const helptext_system_advanced = {
   fieldset_initshutdown: T("Init/Shutdown Scripts"),
 
   dialog_generate_debug_title: T("Generate Debug File"),
-  dialog_generate_debug_message: T(
-    "This operation might take a long time. Proceed?"
-  ),
+  dialog_generate_debug_message: T("This operation might take a long time. Proceed?"),
   dialog_button_ok: T("Proceed"),
 
   system_dataset_placeholder: T("Use System Dataset"),
@@ -65,11 +63,7 @@ export const helptext_system_advanced = {
  <i>0</i> disables swap creation completely. <b>STRONGLY\
  DISCOURAGED</b>"
   ),
-  swapondrive_validation: [
-    Validators.required,
-    Validators.min(0),
-    Validators.max(99),
-  ],
+  swapondrive_validation: [Validators.required, Validators.min(0), Validators.max(99)],
 
   overprovision: {
     placeholder: T("LOG (Write Cache) Overprovision Size in GiB"),
@@ -94,10 +88,8 @@ export const helptext_system_advanced = {
   ),
 
   debugkernel_placeholder: T("Enable Debug Kernel"),
-  debugkernel_tooltip: T(
-    "Set to boot a debug kernel after the next system\
-  reboot."
-  ),
+  debugkernel_tooltip: T("Set to boot a debug kernel after the next system\
+  reboot."),
 
   motd_placeholder: T("MOTD Banner"),
   motd_tooltip: T("The message to show when a user logs in with SSH."),
@@ -109,9 +101,7 @@ export const helptext_system_advanced = {
   ),
 
   advancedmode_placeholder: T("Show Advanced Fields by Default"),
-  advancedmode_tooltip: T(
-    "Set to always show advanced fields, when available."
-  ),
+  advancedmode_tooltip: T("Set to always show advanced fields, when available."),
 
   fqdn_placeholder: T("Use FQDN for Logging"),
   fqdn_tooltip: T(
@@ -121,15 +111,11 @@ export const helptext_system_advanced = {
   ),
 
   cpu_in_percentage_placeholder: T("Report CPU Usage in Percentage"),
-  cpu_in_percentage_tooltip: T(
-    "Set to display CPU usage as percentages in Reporting."
-  ),
+  cpu_in_percentage_tooltip: T("Set to display CPU usage as percentages in Reporting."),
 
   sed_user_placeholder: T("ATA Security User"),
-  sed_user_tooltip: T(
-    "User passed to <i>camcontrol security -u</i> to unlock\
- SEDs"
-  ),
+  sed_user_tooltip: T("User passed to <i>camcontrol security -u</i> to unlock\
+ SEDs"),
 
   sed_passwd_placeholder: T("SED Password"),
   sed_passwd_tooltip: T("Global password to unlock SEDs."),
@@ -145,10 +131,8 @@ export const helptext_system_advanced = {
 
   sysloglevel: {
     placeholder: T("Syslog Level"),
-    tooltip: T(
-      "When <i>Syslog Server</i> is defined, only logs matching this\
- level are sent."
-    ),
+    tooltip: T("When <i>Syslog Server</i> is defined, only logs matching this\
+ level are sent."),
     options: [
       { label: T("Emergency"), value: "F_EMERG" },
       { label: T("Alert"), value: "F_ALERT" },

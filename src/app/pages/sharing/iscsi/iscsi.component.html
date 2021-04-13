@@ -1,11 +1,6 @@
 <mat-card>
   <div dir="rtl">
-    <button
-      mat-button
-      color="primary"
-      id="iscsi_wizard_action_button"
-      (click)="gotoWizard()"
-    >
+    <button mat-button color="primary" id="iscsi_wizard_action_button" (click)="gotoWizard()">
       Wizard
     </button>
   </div>
@@ -28,22 +23,14 @@
     <app-iscsi-globalconfiguration
       *ngIf="activedTab == 'configuration'"
     ></app-iscsi-globalconfiguration>
-    <app-iscsi-portal-list
-      *ngIf="activedTab == 'portals'"
-    ></app-iscsi-portal-list>
-    <app-iscsi-initiator-list
-      *ngIf="activedTab == 'initiator'"
-    ></app-iscsi-initiator-list>
-    <app-iscsi-authorizedaccess-list
-      *ngIf="activedTab == 'auth'"
-    ></app-iscsi-authorizedaccess-list>
+    <app-iscsi-portal-list *ngIf="activedTab == 'portals'"></app-iscsi-portal-list>
+    <app-iscsi-initiator-list *ngIf="activedTab == 'initiator'"></app-iscsi-initiator-list>
+    <app-iscsi-authorizedaccess-list *ngIf="activedTab == 'auth'"></app-iscsi-authorizedaccess-list>
     <app-iscsi-target-list
       *ngIf="activedTab == 'target'"
       [fcEnabled]="fcEnabled"
     ></app-iscsi-target-list>
-    <app-iscsi-extent-list
-      *ngIf="activedTab == 'extent'"
-    ></app-iscsi-extent-list>
+    <app-iscsi-extent-list *ngIf="activedTab == 'extent'"></app-iscsi-extent-list>
     <app-iscsi-associated-target-list
       *ngIf="activedTab == 'associatedtarget'"
     ></app-iscsi-associated-target-list>

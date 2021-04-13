@@ -108,9 +108,7 @@ export class CoreService {
     if (this.debug && this.debug_show_dispatch_table) {
       console.log("UNREGISTER: DISPATCH = ");
       const tbl = this.debug_filter_eventName
-        ? this.dispatchTable.filter(
-            (r) => r.eventName == this.debug_filter_eventName
-          )
+        ? this.dispatchTable.filter((r) => r.eventName == this.debug_filter_eventName)
         : this.dispatchTable;
       console.log(tbl);
       console.log(this.dispatchTable.length + " Observers in table.");
@@ -138,9 +136,7 @@ export class CoreService {
         console.log("CORESERVICE: dispatchTable...");
         console.log(this.dispatchTable.length + " Observers in table.");
         const tbl = this.debug_filter_eventName
-          ? this.dispatchTable.filter(
-              (r) => r.eventName == this.debug_filter_eventName
-            )
+          ? this.dispatchTable.filter((r) => r.eventName == this.debug_filter_eventName)
           : this.dispatchTable;
         console.log(tbl);
       }
@@ -167,9 +163,7 @@ export class CoreService {
       }
 
       if (this.debug && this.debug_show_subscription_type) {
-        console.log(
-          i + ":CoreService: Subscription type = " + subscriptionType
-        );
+        console.log(i + ":CoreService: Subscription type = " + subscriptionType);
       }
 
       if (
@@ -185,11 +179,7 @@ export class CoreService {
           console.log("<<<<<<<<");
         }
         reg.observable.next(evt);
-      } else if (
-        evt.name &&
-        reg.eventName == evt.name &&
-        subscriptionType == "Name"
-      ) {
+      } else if (evt.name && reg.eventName == evt.name && subscriptionType == "Name") {
         if (this.debug && this.debug_show_emit_logs) {
           console.log(">>>>>>>>");
           console.log("Matched name only");
@@ -198,11 +188,7 @@ export class CoreService {
           console.log("<<<<<<<<");
         }
         reg.observable.next(evt);
-      } else if (
-        evt.sender &&
-        reg.sender == evt.sender &&
-        subscriptionType == "Sender"
-      ) {
+      } else if (evt.sender && reg.sender == evt.sender && subscriptionType == "Sender") {
         if (this.debug && this.debug_show_emit_logs) {
           console.log(">>>>>>>>");
           console.log("Matched sender only");

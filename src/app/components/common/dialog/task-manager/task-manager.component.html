@@ -29,18 +29,10 @@
         <mat-icon *ngIf="element.state == 'SUCCESS'" class="state-success"
           >check_circle_outline</mat-icon
         >
-        <mat-icon *ngIf="element.state == 'FAILED'" class="state-failed"
-          >highlight_off</mat-icon
-        >
-        <mat-icon *ngIf="element.state == 'RUNNING'" class="state-running"
-          >cached</mat-icon
-        >
-        <mat-icon *ngIf="element.state == 'WAITING'" class="state-waiting"
-          >schedule</mat-icon
-        >
-        <mat-icon *ngIf="element.state == 'ABORTED'" class="state-aborted"
-          >report</mat-icon
-        >
+        <mat-icon *ngIf="element.state == 'FAILED'" class="state-failed">highlight_off</mat-icon>
+        <mat-icon *ngIf="element.state == 'RUNNING'" class="state-running">cached</mat-icon>
+        <mat-icon *ngIf="element.state == 'WAITING'" class="state-waiting">schedule</mat-icon>
+        <mat-icon *ngIf="element.state == 'ABORTED'" class="state-aborted">report</mat-icon>
       </mat-cell>
     </ng-container>
     <ng-container matColumnDef="method">
@@ -81,8 +73,7 @@
           ><b>{{ "Status:" | translate }}</b> {{ element.state }}</span
         >
         <span *ngIf="element.time_started != null"
-          ><b>{{ "Start Time:" | translate }}</b>
-          {{ getReadableDate(element.time_started) }}</span
+          ><b>{{ "Start Time:" | translate }}</b> {{ getReadableDate(element.time_started) }}</span
         >
         <span *ngIf="element.time_finished != null"
           ><b>{{ "Finished Time:" | translate }}</b>
@@ -93,9 +84,7 @@
         >
         <span
           *ngIf="
-            element.logs_excerpt != null &&
-            element.logs_excerpt != '' &&
-            element.logs_path != null
+            element.logs_excerpt != null && element.logs_excerpt != '' && element.logs_path != null
           "
           ><button mat-flat-button color="primary" (click)="showLogs(element)">
             {{ "View Logs" | translate }}

@@ -137,9 +137,7 @@ export default {
 
   addSPN: {
     btnTxt: T("Add NFS SPN"),
-    message: T(
-      "Adding NFS NPN requires sufficient privileges. Enter your credentials below."
-    ),
+    message: T("Adding NFS NPN requires sufficient privileges. Enter your credentials below."),
     username: T("Username"),
     pw: T("Password"),
     error: T("Error"),

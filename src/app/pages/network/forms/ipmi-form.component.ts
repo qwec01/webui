@@ -233,61 +233,35 @@ export class IPMIFromComponent {
     this.channelValue = entityEdit.pk;
     this.entityEdit = entityEdit;
 
-    entityEdit.formGroup.controls["password"].statusChanges.subscribe(
-      (status) => {
-        this.setErrorStatus(
-          status,
-          _.find(this.fieldConfig, { name: "password" })
-        );
-      }
-    );
+    entityEdit.formGroup.controls["password"].statusChanges.subscribe((status) => {
+      this.setErrorStatus(status, _.find(this.fieldConfig, { name: "password" }));
+    });
 
-    entityEdit.formGroup.controls["ipaddress"].statusChanges.subscribe(
-      (status) => {
-        this.setErrorStatus(
-          status,
-          _.find(this.fieldConfig, { name: "ipaddress" })
-        );
-        const ipValue = entityEdit.formGroup.controls["ipaddress"].value;
-        const btn = <HTMLInputElement>(
-          document.getElementById("cust_button_Manage")
-        );
-        status === "INVALID" || ipValue === "0.0.0.0"
-          ? (btn.disabled = true)
-          : (btn.disabled = false);
-      }
-    );
+    entityEdit.formGroup.controls["ipaddress"].statusChanges.subscribe((status) => {
+      this.setErrorStatus(status, _.find(this.fieldConfig, { name: "ipaddress" }));
+      const ipValue = entityEdit.formGroup.controls["ipaddress"].value;
+      const btn = <HTMLInputElement>document.getElementById("cust_button_Manage");
+      status === "INVALID" || ipValue === "0.0.0.0"
+        ? (btn.disabled = true)
+        : (btn.disabled = false);
+    });
 
-    entityEdit.formGroup.controls["ipaddress"].valueChanges.subscribe(
-      (value) => {
-        this.managementIP = value;
-      }
-    );
+    entityEdit.formGroup.controls["ipaddress"].valueChanges.subscribe((value) => {
+      this.managementIP = value;
+    });
 
-    entityEdit.formGroup.controls["netmask"].statusChanges.subscribe(
-      (status) => {
-        this.setErrorStatus(
-          status,
-          _.find(this.fieldConfig, { name: "netmask" })
-        );
-      }
-    );
+    entityEdit.formGroup.controls["netmask"].statusChanges.subscribe((status) => {
+      this.setErrorStatus(status, _.find(this.fieldConfig, { name: "netmask" }));
+    });
 
-    entityEdit.formGroup.controls["gateway"].statusChanges.subscribe(
-      (status) => {
-        this.setErrorStatus(
-          status,
-          _.find(this.fieldConfig, { name: "gateway" })
-        );
-      }
-    );
+    entityEdit.formGroup.controls["gateway"].statusChanges.subscribe((status) => {
+      this.setErrorStatus(status, _.find(this.fieldConfig, { name: "gateway" }));
+    });
 
     if (entityEdit.formGroup.controls["remoteController"]) {
-      entityEdit.formGroup.controls["remoteController"].valueChanges.subscribe(
-        (res) => {
-          this.loadData();
-        }
-      );
+      entityEdit.formGroup.controls["remoteController"].valueChanges.subscribe((res) => {
+        this.loadData();
+      });
     }
   }
 
@@ -301,10 +275,7 @@ export class IPMIFromComponent {
       this.entityEdit.formGroup.controls["remoteController"] &&
       this.entityEdit.formGroup.controls["remoteController"].value
     ) {
-      call = this.ws.call("failover.call_remote", [
-        "ipmi.update",
-        [this.channelValue, payload],
-      ]);
+      call = this.ws.call("failover.call_remote", ["ipmi.update", [this.channelValue, payload]]);
     }
 
     this.loader.open();
@@ -333,9 +304,7 @@ export class IPMIFromComponent {
         this.channelValue = res[i].channel;
         this.entityEdit.formGroup.controls["netmask"].setValue(res[i].netmask);
         this.entityEdit.formGroup.controls["dhcp"].setValue(res[i].dhcp);
-        this.entityEdit.formGroup.controls["ipaddress"].setValue(
-          res[i].ipaddress
-        );
+        this.entityEdit.formGroup.controls["ipaddress"].setValue(res[i].ipaddress);
         this.entityEdit.formGroup.controls["gateway"].setValue(res[i].gateway);
         this.entityEdit.formGroup.controls["vlan"].setValue(res[i].vlan);
       }

@@ -84,11 +84,7 @@
       (toggleExpanded)="onToggle($event)"
       (loadNodeChildren)="loadNodeChildren($event)"
     >
-      <ng-template
-        #treeNodeTemplate
-        let-node
-        *ngIf="config.explorerType == 'zvol'"
-      >
+      <ng-template #treeNodeTemplate let-node *ngIf="config.explorerType == 'zvol'">
         <mat-icon>folder</mat-icon>
         <span title="{{ node.data.mountpoint }}">{{ node.data.name }}</span>
       </ng-template>
@@ -102,13 +98,10 @@
           !config.explorerType
         "
       >
-        <mat-icon
-          *ngIf="node.data.hasChildren || node.data.children; else fileIcon"
+        <mat-icon *ngIf="node.data.hasChildren || node.data.children; else fileIcon"
           >folder</mat-icon
         >
-        <ng-template #fileIcon
-          ><mat-icon>insert_drive_file</mat-icon></ng-template
-        >
+        <ng-template #fileIcon><mat-icon>insert_drive_file</mat-icon></ng-template>
         <span title="{{ node.data.name }}"
           >{{ node.data.subTitle }}
           <div
@@ -123,13 +116,8 @@
       </ng-template>
     </tree-root>
   </div>
-  <form-errors
-    [control]="group.controls[config.name]"
-    [config]="config"
-  ></form-errors>
-  <mat-error *ngIf="config['hasErrors']"
-    ><div [innerHTML]="config['errors']"></div
-  ></mat-error>
+  <form-errors [control]="group.controls[config.name]" [config]="config"></form-errors>
+  <mat-error *ngIf="config['hasErrors']"><div [innerHTML]="config['errors']"></div></mat-error>
   <mat-error *ngIf="config.warnings"
     ><div [innerHTML]="config.warnings | translate"></div
   ></mat-error>

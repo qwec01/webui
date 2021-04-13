@@ -108,11 +108,9 @@ export class LocalizationFormComponent implements OnDestroy {
     public localeService: LocaleService,
     private modalService: ModalService
   ) {
-    this.getDataFromDash = this.sysGeneralService.sendConfigData$.subscribe(
-      (res) => {
-        this.configData = res;
-      }
-    );
+    this.getDataFromDash = this.sysGeneralService.sendConfigData$.subscribe((res) => {
+      this.configData = res;
+    });
   }
 
   afterInit(entityEdit: any) {
@@ -124,9 +122,7 @@ export class LocalizationFormComponent implements OnDestroy {
       this.fieldSets
         .find((set) => set.name === helptext.stg_fieldset_loc)
         .config.find((config) => config.name === "kbdmap").options = mapChoices;
-      this.entityForm.formGroup.controls["kbdmap"].setValue(
-        this.configData.kbdmap
-      );
+      this.entityForm.formGroup.controls["kbdmap"].setValue(this.configData.kbdmap);
     });
 
     this.sysGeneralService.timezoneChoices().subscribe((tzChoices) => {
@@ -137,36 +133,24 @@ export class LocalizationFormComponent implements OnDestroy {
       ]);
       this.fieldSets
         .find((set) => set.name === helptext.stg_fieldset_loc)
-        .config.find(
-          (config) => config.name === "timezone"
-        ).options = tzChoices;
-      this.entityForm.formGroup.controls["timezone"].setValue(
-        this.configData.timezone
-      );
+        .config.find((config) => config.name === "timezone").options = tzChoices;
+      this.entityForm.formGroup.controls["timezone"].setValue(this.configData.timezone);
     });
 
-    entityEdit.formGroup.controls["language_sort"].valueChanges.subscribe(
-      (res) => {
-        res
-          ? (this.sortLanguagesByName = true)
-          : (this.sortLanguagesByName = false);
-        this.makeLanguageList();
-      }
-    );
+    entityEdit.formGroup.controls["language_sort"].valueChanges.subscribe((res) => {
+      res ? (this.sortLanguagesByName = true) : (this.sortLanguagesByName = false);
+      this.makeLanguageList();
+    });
 
     this.getDateTimeFormats();
-    this.dateTimeChangeSubscription = this.localeService.dateTimeFormatChange$.subscribe(
-      () => {
-        this.getDateTimeFormats();
-      }
-    );
+    this.dateTimeChangeSubscription = this.localeService.dateTimeFormatChange$.subscribe(() => {
+      this.getDateTimeFormats();
+    });
 
     entityEdit.formGroup.controls["language"].valueChanges.subscribe((res) => {
       this.languageKey = this.getKeyByValue(this.languageList, res);
       if (this.languageList[res]) {
-        entityEdit.formGroup.controls["language"].setValue(
-          `${this.languageList[res]}`
-        );
+        entityEdit.formGroup.controls["language"].setValue(`${this.languageList[res]}`);
       }
     });
   }
@@ -175,16 +159,12 @@ export class LocalizationFormComponent implements OnDestroy {
     const timeOptions = this.localeService.getTimeFormatOptions(tz);
     this.fieldSets
       .find((set) => set.name === helptext.stg_fieldset_loc)
-      .config.find(
-        (config) => config.name === "time_format"
-      ).options = timeOptions;
+      .config.find((config) => config.name === "time_format").options = timeOptions;
 
     const dateOptions = this.localeService.getDateFormatOptions(tz);
     this.fieldSets
       .find((set) => set.name === helptext.stg_fieldset_loc)
-      .config.find(
-        (config) => config.name === "date_format"
-      ).options = dateOptions;
+      .config.find((config) => config.name === "date_format").options = dateOptions;
   }
 
   getDateTimeFormats() {
@@ -213,9 +193,7 @@ export class LocalizationFormComponent implements OnDestroy {
         options,
         this.sortLanguagesByName ? "label" : "value"
       );
-      this.entityForm.formGroup.controls["language"].setValue(
-        this.configData.language
-      );
+      this.entityForm.formGroup.controls["language"].setValue(this.configData.language);
     });
   }
 

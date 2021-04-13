@@ -1,10 +1,8 @@
 <mat-card class="form-card">
   <mat-card-title *ngIf="groupName"
-    >{{ "Manage members of" | translate }} {{ groupName }}
-    {{ "group" | translate }}</mat-card-title
+    >{{ "Manage members of" | translate }} {{ groupName }} {{ "group" | translate }}</mat-card-title
   >
-  <mat-spinner [diameter]="40" id="group-member-spinner" *ngIf="showSpinner">
-  </mat-spinner>
+  <mat-spinner [diameter]="40" id="group-member-spinner" *ngIf="showSpinner"> </mat-spinner>
   <mat-card-content>
     <div class="padding-16" *ngIf="members.length > 0">
       <app-dual-listbox

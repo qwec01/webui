@@ -7,9 +7,7 @@ import { T } from "app/translate-marker";
 
 @Component({
   selector: "app-iscsi-extent-list",
-  template: `
-    <entity-table [conf]="this" [title]="tableTitle"></entity-table>
-  `,
+  template: ` <entity-table [conf]="this" [title]="tableTitle"></entity-table> `,
 })
 export class ExtentListComponent {
   public tableTitle = "Extents";
@@ -108,23 +106,17 @@ export class ExtentListComponent {
         const value = entityDialog.formValue;
         entityTable.loader.open();
         entityTable.loaderOpen = true;
-        entityTable.ws
-          .call(self.wsDelete, [id, value.remove, value.force])
-          .subscribe(
-            (resinner) => {
-              entityDialog.dialogRef.close(true);
-              entityTable.getData();
-              entityTable.excuteDeletion = true;
-            },
-            (err) => {
-              entityTable.loader.close();
-              new EntityUtils().handleWSError(
-                entityTable,
-                err,
-                entityTable.dialogService
-              );
-            }
-          );
+        entityTable.ws.call(self.wsDelete, [id, value.remove, value.force]).subscribe(
+          (resinner) => {
+            entityDialog.dialogRef.close(true);
+            entityTable.getData();
+            entityTable.excuteDeletion = true;
+          },
+          (err) => {
+            entityTable.loader.close();
+            new EntityUtils().handleWSError(entityTable, err, entityTable.dialogService);
+          }
+        );
       },
     };
     this.entityTable.dialogService.dialogForm(conf);

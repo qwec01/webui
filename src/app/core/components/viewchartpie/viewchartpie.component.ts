@@ -12,9 +12,7 @@ import { ViewChartDonutComponent } from "app/core/components/viewchartdonut/view
   //templateUrl: './viewchartpie.component.html',
   styleUrls: ["./viewchartpie.component.css"],
 })
-export class ViewChartPieComponent
-  extends ViewChartDonutComponent
-  implements OnInit {
+export class ViewChartPieComponent extends ViewChartDonutComponent implements OnInit {
   public chartType: string = "pie";
 
   constructor() {

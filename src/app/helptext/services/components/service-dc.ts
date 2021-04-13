@@ -15,10 +15,8 @@ export default {
 
   dc_role_label: "Server Role",
   dc_role_placeholder: T("Server Role"),
-  dc_role_tooltip: T(
-    "The only server role available is the domain\
- controller for a new domain."
-  ),
+  dc_role_tooltip: T("The only server role available is the domain\
+ controller for a new domain."),
   dc_role_options: [{ label: "DC", value: "dc" }],
 
   dc_dns_forwarder_label: "DNS Forwarder",
@@ -52,10 +50,7 @@ export default {
     "Enter the password to be used for the \
  Active Directory administrator account."
   ),
-  dc_passwd_validation: [
-    Validators.minLength(8),
-    matchOtherValidator("dc_passwd2"),
-  ],
+  dc_passwd_validation: [Validators.minLength(8), matchOtherValidator("dc_passwd2")],
 
   dc_passwd2_placeholder: T("Confirm password"),
 

@@ -1,11 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnDestroy,
-  OnInit,
-  Output,
-} from "@angular/core";
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from "@angular/core";
 import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
@@ -20,10 +13,7 @@ import { EntityUtils } from "../../../pages/common/entity/utils";
 import { AppLoaderService } from "../../../services/app-loader/app-loader.service";
 import { DialogService } from "../../../services/dialog.service";
 import { LanguageService } from "../../../services/language.service";
-import {
-  NotificationAlert,
-  NotificationsService,
-} from "../../../services/notifications.service";
+import { NotificationAlert, NotificationsService } from "../../../services/notifications.service";
 import { RestService } from "../../../services/rest.service";
 import { PreferencesService } from "app/core/services/preferences.service";
 import { SystemGeneralService } from "../../../services/system-general.service";
@@ -45,9 +35,7 @@ import { matchOtherValidator } from "app/pages/common/entity/entity-form/validat
   styleUrls: ["./topbar.component.css"],
   templateUrl: "./topbar.template.html",
 })
-export class TopbarComponent
-  extends ViewControllerComponent
-  implements OnInit, OnDestroy {
+export class TopbarComponent extends ViewControllerComponent implements OnInit, OnDestroy {
   @Input() sidenav;
   @Input() notificPanel;
 
@@ -163,12 +151,7 @@ export class TopbarComponent
           });
         }
         if (!this.is_ha) {
-          if (
-            res &&
-            res.fields &&
-            res.fields.arguments[0] &&
-            res.fields.arguments[0].reboot
-          ) {
+          if (res && res.fields && res.fields.arguments[0] && res.fields.arguments[0].reboot) {
             this.systemWillRestart = true;
             if (res.fields.state === "SUCCESS") {
               this.router.navigate(["/others/reboot"]);
@@ -205,20 +188,14 @@ export class TopbarComponent
     const notifications = this.notificationsService.getNotificationList();
 
     notifications.forEach((notificationAlert: NotificationAlert) => {
-      if (
-        notificationAlert.dismissed === false &&
-        notificationAlert.level !== "INFO"
-      ) {
+      if (notificationAlert.dismissed === false && notificationAlert.level !== "INFO") {
         this.notifications.push(notificationAlert);
       }
     });
     this.notificationsService.getNotifications().subscribe((notifications1) => {
       this.notifications = [];
       notifications1.forEach((notificationAlert: NotificationAlert) => {
-        if (
-          notificationAlert.dismissed === false &&
-          notificationAlert.level !== "INFO"
-        ) {
+        if (notificationAlert.dismissed === false && notificationAlert.level !== "INFO") {
           this.notifications.push(notificationAlert);
         }
       });
@@ -250,10 +227,7 @@ export class TopbarComponent
     });
 
     setInterval(() => {
-      if (
-        this.resilveringDetails &&
-        this.resilveringDetails.scan.state == "FINISHED"
-      ) {
+      if (this.resilveringDetails && this.resilveringDetails.scan.state == "FINISHED") {
         this.showResilvering = false;
         this.resilveringDetails = "";
       }
@@ -303,14 +277,12 @@ export class TopbarComponent
   }
 
   checkLegacyUISetting() {
-    this.getAdvancedConfig = this.sysGenService.getAdvancedConfig.subscribe(
-      (res) => {
-        if (res.legacy_ui) {
-          this.exposeLegacyUI = res.legacy_ui;
-          window.localStorage.setItem("exposeLegacyUI", res.legacy_ui);
-        }
+    this.getAdvancedConfig = this.sysGenService.getAdvancedConfig.subscribe((res) => {
+      if (res.legacy_ui) {
+        this.exposeLegacyUI = res.legacy_ui;
+        window.localStorage.setItem("exposeLegacyUI", res.legacy_ui);
       }
-    );
+    });
   }
 
   ngOnDestroy() {
@@ -356,10 +328,7 @@ export class TopbarComponent
     let appBody = document.body;
 
     domHelper.toggleClass(appBody, "collapsed-menu");
-    domHelper.removeClass(
-      document.getElementsByClassName("has-submenu"),
-      "open"
-    );
+    domHelper.removeClass(document.getElementsByClassName("has-submenu"), "open");
     this.core.emit({
       name: "SidenavStatus",
       data: {
@@ -372,8 +341,7 @@ export class TopbarComponent
   }
 
   getCollapsedState(): boolean {
-    const isCollapsed =
-      document.getElementsByClassName("collapsed-menu").length == 1;
+    const isCollapsed = document.getElementsByClassName("collapsed-menu").length == 1;
     return isCollapsed;
   }
 
@@ -394,42 +362,33 @@ export class TopbarComponent
 
   onShutdown() {
     this.translate.get("Shut down").subscribe((shutdown: string) => {
-      this.translate
-        .get("Shut down the system?")
-        .subscribe((shutdown_prompt: string) => {
-          this.dialogService
-            .confirm(shutdown, shutdown_prompt, false, T("Shut Down"))
-            .subscribe((res) => {
-              if (res) {
-                this.router.navigate(["/others/shutdown"]);
-              }
-            });
-        });
+      this.translate.get("Shut down the system?").subscribe((shutdown_prompt: string) => {
+        this.dialogService
+          .confirm(shutdown, shutdown_prompt, false, T("Shut Down"))
+          .subscribe((res) => {
+            if (res) {
+              this.router.navigate(["/others/shutdown"]);
+            }
+          });
+      });
     });
   }
 
   onReboot() {
     this.translate.get("Restart").subscribe((reboot: string) => {
-      this.translate
-        .get("Restart the system?")
-        .subscribe((reboot_prompt: string) => {
-          this.dialogService
-            .confirm(reboot, reboot_prompt, false, T("Restart"))
-            .subscribe((res) => {
-              if (res) {
-                this.router.navigate(["/others/reboot"]);
-              }
-            });
+      this.translate.get("Restart the system?").subscribe((reboot_prompt: string) => {
+        this.dialogService.confirm(reboot, reboot_prompt, false, T("Restart")).subscribe((res) => {
+          if (res) {
+            this.router.navigate(["/others/reboot"]);
+          }
         });
+      });
     });
   }
 
   checkEULA() {
     this.ws.call("truenas.is_eula_accepted").subscribe((eula_accepted) => {
-      if (
-        !eula_accepted ||
-        window.localStorage.getItem("upgrading_status") === "upgrading"
-      ) {
+      if (!eula_accepted || window.localStorage.getItem("upgrading_status") === "upgrading") {
         this.ws.call("truenas.get_eula").subscribe((eula) => {
           this.dialogService
             .confirm(
@@ -557,12 +516,7 @@ export class TopbarComponent
 
   onGoToLegacy() {
     this.dialogService
-      .confirm(
-        T("Warning"),
-        helptext.legacyUIWarning,
-        true,
-        T("Continue to Legacy UI")
-      )
+      .confirm(T("Warning"), helptext.legacyUIWarning, true, T("Continue to Legacy UI"))
       .subscribe((res) => {
         if (res) {
           window.location.href = "/legacy/";
@@ -596,18 +550,15 @@ export class TopbarComponent
       this.dirServicesMonitor.close(true);
     } else {
       this.isDirServicesMonitorOpened = true;
-      this.dirServicesMonitor = this.dialog.open(
-        DirectoryServicesMonitorComponent,
-        {
-          disableClose: false,
-          width: "400px",
-          hasBackdrop: true,
-          position: {
-            top: "48px",
-            right: "0px",
-          },
-        }
-      );
+      this.dirServicesMonitor = this.dialog.open(DirectoryServicesMonitorComponent, {
+        disableClose: false,
+        width: "400px",
+        hasBackdrop: true,
+        position: {
+          top: "48px",
+          right: "0px",
+        },
+      });
     }
 
     this.dirServicesMonitor.afterClosed().subscribe((res) => {
@@ -643,8 +594,7 @@ export class TopbarComponent
       ha_status = helptext.ha_status_text_disabled;
       ha_icon = "warning";
       for (let i = 0; i < this.ha_disabled_reasons.length; i++) {
-        const reason_text =
-          helptext.ha_disabled_reasons[this.ha_disabled_reasons[i]];
+        const reason_text = helptext.ha_disabled_reasons[this.ha_disabled_reasons[i]];
         this.translate.get(reason_text).subscribe((reason) => {
           reasons = reasons + "<li>" + reason_text + "</li>\n";
         });
@@ -693,11 +643,7 @@ export class TopbarComponent
             this.upgradeWaitingToFinish = false;
           });
           this.dialogRef.componentInstance.failure.subscribe((failure) => {
-            this.dialogService.errorReport(
-              failure.error,
-              failure.reason,
-              failure.trace.formatted
-            );
+            this.dialogService.errorReport(failure.error, failure.reason, failure.trace.formatted);
           });
         }
       });
@@ -740,8 +686,7 @@ export class TopbarComponent
     let message =
       this.is_ha || !this.systemWillRestart
         ? helptext.updateRunning_dialog.message
-        : helptext.updateRunning_dialog.message +
-          helptext.updateRunning_dialog.message_pt2;
+        : helptext.updateRunning_dialog.message + helptext.updateRunning_dialog.message_pt2;
     this.dialogService.confirm(
       helptext.updateRunning_dialog.title,
       message,
@@ -826,30 +771,26 @@ export class TopbarComponent
               .subscribe((res) => {
                 if (res) {
                   self.loader.open();
-                  self.ws
-                    .call(self.tc_updateCall, [
-                      { api_key: null, enabled: false },
-                    ])
-                    .subscribe(
-                      (wsRes) => {
-                        self.loader.close();
-                        updateDialog.dialogRef.close();
-                        self.tcStatusDialogRef.close(true);
-                        self.dialogService.generalDialog({
-                          title: helptext.deregisterInfoDialog.title,
-                          message: helptext.deregisterInfoDialog.message,
-                          hideCancel: true,
-                        });
-                      },
-                      (err) => {
-                        self.loader.close();
-                        new EntityUtils().handleWSError(
-                          updateDialog.parent,
-                          err,
-                          updateDialog.parent.dialogService
-                        );
-                      }
-                    );
+                  self.ws.call(self.tc_updateCall, [{ api_key: null, enabled: false }]).subscribe(
+                    (wsRes) => {
+                      self.loader.close();
+                      updateDialog.dialogRef.close();
+                      self.tcStatusDialogRef.close(true);
+                      self.dialogService.generalDialog({
+                        title: helptext.deregisterInfoDialog.title,
+                        message: helptext.deregisterInfoDialog.message,
+                        hideCancel: true,
+                      });
+                    },
+                    (err) => {
+                      self.loader.close();
+                      new EntityUtils().handleWSError(
+                        updateDialog.parent,
+                        err,
+                        updateDialog.parent.dialogService
+                      );
+                    }
+                  );
                 }
               });
           },
@@ -990,56 +931,42 @@ export class TopbarComponent
         const pwChange = entityDialog.formValue;
         delete pwChange.password_conf;
         entityDialog.dialogRef.close();
-        this.ws
-          .call("auth.check_user", ["root", pwChange.curr_password])
-          .subscribe(
-            (check) => {
-              if (check) {
-                delete pwChange.curr_password;
-                this.ws.call("user.update", [1, pwChange]).subscribe(
-                  (res) => {
-                    this.loader.close();
-                    this.dialogService.Info(
-                      T("Success"),
-                      helptext.changePasswordDialog.pw_updated,
-                      "300px",
-                      "info",
-                      false
-                    );
-                  },
-                  (res) => {
-                    this.loader.close();
-                    this.dialogService.Info(
-                      T("Error"),
-                      res,
-                      "300px",
-                      "warning",
-                      false
-                    );
-                  }
-                );
-              } else {
-                this.loader.close();
-                this.dialogService.Info(
-                  helptext.changePasswordDialog.pw_invalid_title,
-                  helptext.changePasswordDialog.pw_invalid_title,
-                  "300px",
-                  "warning",
-                  false
-                );
-              }
-            },
-            (res) => {
+        this.ws.call("auth.check_user", ["root", pwChange.curr_password]).subscribe(
+          (check) => {
+            if (check) {
+              delete pwChange.curr_password;
+              this.ws.call("user.update", [1, pwChange]).subscribe(
+                (res) => {
+                  this.loader.close();
+                  this.dialogService.Info(
+                    T("Success"),
+                    helptext.changePasswordDialog.pw_updated,
+                    "300px",
+                    "info",
+                    false
+                  );
+                },
+                (res) => {
+                  this.loader.close();
+                  this.dialogService.Info(T("Error"), res, "300px", "warning", false);
+                }
+              );
+            } else {
               this.loader.close();
               this.dialogService.Info(
-                T("Error"),
-                res,
+                helptext.changePasswordDialog.pw_invalid_title,
+                helptext.changePasswordDialog.pw_invalid_title,
                 "300px",
                 "warning",
                 false
               );
             }
-          );
+          },
+          (res) => {
+            this.loader.close();
+            this.dialogService.Info(T("Error"), res, "300px", "warning", false);
+          }
+        );
       },
     };
     this.dialogService.dialogForm(conf);

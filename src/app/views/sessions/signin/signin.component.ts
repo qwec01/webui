@@ -1,21 +1,9 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  OnDestroy,
-  ElementRef,
-  AfterViewInit,
-} from "@angular/core";
+import { Component, OnInit, ViewChild, OnDestroy, ElementRef, AfterViewInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { MatProgressBar } from "@angular/material/progress-bar";
 import { MatButton } from "@angular/material/button";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  FormControl,
-} from "@angular/forms";
+import { FormBuilder, FormGroup, Validators, FormControl } from "@angular/forms";
 import { HttpClient } from "@angular/common/http";
 import { matchOtherValidator } from "../../../pages/common/entity/entity-form/validators/password-validation";
 import { TranslateService } from "@ngx-translate/core";
@@ -122,39 +110,31 @@ export class SigninComponent implements OnInit, OnDestroy, AfterViewInit {
 
   checkSystemType() {
     if (!this.logo_ready) {
-      this.getProdType = this.sysGeneralService.getProductType.subscribe(
-        (res) => {
-          this.logo_ready = true;
-          this.product_type = res;
-          if (this.interval) {
-            clearInterval(this.interval);
+      this.getProdType = this.sysGeneralService.getProductType.subscribe((res) => {
+        this.logo_ready = true;
+        this.product_type = res;
+        if (this.interval) {
+          clearInterval(this.interval);
+        }
+        if (this.product_type.includes("ENTERPRISE") || this.product_type === "SCALE") {
+          if (this.HAInterval) {
+            clearInterval(this.HAInterval);
           }
-          if (
-            this.product_type.includes("ENTERPRISE") ||
-            this.product_type === "SCALE"
-          ) {
-            if (this.HAInterval) {
-              clearInterval(this.HAInterval);
-            }
+          this.getHAStatus();
+          this.HAInterval = setInterval(() => {
             this.getHAStatus();
-            this.HAInterval = setInterval(() => {
-              this.getHAStatus();
-            }, 6000);
-          } else {
-            if (this.canLogin()) {
-              this.checkBuildtime();
-              this.loginToken();
-            }
-          }
-          window.localStorage.setItem("product_type", res);
-          if (
-            this.product_type === "ENTERPRISE" &&
-            window.localStorage.exposeLegacyUI === "true"
-          ) {
-            this.exposeLegacyUI = true;
+          }, 6000);
+        } else {
+          if (this.canLogin()) {
+            this.checkBuildtime();
+            this.loginToken();
           }
         }
-      );
+        window.localStorage.setItem("product_type", res);
+        if (this.product_type === "ENTERPRISE" && window.localStorage.exposeLegacyUI === "true") {
+          this.exposeLegacyUI = true;
+        }
+      });
     }
   }
 
@@ -171,10 +151,7 @@ export class SigninComponent implements OnInit, OnDestroy, AfterViewInit {
     this.core
       .register({ observerClass: this, eventName: "ThemeChanged" })
       .subscribe((evt: CoreEvent) => {
-        if (
-          this.router.url == "/sessions/signin" &&
-          evt.sender.userThemeLoaded == true
-        ) {
+        if (this.router.url == "/sessions/signin" && evt.sender.userThemeLoaded == true) {
           this.redirect();
         }
       });
@@ -195,10 +172,7 @@ export class SigninComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.setPasswordFormGroup = this.fb.group({
       password: new FormControl("", [Validators.required]),
-      password2: new FormControl("", [
-        Validators.required,
-        matchOtherValidator("password"),
-      ]),
+      password2: new FormControl("", [Validators.required, matchOtherValidator("password")]),
     });
 
     this.ws.call("auth.two_factor_auth").subscribe((res) => {
@@ -287,8 +261,7 @@ export class SigninComponent implements OnInit, OnDestroy, AfterViewInit {
 
   getHAStatus() {
     if (
-      (this.product_type.includes("ENTERPRISE") ||
-        this.product_type === "SCALE") &&
+      (this.product_type.includes("ENTERPRISE") || this.product_type === "SCALE") &&
       !this.checking_status
     ) {
       this.checking_status = true;
@@ -325,10 +298,7 @@ export class SigninComponent implements OnInit, OnDestroy, AfterViewInit {
                   this.show_reasons = true;
                   this.ha_status = false;
                 }
-                window.sessionStorage.setItem(
-                  "ha_status",
-                  this.ha_status.toString()
-                );
+                window.sessionStorage.setItem("ha_status", this.ha_status.toString());
                 if (this.canLogin()) {
                   this.checkBuildtime();
                   this.loginToken();
@@ -374,31 +344,23 @@ export class SigninComponent implements OnInit, OnDestroy, AfterViewInit {
 
     if (this.isTwoFactor) {
       this.ws
-        .login(
-          this.signinData.username,
-          this.signinData.password,
-          this.signinData.otp
-        )
+        .login(this.signinData.username, this.signinData.password, this.signinData.otp)
         .subscribe((result) => {
           this.loginCallback(result);
         });
     } else {
-      this.ws
-        .login(this.signinData.username, this.signinData.password)
-        .subscribe((result) => {
-          this.loginCallback(result);
-        });
+      this.ws.login(this.signinData.username, this.signinData.password).subscribe((result) => {
+        this.loginCallback(result);
+      });
     }
   }
 
   setpassword() {
-    this.ws
-      .call("user.set_root_password", [this.password.value])
-      .subscribe((res) => {
-        this.ws.login("root", this.password.value).subscribe((result) => {
-          this.loginCallback(result);
-        });
+    this.ws.call("user.set_root_password", [this.password.value]).subscribe((res) => {
+      this.ws.login("root", this.password.value).subscribe((result) => {
+        this.loginCallback(result);
       });
+    });
   }
 
   loginCallback(result) {
@@ -428,14 +390,12 @@ export class SigninComponent implements OnInit, OnDestroy, AfterViewInit {
   }
   successLogin() {
     this.snackBar.dismiss();
-    this.tokenObservable = this.ws
-      .call("auth.generate_token", [300])
-      .subscribe((result) => {
-        if (result) {
-          this.ws.token = result;
-          this.redirect();
-        }
-      });
+    this.tokenObservable = this.ws.call("auth.generate_token", [300]).subscribe((result) => {
+      if (result) {
+        this.ws.token = result;
+        this.redirect();
+      }
+    });
   }
 
   errorLogin() {
@@ -462,12 +422,7 @@ export class SigninComponent implements OnInit, OnDestroy, AfterViewInit {
 
   onGoToLegacy() {
     this.dialogService
-      .confirm(
-        T("Warning"),
-        globalHelptext.legacyUIWarning,
-        true,
-        T("Continue to Legacy UI")
-      )
+      .confirm(T("Warning"), globalHelptext.legacyUIWarning, true, T("Continue to Legacy UI"))
       .subscribe((res) => {
         if (res) {
           window.location.href = "/legacy/";

@@ -253,22 +253,20 @@ export class ShellComponent implements OnInit, OnChanges, OnDestroy {
 
     this.refreshToolbarButtons();
 
-    this.shellConnectedSubscription = this.ss.shellConnected.subscribe(
-      (res) => {
-        this.shellConnected = res.connected;
-        this.connectionId = res.id;
+    this.shellConnectedSubscription = this.ss.shellConnected.subscribe((res) => {
+      this.shellConnected = res.connected;
+      this.connectionId = res.id;
 
-        if (this.attachAddon) {
-          this.attachAddon.dispose();
-        }
-
-        this.attachAddon = new AttachAddon(this.ss.socket);
-        this.xterm.loadAddon(this.attachAddon);
-
-        this.refreshToolbarButtons();
-        this.resizeTerm();
+      if (this.attachAddon) {
+        this.attachAddon.dispose();
       }
-    );
+
+      this.attachAddon = new AttachAddon(this.ss.socket);
+      this.xterm.loadAddon(this.attachAddon);
+
+      this.refreshToolbarButtons();
+      this.resizeTerm();
+    });
   }
 
   getAuthToken() {

@@ -22,8 +22,7 @@ export class MINIX extends Chassis {
     this.front.altDriveTraySlots = [6, 7];
     this.front.altDriveTrayBackgroundPath =
       "assets/images/hardware/mini_x/mini_x_ssd_drivetray_bg.png";
-    this.front.altDriveTrayHandlePath =
-      "assets/images/hardware/mini_x/mini_x_ssd_drivetray_bg.png";
+    this.front.altDriveTrayHandlePath = "assets/images/hardware/mini_x/mini_x_ssd_drivetray_bg.png";
 
     this.front.vertical = false;
     this.front.disabledOpacity = 0.5;

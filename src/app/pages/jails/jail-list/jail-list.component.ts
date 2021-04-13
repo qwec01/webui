@@ -65,50 +65,33 @@ export class JailListComponent {
       onClick: (selected) => {
         let selectedJails = this.getSelectedNames(selected);
         this.loader.open();
-        this.entityList.busy = this.ws
-          .job("core.bulk", ["jail.start", selectedJails])
-          .subscribe(
-            (res) => {
-              for (let i in selected) {
-                selected[i].state = "up";
-                this.updateRow(selected[i]);
-              }
-              this.updateMultiAction(selected);
-              this.loader.close();
-              let message = "";
-              for (let i = 0; i < res.result.length; i++) {
-                if (res.result[i].error != null) {
-                  message =
-                    message +
-                    "<li>" +
-                    selectedJails[i] +
-                    ": " +
-                    res.result[i].error +
-                    "</li>";
-                }
-              }
-              if (message === "") {
-                this.dialogService.Info(
-                  T("Jails Started"),
-                  T("Jails started.")
-                );
-              } else {
-                message = "<ul>" + message + "</ul>";
-                this.dialogService.errorReport(
-                  T("Jails failed to start"),
-                  message
-                );
-              }
-            },
-            (res) => {
-              this.loader.close();
-              new EntityUtils().handleWSError(
-                this.entityList,
-                res,
-                this.dialogService
-              );
+        this.entityList.busy = this.ws.job("core.bulk", ["jail.start", selectedJails]).subscribe(
+          (res) => {
+            for (let i in selected) {
+              selected[i].state = "up";
+              this.updateRow(selected[i]);
             }
-          );
+            this.updateMultiAction(selected);
+            this.loader.close();
+            let message = "";
+            for (let i = 0; i < res.result.length; i++) {
+              if (res.result[i].error != null) {
+                message =
+                  message + "<li>" + selectedJails[i] + ": " + res.result[i].error + "</li>";
+              }
+            }
+            if (message === "") {
+              this.dialogService.Info(T("Jails Started"), T("Jails started."));
+            } else {
+              message = "<ul>" + message + "</ul>";
+              this.dialogService.errorReport(T("Jails failed to start"), message);
+            }
+          },
+          (res) => {
+            this.loader.close();
+            new EntityUtils().handleWSError(this.entityList, res, this.dialogService);
+          }
+        );
       },
     },
     {
@@ -123,9 +106,7 @@ export class JailListComponent {
           .confirm(
             "Stop",
             "Stop the selected jails?",
-            dialog.hasOwnProperty("hideCheckbox")
-              ? dialog["hideCheckbox"]
-              : true,
+            dialog.hasOwnProperty("hideCheckbox") ? dialog["hideCheckbox"] : true,
             T("Stop")
           )
           .subscribe((res) => {
@@ -145,11 +126,7 @@ export class JailListComponent {
                   },
                   (res) => {
                     this.loader.close();
-                    new EntityUtils().handleWSError(
-                      this.entityList,
-                      res,
-                      this.dialogService
-                    );
+                    new EntityUtils().handleWSError(this.entityList, res, this.dialogService);
                   }
                 );
             }
@@ -164,10 +141,7 @@ export class JailListComponent {
       ttpos: "above",
       onClick: (selected) => {
         const selectedJails = this.getSelectedNames(selected);
-        this.dialogService.Info(
-          T("Jail Update"),
-          T("Updating selected plugins.")
-        );
+        this.dialogService.Info(T("Jail Update"), T("Updating selected plugins."));
         this.entityList.busy = this.ws
           .job("core.bulk", ["jail.update_to_latest_patch", selectedJails])
           .subscribe(
@@ -176,38 +150,20 @@ export class JailListComponent {
               for (let i = 0; i < res.result.length; i++) {
                 if (res.result[i].error != null) {
                   message =
-                    message +
-                    "<li>" +
-                    selectedJails[i] +
-                    ": " +
-                    res.result[i].error +
-                    "</li>";
+                    message + "<li>" + selectedJails[i] + ": " + res.result[i].error + "</li>";
                 } else {
                   this.updateRow(selected[i]);
                 }
               }
               if (message === "") {
-                this.dialogService.Info(
-                  "",
-                  T("Selected jails updated."),
-                  "500px",
-                  "info",
-                  true
-                );
+                this.dialogService.Info("", T("Selected jails updated."), "500px", "info", true);
               } else {
                 message = "<ul>" + message + "</ul>";
-                this.dialogService.errorReport(
-                  T("Jail Update Failed"),
-                  message
-                );
+                this.dialogService.errorReport(T("Jail Update Failed"), message);
               }
             },
             (res) => {
-              new EntityUtils().handleWSError(
-                this.entityList,
-                res,
-                this.dialogService
-              );
+              new EntityUtils().handleWSError(this.entityList, res, this.dialogService);
             }
           );
       },
@@ -259,9 +215,7 @@ export class JailListComponent {
 
     dialogRef.subscribe((res) => {
       if (res) {
-        this.router.navigate(
-          new Array("/").concat(["storage", "pools", "manager"])
-        );
+        this.router.navigate(new Array("/").concat(["storage", "pools", "manager"]));
       }
     });
   }
@@ -282,11 +236,7 @@ export class JailListComponent {
           },
           (err) => {
             resolve(false);
-            new EntityUtils().handleWSError(
-              this.entityList,
-              err,
-              this.dialogService
-            );
+            new EntityUtils().handleWSError(this.entityList, err, this.dialogService);
           }
         );
 
@@ -364,8 +314,7 @@ export class JailListComponent {
             self.entityList.getData();
             self.dialogService.Info(
               helptext.activatePoolDialog.successInfoDialog.title,
-              helptext.activatePoolDialog.successInfoDialog.message +
-                value["selectedPool"],
+              helptext.activatePoolDialog.successInfoDialog.message + value["selectedPool"],
               "500px",
               "info",
               true
@@ -373,11 +322,7 @@ export class JailListComponent {
           },
           (res) => {
             self.entityList.loader.close();
-            new EntityUtils().handleWSError(
-              self.entityList,
-              res,
-              self.dialogService
-            );
+            new EntityUtils().handleWSError(self.entityList, res, self.dialogService);
           }
         );
       },
@@ -395,9 +340,7 @@ export class JailListComponent {
         id: "edit",
         label: T("Edit"),
         onClick: (row) => {
-          this.router.navigate(
-            new Array("").concat(["jails", "edit", row.host_hostuuid])
-          );
+          this.router.navigate(new Array("").concat(["jails", "edit", row.host_hostuuid]));
         },
       },
       {
@@ -406,9 +349,7 @@ export class JailListComponent {
         id: "mount",
         label: T("Mount points"),
         onClick: (row) => {
-          this.router.navigate(
-            new Array("").concat(["jails", "storage", row.host_hostuuid])
-          );
+          this.router.navigate(new Array("").concat(["jails", "storage", row.host_hostuuid]));
         },
       },
       {
@@ -421,9 +362,7 @@ export class JailListComponent {
             data: { title: T("Starting Jail") },
             disableClose: true,
           });
-          dialogRef.componentInstance.setCall("jail.start", [
-            row.host_hostuuid,
-          ]);
+          dialogRef.componentInstance.setCall("jail.start", [row.host_hostuuid]);
           dialogRef.componentInstance.submit();
           dialogRef.componentInstance.success.subscribe((res) => {
             dialogRef.close(true);
@@ -442,9 +381,7 @@ export class JailListComponent {
             data: { title: T("Restarting Jail") },
             disableClose: true,
           });
-          dialogRef.componentInstance.setCall("jail.restart", [
-            row.host_hostuuid,
-          ]);
+          dialogRef.componentInstance.setCall("jail.restart", [row.host_hostuuid]);
           dialogRef.componentInstance.submit();
           dialogRef.componentInstance.success.subscribe((res) => {
             dialogRef.close(true);
@@ -464,9 +401,7 @@ export class JailListComponent {
             .confirm(
               "Stop",
               "Stop the selected jail?",
-              dialog.hasOwnProperty("hideCheckbox")
-                ? dialog["hideCheckbox"]
-                : true,
+              dialog.hasOwnProperty("hideCheckbox") ? dialog["hideCheckbox"] : true,
               T("Stop")
             )
             .subscribe((dialog_res) => {
@@ -475,9 +410,7 @@ export class JailListComponent {
                   data: { title: T("Stopping Jail") },
                   disableClose: true,
                 });
-                dialogRef.componentInstance.setCall("jail.stop", [
-                  row.host_hostuuid,
-                ]);
+                dialogRef.componentInstance.setCall("jail.stop", [row.host_hostuuid]);
                 dialogRef.componentInstance.submit();
                 dialogRef.componentInstance.success.subscribe((res) => {
                   dialogRef.close(true);
@@ -495,21 +428,16 @@ export class JailListComponent {
         label: T("Update"),
         onClick: (row) => {
           this.dialogService
-            .confirm(
-              helptext.updateConfirmDialog.title,
-              helptext.updateConfirmDialog.message,
-              true
-            )
+            .confirm(helptext.updateConfirmDialog.title, helptext.updateConfirmDialog.message, true)
             .subscribe((dialog_res) => {
               if (dialog_res) {
                 const dialogRef = this.dialog.open(EntityJobComponent, {
                   data: { title: T("Updating Jail") },
                   disableClose: true,
                 });
-                dialogRef.componentInstance.setCall(
-                  "jail.update_to_latest_patch",
-                  [row.host_hostuuid]
-                );
+                dialogRef.componentInstance.setCall("jail.update_to_latest_patch", [
+                  row.host_hostuuid,
+                ]);
                 dialogRef.componentInstance.submit();
                 dialogRef.componentInstance.success.subscribe((res) => {
                   dialogRef.close(true);
@@ -532,9 +460,7 @@ export class JailListComponent {
         id: "shell",
         label: T("Shell"),
         onClick: (row) => {
-          this.router.navigate(
-            new Array("").concat(["jails", "shell", row.host_hostuuid])
-          );
+          this.router.navigate(new Array("").concat(["jails", "shell", row.host_hostuuid]));
         },
       },
       {
@@ -572,24 +498,18 @@ export class JailListComponent {
   }
 
   updateRow(row) {
-    this.ws
-      .call(this.queryCall, [[["host_hostuuid", "=", row.host_hostuuid]]])
-      .subscribe((res) => {
-        if (res[0]) {
-          const prefix =
-            res[0].state === "up" && res[0].dhcp === "on" ? "DHCP: " : "";
-          for (const col of this.entityList.allColumns) {
-            if (
-              col.prop == "ip4_addr" &&
-              _.split(res[0].ip4_addr, "|").length > 1
-            ) {
-              row.ip4_addr = prefix + _.split(res[0].ip4_addr, "|")[1];
-            } else {
-              row[col.prop] = res[0][col.prop];
-            }
+    this.ws.call(this.queryCall, [[["host_hostuuid", "=", row.host_hostuuid]]]).subscribe((res) => {
+      if (res[0]) {
+        const prefix = res[0].state === "up" && res[0].dhcp === "on" ? "DHCP: " : "";
+        for (const col of this.entityList.allColumns) {
+          if (col.prop == "ip4_addr" && _.split(res[0].ip4_addr, "|").length > 1) {
+            row.ip4_addr = prefix + _.split(res[0].ip4_addr, "|")[1];
+          } else {
+            row[col.prop] = res[0][col.prop];
           }
         }
-      });
+      }
+    });
   }
 
   updateMultiAction(selected: any) {
@@ -614,27 +534,18 @@ export class JailListComponent {
 
   dataHandler(entityList: any) {
     // Call sort on load to make sure initial sort is by Jail name, asecnding
-    entityList.rows = this.sorter.tableSorter(
-      entityList.rows,
-      "host_hostuuid",
-      "asc"
-    );
+    entityList.rows = this.sorter.tableSorter(entityList.rows, "host_hostuuid", "asc");
     for (let i = 0; i < entityList.rows.length; i++) {
-      entityList.rows[i].boot_readble =
-        entityList.rows[i].boot === 0 ? "off" : "on";
+      entityList.rows[i].boot_readble = entityList.rows[i].boot === 0 ? "off" : "on";
       entityList.rows[i].source_template = entityList.rows[i].source_template
         ? entityList.rows[i].source_template
         : "-";
-      entityList.rows[i].basejail_readble =
-        entityList.rows[i].basejail === 0 ? "no" : "yes";
+      entityList.rows[i].basejail_readble = entityList.rows[i].basejail === 0 ? "no" : "yes";
 
       const prefix =
-        entityList.rows[i].state === "up" && entityList.rows[i].dhcp === "on"
-          ? "DHCP: "
-          : "";
+        entityList.rows[i].state === "up" && entityList.rows[i].dhcp === "on" ? "DHCP: " : "";
       if (_.split(entityList.rows[i].ip4_addr, "|").length > 1) {
-        entityList.rows[i].ip4_addr =
-          prefix + _.split(entityList.rows[i].ip4_addr, "|")[1];
+        entityList.rows[i].ip4_addr = prefix + _.split(entityList.rows[i].ip4_addr, "|")[1];
       }
       if (entityList.rows[i].ip6_addr == "vnet0|accept_rtadv") {
         entityList.rows[i].ip6_addr = "Auto";

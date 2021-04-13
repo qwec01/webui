@@ -75,11 +75,7 @@ export class VdevComponent implements OnInit {
 
   getTitle() {
     return (
-      "Vdev " +
-      (this.index + 1) +
-      ": " +
-      this.type.charAt(0).toUpperCase() +
-      this.type.slice(1)
+      "Vdev " + (this.index + 1) + ": " + this.type.charAt(0).toUpperCase() + this.type.slice(1)
     );
   }
 
@@ -138,10 +134,7 @@ export class VdevComponent implements OnInit {
         smallestdisk = size;
         this.firstdisksize = size;
       }
-      if (
-        size > smallestdisk + this.ten_mib ||
-        size < smallestdisk - this.ten_mib
-      ) {
+      if (size > smallestdisk + this.ten_mib || size < smallestdisk - this.ten_mib) {
         this.vdev_disks_size_error = true;
         this.error = this.diskSizeErrorMsg;
       }
@@ -150,14 +143,8 @@ export class VdevComponent implements OnInit {
       }
     }
     if (this.group === "data") {
-      if (
-        this.disks.length > 0 &&
-        this.disks.length < this.mindisks[this.type]
-      ) {
-        this.error =
-          this.vdev_size_error +
-          this.mindisks[this.type] +
-          this.vdev_size_error_2;
+      if (this.disks.length > 0 && this.disks.length < this.mindisks[this.type]) {
+        this.error = this.vdev_size_error + this.mindisks[this.type] + this.vdev_size_error_2;
         this.vdev_disks_error = true;
       } else {
         this.vdev_disks_error = false;
@@ -236,20 +223,14 @@ export class VdevComponent implements OnInit {
   toggleExpandRow(row) {
     //console.log('Toggled Expand Row!', row);
     if (!this.startingHeight) {
-      this.startingHeight = document.getElementsByClassName(
-        "ngx-datatable"
-      )[0].clientHeight;
+      this.startingHeight = document.getElementsByClassName("ngx-datatable")[0].clientHeight;
     }
     this.table.rowDetail.toggleExpandRow(row);
     setTimeout(() => {
-      this.expandedRows = document.querySelectorAll(
-        ".datatable-row-detail"
-      ).length;
+      this.expandedRows = document.querySelectorAll(".datatable-row-detail").length;
       const newHeight = this.expandedRows * 100 + this.startingHeight;
       const heightStr = `height: ${newHeight}px`;
-      document
-        .getElementsByClassName("ngx-datatable")[0]
-        .setAttribute("style", heightStr);
+      document.getElementsByClassName("ngx-datatable")[0].setAttribute("style", heightStr);
     }, 100);
   }
 }

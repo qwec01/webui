@@ -148,20 +148,18 @@ export class VMListComponent implements OnDestroy {
   afterInit(entityList) {
     this.checkMemory();
     this.entityList = entityList;
-    this.eventSubscription = this.ws
-      .subscribe("vm.query")
-      .subscribe((event) => {
-        const changedRow = this.entityList.rows.find((o) => o.id === event.id);
-        if (event.fields.state === "RUNNING") {
-          changedRow.state = "RUNNING";
-          changedRow.status.state = "RUNNING";
-          changedRow.status.domain_state = event.fields.state;
-        } else {
-          changedRow.state = "STOPPED";
-          changedRow.status.state = "STOPPED";
-          changedRow.status.domain_state = event.fields.state;
-        }
-      });
+    this.eventSubscription = this.ws.subscribe("vm.query").subscribe((event) => {
+      const changedRow = this.entityList.rows.find((o) => o.id === event.id);
+      if (event.fields.state === "RUNNING") {
+        changedRow.state = "RUNNING";
+        changedRow.status.state = "RUNNING";
+        changedRow.status.domain_state = event.fields.state;
+      } else {
+        changedRow.state = "STOPPED";
+        changedRow.status.state = "STOPPED";
+        changedRow.status.domain_state = event.fields.state;
+      }
+    });
   }
 
   resourceTransformIncomingRestData(vms) {
@@ -244,13 +242,8 @@ export class VMListComponent implements OnDestroy {
         customSubmit: function (entityDialog) {
           entityDialog.dialogRef.close(true);
           let forceValue = false; // We are not exposing this in the UI
-          let forceValueTimeout = entityDialog.formValue.force_after_timeout
-            ? true
-            : false;
-          const params = [
-            row.id,
-            { force: forceValue, force_after_timeout: forceValueTimeout },
-          ];
+          let forceValueTimeout = entityDialog.formValue.force_after_timeout ? true : false;
+          const params = [row.id, { force: forceValue, force_after_timeout: forceValueTimeout }];
           parent.doRowAction(row, method, params);
         },
       };
@@ -275,16 +268,13 @@ export class VMListComponent implements OnDestroy {
     );
 
     memoryDialog.componentInstance.switchSelectionEmitter.subscribe((res) => {
-      memoryDialog.componentInstance.isSubmitEnabled = !memoryDialog
-        .componentInstance.isSubmitEnabled;
+      memoryDialog.componentInstance.isSubmitEnabled = !memoryDialog.componentInstance
+        .isSubmitEnabled;
     });
 
     memoryDialog.afterClosed().subscribe((dialogRes) => {
       if (dialogRes) {
-        this.doRowAction(row, this.wsMethods.start, [
-          row.id,
-          { overcommit: true },
-        ]);
+        this.doRowAction(row, this.wsMethods.start, [row.id, { overcommit: true }]);
       }
     });
   }
@@ -380,10 +370,7 @@ export class VMListComponent implements OnDestroy {
 
   onCheckboxChange(row) {
     row.autostart = !row.autostart;
-    this.doRowAction(row, this.wsMethods.update, [
-      row.id,
-      { autostart: row.autostart },
-    ]);
+    this.doRowAction(row, this.wsMethods.update, [row.id, { autostart: row.autostart }]);
   }
 
   getActions(row) {
@@ -425,9 +412,7 @@ export class VMListComponent implements OnDestroy {
         icon: "edit",
         label: T("Edit"),
         onClick: (edit_row) => {
-          this.router.navigate(
-            new Array("").concat(["vm", "edit", edit_row.id])
-          );
+          this.router.navigate(new Array("").concat(["vm", "edit", edit_row.id]));
         },
       },
       {
@@ -493,12 +478,7 @@ export class VMListComponent implements OnDestroy {
         label: T("Devices"),
         onClick: (devices_row) => {
           this.router.navigate(
-            new Array("").concat([
-              "vm",
-              devices_row.id,
-              "devices",
-              devices_row.name,
-            ])
+            new Array("").concat(["vm", devices_row.id, "devices", devices_row.name])
           );
         },
       },
@@ -526,12 +506,7 @@ export class VMListComponent implements OnDestroy {
               if (entityDialog.formValue.name) {
                 params.push(entityDialog.formValue.name);
               }
-              parent.doRowAction(
-                clone_row,
-                parent.wsMethods.clone,
-                params,
-                true
-              );
+              parent.doRowAction(clone_row, parent.wsMethods.clone, params, true);
             },
           };
           this.dialogService.dialogForm(conf);
@@ -568,9 +543,7 @@ export class VMListComponent implements OnDestroy {
                   if (display_device.attributes.password_configured) {
                     const pass_conf: DialogFormConfiguration = {
                       title: T("Enter password"),
-                      message: T(
-                        "Enter password to unlock this display device"
-                      ),
+                      message: T("Enter password to unlock this display device"),
                       fieldConfig: [
                         {
                           type: "input",
@@ -604,18 +577,16 @@ export class VMListComponent implements OnDestroy {
                     this.dialogService.dialogForm(pass_conf);
                   } else {
                     this.loader.open();
-                    this.ws
-                      .call("vm.get_display_web_uri", [display_device.id])
-                      .subscribe(
-                        (res) => {
-                          this.loader.close();
-                          window.open(res[0], "_blank");
-                        },
-                        (err) => {
-                          this.loader.close();
-                          new EntityUtils().handleError(this, err);
-                        }
-                      );
+                    this.ws.call("vm.get_display_web_uri", [display_device.id]).subscribe(
+                      (res) => {
+                        this.loader.close();
+                        window.open(res[0], "_blank");
+                      },
+                      (err) => {
+                        this.loader.close();
+                        new EntityUtils().handleError(this, err);
+                      }
+                    );
                   }
                   entityDialog.dialogRef.close();
                 },
@@ -644,31 +615,23 @@ export class VMListComponent implements OnDestroy {
         onClick: (vm) => {
           const path = `/var/log/libvirt/bhyve/${vm.id}_${vm.name}.log`;
           const filename = `${vm.id}_${vm.name}.log`;
-          this.ws
-            .call("core.download", ["filesystem.get", [path], filename])
-            .subscribe(
-              (download_res) => {
-                const url = download_res[1];
-                const mimetype = "text/plain";
-                this.storageService
-                  .streamDownloadFile(this.http, url, filename, mimetype)
-                  .subscribe(
-                    (file) => {
-                      this.storageService.downloadBlob(file, filename);
-                    },
-                    (err) => {
-                      new EntityUtils().handleWSError(
-                        this,
-                        err,
-                        this.dialogService
-                      );
-                    }
-                  );
-              },
-              (err) => {
-                new EntityUtils().handleWSError(this, err, this.dialogService);
-              }
-            );
+          this.ws.call("core.download", ["filesystem.get", [path], filename]).subscribe(
+            (download_res) => {
+              const url = download_res[1];
+              const mimetype = "text/plain";
+              this.storageService.streamDownloadFile(this.http, url, filename, mimetype).subscribe(
+                (file) => {
+                  this.storageService.downloadBlob(file, filename);
+                },
+                (err) => {
+                  new EntityUtils().handleWSError(this, err, this.dialogService);
+                }
+              );
+            },
+            (err) => {
+              new EntityUtils().handleWSError(this, err, this.dialogService);
+            }
+          );
         },
       },
     ];

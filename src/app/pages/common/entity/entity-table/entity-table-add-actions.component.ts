@@ -19,8 +19,7 @@ import { EntityTableComponent } from "./entity-table.component";
   selector: "app-entity-table-add-actions",
   templateUrl: "./entity-table-add-actions.component.html",
 })
-export class EntityTableAddActionsComponent
-  implements OnInit, AfterViewInit, OnDestroy, OnChanges {
+export class EntityTableAddActionsComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
   @ViewChild("filter", { static: false }) filter: ElementRef;
   @Input("entity") entity: EntityTableComponent;
   public conf;

@@ -1,12 +1,7 @@
 import { Component, ViewChild, ElementRef } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { Subscription, Observer } from "rxjs";
-import {
-  HttpClient,
-  HttpRequest,
-  HttpEventType,
-  HttpResponse,
-} from "@angular/common/http";
+import { HttpClient, HttpRequest, HttpEventType, HttpResponse } from "@angular/common/http";
 import { TranslateService } from "@ngx-translate/core";
 import { FieldConfig } from "../../models/field-config.interface";
 import { WebSocketService } from "../../../../../../services/";
@@ -17,10 +12,7 @@ import { T } from "../../../../../../translate-marker";
 @Component({
   selector: "app-form-upload",
   templateUrl: "./form-upload.component.html",
-  styleUrls: [
-    "../dynamic-field/dynamic-field.css",
-    "form-upload.component.css",
-  ],
+  styleUrls: ["../dynamic-field/dynamic-field.css", "form-upload.component.css"],
 })
 export class FormUploadComponent {
   @ViewChild("fileInput", { static: false })
@@ -85,13 +77,7 @@ export class FormUploadComponent {
             if (event.statusText === "OK") {
               this.newMessage(location + "/" + fileBrowser.files[0].name);
               this.loader.close();
-              this.dialog.Info(
-                T("File upload complete"),
-                "",
-                "300px",
-                "info",
-                true
-              );
+              this.dialog.Info(T("File upload complete"), "", "300px", "info", true);
             }
           }
         },

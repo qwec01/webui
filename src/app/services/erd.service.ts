@@ -30,10 +30,10 @@ export class ErdService {
 
       const elementAny = document.getElementById(elementId);
       if (
-        typeof erd !== "undefined"
-        && erd !== null
-        && typeof elementAny !== "undefined"
-        && elementAny !== null
+        typeof erd !== "undefined" &&
+        erd !== null &&
+        typeof elementAny !== "undefined" &&
+        elementAny !== null
       ) {
         erd.listenTo(elementAny, (element) => {
           (<any>window).dispatchEvent(new Event("resize"));

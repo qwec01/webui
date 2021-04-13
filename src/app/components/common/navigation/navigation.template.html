@@ -4,9 +4,7 @@
     <!-- Icon menu separator -->
     <div class="mt-1 mb-1 icon-menu-separator">
       <mat-divider [style.margin]="'0 -24px'"></mat-divider>
-      <span
-        [ngStyle]="{paddingLeft: 0, marginLeft: '-6px'}"
-        class="nav-section-title text-muted"
+      <span [ngStyle]="{paddingLeft: 0, marginLeft: '-6px'}" class="nav-section-title text-muted"
         >{{iconTypeMenuTitle}}</span
       >
     </div>
@@ -55,8 +53,7 @@
           matTooltipPosition="right"
         ></span>
         <!--<mat-icon>{{item.icon}}</mat-icon>-->
-        <mat-icon
-          *ngIf="item.icon !== 'jail_icon' && item.icon !== 'console-line'"
+        <mat-icon *ngIf="item.icon !== 'jail_icon' && item.icon !== 'console-line'"
           >{{item.icon}}</mat-icon
         >
         <mat-icon

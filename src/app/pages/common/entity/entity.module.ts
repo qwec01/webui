@@ -13,11 +13,7 @@ import { FlexLayoutModule } from "@angular/flex-layout";
 
 import { AppLoaderService } from "../../../services/app-loader/app-loader.service";
 import { DocsService } from "../../../services/docs.service";
-import {
-  RestService,
-  WebSocketService,
-  JobService,
-} from "../../../services/index";
+import { RestService, WebSocketService, JobService } from "../../../services/index";
 import { TranslateModule } from "@ngx-translate/core";
 import { TreeTableModule } from "primeng/treetable";
 import { NgxFilesizeModule } from "ngx-filesize";

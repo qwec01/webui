@@ -22,8 +22,6 @@ export default {
   ),
 
   import_disk_dst_path_placeholder: T("Destination Path"),
-  import_disk_dst_path_tooltip: T(
-    "Browse to the ZFS dataset that will hold the copied data."
-  ),
+  import_disk_dst_path_tooltip: T("Browse to the ZFS dataset that will hold the copied data."),
   import_disk_dst_path_validation: [Validators.required],
 };

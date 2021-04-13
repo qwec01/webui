@@ -27,10 +27,7 @@ import { EntityUtils } from "../utils";
 @Component({
   selector: "entity-wizard",
   templateUrl: "./entity-wizard.component.html",
-  styleUrls: [
-    "./entity-wizard.component.css",
-    "../entity-form/entity-form.component.scss",
-  ],
+  styleUrls: ["./entity-wizard.component.css", "../entity-form/entity-form.component.scss"],
   providers: [EntityFormService, FieldRelationService],
 })
 export class EntityWizardComponent implements OnInit {
@@ -115,9 +112,7 @@ export class EntityWizardComponent implements OnInit {
         ];
       }
       wizardformArray.push(
-        this.entityFormService.createFormGroup(
-          this.conf.wizardConfig[i].fieldConfig
-        )
+        this.entityFormService.createFormGroup(this.conf.wizardConfig[i].fieldConfig)
       );
     }
 
@@ -156,9 +151,7 @@ export class EntityWizardComponent implements OnInit {
   }
 
   setRelation(config: FieldConfig, stepIndex: any) {
-    let activations = this.fieldRelationService.findActivationRelation(
-      config.relation
-    );
+    let activations = this.fieldRelationService.findActivationRelation(config.relation);
     if (activations) {
       const tobeDisabled = this.fieldRelationService.isFormControlToBeDisabled(
         activations,
@@ -171,10 +164,7 @@ export class EntityWizardComponent implements OnInit {
       this.setDisabled(config.name, tobeDisabled, stepIndex, tobeHide);
 
       this.fieldRelationService
-        .getRelatedFormControls(
-          config,
-          <FormGroup>this.formArray.get(stepIndex)
-        )
+        .getRelatedFormControls(config, <FormGroup>this.formArray.get(stepIndex))
         .forEach((control) => {
           control.valueChanges.subscribe(() => {
             this.relationUpdate(config, activations, stepIndex);
@@ -191,9 +181,7 @@ export class EntityWizardComponent implements OnInit {
     }
 
     for (let i in this.conf.wizardConfig) {
-      this.conf.wizardConfig[i].fieldConfig = this.conf.wizardConfig[
-        i
-      ].fieldConfig.map((item) => {
+      this.conf.wizardConfig[i].fieldConfig = this.conf.wizardConfig[i].fieldConfig.map((item) => {
         if (item.name === name) {
           item.disabled = disable;
           item["isHidden"] = hide;
@@ -245,9 +233,7 @@ export class EntityWizardComponent implements OnInit {
             this.dialog.errorReport(res.error, res.reason, res.exception);
           } else {
             if (this.conf.route_success) {
-              this.router.navigate(
-                new Array("/").concat(this.conf.route_success)
-              );
+              this.router.navigate(new Array("/").concat(this.conf.route_success));
             } else {
               this.dialog.Info(T("Settings saved"), "", "300px", "info", true);
             }
@@ -292,18 +278,13 @@ export class EntityWizardComponent implements OnInit {
         for (let step = 0; step < this.conf.wizardConfig.length; step++) {
           const wizard = this.conf.wizardConfig[step];
           wizard.fieldConfig.forEach((fieldConfig) => {
-            const formControl = <FormGroup>(
-              this.formArray.get([step]).get(fieldConfig.name)
-            );
+            const formControl = <FormGroup>this.formArray.get([step]).get(fieldConfig.name);
             if (formControl) {
               let summaryName = fieldConfig.placeholder;
               if (!summaryName) {
                 summaryName = fieldConfig.name;
               }
-              this.conf.summary[summaryName] = this.getSummaryValue(
-                fieldConfig,
-                formControl
-              );
+              this.conf.summary[summaryName] = this.getSummaryValue(fieldConfig, formControl);
             }
           });
         }

@@ -48,9 +48,7 @@ export class SmdFabSpeedDialTrigger {
 
 @Component({
   selector: "smd-fab-actions",
-  template: `
-    <ng-content select="[md-mini-fab], [mat-mini-fab]"></ng-content>
-  `,
+  template: ` <ng-content select="[md-mini-fab], [mat-mini-fab]"></ng-content> `,
 })
 export class SmdFabSpeedDialActions implements AfterContentInit {
   @ContentChildren(MatButton) _buttons: QueryList<MatButton>;
@@ -73,11 +71,7 @@ export class SmdFabSpeedDialActions implements AfterContentInit {
   private initButtonStates() {
     this._buttons.toArray().forEach((button, i) => {
       this.renderer.addClass(button._getHostElement(), "smd-fab-action-item");
-      this.changeElementStyle(
-        button._getHostElement(),
-        "z-index",
-        "" + (Z_INDEX_ITEM - i)
-      );
+      this.changeElementStyle(button._getHostElement(), "z-index", "" + (Z_INDEX_ITEM - i));
     });
   }
 
@@ -99,11 +93,7 @@ export class SmdFabSpeedDialActions implements AfterContentInit {
           transitionDelay + "ms"
         );
         this.changeElementStyle(button._getHostElement(), "opacity", "1");
-        this.changeElementStyle(
-          button._getHostElement(),
-          "transform",
-          transform
-        );
+        this.changeElementStyle(button._getHostElement(), "transform", transform);
       });
     }
   }
@@ -127,19 +117,14 @@ export class SmdFabSpeedDialActions implements AfterContentInit {
           transitionDelay + "ms"
         );
         this.changeElementStyle(button._getHostElement(), "opacity", opacity);
-        this.changeElementStyle(
-          button._getHostElement(),
-          "transform",
-          transform
-        );
+        this.changeElementStyle(button._getHostElement(), "transform", transform);
       });
     }
   }
 
   private getTranslateFunction(value: string) {
     let dir = this._parent.direction;
-    let translateFn =
-      dir == "up" || dir == "down" ? "translateY" : "translateX";
+    let translateFn = dir == "up" || dir == "down" ? "translateY" : "translateX";
     let sign = dir == "down" || dir == "right" ? "-" : "";
     return translateFn + "(" + sign + value + ")";
   }

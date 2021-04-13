@@ -7,10 +7,7 @@ import { CoreEvent } from "app/core/services/core.service";
 
 import { TooltipsService, WebSocketService } from "app/services";
 import { EntityFormEmbeddedComponent } from "./entity-form-embedded.component";
-import {
-  EntityFormComponent,
-  Formconfiguration,
-} from "./entity-form.component";
+import { EntityFormComponent, Formconfiguration } from "./entity-form.component";
 import { FieldConfig } from "./models/field-config.interface";
 import { FieldSets } from "./classes/field-sets";
 import { ipv4Validator, ipv6Validator } from "./validators/ip-validation";
@@ -59,11 +56,7 @@ export class EntityFormConfigurationComponent implements Formconfiguration {
 
   afterInit(entityEdit: any) {
     this.entityEdit = entityEdit;
-    if (
-      this.formType == "EntityFormComponent" &&
-      this.target &&
-      !this.customSubmit
-    ) {
+    if (this.formType == "EntityFormComponent" && this.target && !this.customSubmit) {
       this.customSubmit = (values) => {
         this.target.next({
           name: "FormSubmit",

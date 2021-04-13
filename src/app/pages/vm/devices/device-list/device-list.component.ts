@@ -117,29 +117,26 @@ export class DeviceListComponent {
             ],
             saveButtonText: T("Save"),
             preInit: function (entityDialog) {
-              _.find(entityDialog.fieldConfig, { name: "order" })["value"] =
-                row1.order;
+              _.find(entityDialog.fieldConfig, { name: "order" })["value"] = row1.order;
             },
             customSubmit: function (entityDialog) {
               const value = entityDialog.formValue;
               self.loader.open();
-              self.ws
-                .call("vm.device.update", [row1.id, { order: value.order }])
-                .subscribe(
-                  (succ) => {
-                    entityDialog.dialogRef.close(true);
-                    self.loader.close();
-                    this.parent.entityList.getData();
-                  },
-                  (err) => {
-                    self.loader.close();
-                  },
-                  () => {
-                    entityDialog.dialogRef.close(true);
-                    self.loader.close();
-                    this.parent.entityList.getData();
-                  }
-                );
+              self.ws.call("vm.device.update", [row1.id, { order: value.order }]).subscribe(
+                (succ) => {
+                  entityDialog.dialogRef.close(true);
+                  self.loader.close();
+                  this.parent.entityList.getData();
+                },
+                (err) => {
+                  self.loader.close();
+                },
+                () => {
+                  entityDialog.dialogRef.close(true);
+                  self.loader.close();
+                  this.parent.entityList.getData();
+                }
+              );
             },
           };
           self.dialogService.dialogForm(conf);
@@ -155,15 +152,9 @@ export class DeviceListComponent {
           self.translate.get("Change order for ").subscribe((detailMsg) => {
             let details = ``;
             for (const attribute in device.attributes) {
-              details =
-                `${attribute}: ${device.attributes[attribute]} \n` + details;
+              details = `${attribute}: ${device.attributes[attribute]} \n` + details;
             }
-            this.dialogService.Info(
-              detailMsg + `${row.dtype} ${row.id}`,
-              details,
-              "500px",
-              "info"
-            );
+            this.dialogService.Info(detailMsg + `${row.dtype} ${row.id}`, details, "500px", "info");
           });
         },
       });
@@ -173,30 +164,23 @@ export class DeviceListComponent {
   deviceDelete(row) {
     this.translate.get("Delete").subscribe((msg) => {
       this.dialogService
-        .confirm(
-          T("Delete"),
-          `${msg} <b>${row.dtype} ${row.id}</b>`,
-          true,
-          T("Delete Device")
-        )
+        .confirm(T("Delete"), `${msg} <b>${row.dtype} ${row.id}</b>`, true, T("Delete Device"))
         .subscribe((res) => {
           if (res) {
             this.loader.open();
             this.loaderOpen = true;
             const data = {};
             if (this.wsDelete) {
-              this.busy = this.ws
-                .call(this.wsDelete, ["vm.device", row.id])
-                .subscribe(
-                  (resinner) => {
-                    this.entityList.getData();
-                    this.loader.close();
-                  },
-                  (resinner) => {
-                    new EntityUtils().handleError(this, resinner);
-                    this.loader.close();
-                  }
-                );
+              this.busy = this.ws.call(this.wsDelete, ["vm.device", row.id]).subscribe(
+                (resinner) => {
+                  this.entityList.getData();
+                  this.loader.close();
+                },
+                (resinner) => {
+                  new EntityUtils().handleError(this, resinner);
+                  this.loader.close();
+                }
+              );
             }
           }
         });

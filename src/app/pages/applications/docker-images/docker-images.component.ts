@@ -143,9 +143,7 @@ export class DockerImagesComponent implements OnInit, OnDestroy {
     const data = [];
     d.forEach((row) => {
       if (!row.system_image) {
-        row.state = row.update_available
-          ? helptext.dockerImages.updateAvailable
-          : "";
+        row.state = row.update_available ? helptext.dockerImages.updateAvailable : "";
         data.push(row);
       }
     });

@@ -125,17 +125,9 @@ export class ExtentFormComponent {
           validation: [
             Validators.required,
             (control: FormControl): ValidationErrors => {
-              const config = this.fieldConfig.find(
-                (c) => c.name === "filesize"
-              );
-              const size = this.storageService.convertHumanStringToNum(
-                control.value,
-                true
-              );
-              const errors =
-                control.value && isNaN(size)
-                  ? { invalid_byte_string: true }
-                  : null;
+              const config = this.fieldConfig.find((c) => c.name === "filesize");
+              const size = this.storageService.convertHumanStringToNum(control.value, true);
+              const errors = control.value && isNaN(size) ? { invalid_byte_string: true } : null;
               if (errors) {
                 config.hasErrors = true;
                 config.errors = globalHelptext.human_readable.input_error;
@@ -188,8 +180,7 @@ export class ExtentFormComponent {
         {
           type: "input",
           name: "avail_threshold",
-          placeholder:
-            helptext_sharing_iscsi.extent_placeholder_avail_threshold,
+          placeholder: helptext_sharing_iscsi.extent_placeholder_avail_threshold,
           tooltip: helptext_sharing_iscsi.extent_tooltip_avail_threshold,
           isHidden: false,
         },
@@ -281,12 +272,9 @@ export class ExtentFormComponent {
       if (!params["pk"]) {
         this.isNew = true;
         const extentTypeFieldset = _.find(this.fieldSets, { class: "type" });
-        extentTypeFieldset.config = _.filter(
-          extentTypeFieldset.config,
-          function (item) {
-            return item.name !== "serial";
-          }
-        );
+        extentTypeFieldset.config = _.filter(extentTypeFieldset.config, function (item) {
+          return item.name !== "serial";
+        });
       } else {
         this.isNew = false;
         this.pk = params["pk"];
@@ -373,9 +361,7 @@ export class ExtentFormComponent {
       delete data["path"];
     }
     if (data.filesize && data.filesize !== "0") {
-      data.filesize = this.storageService.convertBytestoHumanReadable(
-        data.filesize
-      );
+      data.filesize = this.storageService.convertBytestoHumanReadable(data.filesize);
     }
     return data;
   }
@@ -398,10 +384,7 @@ export class ExtentFormComponent {
   }
 
   beforeSubmit(data) {
-    data.filesize = this.storageService.convertHumanStringToNum(
-      data.filesize,
-      true
-    );
+    data.filesize = this.storageService.convertHumanStringToNum(data.filesize, true);
     if (this.pk === undefined || this.originalFilesize !== data.filesize) {
       data.filesize =
         data.filesize == 0

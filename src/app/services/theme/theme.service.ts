@@ -11,16 +11,7 @@ export const DefaultTheme = {
   label: "iX Dark",
   labelSwatch: "blue",
   description: "TrueNAS 12 default theme",
-  accentColors: [
-    "blue",
-    "magenta",
-    "orange",
-    "cyan",
-    "yellow",
-    "violet",
-    "red",
-    "green",
-  ],
+  accentColors: ["blue", "magenta", "orange", "cyan", "yellow", "violet", "red", "green"],
   primary: "var(--blue)",
   topbar: "#111111",
   "topbar-txt": "var(--fg2)",
@@ -95,16 +86,7 @@ export class ThemeService {
       label: "iX Blue",
       labelSwatch: "blue",
       description: "Official iX System Colors on light",
-      accentColors: [
-        "blue",
-        "orange",
-        "cyan",
-        "violet",
-        "yellow",
-        "magenta",
-        "red",
-        "green",
-      ],
+      accentColors: ["blue", "orange", "cyan", "violet", "yellow", "magenta", "red", "green"],
       primary: "var(--blue)",
       topbar: "var(--blue)",
       accent: "var(--yellow)",
@@ -130,16 +112,7 @@ export class ThemeService {
       label: "Dracula",
       labelSwatch: "blue",
       description: "Dracula color theme",
-      accentColors: [
-        "violet",
-        "orange",
-        "cyan",
-        "blue",
-        "yellow",
-        "magenta",
-        "red",
-        "green",
-      ],
+      accentColors: ["violet", "orange", "cyan", "blue", "yellow", "magenta", "red", "green"],
       primary: "var(--blue)",
       topbar: "var(--blue)",
       "topbar-txt": "var(--fg1)",
@@ -165,18 +138,8 @@ export class ThemeService {
       name: "nord",
       label: "Nord",
       labelSwatch: "blue",
-      description:
-        "Unofficial nord color theme based on https://www.nordtheme.com/",
-      accentColors: [
-        "violet",
-        "orange",
-        "cyan",
-        "blue",
-        "yellow",
-        "magenta",
-        "red",
-        "green",
-      ],
+      description: "Unofficial nord color theme based on https://www.nordtheme.com/",
+      accentColors: ["violet", "orange", "cyan", "blue", "yellow", "magenta", "red", "green"],
       primary: "var(--cyan)",
       topbar: "var(--alt-bg2)",
       "topbar-txt": "var(--fg2)",
@@ -203,16 +166,7 @@ export class ThemeService {
       label: "Paper",
       labelSwatch: "blue",
       description: "FreeNAS 11.2 default theme",
-      accentColors: [
-        "violet",
-        "orange",
-        "cyan",
-        "blue",
-        "yellow",
-        "magenta",
-        "red",
-        "green",
-      ],
+      accentColors: ["violet", "orange", "cyan", "blue", "yellow", "magenta", "red", "green"],
       primary: "var(--blue)",
       topbar: "var(--blue)",
       accent: "var(--yellow)",
@@ -238,16 +192,7 @@ export class ThemeService {
       label: "Solarized Dark",
       labelSwatch: "bg2",
       description: "Solarized dark color scheme",
-      accentColors: [
-        "blue",
-        "magenta",
-        "cyan",
-        "violet",
-        "green",
-        "orange",
-        "yellow",
-        "red",
-      ],
+      accentColors: ["blue", "magenta", "cyan", "violet", "green", "orange", "yellow", "red"],
       primary: "var(--fg1)",
       topbar: "var(--fg1)",
       "topbar-txt": "#cdcdcd",
@@ -274,16 +219,7 @@ export class ThemeService {
       label: "Midnight",
       labelSwatch: "blue",
       description: "Dark theme with blues and greys",
-      accentColors: [
-        "violet",
-        "orange",
-        "cyan",
-        "blue",
-        "yellow",
-        "magenta",
-        "red",
-        "green",
-      ],
+      accentColors: ["violet", "orange", "cyan", "blue", "yellow", "magenta", "red", "green"],
       primary: "var(--blue)",
       topbar: "var(--blue)",
       "topbar-txt": "var(--fg2)",
@@ -310,16 +246,7 @@ export class ThemeService {
       label: "High Contrast",
       labelSwatch: "fg1",
       description: "High contrast theme based on Legacy UI color scheme",
-      accentColors: [
-        "green",
-        "violet",
-        "orange",
-        "cyan",
-        "magenta",
-        "red",
-        "yellow",
-        "blue",
-      ],
+      accentColors: ["green", "violet", "orange", "cyan", "magenta", "red", "yellow", "blue"],
       primary: "var(--blue)",
       topbar: "var(--black)",
       accent: "var(--magenta)",
@@ -419,8 +346,7 @@ export class ThemeService {
       this.customThemes = evt.data.customThemes;
     }
 
-    this.activeTheme =
-      evt.data.userTheme == "default" ? this.defaultTheme : evt.data.userTheme;
+    this.activeTheme = evt.data.userTheme == "default" ? this.defaultTheme : evt.data.userTheme;
     this.setCssVars(this.findTheme(this.activeTheme, true));
     this.userThemeLoaded = true;
     this.core.emit({
@@ -430,27 +356,15 @@ export class ThemeService {
     });
 
     if (evt.data.allowPwToggle) {
-      (<any>document).documentElement.style.setProperty(
-        "--toggle_pw_display_prop",
-        "inline"
-      );
+      (<any>document).documentElement.style.setProperty("--toggle_pw_display_prop", "inline");
     } else if (!evt.data.allowPwToggle) {
-      (<any>document).documentElement.style.setProperty(
-        "--toggle_pw_display_prop",
-        "none"
-      );
+      (<any>document).documentElement.style.setProperty("--toggle_pw_display_prop", "none");
     }
 
     if (evt.data.enableWarning) {
-      (<any>document).documentElement.style.setProperty(
-        "--enableWarning",
-        "inline"
-      );
+      (<any>document).documentElement.style.setProperty("--enableWarning", "inline");
     } else if (!evt.data.allowPwToggle) {
-      (<any>document).documentElement.style.setProperty(
-        "--enableWarning",
-        "none"
-      );
+      (<any>document).documentElement.style.setProperty("--enableWarning", "none");
     }
   }
 
@@ -525,16 +439,10 @@ export class ThemeService {
       // Generate aux. text styles
       if (this.freenasThemes[0].accentColors.indexOf(color) !== -1) {
         let txtColor = this.utils.textContrast(theme[color], theme["bg2"]);
-        (<any>document).documentElement.style.setProperty(
-          "--" + color + "-txt",
-          txtColor
-        );
+        (<any>document).documentElement.style.setProperty("--" + color + "-txt", txtColor);
       }
 
-      (<any>document).documentElement.style.setProperty(
-        "--" + color,
-        theme[color]
-      );
+      (<any>document).documentElement.style.setProperty("--" + color, theme[color]);
     });
 
     // Add Black White and Grey Variables
@@ -543,45 +451,22 @@ export class ThemeService {
     (<any>document).documentElement.style.setProperty("--grey", "#989898");
 
     // Set Material palette colors
-    (<any>document).documentElement.style.setProperty(
-      "--primary",
-      theme["primary"]
-    );
-    (<any>document).documentElement.style.setProperty(
-      "--accent",
-      theme["accent"]
-    );
+    (<any>document).documentElement.style.setProperty("--primary", theme["primary"]);
+    (<any>document).documentElement.style.setProperty("--accent", theme["accent"]);
 
     // Set Material aux. text styles
     let primaryColor = this.utils.colorFromMeta(theme["primary"]); // eg. blue
     let accentColor = this.utils.colorFromMeta(theme["accent"]); // eg. yellow
-    let primaryTextColor = this.utils.textContrast(
-      theme[primaryColor],
-      theme["bg2"]
-    );
-    let accentTextColor = this.utils.textContrast(
-      theme[accentColor],
-      theme["bg2"]
-    );
+    let primaryTextColor = this.utils.textContrast(theme[primaryColor], theme["bg2"]);
+    let accentTextColor = this.utils.textContrast(theme[accentColor], theme["bg2"]);
 
-    (<any>document).documentElement.style.setProperty(
-      "--primary-txt",
-      primaryTextColor
-    );
-    (<any>document).documentElement.style.setProperty(
-      "--accent-txt",
-      accentTextColor
-    );
-    (<any>document).documentElement.style.setProperty(
-      "--highlight",
-      accentTextColor
-    );
+    (<any>document).documentElement.style.setProperty("--primary-txt", primaryTextColor);
+    (<any>document).documentElement.style.setProperty("--accent-txt", accentTextColor);
+    (<any>document).documentElement.style.setProperty("--highlight", accentTextColor);
 
     // Set line colors
     const isDark: boolean = this.darkTest(theme.bg2);
-    const lineColor = isDark
-      ? "var(--dark-theme-lines)"
-      : "var(--light-theme-lines)";
+    const lineColor = isDark ? "var(--dark-theme-lines)" : "var(--light-theme-lines)";
     (<any>document).documentElement.style.setProperty("--lines", lineColor);
 
     // Set multiple background color contrast options
@@ -591,39 +476,18 @@ export class ThemeService {
     let contrastLighter = this.utils.lighten(contrastSrc, 5);
     let contrastLightest = this.utils.lighten(contrastSrc, 10);
 
-    (<any>document).documentElement.style.setProperty(
-      "--contrast-darker",
-      contrastDarker
-    );
-    (<any>document).documentElement.style.setProperty(
-      "--contrast-darkest",
-      contrastDarkest
-    );
-    (<any>document).documentElement.style.setProperty(
-      "--contrast-lighter",
-      contrastLighter
-    );
-    (<any>document).documentElement.style.setProperty(
-      "--contrast-lightest",
-      contrastLightest
-    );
+    (<any>document).documentElement.style.setProperty("--contrast-darker", contrastDarker);
+    (<any>document).documentElement.style.setProperty("--contrast-darkest", contrastDarkest);
+    (<any>document).documentElement.style.setProperty("--contrast-lighter", contrastLighter);
+    (<any>document).documentElement.style.setProperty("--contrast-lightest", contrastLightest);
 
     let topbarTextColor;
     if (!theme["topbar-txt"] && theme.topbar) {
       topbarTextColor = this.utils.textContrast(theme.topbar, theme["bg2"]);
-      (<any>document).documentElement.style.setProperty(
-        "--topbar-txt",
-        topbarTextColor
-      );
+      (<any>document).documentElement.style.setProperty("--topbar-txt", topbarTextColor);
     } else if (!theme["topbar-txt"] && !theme.topbar) {
-      topbarTextColor = this.utils.textContrast(
-        theme[primaryColor],
-        theme["bg2"]
-      );
-      (<any>document).documentElement.style.setProperty(
-        "--topbar-txt",
-        topbarTextColor
-      );
+      topbarTextColor = this.utils.textContrast(theme[primaryColor], theme["bg2"]);
+      (<any>document).documentElement.style.setProperty("--topbar-txt", topbarTextColor);
     }
 
     // Logo light/dark

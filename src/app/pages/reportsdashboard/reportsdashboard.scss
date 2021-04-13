@@ -67,9 +67,7 @@ nav.reports-toolbar {
   width: 100%;
   top: 96;
   left: 0;
-  height: calc(
-    100vh - 92px - 4px
-  ); /* 92 is for the topbar && 48 is for the entity-toolbar */
+  height: calc(100vh - 92px - 4px); /* 92 is for the topbar && 48 is for the entity-toolbar */
   padding-bottom: 16px;
 }
 

@@ -1,11 +1,6 @@
 <ng-container *ngIf="errors.length == 0">
   <div
-    *ngIf="
-      system &&
-      system.enclosures &&
-      system_manufacturer &&
-      system_manufacturer == 'ixsystems'
-    "
+    *ngIf="system && system.enclosures && system_manufacturer && system_manufacturer == 'ixsystems'"
     class="page-viewport"
     fxLayout="row wrap"
   >
@@ -19,11 +14,7 @@
             [ngClass]="{ active: button.name == currentView.name }"
           >
             <div class="view-nav-btn-icon">
-              <mat-icon
-                role="img"
-                fontSet="mdi-set"
-                fontIcon="mdi-{{ button.icon }}"
-              ></mat-icon>
+              <mat-icon role="img" fontSet="mdi-set" fontIcon="mdi-{{ button.icon }}"></mat-icon>
             </div>
             <div class="view-nav-btn-label">{{ button.name }}</div>
           </span>
@@ -37,18 +28,11 @@
       fxFlex="calc(100% - {{ (system.enclosures.length * 240).toString() }}px )"
     >
       <div>
-        <mat-spinner
-          [diameter]="40"
-          *ngIf="spinner"
-          class="spinner"
-        ></mat-spinner>
+        <mat-spinner [diameter]="40" *ngIf="spinner" class="spinner"></mat-spinner>
       </div>
 
       <ng-container *ngIf="supportedHardware">
-        <div
-          *ngIf="!system.platform.includes('MINI'); else mini"
-          style="padding: 64px"
-        >
+        <div *ngIf="!system.platform.includes('MINI'); else mini" style="padding: 64px">
           <enclosure-disks
             style.padding="32px 0 0 0"
             *ngIf="events && system && system.pools && selectedEnclosure"
@@ -136,11 +120,7 @@
     </div>
 
     <div class="error-footer">
-      <button
-        mat-button
-        color="primary"
-        (click)="router.navigate(['/system/support'])"
-      >
+      <button mat-button color="primary" (click)="router.navigate(['/system/support'])">
         CONTACT SUPPORT
       </button>
     </div>

@@ -53,10 +53,8 @@ export const helptext_system_general = {
 
   stg_guihttpsport: {
     placeholder: T("Web Interface HTTPS Port"),
-    tooltip: T(
-      "Allow configuring a non-standard port to access the GUI\
- over <i>HTTPS</i>."
-    ),
+    tooltip: T("Allow configuring a non-standard port to access the GUI\
+ over <i>HTTPS</i>."),
     validation: [Validators.required],
   },
 
@@ -231,7 +229,5 @@ export const helptext_system_general = {
   },
 
   consolemsg_placeholder: T("Show Console Messages"),
-  consolemsg_tooltip: T(
-    "Display console messages in real time at the bottom of the browser."
-  ),
+  consolemsg_tooltip: T("Display console messages in real time at the bottom of the browser."),
 };

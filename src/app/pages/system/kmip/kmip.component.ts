@@ -1,11 +1,7 @@
 import { Component } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 
-import {
-  SystemGeneralService,
-  DialogService,
-  WebSocketService,
-} from "../../../services/";
+import { SystemGeneralService, DialogService, WebSocketService } from "../../../services/";
 import { FieldConfig } from "../../common/entity/entity-form/models/field-config.interface";
 import { FieldSet } from "app/pages/common/entity/entity-form/models/fieldset.interface";
 import { helptext_system_kmip } from "app/helptext/system/kmip";
@@ -144,11 +140,7 @@ export class KmipComponent {
               this.sync_pending = isPending;
             },
             (penddingCallErr) => {
-              new EntityUtils().handleWSError(
-                this,
-                penddingCallErr,
-                this.dialogService
-              );
+              new EntityUtils().handleWSError(this, penddingCallErr, this.dialogService);
             }
           );
         } else {

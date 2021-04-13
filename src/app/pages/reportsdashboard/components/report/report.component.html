@@ -23,11 +23,7 @@
             {{ reportTitle }}
             <span *ngIf="multipathTitle">
               {{ multipathTitle }}
-              <mat-icon
-                class="multipath-icon"
-                role="img"
-                svgIcon="multipath"
-              ></mat-icon>
+              <mat-icon class="multipath-icon" role="img" svgIcon="multipath"></mat-icon>
             </span>
           </h3>
         </mat-card-title>
@@ -43,11 +39,7 @@
               ix-auto-type="button"
               ix-auto-identifier="{{ reportTitle }}_zoomIn"
             >
-              <mat-icon
-                role="img"
-                fontSet="mdi-set"
-                fontIcon="mdi-magnify-plus"
-              ></mat-icon>
+              <mat-icon role="img" fontSet="mdi-set" fontIcon="mdi-magnify-plus"></mat-icon>
             </button>
 
             <button
@@ -59,11 +51,7 @@
               ix-auto-type="button"
               ix-auto-identifier="{{ reportTitle }}_zoomOut"
             >
-              <mat-icon
-                role="img"
-                fontSet="mdi-set"
-                fontIcon="mdi-magnify-minus"
-              ></mat-icon>
+              <mat-icon role="img" fontSet="mdi-set" fontIcon="mdi-magnify-minus"></mat-icon>
             </button>
 
             <button
@@ -74,11 +62,7 @@
               ix-auto-type="button"
               ix-auto-identifier="{{ reportTitle }}_stepBack"
             >
-              <mat-icon
-                role="img"
-                fontSet="mdi-set"
-                fontIcon="mdi-rewind"
-              ></mat-icon>
+              <mat-icon role="img" fontSet="mdi-set" fontIcon="mdi-rewind"></mat-icon>
             </button>
 
             <button
@@ -90,11 +74,7 @@
               ix-auto-type="button"
               ix-auto-identifier="{{ reportTitle }}_stepForward"
             >
-              <mat-icon
-                role="img"
-                fontSet="mdi-set"
-                fontIcon="mdi-fast-forward"
-              ></mat-icon>
+              <mat-icon role="img" fontSet="mdi-set" fontIcon="mdi-fast-forward"></mat-icon>
             </button>
           </div>
         </div>
@@ -133,13 +113,9 @@
                 <span *ngIf="data && legendData">
                   <h4>
                     <strong>Start:</strong>
-                    <span style="font-weight: normal"
-                      >&nbsp;&nbsp;{{ startTime }}</span
-                    >
+                    <span style="font-weight: normal">&nbsp;&nbsp;{{ startTime }}</span>
                     <br ngClass.gt-sm="hidden" />
-                    <span style="margin-left: 0px" class="text-small">
-                      ({{ timezone }})</span
-                    >
+                    <span style="margin-left: 0px" class="text-small"> ({{ timezone }})</span>
                   </h4>
                 </span>
               </div>
@@ -150,13 +126,9 @@
                 <span *ngIf="data && legendData">
                   <h4>
                     <strong>End:</strong>
-                    <span style="font-weight: normal"
-                      >&nbsp;&nbsp;{{ endTime }}</span
-                    >
+                    <span style="font-weight: normal">&nbsp;&nbsp;{{ endTime }}</span>
                     <br ngClass.gt-sm="hidden" />
-                    <span style="opacity: 0" class="text-small">
-                      ({{ timezone }})</span
-                    >
+                    <span style="opacity: 0" class="text-small"> ({{ timezone }})</span>
                   </h4>
                 </span>
               </div>
@@ -171,19 +143,12 @@
           fxLayout="column"
           fxLayoutAlign="start"
         >
-          <div
-            *ngIf="report && data && data.legend"
-            class="legend-timestamp"
-            fxFlex="32px"
-          >
+          <div *ngIf="report && data && data.legend" class="legend-timestamp" fxFlex="32px">
             <div>
               <span *ngIf="data && legendData && legendData.xHTML">
                 <h4>
                   <strong>Time:</strong>
-                  <span
-                    *ngIf="legendData && legendData.xHTML"
-                    style="font-weight: normal"
-                  >
+                  <span *ngIf="legendData && legendData.xHTML" style="font-weight: normal">
                     &nbsp;&nbsp;
                     {{ legendData.xHTML }}
                   </span>
@@ -209,10 +174,7 @@
               </tr>
 
               <!-- Table Rows -->
-              <tr
-                class="legend-group"
-                *ngFor="let legendItem of data.legend; let i = index"
-              >
+              <tr class="legend-group" *ngFor="let legendItem of data.legend; let i = index">
                 <td class="legend-label">
                   <!--Legend Label-->
                   <div
@@ -226,9 +188,7 @@
 
                   <span *ngIf="legendData && legendData.series">
                     <span class="tooltip-value">
-                      <span style="font-weight: normal">
-                        : {{ legendData.series[i].yHTML }}</span
-                      >
+                      <span style="font-weight: normal"> : {{ legendData.series[i].yHTML }}</span>
                     </span>
                   </span>
                 </td>
@@ -241,11 +201,7 @@
                     class="report-analytics"
                   >
                     <span>
-                      {{
-                        data.aggregations[key][i]
-                          ? data.aggregations[key][i]
-                          : "null"
-                      }}
+                      {{ data.aggregations[key][i] ? data.aggregations[key][i] : "null" }}
                     </span>
                   </td>
                 </ng-container>
@@ -263,11 +219,7 @@
       fxlayoutGap="16px"
       fxLayoutAlign="center center"
     >
-      <mat-icon
-        *ngIf="retroLogo == 1"
-        class="generic"
-        svgIcon="freenas_logo_full"
-      ></mat-icon>
+      <mat-icon *ngIf="retroLogo == 1" class="generic" svgIcon="freenas_logo_full"></mat-icon>
       <mat-icon
         *ngIf="retroLogo == 0 && product_type == 'CORE'"
         class="generic"
@@ -279,10 +231,7 @@
         svgIcon="truenas_enterprise_logo_full"
       ></mat-icon>
       <mat-icon
-        *ngIf="
-          (retroLogo == 0 && product_type == 'SCALE') ||
-          product_type == 'SCALE_ENTERPRISE'
-        "
+        *ngIf="(retroLogo == 0 && product_type == 'SCALE') || product_type == 'SCALE_ENTERPRISE'"
         class="generic"
         svgIcon="truenas_scale_logo_full"
       ></mat-icon>
@@ -290,11 +239,7 @@
 
     <ng-template *ngIf="configurable">
       <mat-card class="back">
-        <mat-card-content
-          fxLayout="column"
-          fxLayoutAlign="start stretch"
-          fxFlex="100"
-        >
+        <mat-card-content fxLayout="column" fxLayoutAlign="start stretch" fxFlex="100">
         </mat-card-content>
         <div class="widget-footer">
           <button mat-button color="accent" (click)="toggleConfig()">

@@ -10,6 +10,4 @@ export const routes: Routes = [
     data: { title: "Clustering", breadcrumb: "Clustering" },
   },
 ];
-export const routing: ModuleWithProviders<RouterModule> = RouterModule.forChild(
-  routes
-);
+export const routing: ModuleWithProviders<RouterModule> = RouterModule.forChild(routes);

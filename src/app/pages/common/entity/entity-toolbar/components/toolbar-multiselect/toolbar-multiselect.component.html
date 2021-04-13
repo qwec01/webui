@@ -29,12 +29,8 @@
         value="select_all"
       >
         <span>
-          <mat-icon *ngIf="checkLength()" class="fn-checked"
-            >check_circle</mat-icon
-          >
-          <mat-icon *ngIf="!checkLength()" class="fn-unchecked"
-            >remove</mat-icon
-          >
+          <mat-icon *ngIf="checkLength()" class="fn-checked">check_circle</mat-icon>
+          <mat-icon *ngIf="!checkLength()" class="fn-unchecked">remove</mat-icon>
         </span>
         Select All
       </div>
@@ -50,17 +46,11 @@
               style="opacity: 0.5"
               ix-auto
               ix-auto-type="option"
-              ix-auto-identifier="{{ id }}_{{ config.placeholder }}_{{
-                option.label
-              }}"
+              ix-auto-identifier="{{ id }}_{{ config.placeholder }}_{{ option.label }}"
             >
               <span style="color: var(--red)">
-                <mat-icon *ngIf="checkLength()" class="fn-checked"
-                  >check_circle</mat-icon
-                >
-                <mat-icon *ngIf="!checkLength()" class="fn-unchecked"
-                  >remove</mat-icon
-                >
+                <mat-icon *ngIf="checkLength()" class="fn-checked">check_circle</mat-icon>
+                <mat-icon *ngIf="!checkLength()" class="fn-unchecked">remove</mat-icon>
               </span>
               {{ option.label | translate }}
             </mat-option>
@@ -72,17 +62,11 @@
               (click)="onClick(option, i)"
               ix-auto
               ix-auto-type="option"
-              ix-auto-identifier="{{ id }}_{{ config.placeholder }}_{{
-                option.label
-              }}"
+              ix-auto-identifier="{{ id }}_{{ config.placeholder }}_{{ option.label }}"
             >
               <span>
-                <mat-icon *ngIf="selectStates[i]" class="fn-checked"
-                  >check_circle</mat-icon
-                >
-                <mat-icon *ngIf="!selectStates[i]" class="fn-unchecked"
-                  >remove</mat-icon
-                >
+                <mat-icon *ngIf="selectStates[i]" class="fn-checked">check_circle</mat-icon>
+                <mat-icon *ngIf="!selectStates[i]" class="fn-unchecked">remove</mat-icon>
               </span>
               {{ option.label | translate }}
             </mat-option>

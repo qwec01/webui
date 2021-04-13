@@ -61,11 +61,7 @@ export class ReplicationService {
           return nodes;
         },
         (err) => {
-          new EntityUtils().handleWSError(
-            parentComponent,
-            err,
-            parentComponent.dialogService
-          );
+          new EntityUtils().handleWSError(parentComponent, err, parentComponent.dialogService);
           return reject(err);
         }
       );

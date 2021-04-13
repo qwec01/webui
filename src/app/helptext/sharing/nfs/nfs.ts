@@ -46,10 +46,8 @@ export const helptext_sharing_nfs = {
   ),
 
   placeholder_alldirs: T("All dirs"),
-  tooltip_alldirs: T(
-    "Set to allow the client to mount any\
- subdirectory within the <b>Path</b>."
-  ),
+  tooltip_alldirs: T("Set to allow the client to mount any\
+ subdirectory within the <b>Path</b>."),
 
   placeholder_ro: T("Read Only"),
   tooltip_ro: T("Set to prohibit writing to the share."),
@@ -96,16 +94,12 @@ export const helptext_sharing_nfs = {
   ),
 
   placeholder_mapall_user: T("Mapall User"),
-  tooltip_mapall_user: T(
-    "The specified permissions of that user are used\
- by all clients."
-  ),
+  tooltip_mapall_user: T("The specified permissions of that user are used\
+ by all clients."),
 
   placeholder_mapall_group: T("Mapall Group"),
-  tooltip_mapall_group: T(
-    "The specified permissions of that group are used\
- by all clients."
-  ),
+  tooltip_mapall_group: T("The specified permissions of that group are used\
+ by all clients."),
 
   placeholder_security: T("Security"),
 

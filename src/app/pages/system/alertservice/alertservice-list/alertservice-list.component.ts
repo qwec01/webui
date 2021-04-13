@@ -61,18 +61,16 @@ export class AlertServiceListComponent {
 
   onCheckboxChange(row) {
     row.enabled = !row.enabled;
-    this.ws
-      .call("alertservice.update", [row.id, { enabled: row.enabled }])
-      .subscribe(
-        (res) => {
-          if (!res) {
-            row.enabled = !row.enabled;
-          }
-        },
-        (err) => {
+    this.ws.call("alertservice.update", [row.id, { enabled: row.enabled }]).subscribe(
+      (res) => {
+        if (!res) {
           row.enabled = !row.enabled;
-          new EntityUtils().handleWSError(this, err, this.dialogService);
         }
-      );
+      },
+      (err) => {
+        row.enabled = !row.enabled;
+        new EntityUtils().handleWSError(this, err, this.dialogService);
+      }
+    );
   }
 }

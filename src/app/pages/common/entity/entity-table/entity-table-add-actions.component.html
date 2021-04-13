@@ -22,11 +22,7 @@
   </div>
 
   <!-- START COLUMN FILTER -->
-  <div
-    *ngIf="
-      entity.columnFilter && entity.allColumns && entity.allColumns.length > 0
-    "
-  >
+  <div *ngIf="entity.columnFilter && entity.allColumns && entity.allColumns.length > 0">
     <button
       mat-button
       [matMenuTriggerFor]="menu"
@@ -56,12 +52,8 @@
             <mat-icon *ngIf="entity.checkLength()">check_circle</mat-icon>
             <mat-icon *ngIf="!entity.checkLength()">remove</mat-icon>
           </span>
-          <span *ngIf="!entity.checkLength()">{{
-            "Select All" | translate
-          }}</span>
-          <span *ngIf="entity.checkLength()">{{
-            "Unselect All" | translate
-          }}</span>
+          <span *ngIf="!entity.checkLength()">{{ "Select All" | translate }}</span>
+          <span *ngIf="entity.checkLength()">{{ "Unselect All" | translate }}</span>
         </button>
       </div>
 
@@ -123,8 +115,7 @@
       ix-auto-identifier="{{ entity.conf.title }}_ACTIONS"
     >
       <span
-        >{{ "Actions" | translate }}
-        <mat-icon class="menu-caret">arrow_drop_down</mat-icon></span
+        >{{ "Actions" | translate }} <mat-icon class="menu-caret">arrow_drop_down</mat-icon></span
       >
     </button>
     <mat-menu #menu="matMenu" overlapTrigger="false">
@@ -202,9 +193,7 @@
         ix-auto
         ix-auto-type="button"
         ix-auto-identifier="{{ custBtn.name }}"
-        *ngIf="
-          !conf.isCustActionVisible || conf.isCustActionVisible(custBtn.id)
-        "
+        *ngIf="!conf.isCustActionVisible || conf.isCustActionVisible(custBtn.id)"
         type="button"
         color="primary"
         (click)="custBtn['function']()"

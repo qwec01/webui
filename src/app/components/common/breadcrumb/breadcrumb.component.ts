@@ -1,10 +1,5 @@
 import { Component, OnInit, Input } from "@angular/core";
-import {
-  Router,
-  NavigationEnd,
-  ActivatedRoute,
-  ActivatedRouteSnapshot,
-} from "@angular/router";
+import { Router, NavigationEnd, ActivatedRoute, ActivatedRouteSnapshot } from "@angular/router";
 import { RoutePartsService } from "../../../services/route-parts/route-parts.service";
 import { CoreService, CoreEvent } from "app/core/services/core.service";
 import globalHelptext from "../../../helptext/global-helptext";
@@ -32,9 +27,7 @@ export class BreadcrumbComponent implements OnInit {
 
   ngOnInit() {
     // must be running once to get breadcrumbs
-    this.routeParts = this.routePartsService.generateRouteParts(
-      this.activeRoute.snapshot
-    );
+    this.routeParts = this.routePartsService.generateRouteParts(this.activeRoute.snapshot);
     // generate url from parts
     this.routeParts.reverse().map((item, i) => {
       // prepend / to first part
@@ -54,9 +47,7 @@ export class BreadcrumbComponent implements OnInit {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((routeChange) => {
-        this.routeParts = this.routePartsService.generateRouteParts(
-          this.activeRoute.snapshot
-        );
+        this.routeParts = this.routePartsService.generateRouteParts(this.activeRoute.snapshot);
         // generate url from parts
         this.routeParts.reverse().map((item, i) => {
           // prepend / to first part

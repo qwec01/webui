@@ -6,9 +6,7 @@ import { EntityUtils } from "../../../../common/entity/utils";
 
 @Component({
   selector: "app-iscsi-target-list",
-  template: `
-    <entity-table [conf]="this" [title]="tableTitle"></entity-table>
-  `,
+  template: ` <entity-table [conf]="this" [title]="tableTitle"></entity-table> `,
   providers: [IscsiService],
 })
 export class TargetListComponent implements OnInit {
@@ -81,8 +79,7 @@ export class TargetListComponent implements OnInit {
             for (let i = 0; i < res.length; i++) {
               if (res[i].target.split(":")[1] == rowinner.name) {
                 warningMsg =
-                  '<font color="red">' +
-                  T("Warning: iSCSI Target is already in use.</font><br>");
+                  '<font color="red">' + T("Warning: iSCSI Target is already in use.</font><br>");
                 payload.push(true); // enable force delele
                 break;
               }

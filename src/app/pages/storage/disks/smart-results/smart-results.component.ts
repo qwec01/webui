@@ -28,10 +28,7 @@ export class SmartResultsComponent {
   protected noActions = true;
 
   protected disk;
-  constructor(
-    private aroute: ActivatedRoute,
-    protected translate: TranslateService
-  ) {}
+  constructor(private aroute: ActivatedRoute, protected translate: TranslateService) {}
   preInit(entityForm: any) {
     this.aroute.params.subscribe((params) => {
       this.disk = params["pk"];

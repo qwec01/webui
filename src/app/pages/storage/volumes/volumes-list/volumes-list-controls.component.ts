@@ -17,11 +17,7 @@ import { GlobalAction } from "app/components/common/pagetitle/pagetitle.componen
 import { CoreService } from "app/core/services/core.service";
 import { ModalService } from "app/services/modal.service";
 import { VolumeImportWizardComponent } from "../volume-import-wizard";
-import {
-  AppLoaderService,
-  DialogService,
-  WebSocketService,
-} from "app/services";
+import { AppLoaderService, DialogService, WebSocketService } from "app/services";
 import { MatDialog } from "@angular/material/dialog";
 import { HttpClient } from "@angular/common/http";
 import { MessageService } from "app/pages/common/entity/entity-form/services/message.service";
@@ -94,15 +90,10 @@ export class VolumesListControlsComponent
 
   ngAfterViewInit() {
     if (this.filter) {
-      this.filterSubscription = observableFromEvent(
-        this.filter.nativeElement,
-        "keyup"
-      )
+      this.filterSubscription = observableFromEvent(this.filter.nativeElement, "keyup")
         .pipe(debounceTime(250), distinctUntilChanged())
         .subscribe(() => {
-          this.filterValue = this.filter.nativeElement.value
-            ? this.filter.nativeElement.value
-            : "";
+          this.filterValue = this.filter.nativeElement.value ? this.filter.nativeElement.value : "";
           this.filterDatasets(this.filterValue);
         });
     }
@@ -161,10 +152,7 @@ export class VolumesListControlsComponent
         Object.keys(res).forEach((pool) => {
           this.poolList.push({ label: res[pool], value: pool });
         });
-        this.dialogService.dialogForm(
-          this.getSystemDatasetPoolDialogConfiguration(),
-          true
-        );
+        this.dialogService.dialogForm(this.getSystemDatasetPoolDialogConfiguration(), true);
       });
   }
 
@@ -189,11 +177,9 @@ export class VolumesListControlsComponent
   }
 
   getSystemDatasetPool() {
-    this.poolConfigSubscription = this.ws
-      .call("systemdataset.config")
-      .subscribe((res) => {
-        this.poolValue = res.pool;
-      });
+    this.poolConfigSubscription = this.ws.call("systemdataset.config").subscribe((res) => {
+      this.poolValue = res.pool;
+    });
   }
 
   customSubmitSystemDatasetPool(entityDialog: any) {
@@ -231,9 +217,7 @@ export class VolumesListControlsComponent
       data: { title: helptext.choosePool.jobTitle },
       disableClose: true,
     });
-    self.dialogRef.componentInstance.setCall("systemdataset.update", [
-      { pool: pool },
-    ]);
+    self.dialogRef.componentInstance.setCall("systemdataset.update", [{ pool: pool }]);
     self.dialogRef.componentInstance.submit();
     self.dialogRef.componentInstance.success.subscribe((res) => {
       if (res.error) {

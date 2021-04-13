@@ -1,10 +1,4 @@
-import {
-  Component,
-  AfterViewInit,
-  Input,
-  ViewChild,
-  OnDestroy,
-} from "@angular/core";
+import { Component, AfterViewInit, Input, ViewChild, OnDestroy } from "@angular/core";
 import { CoreServiceInjector } from "app/core/services/coreserviceinjector";
 import { CoreService, CoreEvent } from "app/core/services/core.service";
 import { ThemeUtils } from "app/core/classes/theme-utils";
@@ -34,9 +28,7 @@ export interface TimeData {
   templateUrl: "./widgetchart.component.html",
   styleUrls: ["./widgetchart.component.scss"],
 })
-export class WidgetChartComponent
-  extends WidgetComponent
-  implements AfterViewInit, OnDestroy {
+export class WidgetChartComponent extends WidgetComponent implements AfterViewInit, OnDestroy {
   // Labels
   public title: string = T("CPU Usage");
   public subtitle: string = T("% of all cores");

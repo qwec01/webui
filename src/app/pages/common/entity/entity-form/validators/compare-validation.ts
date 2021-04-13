@@ -1,9 +1,6 @@
 import { FormControl } from "@angular/forms";
 
-export function greaterThan(
-  otherControlName: string,
-  fieldPlaceholers: [string]
-) {
+export function greaterThan(otherControlName: string, fieldPlaceholers: [string]) {
   let thisControl: FormControl;
   let otherControl: FormControl;
 
@@ -17,9 +14,7 @@ export function greaterThan(
       thisControl = control;
       otherControl = control.parent.get(otherControlName) as FormControl;
       if (!otherControl) {
-        throw new Error(
-          "greaterThanValidator(): other control is not found in parent group"
-        );
+        throw new Error("greaterThanValidator(): other control is not found in parent group");
       }
       otherControl.valueChanges.subscribe(() => {
         thisControl.updateValueAndValidity();

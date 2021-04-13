@@ -139,8 +139,7 @@ export class FormPermissionsComponent implements Field, OnInit, OnDestroy {
   }
 
   refreshPermissions() {
-    this.value =
-      this.owner.toString() + this.grp.toString() + this.other.toString();
+    this.value = this.owner.toString() + this.grp.toString() + this.other.toString();
     this.group.controls[this.config.name].setValue(this.value);
   }
 

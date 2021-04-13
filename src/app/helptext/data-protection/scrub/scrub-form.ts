@@ -31,8 +31,6 @@ export default {
   ),
 
   scrub_enabled_placeholder: T("Enabled"),
-  scrub_enabled_tooltip: T(
-    "Unset to disable the scheduled scrub \
- without deleting it."
-  ),
+  scrub_enabled_tooltip: T("Unset to disable the scheduled scrub \
+ without deleting it."),
 };

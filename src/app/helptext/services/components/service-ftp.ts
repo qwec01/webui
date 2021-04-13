@@ -33,15 +33,11 @@ export default {
   loginattempt_validation: [rangeValidator(0, 1000), Validators.required],
 
   timeout_placeholder: T("Timeout"),
-  timeout_tooltip: T(
-    "Maximum client idle time in seconds before client is disconnected."
-  ),
+  timeout_tooltip: T("Maximum client idle time in seconds before client is disconnected."),
   timeout_validation: [rangeValidator(0, 10000), Validators.required],
 
   rootlogin_placeholder: T("Allow Root Login"),
-  rootlogin_tooltip: T(
-    "Setting this option is discouraged as it increases security risk."
-  ),
+  rootlogin_tooltip: T("Setting this option is discouraged as it increases security risk."),
 
   onlyanonymous_placeholder: T("Allow Anonymous Login"),
   onlyanonymous_tooltip: T(
@@ -65,9 +61,7 @@ export default {
   ),
 
   resume_placeholder: T("Allow Transfer Resumption"),
-  resume_tooltip: T(
-    "Set to allow FTP clients to resume interrupted transfers."
-  ),
+  resume_tooltip: T("Set to allow FTP clients to resume interrupted transfers."),
 
   defaultroot_placeholder: T("Always Chroot"),
   defaultroot_tooltip: T(
@@ -127,8 +121,7 @@ export default {
   passiveportsmax_validation: [rangeValidator(0, 65535), Validators.required],
 
   localuserbw_placeholder:
-    T("Local User Upload Bandwidth: ") +
-    globalHelptext.human_readable.suggestion_label,
+    T("Local User Upload Bandwidth: ") + globalHelptext.human_readable.suggestion_label,
   userbw_tooltip:
     T("In KiBs or greater. A default of <i>0 KiB</i> means unlimited. ") +
     globalHelptext.human_readable.suggestion_tooltip +
@@ -171,9 +164,7 @@ export default {
     { label: "Auth + !Data", value: "auth+!data" },
   ],
 
-  tls_opt_allow_client_renegotiations_placeholder: T(
-    "TLS Allow Client Renegotiations"
-  ),
+  tls_opt_allow_client_renegotiations_placeholder: T("TLS Allow Client Renegotiations"),
   tls_opt_allow_client_renegotiations_tooltip: T(
     'Setting this option is <b>not</b> recommended as it\
  breaks several security measures. Refer to\
@@ -190,9 +181,7 @@ export default {
   ),
 
   tls_opt_allow_per_user_placeholder: T("TLS Allow Per User"),
-  tls_opt_allow_per_user_tooltip: T(
-    "If set, the password of the user can be sent unencrypted."
-  ),
+  tls_opt_allow_per_user_tooltip: T("If set, the password of the user can be sent unencrypted."),
 
   tls_opt_common_name_required_placeholder: T("TLS Common Name Required"),
   tls_opt_common_name_required_tooltip: T(
@@ -207,9 +196,7 @@ export default {
   ),
 
   tls_opt_export_cert_data_placeholder: T("TLS Export Certificate Data"),
-  tls_opt_export_cert_data_tooltip: T(
-    "Set to export the certificate environment variables."
-  ),
+  tls_opt_export_cert_data_tooltip: T("Set to export the certificate environment variables."),
 
   tls_opt_no_cert_request_placeholder: T("TLS No Certificate Request"),
   tls_opt_no_cert_request_tooltip: T(
@@ -223,9 +210,7 @@ export default {
  bypasses a security mechanism."
   ),
 
-  tls_opt_no_session_reuse_required_placeholder: T(
-    "TLS No Session Reuse Required"
-  ),
+  tls_opt_no_session_reuse_required_placeholder: T("TLS No Session Reuse Required"),
   tls_opt_no_session_reuse_required_tooltip: T(
     "Setting this option reduces the security of the\
  connection, so only use it if the client does not\
@@ -233,9 +218,7 @@ export default {
   ),
 
   tls_opt_stdenvvars_placeholder: T("TLS Export Standard Vars"),
-  tls_opt_stdenvvars_tooltip: T(
-    "If selected, sets several environment variables."
-  ),
+  tls_opt_stdenvvars_tooltip: T("If selected, sets several environment variables."),
 
   tls_opt_dns_name_required_placeholder: T("TLS DNS Name Required"),
   tls_opt_dns_name_required_tooltip: T(

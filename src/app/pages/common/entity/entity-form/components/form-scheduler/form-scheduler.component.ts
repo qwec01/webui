@@ -46,10 +46,7 @@ interface CronDate {
 @Component({
   selector: "form-scheduler",
   templateUrl: "./form-scheduler.component.html",
-  styleUrls: [
-    "./form-scheduler.component.css",
-    "../dynamic-field/dynamic-field.css",
-  ],
+  styleUrls: ["./form-scheduler.component.css", "../dynamic-field/dynamic-field.css"],
 })
 export class FormSchedulerComponent
   implements Field, OnInit, OnChanges, AfterViewInit, AfterViewChecked {
@@ -390,32 +387,30 @@ export class FormSchedulerComponent
     this.preset = this.presets[1];
     this._months = "*";
 
-    this.getGenConfig = this.sysGeneralService.getGeneralConfig.subscribe(
-      (res) => {
-        this.timezone = res.timezone;
-        moment.tz.setDefault(res.timezone);
+    this.getGenConfig = this.sysGeneralService.getGeneralConfig.subscribe((res) => {
+      this.timezone = res.timezone;
+      moment.tz.setDefault(res.timezone);
 
-        let utcOffset = moment.tz(this.timezone).utcOffset();
-        // Convert offset in minutes (-420) to hours (-700) for Angular date pipe
-        let tempOffset = ((utcOffset / 60) * 100).toString();
-        if (tempOffset[0] !== "-") {
-          tempOffset = "+" + tempOffset;
-        }
-        // Pad to 5 characters (60 to +0060, etc)
-        while (tempOffset.length < 5) {
-          let tempStr = tempOffset.slice(1);
-          tempOffset = tempOffset[0] + "0" + tempStr;
-        }
-        this.offset = tempOffset;
-
-        this.minDate = moment();
-        this.maxDate = moment().endOf("month");
-        this.currentDate = moment();
-
-        this.activeDate = moment(this.currentDate).format();
-        this.disablePrevious = true;
+      let utcOffset = moment.tz(this.timezone).utcOffset();
+      // Convert offset in minutes (-420) to hours (-700) for Angular date pipe
+      let tempOffset = ((utcOffset / 60) * 100).toString();
+      if (tempOffset[0] !== "-") {
+        tempOffset = "+" + tempOffset;
       }
-    );
+      // Pad to 5 characters (60 to +0060, etc)
+      while (tempOffset.length < 5) {
+        let tempStr = tempOffset.slice(1);
+        tempOffset = tempOffset[0] + "0" + tempStr;
+      }
+      this.offset = tempOffset;
+
+      this.minDate = moment();
+      this.maxDate = moment().endOf("month");
+      this.currentDate = moment();
+
+      this.activeDate = moment(this.currentDate).format();
+      this.disablePrevious = true;
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -451,21 +446,14 @@ export class FormSchedulerComponent
   }
 
   onChangeOption($event) {
-    if (
-      this.config.onChangeOption !== undefined &&
-      this.config.onChangeOption != null
-    ) {
+    if (this.config.onChangeOption !== undefined && this.config.onChangeOption != null) {
       this.config.onChangeOption({ event: $event });
     }
   }
 
   validPopup() {
     // Assigned to disabled attribute
-    if (
-      this.validMinutes === false ||
-      this.validHours === false ||
-      this.validDays === false
-    ) {
+    if (this.validMinutes === false || this.validHours === false || this.validDays === false) {
       return true;
     } else {
       return false;
@@ -556,14 +544,8 @@ export class FormSchedulerComponent
     // config should define options with begin prop and end prop
     // e.g. options: ['schedule_begin', 'schedule_end']
     if (this.config.options) {
-      this.beginTime = moment(
-        this.group.controls[this.config.options[0]].value,
-        "hh:mm"
-      );
-      this.endTime = moment(
-        this.group.controls[this.config.options[1]].value,
-        "hh:mm"
-      );
+      this.beginTime = moment(this.group.controls[this.config.options[0]].value, "hh:mm");
+      this.endTime = moment(this.group.controls[this.config.options[1]].value, "hh:mm");
     }
 
     let newSchedule = [];
@@ -592,10 +574,7 @@ export class FormSchedulerComponent
           this.generatedScheduleSubset = parseCounter;
           break;
         }
-        if (
-          parseCounter >= this.generatedScheduleSubset &&
-          parseCounter < subsetEnd
-        ) {
+        if (parseCounter >= this.generatedScheduleSubset && parseCounter < subsetEnd) {
           let obj: any = interval.next();
           if (this.isValidSchedule(obj.value)) {
             newSchedule.push(obj.value);
@@ -613,8 +592,7 @@ export class FormSchedulerComponent
       let daySchedule = [];
       let spl = this.crontab.split(" ");
       // Modified crontab so we can find days;
-      let crontabDays =
-        "0 0 " + " " + spl[1] + " " + spl[2] + " " + spl[3] + " " + spl[4];
+      let crontabDays = "0 0 " + " " + spl[1] + " " + spl[2] + " " + spl[3] + " " + spl[4];
       let intervalDays = parser.parseExpression(crontabDays, {
         currentDate: moment(this.minDate).subtract(1, "seconds").toDate(),
         endDate: this.maxDate,
@@ -652,11 +630,7 @@ export class FormSchedulerComponent
       let aria = this.getAttribute("aria-label", nodes[i]);
       let isScheduled = this.checkSchedule(aria, schedule);
       if (isScheduled) {
-        this.setAttribute(
-          "class",
-          nodes[i],
-          nodeClass + " mat-calendar-body-active"
-        );
+        this.setAttribute("class", nodes[i], nodeClass + " mat-calendar-body-active");
       } else if (!isScheduled && i > 0) {
         this.setAttribute("class", nodes[i], nodeClass);
       }
@@ -715,11 +689,7 @@ export class FormSchedulerComponent
     for (let i in sched) {
       let s = sched[i]; // eg. Sun May 06 2018 04:05:00 GMT-0400 (EDT)
       let schedule = s.toString().split(" ");
-      if (
-        schedule[1] == calMonth &&
-        schedule[2] == calDay &&
-        schedule[3] == calYear
-      ) {
+      if (schedule[1] == calMonth && schedule[2] == calDay && schedule[3] == calYear) {
         return true;
       }
     }
@@ -771,15 +741,7 @@ export class FormSchedulerComponent
   }
 
   formatDaysOfWeek() {
-    let dow = [
-      this._sun,
-      this._mon,
-      this._tue,
-      this._wed,
-      this._thu,
-      this._fri,
-      this._sat,
-    ];
+    let dow = [this._sun, this._mon, this._tue, this._wed, this._thu, this._fri, this._sat];
     let dow_str = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
     let rule = "";
     for (let i = 0; i < dow.length; i++) {

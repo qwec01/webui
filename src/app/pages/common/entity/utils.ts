@@ -73,12 +73,7 @@ export class EntityUtils {
     }
   }
 
-  handleWSError(
-    entity: any,
-    res: any,
-    dialogService?: any,
-    targetFieldConfig?: any
-  ) {
+  handleWSError(entity: any, res: any, dialogService?: any, targetFieldConfig?: any) {
     let dialog;
     if (dialogService) {
       dialog = dialogService;
@@ -91,10 +86,7 @@ export class EntityUtils {
       res.extra = res.exc_info.extra;
     }
 
-    if (
-      res.extra &&
-      (targetFieldConfig || entity.fieldConfig || entity.wizardConfig)
-    ) {
+    if (res.extra && (targetFieldConfig || entity.fieldConfig || entity.wizardConfig)) {
       let scroll = false;
       if (res.extra.excerpt) {
         this.errorReport(res, dialog);
@@ -194,11 +186,7 @@ export class EntityUtils {
   }
 
   bool(v) {
-    return v === "false" ||
-      v === "null" ||
-      v === "NaN" ||
-      v === "undefined" ||
-      v === "0"
+    return v === "false" || v === "null" || v === "NaN" || v === "undefined" || v === "0"
       ? false
       : !!v;
   }
@@ -258,11 +246,7 @@ export class EntityUtils {
   parseFormControlValues(data: any, result: any) {
     Object.keys(data).forEach((key) => {
       const value = data[key];
-      if (
-        key == "release_name" ||
-        key == "undefined" ||
-        key.startsWith(FORM_LABEL_KEY_PREFIX)
-      ) {
+      if (key == "release_name" || key == "undefined" || key.startsWith(FORM_LABEL_KEY_PREFIX)) {
         return;
       }
 
@@ -483,11 +467,7 @@ export class EntityUtils {
       }
 
       schemaConfig.schema.attrs.forEach((dictConfig) => {
-        const subResults = this.parseSchemaFieldConfig(
-          dictConfig,
-          name,
-          parentIsList
-        );
+        const subResults = this.parseSchemaFieldConfig(dictConfig, name, parentIsList);
 
         if (relations) {
           subResults.forEach((subResult) => {
@@ -508,10 +488,7 @@ export class EntityUtils {
 
         if (schemaConfig.schema.subquestions) {
           schemaConfig.schema.subquestions.forEach((subquestion) => {
-            const subResults = this.parseSchemaFieldConfig(
-              subquestion,
-              parentName
-            );
+            const subResults = this.parseSchemaFieldConfig(subquestion, parentName);
 
             if (schemaConfig.schema.show_subquestions_if !== undefined) {
               subResults.forEach((subFieldConfig) => {

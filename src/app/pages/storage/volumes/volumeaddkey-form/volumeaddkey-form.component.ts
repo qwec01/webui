@@ -37,8 +37,7 @@ export class VolumeAddkeyFormComponent implements Formconfiguration {
     {
       type: "paragraph",
       name: "encrypt-headline",
-      paraText:
-        '<i class="material-icons">lock</i>' + helptext.add_key_headline,
+      paraText: '<i class="material-icons">lock</i>' + helptext.add_key_headline,
     },
     {
       type: "paragraph",
@@ -69,24 +68,18 @@ export class VolumeAddkeyFormComponent implements Formconfiguration {
       name: helptext.add_key_invalid_button,
       disabled: this.button_disabled,
       function: () => {
-        this.ws
-          .call("auth.check_user", ["root", this.admin_pw])
-          .subscribe((res) => {
-            if (res) {
-              this.encryptionService.deleteRecoveryKey(
-                this.pk,
-                this.admin_pw,
-                this.poolName,
-                this.route_return
-              );
-            } else {
-              this.dialogService.Info(
-                "Error",
-                "The administrator password is incorrect.",
-                "340px"
-              );
-            }
-          });
+        this.ws.call("auth.check_user", ["root", this.admin_pw]).subscribe((res) => {
+          if (res) {
+            this.encryptionService.deleteRecoveryKey(
+              this.pk,
+              this.admin_pw,
+              this.poolName,
+              this.route_return
+            );
+          } else {
+            this.dialogService.Info("Error", "The administrator password is incorrect.", "340px");
+          }
+        });
       },
     },
     {
@@ -129,30 +122,18 @@ export class VolumeAddkeyFormComponent implements Formconfiguration {
   afterInit(entityForm: any) {
     entityForm.formGroup.controls["password"].valueChanges.subscribe((res) => {
       this.admin_pw = res;
-      let btn = <HTMLInputElement>(
-        document.getElementById("cust_button_Invalidate Existing Key")
-      );
+      let btn = <HTMLInputElement>document.getElementById("cust_button_Invalidate Existing Key");
       this.admin_pw !== "" ? (btn.disabled = false) : (btn.disabled = true);
     });
   }
 
   customSubmit(value) {
-    this.ws
-      .call("auth.check_user", ["root", value.password])
-      .subscribe((res) => {
-        if (res) {
-          this.encryptionService.makeRecoveryKey(
-            this.pk,
-            value.name,
-            this.route_return
-          );
-        } else {
-          this.dialogService.Info(
-            "Error",
-            "The administrator password is incorrect.",
-            "340px"
-          );
-        }
-      });
+    this.ws.call("auth.check_user", ["root", value.password]).subscribe((res) => {
+      if (res) {
+        this.encryptionService.makeRecoveryKey(this.pk, value.name, this.route_return);
+      } else {
+        this.dialogService.Info("Error", "The administrator password is incorrect.", "340px");
+      }
+    });
   }
 }

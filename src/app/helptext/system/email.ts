@@ -28,10 +28,8 @@ export const helptext_system_email = {
 
   outgoingserver: {
     placeholder: T("Outgoing Mail Server"),
-    tooltip: T(
-      "Hostname or IP address of SMTP server to use for\
- sending this email."
-    ),
+    tooltip: T("Hostname or IP address of SMTP server to use for\
+ sending this email."),
   },
 
   port: {
@@ -55,10 +53,8 @@ export const helptext_system_email = {
 
   user: {
     placeholder: T("Username"),
-    tooltip: T(
-      "Enter the username if the SMTP server requires\
- authentication."
-    ),
+    tooltip: T("Enter the username if the SMTP server requires\
+ authentication."),
     validation: [Validators.required],
   },
 
@@ -95,9 +91,7 @@ export const helptext_system_email = {
     },
     client_id: {
       placeholder: T("Client ID"),
-      tooltip: T(
-        "Use the <i>Log In to GMail</i> button to obtain the credentials for this form."
-      ),
+      tooltip: T("Use the <i>Log In to GMail</i> button to obtain the credentials for this form."),
     },
     client_secret: T("Client Secret"),
     refresh_token: T("Refresh Token"),

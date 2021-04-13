@@ -73,8 +73,7 @@ export class SystemProfiler {
       // Detect rear drive bays
       if (this.enclosures[i].controller == true) {
         if (this.enclosures[i].id.includes("plx_enclosure")) {
-          this.enclosures[i].model =
-            this.enclosures[this.headIndex].model + " Rear Bays";
+          this.enclosures[i].model = this.enclosures[this.headIndex].model + " Rear Bays";
           this.rearIndex = i;
         } else {
           this.headIndex = i;
@@ -136,10 +135,7 @@ export class SystemProfiler {
 
   private parseSensorData(obj) {
     let powerStatus = obj.filter((v) => v.name.startsWith("PS"));
-    if (
-      this.enclosures[this.headIndex] &&
-      this.enclosures[this.headIndex].model == "M Series"
-    ) {
+    if (this.enclosures[this.headIndex] && this.enclosures[this.headIndex].model == "M Series") {
       const elements = powerStatus.map((item, index) => {
         item.descriptor = item.name;
         item.status = item.value == 1 ? "OK" : "FAILED";
@@ -230,11 +226,7 @@ export class SystemProfiler {
     let diskKey = enclosure.diskKeys[diskName];
     enclosure.disks[diskKey].vdev = vdev;
     enclosure.disks[diskKey].stats = stats;
-    enclosure.disks[diskKey].status = this.getDiskStatus(
-      diskName,
-      enclosure,
-      vdev
-    );
+    enclosure.disks[diskKey].status = this.getDiskStatus(diskName, enclosure, vdev);
     if (!enclosure.poolKeys[vdev.pool]) {
       enclosure.poolKeys[vdev.pool] = vdev.poolIndex;
     }
@@ -248,13 +240,11 @@ export class SystemProfiler {
 
     let poolDisk;
     if (vdev.disks[diskName] == -1) {
-      poolDisk = this.pools[vdev.poolIndex].topology[vdev.topology][
-        vdev.vdevIndex
-      ];
+      poolDisk = this.pools[vdev.poolIndex].topology[vdev.topology][vdev.vdevIndex];
     } else {
-      poolDisk = this.pools[vdev.poolIndex].topology[vdev.topology][
-        vdev.vdevIndex
-      ].children[vdev.disks[diskName]];
+      poolDisk = this.pools[vdev.poolIndex].topology[vdev.topology][vdev.vdevIndex].children[
+        vdev.disks[diskName]
+      ];
     }
 
     return poolDisk.status;

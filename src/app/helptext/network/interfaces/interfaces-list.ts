@@ -18,9 +18,7 @@ export default {
   pending_checkin_text: T(
     "Network interface settings have been temporarily changed for testing. The settings will revert to the previous configuration after"
   ),
-  pending_checkin_text_2: T(
-    "seconds unless SAVE CHANGES is chosen to make them permanent."
-  ),
+  pending_checkin_text_2: T("seconds unless SAVE CHANGES is chosen to make them permanent."),
 
   commit_changes_title: T("Test Changes"),
   commit_changes_warning: T(
@@ -48,25 +46,17 @@ export default {
   checkin_title: T("Save Changes"),
   checkin_message: T("Save network interface changes?"),
   checkin_complete_title: T("Changes Saved"),
-  checkin_complete_message: T(
-    "Network interface changes have been made permanent."
-  ),
+  checkin_complete_message: T("Network interface changes have been made permanent."),
   checkin_button: T("Save"),
 
   pending_changes_title: T("Pending Network Changes"),
-  pending_changes_message: T(
-    "There are pending network interface changes. Review them now?"
-  ),
+  pending_changes_message: T("There are pending network interface changes. Review them now?"),
 
   ha_enabled_edit_title: T("Cannot Edit while HA is Enabled"),
-  ha_enabled_edit_msg: T(
-    "Editing interfaces while HA is enabled is not allowed."
-  ),
+  ha_enabled_edit_msg: T("Editing interfaces while HA is enabled is not allowed."),
 
   ha_enabled_delete_title: T("Cannot Delete while HA is Enabled"),
-  ha_enabled_delete_msg: T(
-    "Deleting interfaces while HA is enabled is not allowed."
-  ),
+  ha_enabled_delete_msg: T("Deleting interfaces while HA is enabled is not allowed."),
 
   ha_enabled_text: T("Cannot edit while HA is enabled."),
   go_to_ha: T("Go to HA settings"),

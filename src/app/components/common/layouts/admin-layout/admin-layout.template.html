@@ -26,26 +26,15 @@
           <!-- FreeNAS Retro -->
           <div class="branding retro topbar" *ngIf="retroLogo">
             <a routerLink="/dashboard" class="logo"
-              ><mat-icon
-                svgIcon="freenas_logomark"
-                alt="FreeNAS logo"
-                class="app-logo"
-              ></mat-icon
+              ><mat-icon svgIcon="freenas_logomark" alt="FreeNAS logo" class="app-logo"></mat-icon
             ></a>
             <a routerLink="/dashboard" class="logo-text"
-              ><mat-icon
-                svgIcon="freenas_logotype"
-                alt="FreeNAS"
-                class="app-logo-text"
-              ></mat-icon
+              ><mat-icon svgIcon="freenas_logotype" alt="FreeNAS" class="app-logo-text"></mat-icon
             ></a>
           </div>
 
           <!-- TrueNAS Core -->
-          <div
-            class="branding topbar"
-            *ngIf="!retroLogo && product_type == 'CORE' "
-          >
+          <div class="branding topbar" *ngIf="!retroLogo && product_type == 'CORE' ">
             <a routerLink="/dashboard" class="logo">
               <mat-icon
                 [svgIcon]="themeService.isDefaultTheme ? 'truenas_core_logomark_color' : 'truenas_core_logomark'"
@@ -63,10 +52,7 @@
           </div>
 
           <!-- TrueNAS Enterprise -->
-          <div
-            class="branding topbar"
-            *ngIf="!retroLogo && product_type == 'ENTERPRISE' "
-          >
+          <div class="branding topbar" *ngIf="!retroLogo && product_type == 'ENTERPRISE' ">
             <a routerLink="/dashboard" class="logo">
               <mat-icon
                 [svgIcon]="themeService.isDefaultTheme ? 'truenas_enterprise_logomark_color' : 'truenas_enterprise_logomark'"
@@ -112,21 +98,13 @@
         (onCloseMenu)="toggleMenu()"
       ></navigation>
       <div class="sidenav-copyright-txt" *ngIf="!isSidenavCollapsed">
-        <div
-          class="hostname-label"
-          *ngIf="hostname"
-          matTooltip="Hostname: {{hostname}}"
-        >
+        <div class="hostname-label" *ngIf="hostname" matTooltip="Hostname: {{hostname}}">
           {{hostname}}
         </div>
         <div>TrueNAS {{product_type}}®</div>
         <div>
           © {{copyrightYear}} -
-          <a
-            href="http://www.ixsystems.com"
-            target="_blank"
-            title="iXsystems, Inc."
-          >
+          <a href="http://www.ixsystems.com" target="_blank" title="iXsystems, Inc.">
             iXsystems, Inc</a
           >.
         </div>
@@ -180,18 +158,11 @@
         </ng-container>
       </mat-list>
     </div>
-    <div
-      class="overlay"
-      [ngClass]="{'isdark' : isOpen}"
-      (click)="toggleMenu()"
-    ></div>
+    <div class="overlay" [ngClass]="{'isdark' : isOpen}" (click)="toggleMenu()"></div>
     <!-- end slide-in -->
 
     <!-- App content -->
-    <div
-      class="rightside-content-hold"
-      [ngClass]="{'has-footer':isShowFooterConsole}"
-    >
+    <div class="rightside-content-hold" [ngClass]="{'has-footer':isShowFooterConsole}">
       <pagetitle [breadcrumbs]="true" [product_type]="product_type"></pagetitle>
       <router-outlet></router-outlet>
     </div>
@@ -202,9 +173,7 @@
       ix-auto-type="shell"
       ix-auto-identifier="footer-console"
     >
-      <pre #footerBarScroll class="message" (click)="onShowConsolePanel()">
-{{consoleMsg}}</pre
-      >
+      <pre #footerBarScroll class="message" (click)="onShowConsolePanel()">{{consoleMsg}}</pre>
     </div>
   </mat-sidenav-content>
   <!-- Notificaation bar -->

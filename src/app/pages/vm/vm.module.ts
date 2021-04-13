@@ -5,11 +5,7 @@ import { MaterialModule } from "../../appMaterial.module";
 import { TranslateModule } from "@ngx-translate/core";
 
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import {
-  VmService,
-  NetworkService,
-  SystemGeneralService,
-} from "../../services";
+import { VmService, NetworkService, SystemGeneralService } from "../../services";
 import { EntityModule } from "../common/entity/entity.module";
 
 import { EntityFormService } from "../../pages/common/entity/entity-form/services/entity-form.service";
@@ -46,12 +42,6 @@ import { DeviceAddComponent } from "./devices/device-add2";
     VMSerialShellComponent,
     DeviceAddComponent,
   ],
-  providers: [
-    VmService,
-    EntityFormService,
-    NetworkService,
-    SystemGeneralService,
-    MessageService,
-  ],
+  providers: [VmService, EntityFormService, NetworkService, SystemGeneralService, MessageService],
 })
 export class VmModule {}

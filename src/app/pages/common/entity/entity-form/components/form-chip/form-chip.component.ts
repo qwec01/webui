@@ -2,10 +2,7 @@ import { Component, OnInit, ElementRef, ViewChild } from "@angular/core";
 import { COMMA, ENTER } from "@angular/cdk/keycodes";
 import { MatChipInputEvent } from "@angular/material/chips";
 import { FormGroup, FormControl } from "@angular/forms";
-import {
-  MatAutocompleteSelectedEvent,
-  MatAutocomplete,
-} from "@angular/material/autocomplete";
+import { MatAutocompleteSelectedEvent, MatAutocomplete } from "@angular/material/autocomplete";
 import { TranslateService } from "@ngx-translate/core";
 
 import { FieldConfig } from "../../models/field-config.interface";
@@ -14,10 +11,7 @@ import { Field } from "../../models/field.interface";
 @Component({
   selector: "form-chip",
   templateUrl: "./form-chip.component.html",
-  styleUrls: [
-    "../dynamic-field/dynamic-field.css",
-    "./form-chip.component.css",
-  ],
+  styleUrls: ["../dynamic-field/dynamic-field.css", "./form-chip.component.css"],
 })
 export class FormChipComponent implements Field, OnInit {
   config: FieldConfig;

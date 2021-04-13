@@ -1,8 +1,4 @@
-<div
-  fxLayout="column"
-  id="entity-table-component"
-  class="material mat-card mat-card-table"
->
+<div fxLayout="column" id="entity-table-component" class="material mat-card mat-card-table">
   <ng-container *ngIf="!isTableEmpty">
     <!-- BATCH OPERATIONS START -->
     <div
@@ -66,13 +62,8 @@
           <span ix-auto ix-auto-type="button" ix-auto-identifier="mdelete">
             <!-- With Labels -->
             <ng-container>
-              <button
-                mat-button
-                (click)="doMultiDelete(this.selection.selected)"
-              >
-                <mat-icon>delete</mat-icon><br /><span>{{
-                  "Delete" | translate
-                }}</span>
+              <button mat-button (click)="doMultiDelete(this.selection.selected)">
+                <mat-icon>delete</mat-icon><br /><span>{{ "Delete" | translate }}</span>
               </button>
             </ng-container>
 
@@ -95,24 +86,15 @@
 
     <div class="table-container">
       <table
-        *ngIf="
-          conf && currentColumns && currentColumns.length > 0 && dataSource
-        "
+        *ngIf="conf && currentColumns && currentColumns.length > 0 && dataSource"
         multiTemplateDataRows
         mat-table
         [dataSource]="dataSource"
         matSort
-        style="min-width: {{
-          displayedColumns.length * 25
-        }}px; border-collapse: separate;"
+        style="min-width: {{ displayedColumns.length * 25 }}px; border-collapse: separate;"
         #newEntityTable
       >
-        <ng-container
-          *ngFor="
-            let column of columnsToString(currentColumns, 'prop');
-            let i = index
-          "
-        >
+        <ng-container *ngFor="let column of columnsToString(currentColumns, 'prop'); let i = index">
           <!-- Column Template -->
           <ng-container
             *ngIf="
@@ -128,8 +110,7 @@
             <th
               [ngClass]="{
                 'sticky-left-offset': shouldApplyStickyOffset(i),
-                'sticky-border-right':
-                  isLeftStickyColumnNo(i) && isTableOverflow()
+                'sticky-border-right': isLeftStickyColumnNo(i) && isTableOverflow()
               }"
               class="data-column"
               mat-header-cell
@@ -140,8 +121,7 @@
             <td
               [ngClass]="{
                 'sticky-left-offset': shouldApplyStickyOffset(i),
-                'sticky-border-right':
-                  isLeftStickyColumnNo(i) && isTableOverflow()
+                'sticky-border-right': isLeftStickyColumnNo(i) && isTableOverflow()
               }"
               [ngStyle]="{
                 cursor: checkLength() && !conf.onRowClick ? 'auto' : 'pointer'
@@ -201,11 +181,7 @@
           </ng-container>
 
           <!-- Threedot Actions -->
-          <ng-container
-            *ngIf="column == 'action'"
-            matColumnDef="{{ column }}"
-            stickyEnd
-          >
+          <ng-container *ngIf="column == 'action'" matColumnDef="{{ column }}" stickyEnd>
             <th
               class="threedot-column"
               [ngClass]="{ 'sticky-border-left': isTableOverflow() }"
@@ -231,11 +207,7 @@
           </ng-container>
 
           <!-- Multiselect Checkboxes -->
-          <ng-container
-            *ngIf="column == 'multiselect'"
-            matColumnDef="{{ column }}"
-            sticky
-          >
+          <ng-container *ngIf="column == 'multiselect'" matColumnDef="{{ column }}" sticky>
             <th class="multiselect-column" mat-header-cell *matHeaderCellDef>
               <mat-checkbox
                 [indeterminate]="selection.hasValue() && !isAllSelected"
@@ -297,9 +269,7 @@
                   ix-auto
                   ix-auto-type="overlay"
                   [ix-auto-identifier]="column + element.name"
-                  (click)="
-                    $event.stopPropagation(); this.conf.onSliderChange(element)
-                  "
+                  (click)="$event.stopPropagation(); this.conf.onSliderChange(element)"
                   matTooltip="{{ element.state }}"
                   matTooltipPosition="right"
                 ></div>
@@ -319,9 +289,7 @@
                   mat-stroked-button
                   *ngIf="currentColumns[i].button"
                   [ngClass]="getButtonClass(element[column].state)"
-                  (click)="
-                    $event.stopPropagation(); this.conf.onButtonClick(element)
-                  "
+                  (click)="$event.stopPropagation(); this.conf.onButtonClick(element)"
                   id="interactive-button_{{ column }}_{{ element.name }}"
                   ix-auto
                   ix-auto-type="slider"
@@ -336,9 +304,7 @@
           <!-- Interactive Checkbox Column -->
           <ng-container
             *ngIf="
-              (column == 'enabled' ||
-                column == 'enable' ||
-                column == 'autostart') &&
+              (column == 'enabled' || column == 'enable' || column == 'autostart') &&
               isInteractive(column)
             "
             matColumnDef="{{ column }}"
@@ -370,16 +336,8 @@
 
         <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
         <ng-container matColumnDef="expandedDetail">
-          <td
-            mat-cell
-            *matCellDef="let element"
-            [attr.colspan]="currentColumns.length"
-          >
-            <div
-              [@detailExpand]="
-                element == expandedElement ? 'expanded' : 'collapsed'
-              "
-            >
+          <td mat-cell *matCellDef="let element" [attr.colspan]="currentColumns.length">
+            <div [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
               <app-entity-table-row-details
                 [config]="element"
                 [parent]="this"
@@ -388,10 +346,7 @@
           </td>
         </ng-container>
 
-        <tr
-          mat-header-row
-          *matHeaderRowDef="columnsToString(currentColumns, 'prop')"
-        ></tr>
+        <tr mat-header-row *matHeaderRowDef="columnsToString(currentColumns, 'prop')"></tr>
         <tr
           mat-row
           class="element-row"
@@ -409,11 +364,7 @@
         ></tr>
 
         <ng-container *ngIf="hasDetails() === true">
-          <tr
-            mat-row
-            class="details-row"
-            *matRowDef="let row; columns: ['expandedDetail']"
-          ></tr>
+          <tr mat-row class="details-row" *matRowDef="let row; columns: ['expandedDetail']"></tr>
         </ng-container>
       </table>
     </div>

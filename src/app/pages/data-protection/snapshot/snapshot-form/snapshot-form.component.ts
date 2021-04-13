@@ -7,11 +7,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { FieldSets } from "app/pages/common/entity/entity-form/classes/field-sets";
 import * as _ from "lodash";
 import helptext from "../../../../helptext/data-protection/snapshot/snapshot-form";
-import {
-  DialogService,
-  StorageService,
-  TaskService,
-} from "../../../../services";
+import { DialogService, StorageService, TaskService } from "../../../../services";
 import {
   FieldConfig,
   UnitType,
@@ -172,18 +168,13 @@ export class SnapshotFormComponent implements OnDestroy {
     this.entityForm = entityForm;
     this.pk = entityForm.pk;
     this.isNew = entityForm.isNew;
-    this.title = this.isNew
-      ? helptext.snapshot_task_add
-      : helptext.snapshot_task_edit;
+    this.title = this.isNew ? helptext.snapshot_task_add : helptext.snapshot_task_edit;
 
     const datasetField = this.fieldSets.config("dataset");
 
     this.storageService.getDatasetNameOptions().subscribe(
       (options) => {
-        if (
-          this.dataset !== undefined &&
-          !_.find(options, { label: this.dataset })
-        ) {
+        if (this.dataset !== undefined && !_.find(options, { label: this.dataset })) {
           const disabled_dataset = {
             label: this.dataset,
             value: this.dataset,
@@ -201,30 +192,22 @@ export class SnapshotFormComponent implements OnDestroy {
     );
 
     this.datasetFg = entityForm.formGroup.controls["dataset"];
-    this.dataset_subscription = this.datasetFg.valueChanges.subscribe(
-      (value) => {
-        if (this.dataset_disabled && this.dataset !== value) {
-          this.save_button_enabled = true;
-          datasetField.warnings = "";
-        }
+    this.dataset_subscription = this.datasetFg.valueChanges.subscribe((value) => {
+      if (this.dataset_disabled && this.dataset !== value) {
+        this.save_button_enabled = true;
+        datasetField.warnings = "";
       }
-    );
+    });
 
-    entityForm.formGroup.controls["snapshot_picker"].valueChanges.subscribe(
-      (value) => {
-        if (
-          value === "0 0 * * *" ||
-          value === "0 0 * * sun" ||
-          value === "0 0 1 * *"
-        ) {
-          this.entityForm.setDisabled("begin", true, true);
-          this.entityForm.setDisabled("end", true, true);
-        } else {
-          this.entityForm.setDisabled("begin", false, false);
-          this.entityForm.setDisabled("end", false, false);
-        }
+    entityForm.formGroup.controls["snapshot_picker"].valueChanges.subscribe((value) => {
+      if (value === "0 0 * * *" || value === "0 0 * * sun" || value === "0 0 1 * *") {
+        this.entityForm.setDisabled("begin", true, true);
+        this.entityForm.setDisabled("end", true, true);
+      } else {
+        this.entityForm.setDisabled("begin", false, false);
+        this.entityForm.setDisabled("end", false, false);
       }
-    );
+    });
   }
 
   ngOnDestroy() {

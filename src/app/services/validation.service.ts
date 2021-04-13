@@ -17,9 +17,7 @@ export class ValidationService {
         thisControl = control;
         otherControl = control.parent.get(otherControlName) as FormControl;
         if (!otherControl) {
-          throw new Error(
-            "greaterThanValidator(): other control is not found in parent group"
-          );
+          throw new Error("greaterThanValidator(): other control is not found in parent group");
         }
         otherControl.valueChanges.subscribe(() => {
           thisControl.updateValueAndValidity();
@@ -95,9 +93,7 @@ export class ValidationService {
         thisControl = control;
         otherControl = control.parent.get(otherControlName) as FormControl;
         if (!otherControl) {
-          throw new Error(
-            "matchOtherValidator(): other control is not found in parent group"
-          );
+          throw new Error("matchOtherValidator(): other control is not found in parent group");
         }
         otherControl.valueChanges.subscribe(() => {
           thisControl.updateValueAndValidity();

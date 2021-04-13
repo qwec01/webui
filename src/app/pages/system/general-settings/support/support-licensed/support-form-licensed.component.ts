@@ -208,9 +208,7 @@ export class SupportFormLicensedComponent {
         }
 
         const errors =
-          control.value && control.value.length > 0 && counter > 0
-            ? { validEmails: true }
-            : null;
+          control.value && control.value.length > 0 && counter > 0 ? { validEmails: true } : null;
 
         if (errors) {
           config.hasErrors = true;
@@ -253,11 +251,7 @@ export class SupportFormLicensedComponent {
       if (res.result) {
         url = `<a href="${res.result.url}" target="_blank" style="text-decoration:underline;">${res.result.url}</a>`;
       }
-      if (
-        res.method === "support.new_ticket" &&
-        this.subs &&
-        this.subs.length > 0
-      ) {
+      if (res.method === "support.new_ticket" && this.subs && this.subs.length > 0) {
         this.subs.forEach((item) => {
           const formData: FormData = new FormData();
           formData.append(

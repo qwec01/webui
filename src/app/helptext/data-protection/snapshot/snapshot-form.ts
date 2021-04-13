@@ -49,10 +49,8 @@ export default {
   ),
 
   begin_placeholder: T("Begin"),
-  begin_tooltip: T(
-    "Hour and minute when the system can begin \
- taking snapshots."
-  ),
+  begin_tooltip: T("Hour and minute when the system can begin \
+ taking snapshots."),
 
   end_placeholder: T("End"),
   end_tooltip: T(

@@ -8,9 +8,7 @@
       fxLayoutAlign="space-between stretch"
     >
       <mat-card-content #carouselparent>
-        <mat-toolbar-row
-          class="view-{{ path.length > 0 ? currentSlideName : 'Pool' }}"
-        >
+        <mat-toolbar-row class="view-{{ path.length > 0 ? currentSlideName : 'Pool' }}">
           <!-- Mobile Only: Exit widget -->
           <button
             fxHide.gt-xs
@@ -22,9 +20,7 @@
             ix-auto-type="button"
             ix-auto-identifier="goBack"
           >
-            <mat-icon (click)="goBack()" class="back-arrow"
-              >chevron_left</mat-icon
-            >
+            <mat-icon (click)="goBack()" class="back-arrow">chevron_left</mat-icon>
           </button>
 
           <!-- Back to previous slide -->
@@ -50,9 +46,7 @@
             <button
               mat-icon-button
               class=""
-              (click)="
-                router.navigate(['storage/status/' + poolState.id.toString()])
-              "
+              (click)="router.navigate(['storage/status/' + poolState.id.toString()])"
               [ix-auto]="poolState.name"
               ix-auto-type="button"
               ix-auto-identifier="poolStatus"
@@ -114,11 +108,7 @@
           </ng-template>
 
           <!--<ng-container *ngTemplateOutlet="path[0].template"></ng-container>-->
-          <div
-            *ngFor="let slide of path"
-            fxFlex="100"
-            class="slide {{ slide.name }}"
-          >
+          <div *ngFor="let slide of path" fxFlex="100" class="slide {{ slide.name }}">
             <ng-content *ngTemplateOutlet="slide.template"></ng-content>
           </div>
 
@@ -141,9 +131,7 @@
               >
                 <div fxFlex="66" class="left-content">
                   <div class="pool-name">
-                    <span textLimiter threshold="9">{{
-                      poolState.name | translate
-                    }}</span>
+                    <span textLimiter threshold="9">{{ poolState.name | translate }}</span>
                   </div>
 
                   <div class="table">
@@ -163,10 +151,7 @@
                             : poolState.status
                         }}</span>
                         <span
-                          *ngIf="
-                            poolState.status == 'LOCKED' ||
-                            !poolState.is_decrypted
-                          "
+                          *ngIf="poolState.status == 'LOCKED' || !poolState.is_decrypted"
                           class="{{ poolHealth.level }} lock-icon-wrapper icon"
                         >
                           &nbsp;<mat-icon>lock</mat-icon>
@@ -189,9 +174,7 @@
                           ></mat-icon>
                         </span>
                         <span
-                          *ngIf="
-                            poolState.status == 'ONLINE' && !poolState.healthy
-                          "
+                          *ngIf="poolState.status == 'ONLINE' && !poolState.healthy"
                           class="error icon"
                         >
                           &nbsp;<mat-icon
@@ -202,19 +185,13 @@
                           ></mat-icon>
                         </span>
                         <span
-                          *ngIf="
-                            poolHealth.level == 'warn' &&
-                            poolState.status == 'UNKNOWN'
-                          "
+                          *ngIf="poolHealth.level == 'warn' && poolState.status == 'UNKNOWN'"
                           class="{{ poolHealth.level }} icon"
                         >
                           &nbsp;<mat-icon role="img">help</mat-icon>
                         </span>
                         <span
-                          *ngIf="
-                            poolHealth.level == 'warn' &&
-                            poolState.status !== 'UNKNOWN'
-                          "
+                          *ngIf="poolHealth.level == 'warn' && poolState.status !== 'UNKNOWN'"
                           class="{{ poolHealth.level }} icon"
                         >
                           &nbsp;<mat-icon
@@ -238,9 +215,7 @@
 
                     <div class="used-space tr">
                       <ng-container *ngIf="!volumeData || !volumeData.used_pct">
-                        <div class="td label">
-                          <strong>Used Space:</strong>&nbsp;
-                        </div>
+                        <div class="td label"><strong>Used Space:</strong>&nbsp;</div>
                         <div class="td">
                           <span class="value-used">Unknown</span>
                         </div>
@@ -253,14 +228,9 @@
 
                         <div
                           class="td"
-                          *ngIf="
-                            percentAsNumber(volumeData.used_pct) >= 80;
-                            else safeSpace
-                          "
+                          *ngIf="percentAsNumber(volumeData.used_pct) >= 80; else safeSpace"
                         >
-                          &nbsp;<span class="value-used">{{
-                            volumeData.used_pct
-                          }}</span>
+                          &nbsp;<span class="value-used">{{ volumeData.used_pct }}</span>
                           <span class="error icon">
                             &nbsp;<mat-icon
                               class="disk-errors"
@@ -273,13 +243,9 @@
 
                         <ng-template #safeSpace>
                           <div class="td">
-                            <span class="value-used">{{
-                              volumeData.used_pct
-                            }}</span>
+                            <span class="value-used">{{ volumeData.used_pct }}</span>
                             <span class="safe icon">
-                              &nbsp;<mat-icon class="healthy" role="img"
-                                >check_circle</mat-icon
-                              >
+                              &nbsp;<mat-icon class="healthy" role="img">check_circle</mat-icon>
                             </span>
                           </div>
                         </ng-template>
@@ -287,10 +253,7 @@
                     </div>
                     <!-- END ROW -->
 
-                    <div
-                      class="disk-errors tr"
-                      *ngIf="poolState.status == 'ONLINE'"
-                    >
+                    <div class="disk-errors tr" *ngIf="poolState.status == 'ONLINE'">
                       <div class="td label">
                         <strong>Disks with Errors:</strong>
                       </div>
@@ -318,13 +281,8 @@
                             fontIcon="mdi-alert"
                           ></mat-icon>
                         </span>
-                        <span
-                          class="safe icon"
-                          *ngIf="unhealthyDisks.totalErrors == '0'"
-                        >
-                          &nbsp;<mat-icon class="healthy" role="img"
-                            >check_circle</mat-icon
-                          >
+                        <span class="safe icon" *ngIf="unhealthyDisks.totalErrors == '0'">
+                          &nbsp;<mat-icon class="healthy" role="img">check_circle</mat-icon>
                         </span>
                       </div>
                     </div>
@@ -342,10 +300,7 @@
               >
                 <div
                   fxFlex="100"
-                  *ngIf="
-                    poolState.topology && poolState.topology.data;
-                    else locked
-                  "
+                  *ngIf="poolState.topology && poolState.topology.data; else locked"
                 >
                   <div class="list-subheader">
                     <span class="capitalize">{{ "Overview" | translate }}</span>
@@ -357,21 +312,16 @@
                     >
 
                     <mat-list-item>
-                      <strong>{{ "Available Space" | translate }}: </strong
-                      >&nbsp;&nbsp;
-                      <span
-                        *ngIf="volumeData && volumeData.used_pct; else unavail"
-                      >
+                      <strong>{{ "Available Space" | translate }}: </strong>&nbsp;&nbsp;
+                      <span *ngIf="volumeData && volumeData.used_pct; else unavail">
                         <span class="value">{{ diskSize }}</span>
                         <span class="value-units">{{ diskSizeLabel }}</span
                         >&nbsp;&nbsp;
                       </span>
                       <ng-template #unavail>
-                        <span
-                          *ngIf="displayValue !== 'Unknown'"
-                          class="value"
-                          >{{ "Gathering data..." | translate }}</span
-                        >
+                        <span *ngIf="displayValue !== 'Unknown'" class="value">{{
+                          "Gathering data..." | translate
+                        }}</span>
                         <span *ngIf="displayValue == 'Unknown'" class="value">{{
                           "Unknown" | translate
                         }}</span>
@@ -409,13 +359,7 @@
 
                     <mat-list-item
                       (click)="
-                        updateSlide(
-                          'data',
-                          poolState.topology.cache.length > 0,
-                          1,
-                          0,
-                          'cache'
-                        )
+                        updateSlide('data', poolState.topology.cache.length > 0, 1, 0, 'cache')
                       "
                       [ngClass]="{
                         clickable: poolState.topology.cache.length > 0
@@ -435,13 +379,7 @@
 
                     <mat-list-item
                       (click)="
-                        updateSlide(
-                          'data',
-                          poolState.topology.spare.length > 0,
-                          1,
-                          0,
-                          'spare'
-                        )
+                        updateSlide('data', poolState.topology.spare.length > 0, 1, 0, 'spare')
                       "
                       [ngClass]="{
                         clickable: poolState.topology.spare.length > 0
@@ -460,15 +398,7 @@
                     </mat-list-item>
 
                     <mat-list-item
-                      (click)="
-                        updateSlide(
-                          'data',
-                          poolState.topology.log.length > 0,
-                          1,
-                          0,
-                          'log'
-                        )
-                      "
+                      (click)="updateSlide('data', poolState.topology.log.length > 0, 1, 0, 'log')"
                       [ngClass]="{
                         clickable: poolState.topology.log.length > 0
                       }"
@@ -495,49 +425,23 @@
             <div class="list-subheader">
               <span class="capitalize">{{ currentSlideName | translate }}</span>
             </div>
-            <mat-list
-              *ngIf="poolState && poolState.topology[currentSlideTopology]"
-            >
+            <mat-list *ngIf="poolState && poolState.topology[currentSlideTopology]">
               <mat-list-item
                 role="listitem"
-                *ngFor="
-                  let vdev of poolState.topology[currentSlideTopology];
-                  let i = index
-                "
+                *ngFor="let vdev of poolState.topology[currentSlideTopology]; let i = index"
                 (click)="
-                  updateSlide(
-                    'disks',
-                    true,
-                    currentSlideIndex + 1,
-                    i,
-                    currentSlideTopology,
-                    vdev
-                  )
+                  updateSlide('disks', true, currentSlideIndex + 1, i, currentSlideTopology, vdev)
                 "
                 [ngClass]="{ clickable: true }"
               >
                 <strong>{{ vdev.type }}:</strong>&nbsp;&nbsp; {{ vdev.status }}
                 <!-- STATUS ICONS -->
-                <span
-                  *ngIf="vdev.status == 'ONLINE'"
-                  class="{{ poolHealth.level }} healthy"
-                >
-                  <mat-icon
-                    role="img"
-                    fontSet="mdi-set"
-                    fontIcon="mdi-check-circle"
-                  ></mat-icon>
+                <span *ngIf="vdev.status == 'ONLINE'" class="{{ poolHealth.level }} healthy">
+                  <mat-icon role="img" fontSet="mdi-set" fontIcon="mdi-check-circle"></mat-icon>
                   &nbsp;&nbsp;
                 </span>
-                <span
-                  *ngIf="vdev.status !== 'ONLINE'"
-                  class="{{ poolHealth.level }} healthy"
-                >
-                  <mat-icon
-                    role="img"
-                    fontSet="mdi-set"
-                    fontIcon="mdi-alert"
-                  ></mat-icon>
+                <span *ngIf="vdev.status !== 'ONLINE'" class="{{ poolHealth.level }} healthy">
+                  <mat-icon role="img" fontSet="mdi-set" fontIcon="mdi-alert"></mat-icon>
                   &nbsp;&nbsp;
                 </span>
 
@@ -554,10 +458,7 @@
                   &nbsp;&nbsp;
                 </span>
 
-                <span
-                  *ngIf="vdev.type !== 'DISK' && vdev.children.length <= 3"
-                  class="vdev"
-                >
+                <span *ngIf="vdev.type !== 'DISK' && vdev.children.length <= 3" class="vdev">
                   <span *ngFor="let device of vdev.children; let child = index">
                     <div *ngIf="device.disk">
                       <mat-icon
@@ -567,16 +468,10 @@
                         svgIcon="multipath"
                       ></mat-icon>
                       <span>{{
-                        trimMultipath(device.disk.name).isMultipath
-                          ? device.disk.name
-                          : device.disk
+                        trimMultipath(device.disk.name).isMultipath ? device.disk.name : device.disk
                       }}</span>
                       {{ trimMultipath(device.disk.name).name }}
-                      <span
-                        *ngIf="
-                          child < 3 - 1 && child !== vdev.children.length - 1
-                        "
-                        >,</span
+                      <span *ngIf="child < 3 - 1 && child !== vdev.children.length - 1">,</span
                       >&nbsp;&nbsp;
                     </div>
                   </span>
@@ -599,17 +494,11 @@
                           ? trimMultipath(device.disk).name
                           : device.disk
                       }}</span>
-                      <span
-                        *ngIf="
-                          child < 3 - 1 && child !== vdev.children.length - 1
-                        "
-                        >,</span
+                      <span *ngIf="child < 3 - 1 && child !== vdev.children.length - 1">,</span
                       >&nbsp;&nbsp;
                     </div>
                   </span>
-                  <span
-                    >&nbsp;&nbsp; ({{ vdev.children.length - 3 }} more)</span
-                  >
+                  <span>&nbsp;&nbsp; ({{ vdev.children.length - 3 }} more)</span>
                 </span>
 
                 <mat-icon
@@ -637,10 +526,7 @@
             >
               <mat-list-item
                 role="listitem"
-                *ngFor="
-                  let disk of path[currentSlideIndex].dataSource.children;
-                  let i = index
-                "
+                *ngFor="let disk of path[currentSlideIndex].dataSource.children; let i = index"
                 (click)="
                   updateSlide(
                     'disk details',
@@ -651,9 +537,7 @@
                     disk
                   )
                 "
-                (click)="
-                  getDiskDetails('name', disk.disk, checkMultipath(disk.disk))
-                "
+                (click)="getDiskDetails('name', disk.disk, checkMultipath(disk.disk))"
                 [ngClass]="{ clickable: true }"
               >
                 <strong>
@@ -672,25 +556,11 @@
                 &nbsp;&nbsp; {{ disk.status | translate }}
 
                 <!-- STATUS ICONS -->
-                <span
-                  *ngIf="disk.status == 'ONLINE'"
-                  class="{{ poolHealth.level }} healthy"
-                >
-                  <mat-icon
-                    role="img"
-                    fontSet="mdi-set"
-                    fontIcon="mdi-check-circle"
-                  ></mat-icon>
+                <span *ngIf="disk.status == 'ONLINE'" class="{{ poolHealth.level }} healthy">
+                  <mat-icon role="img" fontSet="mdi-set" fontIcon="mdi-check-circle"></mat-icon>
                 </span>
-                <span
-                  *ngIf="disk.status != 'ONLINE'"
-                  class="{{ poolHealth.level }} healthy"
-                >
-                  <mat-icon
-                    role="img"
-                    fontSet="mdi-set"
-                    fontIcon="mdi-alert"
-                  ></mat-icon>
+                <span *ngIf="disk.status != 'ONLINE'" class="{{ poolHealth.level }} healthy">
+                  <mat-icon role="img" fontSet="mdi-set" fontIcon="mdi-alert"></mat-icon>
                 </span>
 
                 <!-- CHEVRON -->
@@ -728,11 +598,7 @@
               >
                 <strong>
                   <span *ngIf="checkMultipath(path[2].dataSource.disk)">
-                    <mat-icon
-                      class="multipath-icon"
-                      role="img"
-                      svgIcon="multipath"
-                    ></mat-icon>
+                    <mat-icon class="multipath-icon" role="img" svgIcon="multipath"></mat-icon>
                   </span>
                   {{ trimMultipath(path[2].dataSource.disk).fullName }}
                   :
@@ -742,11 +608,7 @@
                   *ngIf="path[2].dataSource.status == 'ONLINE'"
                   class="{{ poolHealth.level }} healthy"
                 >
-                  <mat-icon
-                    role="img"
-                    fontSet="mdi-set"
-                    fontIcon="mdi-check-circle"
-                  ></mat-icon>
+                  <mat-icon role="img" fontSet="mdi-set" fontIcon="mdi-check-circle"></mat-icon>
                 </span>
                 <mat-icon
                   class="next-slide"
@@ -769,22 +631,17 @@
                 <strong> {{ "Name" | translate }}:</strong>&nbsp;&nbsp;
                 {{
                   currentMultipathDetails
-                    ? checkMultipathLabel(
-                        path[currentSlideIndex].dataSource.disk
-                      )
+                    ? checkMultipathLabel(path[currentSlideIndex].dataSource.disk)
                     : path[currentSlideIndex].dataSource.disk
                 }}
               </mat-list-item>
 
               <ng-template [ngIf]="currentMultipathDetails">
                 <mat-list-item role="listitem">
-                  <strong> {{ "Multipath Name" | translate }}:</strong
-                  >&nbsp;&nbsp;
+                  <strong> {{ "Multipath Name" | translate }}:</strong>&nbsp;&nbsp;
                   {{
                     currentMultipathDetails
-                      ? checkMultipathLabel(
-                          path[currentSlideIndex].dataSource.disk
-                        )
+                      ? checkMultipathLabel(path[currentSlideIndex].dataSource.disk)
                       : path[currentSlideIndex].dataSource.disk
                   }}
                 </mat-list-item>
@@ -794,9 +651,7 @@
                   role="listitem"
                 >
                   <strong class="multipath-detail-label"
-                    ><span class="capitalize">{{
-                      child.status.toLowerCase()
-                    }}</span>
+                    ><span class="capitalize">{{ child.status.toLowerCase() }}</span>
                     {{ "Disk" | translate }}:</strong
                   >&nbsp;&nbsp; {{ child.name }}
                 </mat-list-item>

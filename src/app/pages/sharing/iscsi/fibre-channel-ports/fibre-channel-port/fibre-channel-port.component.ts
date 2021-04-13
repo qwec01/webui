@@ -156,11 +156,7 @@ export class FibreChannelPortComponent implements OnInit {
       },
       (err) => {
         this.parent.loader.close();
-        this.parent.dialogService.errorReport(
-          err.trace.class,
-          err.reason,
-          err.trace.formatted
-        );
+        this.parent.dialogService.errorReport(err.trace.class, err.reason, err.trace.formatted);
       }
     );
   }

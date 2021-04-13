@@ -22,15 +22,11 @@ export const helptext_sharing_iscsi = {
   target_form_tooltip_alias: T("Optional user-friendly name."),
 
   target_form_placeholder_mode: T("Target Mode"),
-  target_form_tooltip_mode: T(
-    "Define the target as *iSCSI*,\
- *Fibre Channel*, or *Both*."
-  ),
+  target_form_tooltip_mode: T("Define the target as *iSCSI*,\
+ *Fibre Channel*, or *Both*."),
 
   target_form_placeholder_portal: T("Portal Group ID"),
-  target_form_tooltip_portal: T(
-    "Leave empty or select number of existing portal to use."
-  ),
+  target_form_tooltip_portal: T("Leave empty or select number of existing portal to use."),
   target_form_validators_portal: [Validators.required],
 
   target_form_placeholder_initiator: T("Initiator Group ID"),
@@ -40,9 +36,7 @@ export const helptext_sharing_iscsi = {
   ),
 
   target_form_placeholder_authmethod: T("Authentication Method"),
-  target_form_tooltip_authmethod: T(
-    "Choices are <i>None, Auto, CHAP,</i> or <i>Mutual CHAP</i>."
-  ),
+  target_form_tooltip_authmethod: T("Choices are <i>None, Auto, CHAP,</i> or <i>Mutual CHAP</i>."),
 
   target_form_placeholder_auth: T("Authentication Group Number"),
   target_form_tooltip_auth: T(
@@ -62,9 +56,7 @@ export const helptext_sharing_iscsi = {
  group."
   ),
 
-  portal_form_placeholder_discovery_authmethod: T(
-    "Discovery Authentication Method"
-  ),
+  portal_form_placeholder_discovery_authmethod: T("Discovery Authentication Method"),
   portal_form_tooltip_discovery_authmethod: T(
     "iSCSI supports multiple \
  authentication methods that are used by the target to discover valid \
@@ -72,9 +64,7 @@ export const helptext_sharing_iscsi = {
  <i>Mutual CHAP</i> require authentication."
   ),
 
-  portal_form_placeholder_discovery_authgroup: T(
-    "Discovery Authentication Group"
-  ),
+  portal_form_placeholder_discovery_authgroup: T("Discovery Authentication Group"),
   portal_form_tooltip_discovery_authgroup: T(
     "Group ID created in \
  Authorized Access. Required when the Discovery Authentication Method is set to \
@@ -92,10 +82,8 @@ export const helptext_sharing_iscsi = {
   portal_form_validators_ip: [Validators.required],
 
   portal_form_placeholder_port: T("Port"),
-  portal_form_tooltip_port: T(
-    "TCP port used to access the iSCSI target.\
- Default is <i>3260</i>."
-  ),
+  portal_form_tooltip_port: T("TCP port used to access the iSCSI target.\
+ Default is <i>3260</i>."),
   portal_form_validators_port: [Validators.required],
 
   portal_form_placeholder_delete: T("Delete"),
@@ -150,9 +138,7 @@ export const helptext_sharing_iscsi = {
  the system. Separate entries by pressing <code>Enter</code>."
   ),
 
-  globalconf_placeholder_pool_avail_threshold: T(
-    "Pool Available Space Threshold (%)"
-  ),
+  globalconf_placeholder_pool_avail_threshold: T("Pool Available Space Threshold (%)"),
   globalconf_tooltip_pool_avail_threshold: T(
     "Generate an alert when the \
    pool has this percent space remaining. This is typically \
@@ -254,10 +240,8 @@ export const helptext_sharing_iscsi = {
   ),
 
   extent_placeholder_ro: T("Read-only"),
-  extent_tooltip_ro: T(
-    "Set to prevent the initiator from initializing this\
- LUN."
-  ),
+  extent_tooltip_ro: T("Set to prevent the initiator from initializing this\
+ LUN."),
 
   extent_placeholder_enabled: T("Enabled"),
   extent_tooltip_enabled: T("Set to enable the iSCSI extent."),
@@ -300,9 +284,7 @@ export const helptext_sharing_iscsi = {
     "Mutual secret password. Required when Peer User is set. Must be\
  different than the <i>Secret</i>."
   ),
-  authaccess_error_duplicate_secrets: T(
-    "Secret and Peer Secret can not be the same."
-  ),
+  authaccess_error_duplicate_secrets: T("Secret and Peer Secret can not be the same."),
 
   authaccess_placeholder_peersecret_confirm: T("Peer Secret (Confirm)"),
 
@@ -360,9 +342,7 @@ export const helptext_sharing_iscsi = {
   ),
 
   dataset_placeholder: T("Pool/Dataset"),
-  dataset_tooltip: T(
-    "Browse to an existing pool or dataset to store the new zvol."
-  ),
+  dataset_tooltip: T("Browse to an existing pool or dataset to store the new zvol."),
 
   volsize_placeholder: T("Size"),
   volsize_tooltip: T("Specify the size of the new zvol."),
@@ -378,9 +358,7 @@ export const helptext_sharing_iscsi = {
   ),
 
   target_placeholder: T("Target"),
-  target_tooltip: T(
-    "Create a new Target or choose an existing target for this share."
-  ),
+  target_tooltip: T("Create a new Target or choose an existing target for this share."),
 
   step2_label: T("Portal"),
 

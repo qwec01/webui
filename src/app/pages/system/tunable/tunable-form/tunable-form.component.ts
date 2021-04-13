@@ -77,10 +77,7 @@ export class TunableFormComponent {
     },
   ];
 
-  constructor(
-    protected ws: WebSocketService,
-    protected sysGeneralService: SystemGeneralService
-  ) {}
+  constructor(protected ws: WebSocketService, protected sysGeneralService: SystemGeneralService) {}
 
   preInit() {
     this.type_fc = _.find(this.fieldSets[0].config, { name: "type" });
@@ -90,10 +87,7 @@ export class TunableFormComponent {
       }
     });
     this.product_type = window.localStorage.getItem("product_type");
-    if (
-      this.product_type === "SCALE" ||
-      this.product_type === "SCALE_ENTERPRISE"
-    ) {
+    if (this.product_type === "SCALE" || this.product_type === "SCALE_ENTERPRISE") {
       this.type_fc.value = "SYSCTL";
       this.type_fc.isHidden = true;
       this.fieldSets[0].name = helptext.metadata.fieldsets_scale[0];
@@ -101,9 +95,7 @@ export class TunableFormComponent {
   }
 
   async afterInit(entityForm: EntityFormComponent) {
-    this.title = `${entityForm.isNew ? T("Add") : T("Edit")} ${
-      this.fieldSets[0].name
-    }`;
+    this.title = `${entityForm.isNew ? T("Add") : T("Edit")} ${this.fieldSets[0].name}`;
     entityForm.formGroup.controls["enabled"].setValue(true);
   }
 

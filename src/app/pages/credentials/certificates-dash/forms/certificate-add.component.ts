@@ -58,8 +58,7 @@ export class CertificateAddComponent {
           type: "select",
           name: "create_type",
           tooltip: helptext_system_certificates.add.cert_create_type.tooltip,
-          placeholder:
-            helptext_system_certificates.add.cert_create_type.placeholder,
+          placeholder: helptext_system_certificates.add.cert_create_type.placeholder,
           options: helptext_system_certificates.add.cert_create_type.options,
           value: helptext_system_certificates.add.cert_create_type.value,
         },
@@ -99,8 +98,7 @@ export class CertificateAddComponent {
         {
           type: "checkbox",
           name: "csronsys",
-          placeholder:
-            helptext_system_certificates.add.isCSRonSystem.placeholder,
+          placeholder: helptext_system_certificates.add.isCSRonSystem.placeholder,
           tooltip: helptext_system_certificates.add.isCSRonSystem.tooltip,
           isHidden: true,
           disabled: true,
@@ -203,8 +201,7 @@ export class CertificateAddComponent {
         {
           type: "select",
           name: "digest_algorithm",
-          placeholder:
-            helptext_system_certificates.add.digest_algorithm.placeholder,
+          placeholder: helptext_system_certificates.add.digest_algorithm.placeholder,
           tooltip: helptext_system_certificates.add.digest_algorithm.tooltip,
           options: [
             { label: "SHA1", value: "SHA1" },
@@ -215,8 +212,7 @@ export class CertificateAddComponent {
           ],
           value: "SHA256",
           required: true,
-          validation:
-            helptext_system_certificates.add.digest_algorithm.validation,
+          validation: helptext_system_certificates.add.digest_algorithm.validation,
           isHidden: false,
         },
         {
@@ -267,8 +263,7 @@ export class CertificateAddComponent {
         {
           type: "input",
           name: "organization",
-          placeholder:
-            helptext_system_certificates.add.organization.placeholder,
+          placeholder: helptext_system_certificates.add.organization.placeholder,
           tooltip: helptext_system_certificates.add.organization.tooltip,
           required: true,
           validation: helptext_system_certificates.add.organization.validation,
@@ -277,8 +272,7 @@ export class CertificateAddComponent {
         {
           type: "input",
           name: "organizational_unit",
-          placeholder:
-            helptext_system_certificates.add.organizational_unit.placeholder,
+          placeholder: helptext_system_certificates.add.organizational_unit.placeholder,
           tooltip: helptext_system_certificates.add.organizational_unit.tooltip,
           required: false,
           isHidden: false,
@@ -316,22 +310,15 @@ export class CertificateAddComponent {
         {
           type: "checkbox",
           name: "BasicConstraints-enabled",
-          placeholder:
-            helptext_system_certificates.add.basic_constraints.enabled
-              .placeholder,
-          tooltip:
-            helptext_system_certificates.add.basic_constraints.enabled.tooltip,
+          placeholder: helptext_system_certificates.add.basic_constraints.enabled.placeholder,
+          tooltip: helptext_system_certificates.add.basic_constraints.enabled.tooltip,
         },
         {
           type: "input",
           inputType: "number",
           name: "BasicConstraints-path_length",
-          placeholder:
-            helptext_system_certificates.add.basic_constraints.path_length
-              .placeholder,
-          tooltip:
-            helptext_system_certificates.add.basic_constraints.path_length
-              .tooltip,
+          placeholder: helptext_system_certificates.add.basic_constraints.path_length.placeholder,
+          tooltip: helptext_system_certificates.add.basic_constraints.path_length.tooltip,
           relation: [
             {
               action: "SHOW",
@@ -348,28 +335,20 @@ export class CertificateAddComponent {
           type: "select",
           multiple: true,
           name: "BasicConstraints",
-          placeholder:
-            helptext_system_certificates.add.basic_constraints.config
-              .placeholder,
-          tooltip:
-            helptext_system_certificates.add.basic_constraints.config.tooltip,
+          placeholder: helptext_system_certificates.add.basic_constraints.config.placeholder,
+          tooltip: helptext_system_certificates.add.basic_constraints.config.tooltip,
           options: [
             {
               value: "ca",
-              label:
-                helptext_system_certificates.add.basic_constraints.ca
-                  .placeholder,
-              tooltip:
-                helptext_system_certificates.add.basic_constraints.ca.tooltip,
+              label: helptext_system_certificates.add.basic_constraints.ca.placeholder,
+              tooltip: helptext_system_certificates.add.basic_constraints.ca.tooltip,
             },
             {
               value: "extension_critical",
               label:
-                helptext_system_certificates.add.basic_constraints
-                  .extension_critical.placeholder,
+                helptext_system_certificates.add.basic_constraints.extension_critical.placeholder,
               tooltip:
-                helptext_system_certificates.add.basic_constraints
-                  .extension_critical.tooltip,
+                helptext_system_certificates.add.basic_constraints.extension_critical.tooltip,
             },
           ],
           relation: [
@@ -388,40 +367,33 @@ export class CertificateAddComponent {
           type: "checkbox",
           name: "AuthorityKeyIdentifier-enabled",
           placeholder:
-            helptext_system_certificates.add.authority_key_identifier.enabled
-              .placeholder,
-          tooltip:
-            helptext_system_certificates.add.authority_key_identifier.enabled
-              .tooltip,
+            helptext_system_certificates.add.authority_key_identifier.enabled.placeholder,
+          tooltip: helptext_system_certificates.add.authority_key_identifier.enabled.tooltip,
         },
         {
           type: "select",
           multiple: true,
           name: "AuthorityKeyIdentifier",
-          placeholder:
-            helptext_system_certificates.add.authority_key_identifier.config
-              .placeholder,
-          tooltip:
-            helptext_system_certificates.add.authority_key_identifier.config
-              .tooltip,
+          placeholder: helptext_system_certificates.add.authority_key_identifier.config.placeholder,
+          tooltip: helptext_system_certificates.add.authority_key_identifier.config.tooltip,
           options: [
             {
               value: "authority_cert_issuer",
               label:
-                helptext_system_certificates.add.authority_key_identifier
-                  .authority_cert_issuer.placeholder,
+                helptext_system_certificates.add.authority_key_identifier.authority_cert_issuer
+                  .placeholder,
               tooltip:
-                helptext_system_certificates.add.authority_key_identifier
-                  .authority_cert_issuer.tooltip,
+                helptext_system_certificates.add.authority_key_identifier.authority_cert_issuer
+                  .tooltip,
             },
             {
               value: "extension_critical",
               label:
-                helptext_system_certificates.add.authority_key_identifier
-                  .extension_critical.placeholder,
+                helptext_system_certificates.add.authority_key_identifier.extension_critical
+                  .placeholder,
               tooltip:
-                helptext_system_certificates.add.authority_key_identifier
-                  .extension_critical.tooltip,
+                helptext_system_certificates.add.authority_key_identifier.extension_critical
+                  .tooltip,
             },
           ],
           relation: [
@@ -439,21 +411,15 @@ export class CertificateAddComponent {
         {
           type: "checkbox",
           name: "ExtendedKeyUsage-enabled",
-          placeholder:
-            helptext_system_certificates.add.extended_key_usage.enabled
-              .placeholder,
-          tooltip:
-            helptext_system_certificates.add.extended_key_usage.enabled.tooltip,
+          placeholder: helptext_system_certificates.add.extended_key_usage.enabled.placeholder,
+          tooltip: helptext_system_certificates.add.extended_key_usage.enabled.tooltip,
         },
         {
           type: "select",
           multiple: true,
           name: "ExtendedKeyUsage-usages",
-          placeholder:
-            helptext_system_certificates.add.extended_key_usage.usages
-              .placeholder,
-          tooltip:
-            helptext_system_certificates.add.extended_key_usage.usages.tooltip,
+          placeholder: helptext_system_certificates.add.extended_key_usage.usages.placeholder,
+          tooltip: helptext_system_certificates.add.extended_key_usage.usages.tooltip,
           options: [],
           required: false,
           relation: [
@@ -472,11 +438,8 @@ export class CertificateAddComponent {
           type: "checkbox",
           name: "ExtendedKeyUsage-extension_critical",
           placeholder:
-            helptext_system_certificates.add.extended_key_usage
-              .extension_critical.placeholder,
-          tooltip:
-            helptext_system_certificates.add.extended_key_usage
-              .extension_critical.tooltip,
+            helptext_system_certificates.add.extended_key_usage.extension_critical.placeholder,
+          tooltip: helptext_system_certificates.add.extended_key_usage.extension_critical.tooltip,
           relation: [
             {
               action: "SHOW",
@@ -492,105 +455,65 @@ export class CertificateAddComponent {
         {
           type: "checkbox",
           name: "KeyUsage-enabled",
-          placeholder:
-            helptext_system_certificates.add.key_usage.enabled.placeholder,
+          placeholder: helptext_system_certificates.add.key_usage.enabled.placeholder,
           tooltip: helptext_system_certificates.add.key_usage.enabled.tooltip,
         },
         {
           type: "select",
           multiple: true,
           name: "KeyUsage",
-          placeholder:
-            helptext_system_certificates.add.key_usage.config.placeholder,
+          placeholder: helptext_system_certificates.add.key_usage.config.placeholder,
           tooltip: helptext_system_certificates.add.key_usage.config.tooltip,
           options: [
             {
               value: "digital_signature",
-              label:
-                helptext_system_certificates.add.key_usage.digital_signature
-                  .placeholder,
-              tooltip:
-                helptext_system_certificates.add.key_usage.digital_signature
-                  .tooltip,
+              label: helptext_system_certificates.add.key_usage.digital_signature.placeholder,
+              tooltip: helptext_system_certificates.add.key_usage.digital_signature.tooltip,
             },
             {
               value: "content_commitment",
-              label:
-                helptext_system_certificates.add.key_usage.content_commitment
-                  .placeholder,
-              tooltip:
-                helptext_system_certificates.add.key_usage.content_commitment
-                  .tooltip,
+              label: helptext_system_certificates.add.key_usage.content_commitment.placeholder,
+              tooltip: helptext_system_certificates.add.key_usage.content_commitment.tooltip,
             },
             {
               value: "key_encipherment",
-              label:
-                helptext_system_certificates.add.key_usage.key_encipherment
-                  .placeholder,
-              tooltip:
-                helptext_system_certificates.add.key_usage.key_encipherment
-                  .tooltip,
+              label: helptext_system_certificates.add.key_usage.key_encipherment.placeholder,
+              tooltip: helptext_system_certificates.add.key_usage.key_encipherment.tooltip,
             },
             {
               value: "data_encipherment",
-              label:
-                helptext_system_certificates.add.key_usage.data_encipherment
-                  .placeholder,
-              tooltip:
-                helptext_system_certificates.add.key_usage.data_encipherment
-                  .tooltip,
+              label: helptext_system_certificates.add.key_usage.data_encipherment.placeholder,
+              tooltip: helptext_system_certificates.add.key_usage.data_encipherment.tooltip,
             },
             {
               value: "key_agreement",
-              label:
-                helptext_system_certificates.add.key_usage.key_agreement
-                  .placeholder,
-              tooltip:
-                helptext_system_certificates.add.key_usage.key_agreement
-                  .tooltip,
+              label: helptext_system_certificates.add.key_usage.key_agreement.placeholder,
+              tooltip: helptext_system_certificates.add.key_usage.key_agreement.tooltip,
             },
             {
               value: "key_cert_sign",
-              label:
-                helptext_system_certificates.add.key_usage.key_cert_sign
-                  .placeholder,
-              tooltip:
-                helptext_system_certificates.add.key_usage.key_cert_sign
-                  .tooltip,
+              label: helptext_system_certificates.add.key_usage.key_cert_sign.placeholder,
+              tooltip: helptext_system_certificates.add.key_usage.key_cert_sign.tooltip,
             },
             {
               value: "crl_sign",
-              label:
-                helptext_system_certificates.add.key_usage.crl_sign.placeholder,
-              tooltip:
-                helptext_system_certificates.add.key_usage.crl_sign.tooltip,
+              label: helptext_system_certificates.add.key_usage.crl_sign.placeholder,
+              tooltip: helptext_system_certificates.add.key_usage.crl_sign.tooltip,
             },
             {
               value: "encipher_only",
-              label:
-                helptext_system_certificates.add.key_usage.encipher_only
-                  .placeholder,
-              tooltip:
-                helptext_system_certificates.add.key_usage.encipher_only
-                  .tooltip,
+              label: helptext_system_certificates.add.key_usage.encipher_only.placeholder,
+              tooltip: helptext_system_certificates.add.key_usage.encipher_only.tooltip,
             },
             {
               value: "decipher_only",
-              label:
-                helptext_system_certificates.add.key_usage.decipher_only
-                  .placeholder,
-              tooltip:
-                helptext_system_certificates.add.key_usage.decipher_only
-                  .tooltip,
+              label: helptext_system_certificates.add.key_usage.decipher_only.placeholder,
+              tooltip: helptext_system_certificates.add.key_usage.decipher_only.tooltip,
             },
             {
               value: "extension_critical",
-              label:
-                helptext_system_certificates.add.key_usage.extension_critical
-                  .placeholder,
-              tooltip:
-                helptext_system_certificates.add.key_usage.extension_critical
-                  .tooltip,
+              label: helptext_system_certificates.add.key_usage.extension_critical.placeholder,
+              tooltip: helptext_system_certificates.add.key_usage.extension_critical.tooltip,
             },
           ],
           relation: [
@@ -722,12 +645,7 @@ export class CertificateAddComponent {
     "passphrase",
     "passphrase2",
   ];
-  private importCSRFields: Array<any> = [
-    "CSR",
-    "privatekey",
-    "passphrase",
-    "passphrase2",
-  ];
+  private importCSRFields: Array<any> = ["CSR", "privatekey", "passphrase", "passphrase2"];
   private extensionFields: Array<any> = [
     "BasicConstraints-enabled",
     "BasicConstraints-path_length",
@@ -777,14 +695,12 @@ export class CertificateAddComponent {
       }
     });
 
-    this.systemGeneralService
-      .getCertificateCountryChoices()
-      .subscribe((res) => {
-        this.country = this.getTarget("country");
-        for (const item in res) {
-          this.country.options.push({ label: res[item], value: item });
-        }
-      });
+    this.systemGeneralService.getCertificateCountryChoices().subscribe((res) => {
+      this.country = this.getTarget("country");
+      for (const item in res) {
+        this.country.options.push({ label: res[item], value: item });
+      }
+    });
 
     this.ws.call("certificate.query").subscribe((res) => {
       this.csrlist = this.getTarget("csrlist");
@@ -818,9 +734,7 @@ export class CertificateAddComponent {
 
   getSummaryValueLabel(fieldConfig, value) {
     if (fieldConfig.type == "select") {
-      const option = fieldConfig.options.find(
-        (option) => option.value == value
-      );
+      const option = fieldConfig.options.find((option) => option.value == value);
       if (option) {
         value = option.label;
       }
@@ -840,10 +754,7 @@ export class CertificateAddComponent {
         );
       }
       this.getField(fieldName).valueChanges.subscribe((res) => {
-        this.summary[fieldConfig.placeholder] = this.getSummaryValueLabel(
-          fieldConfig,
-          res
-        );
+        this.summary[fieldConfig.placeholder] = this.getSummaryValueLabel(fieldConfig, res);
       });
     }
   }
@@ -995,9 +906,7 @@ export class CertificateAddComponent {
       const usagesRequired = res !== undefined ? res : false;
       this.usageField.required = usagesRequired;
       if (usagesRequired) {
-        this.getField("ExtendedKeyUsage-usages").setValidators([
-          Validators.required,
-        ]);
+        this.getField("ExtendedKeyUsage-usages").setValidators([Validators.required]);
       } else {
         this.getField("ExtendedKeyUsage-usages").clearValidators();
       }
@@ -1015,16 +924,11 @@ export class CertificateAddComponent {
     });
 
     if (this.type && this.type === "csr") {
-      this.getField("create_type").setValue(
-        helptext_system_certificates.add.csr_create_type.value
-      );
+      this.getField("create_type").setValue(helptext_system_certificates.add.csr_create_type.value);
       let certType = this.getTarget("create_type");
-      certType.options =
-        helptext_system_certificates.add.csr_create_type.options;
-      certType.placeholder =
-        helptext_system_certificates.add.csr_create_type.placeholder;
-      certType.tooltip =
-        helptext_system_certificates.add.csr_create_type.tooltip;
+      certType.options = helptext_system_certificates.add.csr_create_type.options;
+      certType.placeholder = helptext_system_certificates.add.csr_create_type.placeholder;
+      certType.tooltip = helptext_system_certificates.add.csr_create_type.tooltip;
       certType.value = helptext_system_certificates.add.csr_create_type.value;
       this.title = helptext_system_certificates.add.title_csr;
     }
@@ -1044,10 +948,7 @@ export class CertificateAddComponent {
             Object.keys(value["cert_extensions"][type]).forEach((prop) => {
               let ctrl = this.getField(`${type}-${prop}`);
               if (ctrl) {
-                if (
-                  reset &&
-                  ctrl.value === value["cert_extensions"][type][prop]
-                ) {
+                if (reset && ctrl.value === value["cert_extensions"][type][prop]) {
                   ctrl.setValue(undefined);
                 } else if (!reset) {
                   ctrl.setValue(value["cert_extensions"][type][prop]);
@@ -1056,23 +957,13 @@ export class CertificateAddComponent {
                 ctrl = this.getField(type);
                 const config = ctrl.value || [];
                 const optionIndex = config.indexOf(prop);
-                if (
-                  reset &&
-                  value["cert_extensions"][type][prop] === true &&
-                  optionIndex > -1
-                ) {
+                if (reset && value["cert_extensions"][type][prop] === true && optionIndex > -1) {
                   config.splice(optionIndex, 1);
                   ctrl.setValue(config);
                 } else if (!reset) {
-                  if (
-                    value["cert_extensions"][type][prop] === true &&
-                    optionIndex === -1
-                  ) {
+                  if (value["cert_extensions"][type][prop] === true && optionIndex === -1) {
                     config.push(prop);
-                  } else if (
-                    value["cert_extensions"][type][prop] === false &&
-                    optionIndex > -1
-                  ) {
+                  } else if (value["cert_extensions"][type][prop] === false && optionIndex > -1) {
                     config.splice(optionIndex, 1);
                   }
                   ctrl.setValue(config);
@@ -1105,8 +996,7 @@ export class CertificateAddComponent {
   getField(fieldName: any) {
     const stepNumber = this.getStep(fieldName);
     if (stepNumber > -1) {
-      const target = (<FormGroup>this.entityWizard.formArray.get([stepNumber]))
-        .controls[fieldName];
+      const target = (<FormGroup>this.entityWizard.formArray.get([stepNumber])).controls[fieldName];
       return target;
     } else {
       return null;

@@ -2,13 +2,7 @@ import { Component } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import * as _ from "lodash";
 import { Subscription } from "rxjs";
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  FormArray,
-  Validators,
-} from "@angular/forms";
+import { FormBuilder, FormControl, FormGroup, FormArray, Validators } from "@angular/forms";
 import { FieldConfig } from "../../common/entity/entity-form/models/field-config.interface";
 import { FieldSet } from "../../common/entity/entity-form/models/fieldset.interface";
 import { ModalService } from "../../../services/modal.service";
@@ -131,15 +125,13 @@ export class ChartReleaseEditComponent {
             {
               type: "input",
               name: "name",
-              placeholder:
-                helptext.chartForm.container.env_vars.key.placeholder,
+              placeholder: helptext.chartForm.container.env_vars.key.placeholder,
               tooltip: helptext.chartForm.container.env_vars.key.tooltip,
             },
             {
               type: "input",
               name: "value",
-              placeholder:
-                helptext.chartForm.container.env_vars.value.placeholder,
+              placeholder: helptext.chartForm.container.env_vars.value.placeholder,
               tooltip: helptext.chartForm.container.env_vars.value.tooltip,
             },
           ],
@@ -176,16 +168,14 @@ export class ChartReleaseEditComponent {
             {
               type: "select",
               name: "hostInterface",
-              placeholder:
-                helptext.chartForm.externalInterfaces.host.placeholder,
+              placeholder: helptext.chartForm.externalInterfaces.host.placeholder,
               tooltip: helptext.chartForm.externalInterfaces.host.tooltip,
               options: this.interfaceList,
             },
             {
               type: "select",
               name: "ipam",
-              placeholder:
-                helptext.chartForm.externalInterfaces.ipam.placeholder,
+              placeholder: helptext.chartForm.externalInterfaces.ipam.placeholder,
               tooltip: helptext.chartForm.externalInterfaces.ipam.tooltip,
               options: helptext.chartForm.externalInterfaces.ipam.options,
             },
@@ -198,9 +188,7 @@ export class ChartReleaseEditComponent {
                 {
                   type: "ipwithnetmask",
                   name: "staticIP",
-                  placeholder:
-                    helptext.chartForm.externalInterfaces.staticConfig
-                      .placeholder,
+                  placeholder: helptext.chartForm.externalInterfaces.staticConfig.placeholder,
                   // isHidden: true,
                   relation: [
                     {
@@ -227,15 +215,13 @@ export class ChartReleaseEditComponent {
                   type: "ipwithnetmask",
                   name: "destination",
                   placeholder:
-                    helptext.chartForm.externalInterfaces.staticRoutes
-                      .destination.placeholder,
+                    helptext.chartForm.externalInterfaces.staticRoutes.destination.placeholder,
                 },
                 {
                   type: "input",
                   name: "gateway",
                   placeholder:
-                    helptext.chartForm.externalInterfaces.staticRoutes.gateway
-                      .placeholder,
+                    helptext.chartForm.externalInterfaces.staticRoutes.gateway.placeholder,
                 },
               ],
               listFields: [],
@@ -291,27 +277,21 @@ export class ChartReleaseEditComponent {
             {
               type: "input",
               name: "containerPort",
-              placeholder:
-                helptext.chartForm.portForwardingList.containerPort.placeholder,
-              validation:
-                helptext.chartForm.portForwardingList.containerPort.validation,
+              placeholder: helptext.chartForm.portForwardingList.containerPort.placeholder,
+              validation: helptext.chartForm.portForwardingList.containerPort.validation,
             },
             {
               type: "input",
               name: "nodePort",
-              placeholder:
-                helptext.chartForm.portForwardingList.nodePort.placeholder,
-              validation:
-                helptext.chartForm.portForwardingList.nodePort.validation,
+              placeholder: helptext.chartForm.portForwardingList.nodePort.placeholder,
+              validation: helptext.chartForm.portForwardingList.nodePort.validation,
             },
             {
               type: "select",
               name: "protocol",
-              placeholder:
-                helptext.chartForm.portForwardingList.protocol.placeholder,
+              placeholder: helptext.chartForm.portForwardingList.protocol.placeholder,
               options: helptext.chartForm.portForwardingList.protocol.options,
-              value:
-                helptext.chartForm.portForwardingList.protocol.options[0].value,
+              value: helptext.chartForm.portForwardingList.protocol.options[0].value,
             },
           ],
           listFields: [],
@@ -335,22 +315,19 @@ export class ChartReleaseEditComponent {
               initial: "/mnt",
               explorerType: "directory",
               hideDirs: "ix-applications",
-              placeholder:
-                helptext.chartForm.hostPathVolumes.hostPath.placeholder,
+              placeholder: helptext.chartForm.hostPathVolumes.hostPath.placeholder,
               tooltip: helptext.chartForm.hostPathVolumes.hostPath.tooltip,
             },
             {
               type: "input",
               name: "mountPath",
-              placeholder:
-                helptext.chartForm.hostPathVolumes.mountPath.placeholder,
+              placeholder: helptext.chartForm.hostPathVolumes.mountPath.placeholder,
               tooltip: helptext.chartForm.hostPathVolumes.mountPath.tooltip,
             },
             {
               type: "checkbox",
               name: "readOnly",
-              placeholder:
-                helptext.chartForm.hostPathVolumes.readOnly.placeholder,
+              placeholder: helptext.chartForm.hostPathVolumes.readOnly.placeholder,
             },
           ],
           listFields: [],
@@ -402,10 +379,7 @@ export class ChartReleaseEditComponent {
     });
     this.getRow = this.modalService.getRow$.subscribe((rowName: string) => {
       this.rowName = rowName;
-      this.customFilter = [
-        [["id", "=", rowName]],
-        { extra: { include_chart_schema: true } },
-      ];
+      this.customFilter = [[["id", "=", rowName]], { extra: { include_chart_schema: true } }];
       this.getRow.unsubscribe();
     });
   }
@@ -418,9 +392,7 @@ export class ChartReleaseEditComponent {
       );
 
       if (gpuConfiguration && gpuConfiguration.schema.attrs.length > 0) {
-        const fieldConfigs = this.entityUtils.parseSchemaFieldConfig(
-          gpuConfiguration
-        );
+        const fieldConfigs = this.entityUtils.parseSchemaFieldConfig(gpuConfiguration);
         const gpuFieldSet = {
           name: gpuConfiguration.group,
           label: true,
@@ -452,10 +424,7 @@ export class ChartReleaseEditComponent {
     if (data.config.externalInterfaces) {
       data.config.externalInterfaces.forEach((i) => {
         let tempArr = [];
-        if (
-          i.ipam.staticIPConfigurations &&
-          i.ipam.staticIPConfigurations.length > 0
-        ) {
+        if (i.ipam.staticIPConfigurations && i.ipam.staticIPConfigurations.length > 0) {
           i.ipam.staticIPConfigurations.forEach((j) => {
             tempArr.push({ staticIP: j });
           });
@@ -468,11 +437,7 @@ export class ChartReleaseEditComponent {
     }
 
     if (data.gpuConfiguration) {
-      this.entityUtils.parseConfigData(
-        data.gpuConfiguration,
-        "gpuConfiguration",
-        data.config
-      );
+      this.entityUtils.parseConfigData(data.gpuConfiguration, "gpuConfiguration", data.config);
     }
 
     const hasGpuConfig = this.parseSchema(data.chart_schema.schema);
@@ -482,29 +447,24 @@ export class ChartReleaseEditComponent {
   }
 
   onChangeExternalInterfaces(listComponent: FormListComponent) {
-    listComponent.listsFromArray.controls.forEach(
-      (externalInterface, index) => {
-        const staticRoutesFC = _.find(listComponent.config.listFields[index], {
-          name: "staticRoutes",
-        });
-        const staticIPConfigurationsFC = _.find(
-          listComponent.config.listFields[index],
-          { name: "staticIPConfigurations" }
-        );
+    listComponent.listsFromArray.controls.forEach((externalInterface, index) => {
+      const staticRoutesFC = _.find(listComponent.config.listFields[index], {
+        name: "staticRoutes",
+      });
+      const staticIPConfigurationsFC = _.find(listComponent.config.listFields[index], {
+        name: "staticIPConfigurations",
+      });
 
-        (<FormGroup>externalInterface).controls["ipam"].valueChanges.subscribe(
-          (value) => {
-            if (value === "static") {
-              staticIPConfigurationsFC.isHidden = false;
-              staticRoutesFC.isHidden = false;
-            } else {
-              staticIPConfigurationsFC.isHidden = true;
-              staticRoutesFC.isHidden = true;
-            }
-          }
-        );
-      }
-    );
+      (<FormGroup>externalInterface).controls["ipam"].valueChanges.subscribe((value) => {
+        if (value === "static") {
+          staticIPConfigurationsFC.isHidden = false;
+          staticRoutesFC.isHidden = false;
+        } else {
+          staticIPConfigurationsFC.isHidden = true;
+          staticRoutesFC.isHidden = true;
+        }
+      });
+    });
   }
 
   customSubmit(data) {
@@ -539,11 +499,7 @@ export class ChartReleaseEditComponent {
     }
 
     let volList = [];
-    if (
-      data.volumes &&
-      data.volumes.length > 0 &&
-      data.volumes[0].datasetName
-    ) {
+    if (data.volumes && data.volumes.length > 0 && data.volumes[0].datasetName) {
       volList = data.volumes;
     }
 

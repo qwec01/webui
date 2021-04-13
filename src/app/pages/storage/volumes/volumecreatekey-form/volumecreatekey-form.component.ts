@@ -42,8 +42,7 @@ export class VolumeCreatekeyFormComponent implements Formconfiguration {
     {
       type: "paragraph",
       name: "encrypt-headline",
-      paraText:
-        '<i class="material-icons">lock</i>' + helptext.changekey_headline,
+      paraText: '<i class="material-icons">lock</i>' + helptext.changekey_headline,
     },
     {
       type: "paragraph",
@@ -78,23 +77,13 @@ export class VolumeCreatekeyFormComponent implements Formconfiguration {
       name: T("Download Encryption Key"),
       disabled: true,
       function: () => {
-        this.ws
-          .call("auth.check_user", ["root", this.admin_pw])
-          .subscribe((res) => {
-            if (res) {
-              this.encryptionService.openEncryptDialog(
-                this.pk,
-                this.route_return,
-                this.poolName
-              );
-            } else {
-              this.dialogService.Info(
-                "Error",
-                "The administrator password is incorrect.",
-                "340px"
-              );
-            }
-          });
+        this.ws.call("auth.check_user", ["root", this.admin_pw]).subscribe((res) => {
+          if (res) {
+            this.encryptionService.openEncryptDialog(this.pk, this.route_return, this.poolName);
+          } else {
+            this.dialogService.Info("Error", "The administrator password is incorrect.", "340px");
+          }
+        });
       },
     },
     {
@@ -136,35 +125,27 @@ export class VolumeCreatekeyFormComponent implements Formconfiguration {
   afterInit(entityForm: any) {
     entityForm.formGroup.controls["adminpw"].valueChanges.subscribe((res) => {
       this.admin_pw = res;
-      let btn = <HTMLInputElement>(
-        document.getElementById("cust_button_Download Encryption Key")
-      );
+      let btn = <HTMLInputElement>document.getElementById("cust_button_Download Encryption Key");
       this.admin_pw !== "" ? (btn.disabled = false) : (btn.disabled = true);
     });
   }
 
   customSubmit(value) {
-    this.ws
-      .call("auth.check_user", ["root", value.adminpw])
-      .subscribe((res) => {
-        if (res) {
-          this.encryptionService.setPassphrase(
-            this.pk,
-            value.passphrase,
-            value.adminpw,
-            value.name,
-            this.route_return,
-            false,
-            true,
-            "created for"
-          );
-        } else {
-          this.dialogService.Info(
-            "Error",
-            "The administrator password is incorrect.",
-            "340px"
-          );
-        }
-      });
+    this.ws.call("auth.check_user", ["root", value.adminpw]).subscribe((res) => {
+      if (res) {
+        this.encryptionService.setPassphrase(
+          this.pk,
+          value.passphrase,
+          value.adminpw,
+          value.name,
+          this.route_return,
+          false,
+          true,
+          "created for"
+        );
+      } else {
+        this.dialogService.Info("Error", "The administrator password is incorrect.", "340px");
+      }
+    });
   }
 }

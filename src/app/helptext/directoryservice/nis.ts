@@ -27,13 +27,9 @@ export default {
   ),
 
   nis_manycast_placeholder: T("Manycast"),
-  nis_manycast_tooltip: T(
-    "Set for ypbind to bind to the server that responds\
- the fastest."
-  ),
+  nis_manycast_tooltip: T("Set for ypbind to bind to the server that responds\
+ the fastest."),
 
   nis_enable_placeholder: T("Enable"),
-  nis_enable_tooltip: T(
-    "Unset to disable the configuration without deleting it."
-  ),
+  nis_enable_tooltip: T("Unset to disable the configuration without deleting it."),
 };

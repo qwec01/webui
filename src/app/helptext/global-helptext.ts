@@ -75,9 +75,7 @@ export default {
   invalidInputValueWithUnit: T(
     "Invalid value. Missing numerical value or invalid numerical value/unit."
   ),
-  invalidInputValueWithMin: T(
-    "Invalid value. Must be greater than or equal to "
-  ),
+  invalidInputValueWithMin: T("Invalid value. Must be greater than or equal to "),
   invalidInputValueWithMax: T("Invalid value. Must be less than or equal to "),
 
   pasteValueStartsWithSpace: T("The pasted string starts with a space"),

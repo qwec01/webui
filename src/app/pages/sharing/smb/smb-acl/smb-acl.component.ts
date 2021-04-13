@@ -149,10 +149,8 @@ export class SMBAclComponent {
             this.updateRequiredValidator("ae_who_name_name", i, false);
           }
         } else if (
-          (res[i].ae_who_name_domain !== undefined &&
-            res[i].ae_who_name_domain !== "") ||
-          (res[i].ae_who_name_name !== undefined &&
-            res[i].ae_who_name_name !== "")
+          (res[i].ae_who_name_domain !== undefined && res[i].ae_who_name_domain !== "") ||
+          (res[i].ae_who_name_name !== undefined && res[i].ae_who_name_name !== "")
         ) {
           const domainField = _.find(this.shareACLField["listFields"][i], {
             name: "ae_who_name_domain",
@@ -171,9 +169,9 @@ export class SMBAclComponent {
   }
 
   updateRequiredValidator(fieldName, index, required) {
-    const fieldCtrl = this.entityForm.formGroup.controls["share_acl"].controls[
-      index
-    ].controls[fieldName];
+    const fieldCtrl = this.entityForm.formGroup.controls["share_acl"].controls[index].controls[
+      fieldName
+    ];
     const fieldConfig = _.find(this.shareACLField["listFields"][index], {
       name: fieldName,
     });
@@ -191,10 +189,8 @@ export class SMBAclComponent {
   resourceTransformIncomingRestData(data) {
     for (let i = 0; i < data["share_acl"].length; i++) {
       if (data["share_acl"][i]["ae_who_name"]) {
-        data["share_acl"][i]["ae_who_name_domain"] =
-          data["share_acl"][i]["ae_who_name"]["domain"];
-        data["share_acl"][i]["ae_who_name_name"] =
-          data["share_acl"][i]["ae_who_name"]["name"];
+        data["share_acl"][i]["ae_who_name_domain"] = data["share_acl"][i]["ae_who_name"]["domain"];
+        data["share_acl"][i]["ae_who_name_name"] = data["share_acl"][i]["ae_who_name"]["name"];
         delete data["share_acl"][i]["ae_who_name"];
       }
     }

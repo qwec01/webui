@@ -2,12 +2,7 @@ import { ApplicationRef, Component, Injector } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import * as _ from "lodash";
 
-import {
-  RestService,
-  UserService,
-  WebSocketService,
-  IscsiService,
-} from "../../../../services/";
+import { RestService, UserService, WebSocketService, IscsiService } from "../../../../services/";
 import { FieldConfig } from "../../../common/entity/entity-form/models/field-config.interface";
 import helptext from "../../../../helptext/services/components/service-afp";
 import { FieldSet } from "app/pages/common/entity/entity-form/models/fieldset.interface";

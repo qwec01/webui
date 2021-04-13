@@ -31,17 +31,11 @@ export class UserService {
     if (hideBuiltIn) {
       queryArgs = queryArgs.concat([["builtin", "=", false]]);
     }
-    return this.ws.call(this.groupQuery, [
-      queryArgs,
-      { ...this.queryOptions, offset },
-    ]);
+    return this.ws.call(this.groupQuery, [queryArgs, { ...this.queryOptions, offset }]);
   }
 
   getGroupByGID(gid) {
-    return this.ws.call(this.groupQuery, [
-      [["gid", "=", gid]],
-      this.queryOptions,
-    ]);
+    return this.ws.call(this.groupQuery, [[["gid", "=", gid]], this.queryOptions]);
   }
 
   getGroupByName(group) {
@@ -54,17 +48,11 @@ export class UserService {
     if (search.length > 0) {
       queryArgs = [["username", "^", search]];
     }
-    return this.ws.call(this.userQuery, [
-      queryArgs,
-      { ...this.queryOptions, offset },
-    ]);
+    return this.ws.call(this.userQuery, [queryArgs, { ...this.queryOptions, offset }]);
   }
 
   getUserByUID(uid) {
-    return this.ws.call(this.userQuery, [
-      [["uid", "=", uid]],
-      this.queryOptions,
-    ]);
+    return this.ws.call(this.userQuery, [[["uid", "=", uid]], this.queryOptions]);
   }
 
   getUserByName(username) {
@@ -93,9 +81,7 @@ export class UserService {
     return group;
   }
 
-  async shellChoices(
-    userId?: number
-  ): Promise<{ label: string; value: string }[]> {
+  async shellChoices(userId?: number): Promise<{ label: string; value: string }[]> {
     return await this.ws
       .call("user.shell_choices", userId ? [userId] : [])
       .pipe(

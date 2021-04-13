@@ -148,14 +148,10 @@ module.exports = function (options) {
        */
       new AddAssetHtmlPlugin([
         {
-          filepath: helpers.root(
-            `dll/${DllBundlesPlugin.resolveFile("polyfills")}`
-          ),
+          filepath: helpers.root(`dll/${DllBundlesPlugin.resolveFile("polyfills")}`),
         },
         {
-          filepath: helpers.root(
-            `dll/${DllBundlesPlugin.resolveFile("vendor")}`
-          ),
+          filepath: helpers.root(`dll/${DllBundlesPlugin.resolveFile("vendor")}`),
         },
       ]),
 

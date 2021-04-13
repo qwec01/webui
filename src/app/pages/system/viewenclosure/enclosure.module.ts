@@ -15,13 +15,7 @@ import { TemperatureMeterComponent } from "./enclosure-disks/components/temperat
 //import { TooltipComponent } from 'app/pages/common/entity/entity-form/components/tooltip/tooltip.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    MaterialModule,
-    TranslateModule,
-    FlexLayoutModule,
-    EntityModule,
-  ],
+  imports: [CommonModule, MaterialModule, TranslateModule, FlexLayoutModule, EntityModule],
   declarations: [
     ViewEnclosureComponent,
     EnclosureDisksComponent,

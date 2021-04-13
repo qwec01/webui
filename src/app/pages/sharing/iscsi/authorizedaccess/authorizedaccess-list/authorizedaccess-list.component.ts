@@ -5,9 +5,7 @@ import { T } from "app/translate-marker";
 
 @Component({
   selector: "app-iscsi-authorizedaccess-list",
-  template: `
-    <entity-table [conf]="this" [title]="tableTitle"></entity-table>
-  `,
+  template: ` <entity-table [conf]="this" [title]="tableTitle"></entity-table> `,
 })
 export class AuthorizedAccessListComponent {
   public tableTitle = "Authorized Access";

@@ -64,9 +64,7 @@ export class GeneralSettingsComponent implements OnInit, OnDestroy {
     this.modalService,
     this.adminLayout
   );
-  protected NTPServerFormComponent = new NTPServerFormComponent(
-    this.modalService
-  );
+  protected NTPServerFormComponent = new NTPServerFormComponent(this.modalService);
 
   // Dialog forms and info for saving, uploading, resetting config
   protected saveConfigFieldConf: FieldConfig[] = [
@@ -149,11 +147,9 @@ export class GeneralSettingsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getDataCardData();
-    this.refreshCardData = this.sysGeneralService.refreshSysGeneral$.subscribe(
-      () => {
-        this.getDataCardData();
-      }
-    );
+    this.refreshCardData = this.sysGeneralService.refreshSysGeneral$.subscribe(() => {
+      this.getDataCardData();
+    });
     this.getNTPData();
     this.refreshTable = this.modalService.refreshTable$.subscribe(() => {
       this.getNTPData();
@@ -204,111 +200,103 @@ export class GeneralSettingsComponent implements OnInit, OnDestroy {
   }
 
   getDataCardData() {
-    this.getGenConfig = this.sysGeneralService.getGeneralConfig.subscribe(
-      (res) => {
-        this.configData = res;
-        this.dataCards = [
-          {
-            title: helptext.guiTitle,
-            id: "gui",
+    this.getGenConfig = this.sysGeneralService.getGeneralConfig.subscribe((res) => {
+      this.configData = res;
+      this.dataCards = [
+        {
+          title: helptext.guiTitle,
+          id: "gui",
+          items: [
+            {
+              label: helptext.stg_guicertificate.placeholder,
+              value: res.ui_certificate.name,
+            },
+            {
+              label: helptext.stg_guiaddress.placeholder,
+              value: res.ui_address.join(", "),
+            },
+            {
+              label: helptext.stg_guiv6address.placeholder,
+              value: res.ui_v6address.join(", "),
+            },
+            {
+              label: helptext.stg_guihttpsport.placeholder,
+              value: res.ui_httpsport,
+            },
+            {
+              label: helptext.stg_guihttpsprotocols.placeholder,
+              value: res.ui_httpsprotocols.join(", "),
+            },
+            {
+              label: helptext.stg_guihttpsredirect.placeholder,
+              value: res.ui_httpsredirect,
+            },
+            {
+              label: helptext.crash_reporting.placeholder,
+              value: res.crash_reporting ? helptext.enabled : helptext.disabled,
+            },
+            {
+              label: helptext.usage_collection.placeholder,
+              value: res.usage_collection ? helptext.enabled : helptext.disabled,
+            },
+            {
+              label: helptext.consolemsg_placeholder,
+              value: res.ui_consolemsg ? helptext.enabled : helptext.disabled,
+            },
+          ],
+          actions: [
+            {
+              label: helptext.actions.save_config,
+              value: "saveConfig",
+              icon: "save_alt",
+            },
+            {
+              label: helptext.actions.upload_config,
+              value: "upLoadConfig",
+              icon: "arrow_upward",
+            },
+            {
+              label: helptext.actions.reset_config,
+              value: "resetConfig",
+              icon: "replay",
+            },
+          ],
+        },
+      ];
+
+      this.sysGeneralService.languageChoices().subscribe((languages) => {
+        this.sysGeneralService.kbdMapChoices().subscribe((mapchoices) => {
+          const keyboardMap = mapchoices.find((x) => x.value === this.configData.kbdmap);
+          this.localeData = {
+            title: helptext.localeTitle,
+            id: "localization",
             items: [
               {
-                label: helptext.stg_guicertificate.placeholder,
-                value: res.ui_certificate.name,
+                label: helptext.stg_language.placeholder,
+                value: languages[res.language],
               },
               {
-                label: helptext.stg_guiaddress.placeholder,
-                value: res.ui_address.join(", "),
+                label: helptext.date_format.placeholder,
+                value: this.localeService.getDateAndTime(res.timezone)[0],
               },
               {
-                label: helptext.stg_guiv6address.placeholder,
-                value: res.ui_v6address.join(", "),
+                label: helptext.time_format.placeholder,
+                value: this.localeService.getDateAndTime(res.timezone)[1],
               },
               {
-                label: helptext.stg_guihttpsport.placeholder,
-                value: res.ui_httpsport,
+                label: helptext.stg_timezone.placeholder,
+                value: res.timezone,
               },
               {
-                label: helptext.stg_guihttpsprotocols.placeholder,
-                value: res.ui_httpsprotocols.join(", "),
-              },
-              {
-                label: helptext.stg_guihttpsredirect.placeholder,
-                value: res.ui_httpsredirect,
-              },
-              {
-                label: helptext.crash_reporting.placeholder,
-                value: res.crash_reporting
-                  ? helptext.enabled
-                  : helptext.disabled,
-              },
-              {
-                label: helptext.usage_collection.placeholder,
-                value: res.usage_collection
-                  ? helptext.enabled
-                  : helptext.disabled,
-              },
-              {
-                label: helptext.consolemsg_placeholder,
-                value: res.ui_consolemsg ? helptext.enabled : helptext.disabled,
+                label: helptext.stg_kbdmap.placeholder,
+                value: res.kbdmap ? keyboardMap.label : helptext.default,
               },
             ],
-            actions: [
-              {
-                label: helptext.actions.save_config,
-                value: "saveConfig",
-                icon: "save_alt",
-              },
-              {
-                label: helptext.actions.upload_config,
-                value: "upLoadConfig",
-                icon: "arrow_upward",
-              },
-              {
-                label: helptext.actions.reset_config,
-                value: "resetConfig",
-                icon: "replay",
-              },
-            ],
-          },
-        ];
-
-        this.sysGeneralService.languageChoices().subscribe((languages) => {
-          this.sysGeneralService.kbdMapChoices().subscribe((mapchoices) => {
-            const keyboardMap = mapchoices.find(
-              (x) => x.value === this.configData.kbdmap
-            );
-            this.localeData = {
-              title: helptext.localeTitle,
-              id: "localization",
-              items: [
-                {
-                  label: helptext.stg_language.placeholder,
-                  value: languages[res.language],
-                },
-                {
-                  label: helptext.date_format.placeholder,
-                  value: this.localeService.getDateAndTime(res.timezone)[0],
-                },
-                {
-                  label: helptext.time_format.placeholder,
-                  value: this.localeService.getDateAndTime(res.timezone)[1],
-                },
-                {
-                  label: helptext.stg_timezone.placeholder,
-                  value: res.timezone,
-                },
-                {
-                  label: helptext.stg_kbdmap.placeholder,
-                  value: res.kbdmap ? keyboardMap.label : helptext.default,
-                },
-              ],
-            };
-            this.dataCards.push(this.localeData);
-          });
+          };
+          this.dataCards.push(this.localeData);
         });
-      }
-    );
+      });
+    });
   }
 
   doAdd(name: string, id?: number) {
@@ -378,10 +366,7 @@ export class GeneralSettingsComponent implements OnInit, OnDestroy {
         let mimetype;
         if (res) {
           let hostname = res.hostname.split(".")[0];
-          let date = entityDialog.datePipe.transform(
-            new Date(),
-            "yyyyMMddHHmmss"
-          );
+          let date = entityDialog.datePipe.transform(new Date(), "yyyyMMddHHmmss");
           fileName = hostname + "-" + res.version + "-" + date;
           if (entityDialog.formValue["secretseed"]) {
             mimetype = "application/x-tar";
@@ -402,12 +387,7 @@ export class GeneralSettingsComponent implements OnInit, OnDestroy {
             (download) => {
               const url = download[1];
               entityDialog.parent.storage
-                .streamDownloadFile(
-                  entityDialog.parent.http,
-                  url,
-                  fileName,
-                  mimetype
-                )
+                .streamDownloadFile(entityDialog.parent.http, url, fileName, mimetype)
                 .subscribe(
                   (file) => {
                     entityDialog.loader.close();
@@ -428,11 +408,7 @@ export class GeneralSettingsComponent implements OnInit, OnDestroy {
             (err) => {
               entityDialog.loader.close();
               entityDialog.dialogRef.close();
-              new EntityUtils().handleWSError(
-                entityDialog,
-                err,
-                entityDialog.dialog
-              );
+              new EntityUtils().handleWSError(entityDialog, err, entityDialog.dialog);
             }
           );
       },

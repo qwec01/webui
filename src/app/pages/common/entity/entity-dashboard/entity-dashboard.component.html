@@ -11,20 +11,12 @@
                 }}</mat-icon>
               </button>
               <span
-                ><a class="text-click" (click)="goList(item)">{{
-                  item.data.title
-                }}</a></span
+                ><a class="text-click" (click)="goList(item)">{{ item.data.title }}</a></span
               >
             </div>
             <div>
-              <button
-                mat-icon-button
-                (click)="goAdd(item)"
-                *ngIf="item.addPath"
-              >
-                <mat-icon aria-label="Example icon-button with a heart icon"
-                  >add_circle</mat-icon
-                >
+              <button mat-icon-button (click)="goAdd(item)" *ngIf="item.addPath">
+                <mat-icon aria-label="Example icon-button with a heart icon">add_circle</mat-icon>
               </button>
             </div>
           </div>

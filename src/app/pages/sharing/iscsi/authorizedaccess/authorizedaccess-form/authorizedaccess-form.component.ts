@@ -76,8 +76,7 @@ export class AuthorizedAccessFormComponent {
         {
           type: "input",
           name: "secret_confirm",
-          placeholder:
-            helptext_sharing_iscsi.authaccess_placeholder_secret_confirm,
+          placeholder: helptext_sharing_iscsi.authaccess_placeholder_secret_confirm,
           inputType: "password",
         },
       ],
@@ -112,8 +111,7 @@ export class AuthorizedAccessFormComponent {
         {
           type: "input",
           name: "peersecret_confirm",
-          placeholder:
-            helptext_sharing_iscsi.authaccess_placeholder_peersecret_confirm,
+          placeholder: helptext_sharing_iscsi.authaccess_placeholder_peersecret_confirm,
           inputType: "password",
         },
       ],
@@ -142,8 +140,7 @@ export class AuthorizedAccessFormComponent {
 
   afterInit(entityForm) {
     const secretControl: FormControl = entityForm.formGroup.controls["secret"];
-    const peersecretControl: FormControl =
-      entityForm.formGroup.controls["peersecret"];
+    const peersecretControl: FormControl = entityForm.formGroup.controls["peersecret"];
     const peeruserFieldset = _.find(this.fieldSets, { class: "peeruser" });
     const peersecretConfig = _.find(peeruserFieldset.config, {
       name: "peersecret",
@@ -177,8 +174,7 @@ export class AuthorizedAccessFormComponent {
             if (errors === null) {
               errors = {
                 manualValidateError: true,
-                manualValidateErrorMsg:
-                  helptext_sharing_iscsi.authaccess_error_duplicate_secrets,
+                manualValidateErrorMsg: helptext_sharing_iscsi.authaccess_error_duplicate_secrets,
               };
             } else {
               errors["manualValidateError"] = true;

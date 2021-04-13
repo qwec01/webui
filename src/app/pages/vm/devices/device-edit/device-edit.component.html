@@ -1,9 +1,5 @@
 <mat-card>
-  <form
-    (ngSubmit)="onSubmit($event)"
-    [formGroup]="formGroup"
-    #entityForm="ngForm"
-  >
+  <form (ngSubmit)="onSubmit($event)" [formGroup]="formGroup" #entityForm="ngForm">
     <div class="mat-card-title" *ngIf="vminfo">
       {{ "Edit" | translate }} {{ vminfo.dtype }} {{ vminfo.id }}
     </div>
@@ -34,11 +30,7 @@
             class="form-line"
           >
             <div *ngFor="let cdromField of fieldSet.cdromFieldConfig">
-              <div
-                dynamicField
-                [config]="cdromField"
-                [group]="cdromFormGroup"
-              ></div>
+              <div dynamicField [config]="cdromField" [group]="cdromFormGroup"></div>
             </div>
           </div>
           <div
@@ -48,11 +40,7 @@
             class="form-line"
           >
             <div *ngFor="let nicField of fieldSet.nicFieldConfig">
-              <div
-                dynamicField
-                [config]="nicField"
-                [group]="nicFormGroup"
-              ></div>
+              <div dynamicField [config]="nicField" [group]="nicFormGroup"></div>
             </div>
           </div>
           <div
@@ -62,11 +50,7 @@
             class="form-line"
           >
             <div *ngFor="let diskField of fieldSet.diskFieldConfig">
-              <div
-                dynamicField
-                [config]="diskField"
-                [group]="diskFormGroup"
-              ></div>
+              <div dynamicField [config]="diskField" [group]="diskFormGroup"></div>
             </div>
           </div>
           <div
@@ -76,11 +60,7 @@
             class="form-line"
           >
             <div *ngFor="let rawfileField of fieldSet.rawfileFieldConfig">
-              <div
-                dynamicField
-                [config]="rawfileField"
-                [group]="rawfileFormGroup"
-              ></div>
+              <div dynamicField [config]="rawfileField" [group]="rawfileFormGroup"></div>
             </div>
           </div>
           <div
@@ -90,11 +70,7 @@
             class="form-line"
           >
             <div *ngFor="let pciField of fieldSet.pciFieldConfig">
-              <div
-                dynamicField
-                [config]="pciField"
-                [group]="pciFormGroup"
-              ></div>
+              <div dynamicField [config]="pciField" [group]="pciFormGroup"></div>
             </div>
           </div>
           <div
@@ -104,11 +80,7 @@
             class="form-line"
           >
             <div *ngFor="let displayField of fieldSet.displayFieldConfig">
-              <div
-                dynamicField
-                [config]="displayField"
-                [group]="displayFormGroup"
-              ></div>
+              <div dynamicField [config]="displayField" [group]="displayFormGroup"></div>
             </div>
           </div>
         </div>

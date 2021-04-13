@@ -74,12 +74,10 @@ export class BootEnvironmentListComponent implements OnDestroy {
   };
 
   preInit() {
-    this.getAdvancedConfig = this.sysGeneralService.getAdvancedConfig.subscribe(
-      (res) => {
-        this.scrub_interval = res.boot_scrub;
-        this.updateBootState();
-      }
-    );
+    this.getAdvancedConfig = this.sysGeneralService.getAdvancedConfig.subscribe((res) => {
+      this.scrub_interval = res.boot_scrub;
+      this.updateBootState();
+    });
   }
 
   dataHandler(entityList: any) {
@@ -135,9 +133,7 @@ export class BootEnvironmentListComponent implements OnDestroy {
       label: T("Clone"),
       id: "clone",
       onClick: (row) => {
-        this._router.navigate(
-          new Array("").concat(["system", "boot", "clone", row.id])
-        );
+        this._router.navigate(new Array("").concat(["system", "boot", "clone", row.id]));
       },
     });
 
@@ -145,9 +141,7 @@ export class BootEnvironmentListComponent implements OnDestroy {
       label: T("Rename"),
       id: "rename",
       onClick: (row) => {
-        this._router.navigate(
-          new Array("").concat(["system", "boot", "rename", row.id])
-        );
+        this._router.navigate(new Array("").concat(["system", "boot", "rename", row.id]));
       },
     });
 
@@ -218,10 +212,7 @@ export class BootEnvironmentListComponent implements OnDestroy {
   getSelectedNames(selectedBootenvs) {
     let selected: any = [];
     for (let i in selectedBootenvs) {
-      if (
-        selectedBootenvs[i].active === "-" ||
-        selectedBootenvs[i].active === ""
-      ) {
+      if (selectedBootenvs[i].active === "-" || selectedBootenvs[i].active === "") {
         selected.push([selectedBootenvs[i].id]);
       }
     }
@@ -265,9 +256,7 @@ export class BootEnvironmentListComponent implements OnDestroy {
   updateBootState(): void {
     this.ws.call("boot.get_state").subscribe((wres) => {
       if (wres.scan.end_time) {
-        this.scrub_msg = this.localeService.formatDateTime(
-          wres.scan.end_time.$date
-        );
+        this.scrub_msg = this.localeService.formatDateTime(wres.scan.end_time.$date);
       } else {
         this.scrub_msg = T("Never");
       }
@@ -276,12 +265,9 @@ export class BootEnvironmentListComponent implements OnDestroy {
       );
       this.condition = wres.properties.health.value;
       if (this.condition === "DEGRADED") {
-        this.condition =
-          this.condition + T(` Check Notifications for more details.`);
+        this.condition = this.condition + T(` Check Notifications for more details.`);
       }
-      this.size_boot = this.storage.convertBytestoHumanReadable(
-        wres.properties.size.parsed
-      );
+      this.size_boot = this.storage.convertBytestoHumanReadable(wres.properties.size.parsed);
       this.percentange = wres.properties.capacity.value;
     });
   }
@@ -300,19 +286,17 @@ export class BootEnvironmentListComponent implements OnDestroy {
             this.loader.open();
             this.loaderOpen = true;
             let data = {};
-            this.busy = this.ws
-              .call(this.wsKeep, [id, { keep: true }])
-              .subscribe(
-                (res) => {
-                  this.entityList.getData();
-                  this.loader.close();
-                  this.entityList.selection.clear();
-                },
-                (res) => {
-                  new EntityUtils().handleWSError(this, res, this.dialog);
-                  this.loader.close();
-                }
-              );
+            this.busy = this.ws.call(this.wsKeep, [id, { keep: true }]).subscribe(
+              (res) => {
+                this.entityList.getData();
+                this.loader.close();
+                this.entityList.selection.clear();
+              },
+              (res) => {
+                new EntityUtils().handleWSError(this, res, this.dialog);
+                this.loader.close();
+              }
+            );
           }
         });
     } else {
@@ -328,19 +312,17 @@ export class BootEnvironmentListComponent implements OnDestroy {
             this.loader.open();
             this.loaderOpen = true;
             let data = {};
-            this.busy = this.ws
-              .call(this.wsKeep, [id, { keep: false }])
-              .subscribe(
-                (res) => {
-                  this.entityList.getData();
-                  this.loader.close();
-                  this.entityList.selection.clear();
-                },
-                (res) => {
-                  new EntityUtils().handleWSError(this, res, this.dialog);
-                  this.loader.close();
-                }
-              );
+            this.busy = this.ws.call(this.wsKeep, [id, { keep: false }]).subscribe(
+              (res) => {
+                this.entityList.getData();
+                this.loader.close();
+                this.entityList.selection.clear();
+              },
+              (res) => {
+                new EntityUtils().handleWSError(this, res, this.dialog);
+                this.loader.close();
+              }
+            );
           }
         });
     }
@@ -351,78 +333,72 @@ export class BootEnvironmentListComponent implements OnDestroy {
       {
         label: T("Stats/Settings"),
         onClick: () => {
-          this.getConfigForActions = this.sysGeneralService.getAdvancedConfig.subscribe(
-            (res) => {
-              this.scrub_interval = res.boot_scrub;
-              let localWS = this.ws,
-                localDialog = this.dialog;
-              let statusConfigFieldConf: FieldConfig[] = [
-                {
-                  type: "paragraph",
-                  name: "condition",
-                  paraText: T(`<b>Boot Pool Condition:</b> ${this.condition}`),
-                },
-                {
-                  type: "paragraph",
-                  name: "size_boot",
-                  paraText: T(`<b>Size:</b> ${this.size_boot}`),
-                },
-                {
-                  type: "paragraph",
-                  name: "size_consumed",
-                  paraText: T(`<b>Used:</b> ${this.size_consumed}`),
-                },
-                {
-                  type: "paragraph",
-                  name: "scrub_msg",
-                  paraText: T(
-                    `<b>Last Scrub Run:</b> ${this.scrub_msg}<br /><br />`
-                  ),
-                },
-                {
-                  type: "input",
-                  name: "new_scrub_interval",
-                  placeholder: T("Scrub interval (in days)"),
-                  inputType: "number",
-                  value: this.scrub_interval,
-                  required: true,
-                },
-              ];
+          this.getConfigForActions = this.sysGeneralService.getAdvancedConfig.subscribe((res) => {
+            this.scrub_interval = res.boot_scrub;
+            let localWS = this.ws,
+              localDialog = this.dialog;
+            let statusConfigFieldConf: FieldConfig[] = [
+              {
+                type: "paragraph",
+                name: "condition",
+                paraText: T(`<b>Boot Pool Condition:</b> ${this.condition}`),
+              },
+              {
+                type: "paragraph",
+                name: "size_boot",
+                paraText: T(`<b>Size:</b> ${this.size_boot}`),
+              },
+              {
+                type: "paragraph",
+                name: "size_consumed",
+                paraText: T(`<b>Used:</b> ${this.size_consumed}`),
+              },
+              {
+                type: "paragraph",
+                name: "scrub_msg",
+                paraText: T(`<b>Last Scrub Run:</b> ${this.scrub_msg}<br /><br />`),
+              },
+              {
+                type: "input",
+                name: "new_scrub_interval",
+                placeholder: T("Scrub interval (in days)"),
+                inputType: "number",
+                value: this.scrub_interval,
+                required: true,
+              },
+            ];
 
-              let statusSettings: DialogFormConfiguration = {
-                title: T("Stats/Settings"),
-                fieldConfig: statusConfigFieldConf,
-                saveButtonText: T("Update Interval"),
-                cancelButtonText: T("Close"),
-                parent: this,
-                customSubmit: function (entityDialog) {
-                  const scrubIntervalValue: number = parseInt(
-                    entityDialog.formValue.new_scrub_interval
-                  );
-                  if (scrubIntervalValue > 0) {
-                    localWS
-                      .call("boot.set_scrub_interval", [scrubIntervalValue])
-                      .subscribe((res) => {
-                        localDialog.closeAllDialogs();
-                        localDialog.Info(
-                          T("Scrub Interval Set"),
-                          T(`Scrub interval set to ${scrubIntervalValue} days`),
-                          "300px",
-                          "info",
-                          true
-                        );
-                      });
-                  } else {
+            let statusSettings: DialogFormConfiguration = {
+              title: T("Stats/Settings"),
+              fieldConfig: statusConfigFieldConf,
+              saveButtonText: T("Update Interval"),
+              cancelButtonText: T("Close"),
+              parent: this,
+              customSubmit: function (entityDialog) {
+                const scrubIntervalValue: number = parseInt(
+                  entityDialog.formValue.new_scrub_interval
+                );
+                if (scrubIntervalValue > 0) {
+                  localWS.call("boot.set_scrub_interval", [scrubIntervalValue]).subscribe((res) => {
+                    localDialog.closeAllDialogs();
                     localDialog.Info(
-                      T("Enter valid value"),
-                      T(scrubIntervalValue + " is not a valid number of days.")
+                      T("Scrub Interval Set"),
+                      T(`Scrub interval set to ${scrubIntervalValue} days`),
+                      "300px",
+                      "info",
+                      true
                     );
-                  }
-                },
-              };
-              this.dialog.dialogForm(statusSettings);
-            }
-          );
+                  });
+                } else {
+                  localDialog.Info(
+                    T("Enter valid value"),
+                    T(scrubIntervalValue + " is not a valid number of days.")
+                  );
+                }
+              },
+            };
+            this.dialog.dialogForm(statusSettings);
+          });
         },
       },
       {
@@ -459,13 +435,7 @@ export class BootEnvironmentListComponent implements OnDestroy {
           this.busy = this.ws.call("boot.scrub").subscribe(
             (res) => {
               this.loader.close();
-              this.dialog.Info(
-                T("Scrub Started"),
-                T(""),
-                "300px",
-                "info",
-                true
-              );
+              this.dialog.Info(T("Scrub Started"), T(""), "300px", "info", true);
             },
             (res) => {
               this.dialog.errorReport(res.error, res.reason, res);

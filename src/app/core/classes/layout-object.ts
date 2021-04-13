@@ -150,11 +150,7 @@ export class LayoutObject {
     this.updateCollectionPositions(0, this.orderedCollection.length - 1);
   }
 
-  private test(
-    animation: string,
-    state: string,
-    animationTarget: DisplayObject
-  ) {
+  private test(animation: string, state: string, animationTarget: DisplayObject) {
     this.messageBus.emit({
       name: "Animate",
       data: {
@@ -201,10 +197,7 @@ export class LayoutObject {
     this.updateCollectionPositions(0, this.collection.length - 1);
   }
 
-  private createLayoutFromArrangement(
-    arrangement?: string,
-    constrain?: boolean
-  ) {
+  private createLayoutFromArrangement(arrangement?: string, constrain?: boolean) {
     if (!constrain) {
       constrain = false;
     }
@@ -226,11 +219,7 @@ export class LayoutObject {
     }
   }
 
-  public moveToScreenPosition(
-    dragTarget: DisplayObject,
-    index: number,
-    debug?: boolean
-  ) {
+  public moveToScreenPosition(dragTarget: DisplayObject, index: number, debug?: boolean) {
     // Move an existing DisplayObject to a new position.
     let startX = dragTarget.x;
     let startY = dragTarget.y;
@@ -322,20 +311,14 @@ export class LayoutObject {
             //console.log("Position changed to " + index);
 
             //let dragTargetIndex:number = Number(newCollection.indexOf(dragTarget));
-            let dragTargetIndex: number = Number(
-              newCollection.indexOf(dragTarget.id)
-            );
+            let dragTargetIndex: number = Number(newCollection.indexOf(dragTarget.id));
             newCollection.splice(dragTargetIndex, 1);
             newCollection.splice(index, 0, dragTarget.id);
 
             if (direction == "up") {
               this.updateCollectionPositions(index, maxIndex, dragTarget);
             } else if (direction == "down") {
-              this.updateCollectionPositions(
-                dragTargetIndex,
-                index,
-                dragTarget
-              );
+              this.updateCollectionPositions(dragTargetIndex, index, dragTarget);
             }
 
             this.updateInteractiveMovement(dragTarget, newCollection, index);
@@ -426,12 +409,7 @@ export class LayoutObject {
     }
   }
 
-  private createScreenPositions(
-    columns: number,
-    total: number,
-    margin: number,
-    dynamic?: boolean
-  ) {
+  private createScreenPositions(columns: number, total: number, margin: number, dynamic?: boolean) {
     //console.log("Creating Rows...")
     if (this.screenPositions.length > 0) {
       this.screenPositions = [];
@@ -495,12 +473,7 @@ export class LayoutObject {
     // a = dragTarget , b = target
     let test: boolean = false;
     const range = 16; // margin of error
-    if (
-      a.x < b.x + range &&
-      a.x > b.x - range &&
-      a.y < b.y + range &&
-      a.y > b.y - range
-    ) {
+    if (a.x < b.x + range && a.x > b.x - range && a.y < b.y + range && a.y > b.y - range) {
       test = true;
     }
     return test;
@@ -516,11 +489,6 @@ export class LayoutObject {
   }
 
   private detectBoxCollision(a, b) {
-    return !(
-      a.bottom < b.top ||
-      a.top > b.bottom ||
-      a.right < b.left ||
-      a.left > b.right
-    );
+    return !(a.bottom < b.top || a.top > b.bottom || a.right < b.left || a.left > b.right);
   }
 }

@@ -23,14 +23,10 @@ import { EntityUtils, NULL_VALUE } from "../../../utils";
 
 @Component({
   selector: "form-select",
-  styleUrls: [
-    "form-select.component.scss",
-    "../dynamic-field/dynamic-field.css",
-  ],
+  styleUrls: ["form-select.component.scss", "../dynamic-field/dynamic-field.css"],
   templateUrl: "./form-select.component.html",
 })
-export class FormSelectComponent
-  implements Field, AfterViewInit, AfterViewChecked {
+export class FormSelectComponent implements Field, AfterViewInit, AfterViewChecked {
   config: FieldConfig;
   group: FormGroup;
   fieldShow: string;
@@ -144,10 +140,7 @@ export class FormSelectComponent
   }
 
   onChangeOption($event) {
-    if (
-      this.config.onChangeOption !== undefined &&
-      this.config.onChangeOption != null
-    ) {
+    if (this.config.onChangeOption !== undefined && this.config.onChangeOption != null) {
       this.config.onChangeOption({ event: $event });
     }
   }
@@ -225,10 +218,7 @@ export class FormSelectComponent
       return;
     }
 
-    if (
-      this.selectedValues.findIndex((v) => v === option.value) >= 0 &&
-      this.config.alert
-    ) {
+    if (this.selectedValues.findIndex((v) => v === option.value) >= 0 && this.config.alert) {
       this.showAlert(option);
     }
     this.group.value[this.config.name] = this.selectedValues;

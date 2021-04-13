@@ -7,10 +7,7 @@
 >
   <label>{{ config.placeholder | translate }}</label>
   <br />
-  <mat-button-toggle-group
-    multiple
-    class="toggle-button-wrap toggle-button-group"
-  >
+  <mat-button-toggle-group multiple class="toggle-button-wrap toggle-button-group">
     <mat-button-toggle
       *ngFor="let option of config.options"
       [value]="option.value"

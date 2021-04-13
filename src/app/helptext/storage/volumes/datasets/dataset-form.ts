@@ -85,9 +85,7 @@ export default {
  available free space."
   ),
 
-  dataset_form_reservation_placeholder: T(
-    "Reserved space for this dataset and all children"
-  ),
+  dataset_form_reservation_placeholder: T("Reserved space for this dataset and all children"),
   dataset_form_reservation_tooltip: T(
     "<i>0</i> is unlimited. A specified value applies to\
  both this dataset and any child datasets."
@@ -106,14 +104,10 @@ export default {
   ),
 
   dataset_form_readonly_placeholder: T("Read-only"),
-  dataset_form_readonly_tooltip: T(
-    "Set to prevent the dataset from being modified."
-  ),
+  dataset_form_readonly_tooltip: T("Set to prevent the dataset from being modified."),
 
   dataset_form_exec_placeholder: T("Exec"),
-  dataset_form_exec_tooltip: T(
-    "Set whether processes can be executed from within this dataset."
-  ),
+  dataset_form_exec_tooltip: T("Set whether processes can be executed from within this dataset."),
 
   dataset_form_snapdir_placeholder: T("Snapshot directory"),
   dataset_form_snapdir_tooltip: T(
@@ -122,9 +116,7 @@ export default {
   ),
 
   dataset_form_copies_placeholder: T("Copies"),
-  dataset_form_copies_tooltip: T(
-    "Set the number of data copies on this dataset."
-  ),
+  dataset_form_copies_tooltip: T("Set the number of data copies on this dataset."),
 
   dataset_form_recordsize_placeholder: T("Record Size"),
   dataset_form_recordsize_tooltip: T(
@@ -158,9 +150,7 @@ export default {
  dataset could require adding <i>--no-perms</i> in the task <i>Auxiliary Parameters</i> field.'
   ),
 
-  dataset_form_dataset_section_placeholder: T(
-    "This Dataset and Child Datasets"
-  ),
+  dataset_form_dataset_section_placeholder: T("This Dataset and Child Datasets"),
   dataset_form_refdataset_section_placeholder: T("This Dataset"),
   dataset_form_name_section_placeholder: T("Name and Options"),
   dataset_form_other_section_placeholder: T("Other Options"),
@@ -168,13 +158,9 @@ export default {
   dataset_form_inherit: T("Inherit"),
   dataset_form_default: T("Default"),
 
-  dataset_form_quota_too_small: T(
-    "Quota size is too small, enter a value of 1 GiB or larger."
-  ),
+  dataset_form_quota_too_small: T("Quota size is too small, enter a value of 1 GiB or larger."),
 
-  dataset_form_special_small_blocks_placeholder: T(
-    "Metadata (Special) Small Block Size"
-  ),
+  dataset_form_special_small_blocks_placeholder: T("Metadata (Special) Small Block Size"),
   dataset_form_special_small_blocks_tooltip: T(
     'This value represents the threshold block size\
  for including small file blocks into the special allocation class. Blocks smaller than or\
@@ -190,9 +176,7 @@ export default {
     inherit_checkbox_placeholder: T("Inherit"),
     inherit_checkbox_notencrypted: T("Inherit (non-encrypted)"),
     inherit_checkbox_encrypted: T("Inherit (encrypted)"),
-    inherit_checkbox_tooltip: T(
-      "Use the encryption properties of the root dataset."
-    ),
+    inherit_checkbox_tooltip: T("Use the encryption properties of the root dataset."),
     encryption_checkbox_placeholder: T("Encryption"),
     encryption_checkbox_tooltip: T(
       "Secure data within this dataset. Data is unusable until \
@@ -239,9 +223,7 @@ export default {
      dataset. Store the encryption key in a secure location."
     ),
     key_placeholder: T("Key"),
-    key_tooltip: T(
-      "Enter or paste a string to use as the encryption key for this dataset."
-    ),
+    key_tooltip: T("Enter or paste a string to use as the encryption key for this dataset."),
     key_validation: [Validators.minLength(64), Validators.maxLength(64)],
     non_encrypted_warning_title: T("Warning"),
     non_encrypted_warning_warning: T(

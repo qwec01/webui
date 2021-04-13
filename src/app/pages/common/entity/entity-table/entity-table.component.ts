@@ -8,32 +8,17 @@ import {
   OnDestroy,
   OnInit,
 } from "@angular/core";
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger,
-} from "@angular/animations";
+import { animate, state, style, transition, trigger } from "@angular/animations";
 import { MatDialog } from "@angular/material/dialog";
 import { MatPaginator } from "@angular/material/paginator";
 import { MatSort } from "@angular/material/sort";
-import {
-  MatTableModule,
-  MatTable,
-  MatTableDataSource,
-} from "@angular/material/table";
+import { MatTableModule, MatTable, MatTableDataSource } from "@angular/material/table";
 import { Router, NavigationStart } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
 import { CoreEvent, CoreService } from "app/core/services/core.service";
 import { PreferencesService } from "app/core/services/preferences.service";
 import * as _ from "lodash";
-import {
-  fromEvent as observableFromEvent,
-  Observable,
-  of,
-  Subscription,
-} from "rxjs";
+import { fromEvent as observableFromEvent, Observable, of, Subscription } from "rxjs";
 import {
   catchError,
   debounceTime,
@@ -150,10 +135,7 @@ const DETAIL_HEIGHT = 24;
     trigger("detailExpand", [
       state("collapsed", style({ height: "0px", minHeight: "0" })),
       state("expanded", style({ height: "*" })),
-      transition(
-        "expanded <=> collapsed",
-        animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)")
-      ),
+      transition("expanded <=> collapsed", animate("225ms cubic-bezier(0.4, 0.0, 0.2, 1)")),
     ]),
   ],
 })
@@ -275,8 +257,7 @@ export class EntityTableComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public hasDetails = () =>
     this.conf.rowDetailComponent ||
-    (this.allColumns.length > 0 &&
-      this.conf.columns.length !== this.allColumns.length);
+    (this.allColumns.length > 0 && this.conf.columns.length !== this.allColumns.length);
 
   public getRowDetailHeight = () =>
     this.hasDetails() && !this.conf.rowDetailComponent
@@ -388,10 +369,8 @@ export class EntityTableComponent implements OnInit, AfterViewInit, OnDestroy {
         this.alwaysDisplayedCols.push(column); // Make an array of required cols
       }
     });
-    this.columnFilter =
-      this.conf.columnFilter === undefined ? true : this.conf.columnFilter;
-    this.showActions =
-      this.conf.showActions === undefined ? true : this.conf.showActions;
+    this.columnFilter = this.conf.columnFilter === undefined ? true : this.conf.columnFilter;
+    this.showActions = this.conf.showActions === undefined ? true : this.conf.showActions;
     this.filterColumns = this.conf.columns;
     this.conf.columns = this.allColumns; // Remove any alwaysDisplayed cols from the official list
 
@@ -404,8 +383,7 @@ export class EntityTableComponent implements OnInit, AfterViewInit, OnDestroy {
 
     setTimeout(
       () => {
-        const preferredCols = this.prefService.preferences
-          .tableDisplayedColumns;
+        const preferredCols = this.prefService.preferences.tableDisplayedColumns;
         // Turn off preferred cols for snapshots to allow for two diffferent column sets to be displayed
         if (preferredCols.length > 0 && this.title !== "Snapshots") {
           preferredCols.forEach((i) => {
@@ -414,23 +392,17 @@ export class EntityTableComponent implements OnInit, AfterViewInit, OnDestroy {
               this.firstUse = false;
               this.conf.columns = i.cols.filter((col) => {
                 // Remove columns if they are already present in always displayed columns
-                return !this.alwaysDisplayedCols.find(
-                  (item) => item.prop === col.prop
-                );
+                return !this.alwaysDisplayedCols.find((item) => item.prop === col.prop);
               });
               // Remove columns from display and preferred cols if they don't exist in the table
               const notFound = [];
               this.conf.columns.forEach((col) => {
-                const found = this.filterColumns.find(
-                  (o) => o.prop === col.prop
-                );
+                const found = this.filterColumns.find((o) => o.prop === col.prop);
                 if (!found) {
                   notFound.push(col.prop);
                 }
               });
-              this.conf.columns = this.conf.columns.filter(
-                (col) => !notFound.includes(col.prop)
-              );
+              this.conf.columns = this.conf.columns.filter((col) => !notFound.includes(col.prop));
               this.selectColumnsToShowOrHide();
             }
           });
@@ -511,15 +483,12 @@ export class EntityTableComponent implements OnInit, AfterViewInit, OnDestroy {
     // Reset all column maxWidths
     this.conf.columns.forEach((column) => {
       if (this.colMaxWidths.length > 0) {
-        column["maxWidth"] = this.colMaxWidths.find(
-          ({ name }) => name === column.name
-        ).maxWidth;
+        column["maxWidth"] = this.colMaxWidths.find(({ name }) => name === column.name).maxWidth;
       }
     });
     // Delete maXwidth on last col displayed (prevents a display glitch)
     if (this.conf.columns.length > 0) {
-      delete this.conf.columns[Object.keys(this.conf.columns).length - 1]
-        .maxWidth;
+      delete this.conf.columns[Object.keys(this.conf.columns).length - 1].maxWidth;
     }
     return this.conf.columns;
   }
@@ -549,19 +518,13 @@ export class EntityTableComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.conf.queryCall) {
       if (this.conf.queryCallJob) {
         if (this.conf.queryCallOption) {
-          this.getFunction = this.ws.job(
-            this.conf.queryCall,
-            this.conf.queryCallOption
-          );
+          this.getFunction = this.ws.job(this.conf.queryCall, this.conf.queryCallOption);
         } else {
           this.getFunction = this.ws.job(this.conf.queryCall, []);
         }
       } else {
         if (this.conf.queryCallOption) {
-          this.getFunction = this.ws.call(
-            this.conf.queryCall,
-            this.conf.queryCallOption
-          );
+          this.getFunction = this.ws.call(this.conf.queryCall, this.conf.queryCallOption);
         } else {
           this.getFunction = this.ws.call(this.conf.queryCall, []);
         }
@@ -634,40 +597,22 @@ export class EntityTableComponent implements OnInit, AfterViewInit, OnDestroy {
     if (res.data) {
       if (typeof this.conf.resourceTransformIncomingRestData !== "undefined") {
         res.data = this.conf.resourceTransformIncomingRestData(res.data);
-        for (const prop of [
-          "schedule",
-          "cron_schedule",
-          "cron",
-          "scrub_schedule",
-        ]) {
+        for (const prop of ["schedule", "cron_schedule", "cron", "scrub_schedule"]) {
           if (
             res.data.length > 0 &&
             res.data[0].hasOwnProperty(prop) &&
             typeof res.data[0][prop] === "string"
           ) {
-            res.data.map(
-              (row) => (row[prop] = new EntityUtils().parseDOW(row[prop]))
-            );
+            res.data.map((row) => (row[prop] = new EntityUtils().parseDOW(row[prop])));
           }
         }
       }
     } else {
       if (typeof this.conf.resourceTransformIncomingRestData !== "undefined") {
         res = this.conf.resourceTransformIncomingRestData(res);
-        for (const prop of [
-          "schedule",
-          "cron_schedule",
-          "cron",
-          "scrub_schedule",
-        ]) {
-          if (
-            res.length > 0 &&
-            res[0].hasOwnProperty(prop) &&
-            typeof res[0][prop] === "string"
-          ) {
-            res.map(
-              (row) => (row[prop] = new EntityUtils().parseDOW(row[prop]))
-            );
+        for (const prop of ["schedule", "cron_schedule", "cron", "scrub_schedule"]) {
+          if (res.length > 0 && res[0].hasOwnProperty(prop) && typeof res[0][prop] === "string") {
+            res.map((row) => (row[prop] = new EntityUtils().parseDOW(row[prop])));
           }
         }
       }
@@ -713,18 +658,14 @@ export class EntityTableComponent implements OnInit, AfterViewInit, OnDestroy {
           type: EmptyType.first_use,
           large: true,
           title: T("No ") + this.title,
-          message:
-            T(`It seems you haven't setup any `) + this.title + T(` yet.`),
+          message: T(`It seems you haven't setup any `) + this.title + T(` yet.`),
         };
       } else {
         this.emptyTableConf = {
           type: EmptyType.no_page_data,
           large: true,
           title: T("No ") + this.title,
-          message:
-            T(`The system could not retrieve any `) +
-            this.title +
-            T(` from the database.`),
+          message: T(`The system could not retrieve any `) + this.title + T(` from the database.`),
         };
       }
       if (!this.conf.noAdd) {
@@ -915,9 +856,7 @@ export class EntityTableComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.conf.doEdit) {
       this.conf.doEdit(id);
     } else {
-      this.router.navigate(
-        new Array("/").concat(this.conf.route_edit).concat(id)
-      );
+      this.router.navigate(new Array("/").concat(this.conf.route_edit).concat(id));
     }
   }
 
@@ -930,10 +869,7 @@ export class EntityTableComponent implements OnInit, AfterViewInit, OnDestroy {
       if (this.conf.config.deleteMsg.key_props.length > 1) {
         for (let i = 1; i < this.conf.config.deleteMsg.key_props.length; i++) {
           if (item[this.conf.config.deleteMsg.key_props[i]] !== "") {
-            msg_content =
-              msg_content +
-              " - " +
-              item[this.conf.config.deleteMsg.key_props[i]];
+            msg_content = msg_content + " - " + item[this.conf.config.deleteMsg.key_props[i]];
           }
         }
       }
@@ -948,8 +884,7 @@ export class EntityTableComponent implements OnInit, AfterViewInit, OnDestroy {
 
   doDelete(item, action?) {
     const deleteMsg =
-      this.conf.confirmDeleteDialog &&
-      this.conf.confirmDeleteDialog.isMessageComplete
+      this.conf.confirmDeleteDialog && this.conf.confirmDeleteDialog.isMessageComplete
         ? ""
         : this.getDeleteMessage(item, action);
 
@@ -968,29 +903,20 @@ export class EntityTableComponent implements OnInit, AfterViewInit, OnDestroy {
       dialog.button = dialog.buttonMsg(item);
     }
 
-    if (
-      this.conf.config.deleteMsg &&
-      this.conf.config.deleteMsg.doubleConfirm
-    ) {
+    if (this.conf.config.deleteMsg && this.conf.config.deleteMsg.doubleConfirm) {
       // double confirm: input delete item's name to confirm deletion
-      this.conf.config.deleteMsg
-        .doubleConfirm(item)
-        .subscribe((doubleConfirmDialog) => {
-          if (doubleConfirmDialog) {
-            this.toDeleteRow = item;
-            this.delete(id);
-          }
-        });
+      this.conf.config.deleteMsg.doubleConfirm(item).subscribe((doubleConfirmDialog) => {
+        if (doubleConfirmDialog) {
+          this.toDeleteRow = item;
+          this.delete(id);
+        }
+      });
     } else {
       this.dialogService
         .confirm(
           dialog.hasOwnProperty("title") ? dialog["title"] : T("Delete"),
-          dialog.hasOwnProperty("message")
-            ? dialog["message"] + deleteMsg
-            : deleteMsg,
-          dialog.hasOwnProperty("hideCheckbox")
-            ? dialog["hideCheckbox"]
-            : false,
+          dialog.hasOwnProperty("message") ? dialog["message"] + deleteMsg : deleteMsg,
+          dialog.hasOwnProperty("hideCheckbox") ? dialog["hideCheckbox"] : false,
           dialog.hasOwnProperty("button") ? dialog["button"] : T("Delete")
         )
         .subscribe((res) => {
@@ -1009,9 +935,7 @@ export class EntityTableComponent implements OnInit, AfterViewInit, OnDestroy {
     this.busy = this.ws
       .call(
         this.conf.wsDelete,
-        this.conf.wsDeleteParams
-          ? this.conf.wsDeleteParams(this.toDeleteRow, id)
-          : [id]
+        this.conf.wsDeleteParams ? this.conf.wsDeleteParams(this.toDeleteRow, id) : [id]
       )
       .subscribe(
         (resinner) => {
@@ -1044,9 +968,7 @@ export class EntityTableComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.dialogService
       .confirm(
         dialog.hasOwnProperty("title") ? dialog["title"] : T("Delete"),
-        dialog.hasOwnProperty("message")
-          ? dialog["message"] + deleteMsg
-          : deleteMsg,
+        dialog.hasOwnProperty("message") ? dialog["message"] + deleteMsg : deleteMsg,
         dialog.hasOwnProperty("hideCheckbox") ? dialog["hideCheckbox"] : false,
         dialog.hasOwnProperty("button") ? dialog["button"] : T("Delete")
       )
@@ -1060,18 +982,12 @@ export class EntityTableComponent implements OnInit, AfterViewInit, OnDestroy {
           this.ws
             .call(
               this.conf.wsDelete,
-              this.conf.wsDeleteParams
-                ? this.conf.wsDeleteParams(this.toDeleteRow, id)
-                : [id]
+              this.conf.wsDeleteParams ? this.conf.wsDeleteParams(this.toDeleteRow, id) : [id]
             )
             .pipe(
               take(1),
               catchError((error) => {
-                new EntityUtils().handleWSError(
-                  this,
-                  error,
-                  this.dialogService
-                );
+                new EntityUtils().handleWSError(this, error, this.dialogService);
                 this.loader.close();
                 return of(false);
               })
@@ -1110,34 +1026,24 @@ export class EntityTableComponent implements OnInit, AfterViewInit, OnDestroy {
   getMultiDeleteMessage(items) {
     let deleteMsg = "Delete the selected items?";
     if (this.conf.config.deleteMsg) {
-      deleteMsg =
-        "Delete selected " + this.conf.config.deleteMsg.title + "(s)?";
+      deleteMsg = "Delete selected " + this.conf.config.deleteMsg.title + "(s)?";
       let msg_content = "<ul>";
       for (let j = 0; j < items.length; j++) {
         let sub_msg_content;
         if (this.conf.config.deleteMsg.key_props.length > 1) {
           sub_msg_content =
-            "<li><strong>" +
-            items[j][this.conf.config.deleteMsg.key_props[0]] +
-            "</strong>";
+            "<li><strong>" + items[j][this.conf.config.deleteMsg.key_props[0]] + "</strong>";
           sub_msg_content += '<ul class="nested-list">';
 
-          for (
-            let i = 1;
-            i < this.conf.config.deleteMsg.key_props.length;
-            i++
-          ) {
+          for (let i = 1; i < this.conf.config.deleteMsg.key_props.length; i++) {
             if (items[j][this.conf.config.deleteMsg.key_props[i]] != "") {
               sub_msg_content +=
-                "<li>" +
-                items[j][this.conf.config.deleteMsg.key_props[i]] +
-                "</li>";
+                "<li>" + items[j][this.conf.config.deleteMsg.key_props[i]] + "</li>";
             }
           }
           sub_msg_content += "</ul>";
         } else {
-          sub_msg_content =
-            "<li>" + items[j][this.conf.config.deleteMsg.key_props[0]];
+          sub_msg_content = "<li>" + items[j][this.conf.config.deleteMsg.key_props[0]];
         }
 
         sub_msg_content += "</li>";
@@ -1154,77 +1060,57 @@ export class EntityTableComponent implements OnInit, AfterViewInit, OnDestroy {
 
   doMultiDelete(selected) {
     const multiDeleteMsg = this.getMultiDeleteMessage(selected);
-    this.dialogService
-      .confirm("Delete", multiDeleteMsg, false, T("Delete"))
-      .subscribe((res) => {
-        if (res) {
-          this.loader.open();
-          this.loaderOpen = true;
-          if (this.conf.wsMultiDelete) {
-            // ws to do multi-delete
-            if (this.conf.wsMultiDeleteParams) {
-              this.busy = this.ws
-                .job(
-                  this.conf.wsMultiDelete,
-                  this.conf.wsMultiDeleteParams(selected)
-                )
-                .subscribe(
-                  (res1) => {
-                    if (res1.state === "SUCCESS") {
-                      this.loader.close();
-                      this.loaderOpen = false;
-                      this.getData();
-                      //this.selected = [];
-                      this.selection.clear();
-
-                      const selectedName = this.conf.wsMultiDeleteParams(
-                        selected
-                      )[1];
-                      let message = "";
-                      for (let i = 0; i < res1.result.length; i++) {
-                        if (res1.result[i].error != null) {
-                          message =
-                            message +
-                            "<li>" +
-                            selectedName[i] +
-                            ": " +
-                            res1.result[i].error +
-                            "</li>";
-                        }
-                      }
-                      if (message === "") {
-                        this.dialogService.Info(
-                          T("Items deleted"),
-                          "",
-                          "300px",
-                          "info",
-                          true
-                        );
-                      } else {
-                        message = "<ul>" + message + "</ul>";
-                        this.dialogService.errorReport(
-                          T("Items Delete Failed"),
-                          message
-                        );
-                      }
-                    }
-                  },
-                  (res1) => {
-                    new EntityUtils().handleWSError(
-                      this,
-                      res1,
-                      this.dialogService
-                    );
+    this.dialogService.confirm("Delete", multiDeleteMsg, false, T("Delete")).subscribe((res) => {
+      if (res) {
+        this.loader.open();
+        this.loaderOpen = true;
+        if (this.conf.wsMultiDelete) {
+          // ws to do multi-delete
+          if (this.conf.wsMultiDeleteParams) {
+            this.busy = this.ws
+              .job(this.conf.wsMultiDelete, this.conf.wsMultiDeleteParams(selected))
+              .subscribe(
+                (res1) => {
+                  if (res1.state === "SUCCESS") {
                     this.loader.close();
                     this.loaderOpen = false;
+                    this.getData();
+                    //this.selected = [];
+                    this.selection.clear();
+
+                    const selectedName = this.conf.wsMultiDeleteParams(selected)[1];
+                    let message = "";
+                    for (let i = 0; i < res1.result.length; i++) {
+                      if (res1.result[i].error != null) {
+                        message =
+                          message +
+                          "<li>" +
+                          selectedName[i] +
+                          ": " +
+                          res1.result[i].error +
+                          "</li>";
+                      }
+                    }
+                    if (message === "") {
+                      this.dialogService.Info(T("Items deleted"), "", "300px", "info", true);
+                    } else {
+                      message = "<ul>" + message + "</ul>";
+                      this.dialogService.errorReport(T("Items Delete Failed"), message);
+                    }
                   }
-                );
-            }
-          } else {
-            // rest to do multi-delete
+                },
+                (res1) => {
+                  new EntityUtils().handleWSError(this, res1, this.dialogService);
+                  this.loader.close();
+                  this.loaderOpen = false;
+                }
+              );
           }
+        } else {
+          // rest to do multi-delete
         }
-      });
+      }
+    });
   }
 
   // Next section operates the checkboxes to show/hide columns
@@ -1376,9 +1262,7 @@ export class EntityTableComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getFirstKey(obj) {
-    return this.conf.config.multiSelect
-      ? this.currentColumns[1].prop
-      : this.currentColumns[0].prop;
+    return this.conf.config.multiSelect ? this.currentColumns[1].prop : this.currentColumns[0].prop;
   }
 
   onHover(evt, over = true) {

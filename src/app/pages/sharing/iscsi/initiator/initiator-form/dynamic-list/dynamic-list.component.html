@@ -47,10 +47,7 @@
     <div fxLayout="row">
       <div class="dynamic-list">
         <mat-list class="dynamic-list">
-          <mat-list-item
-            *ngFor="let item of this.listControl.value"
-            class="dynamic-list"
-          >
+          <mat-list-item *ngFor="let item of this.listControl.value" class="dynamic-list">
             <label mat-line class="dynamic-list-item">{{ item }}</label>
             <button
               ix-auto

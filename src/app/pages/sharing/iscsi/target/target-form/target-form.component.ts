@@ -3,11 +3,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
 import * as _ from "lodash";
 
-import {
-  IscsiService,
-  WebSocketService,
-  AppLoaderService,
-} from "../../../../../services/";
+import { IscsiService, WebSocketService, AppLoaderService } from "../../../../../services/";
 import { EntityUtils } from "../../../../common/entity/utils";
 import { helptext_sharing_iscsi } from "app/helptext/sharing";
 import { FieldSet } from "../../../../common/entity/entity-form/models/fieldset.interface";
@@ -84,8 +80,7 @@ export class TargetFormComponent {
             {
               type: "select",
               name: "portal",
-              placeholder:
-                helptext_sharing_iscsi.target_form_placeholder_portal,
+              placeholder: helptext_sharing_iscsi.target_form_placeholder_portal,
               tooltip: helptext_sharing_iscsi.target_form_tooltip_portal,
               value: "",
               options: [],
@@ -97,8 +92,7 @@ export class TargetFormComponent {
             {
               type: "select",
               name: "initiator",
-              placeholder:
-                helptext_sharing_iscsi.target_form_placeholder_initiator,
+              placeholder: helptext_sharing_iscsi.target_form_placeholder_initiator,
               tooltip: helptext_sharing_iscsi.target_form_tooltip_initiator,
               value: null,
               options: [],
@@ -108,8 +102,7 @@ export class TargetFormComponent {
             {
               type: "select",
               name: "authmethod",
-              placeholder:
-                helptext_sharing_iscsi.target_form_placeholder_authmethod,
+              placeholder: helptext_sharing_iscsi.target_form_placeholder_authmethod,
               tooltip: helptext_sharing_iscsi.target_form_tooltip_authmethod,
               value: "NONE",
               options: [

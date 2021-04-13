@@ -2,12 +2,7 @@ import { Component, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
 import { T } from "../../../../translate-marker";
-import {
-  DialogService,
-  StorageService,
-  ValidationService,
-  UserService,
-} from "app/services";
+import { DialogService, StorageService, ValidationService, UserService } from "app/services";
 import { AppLoaderService } from "../../../../services/app-loader/app-loader.service";
 import { WebSocketService } from "../../../../services/ws.service";
 import { PreferencesService } from "app/core/services/preferences.service";
@@ -137,11 +132,9 @@ export class UserListComponent implements OnDestroy {
       }
     }, 2000);
 
-    this.refreshTableSubscription = this.modalService.refreshTable$.subscribe(
-      () => {
-        this.entityList.getData();
-      }
-    );
+    this.refreshTableSubscription = this.modalService.refreshTable$.subscribe(() => {
+      this.entityList.getData();
+    });
   }
   getActions(row) {
     const actions = [];
@@ -151,11 +144,7 @@ export class UserListComponent implements OnDestroy {
       label: helptext.user_list_actions_edit_label,
       name: helptext.user_list_actions_edit_id,
       onClick: (users_edit) => {
-        this.modalService.open(
-          "slide-in-form",
-          this.addComponent,
-          users_edit.id
-        );
+        this.modalService.open("slide-in-form", this.addComponent, users_edit.id);
       },
     });
     if (row.builtin !== true) {
@@ -168,8 +157,7 @@ export class UserListComponent implements OnDestroy {
           const self = this;
           const conf: DialogFormConfiguration = {
             title: helptext.deleteDialog.title,
-            message:
-              helptext.deleteDialog.message + `<i>${users_edit.username}</i>?`,
+            message: helptext.deleteDialog.message + `<i>${users_edit.username}</i>?`,
             fieldConfig: [],
             confirmCheckbox: true,
             saveButtonText: helptext.deleteDialog.saveButtonText,
@@ -179,8 +167,7 @@ export class UserListComponent implements OnDestroy {
                   type: "checkbox",
                   name: "delete_group",
                   placeholder:
-                    helptext.deleteDialog.deleteGroup_placeholder +
-                    users_edit.group.bsdgrp_group,
+                    helptext.deleteDialog.deleteGroup_placeholder + users_edit.group.bsdgrp_group,
                   value: false,
                 });
               }
@@ -188,22 +175,16 @@ export class UserListComponent implements OnDestroy {
             customSubmit: function (entityDialog) {
               entityDialog.dialogRef.close(true);
               self.loader.open();
-              self.ws
-                .call(self.wsDelete, [users_edit.id, entityDialog.formValue])
-                .subscribe(
-                  (res) => {
-                    self.entityList.getData();
-                    self.loader.close();
-                  },
-                  (err) => {
-                    new EntityUtils().handleWSError(
-                      self,
-                      err,
-                      self.dialogService
-                    );
-                    self.loader.close();
-                  }
-                );
+              self.ws.call(self.wsDelete, [users_edit.id, entityDialog.formValue]).subscribe(
+                (res) => {
+                  self.entityList.getData();
+                  self.loader.close();
+                },
+                (err) => {
+                  new EntityUtils().handleWSError(self, err, self.dialogService);
+                  self.loader.close();
+                }
+              );
             },
           };
           this.dialogService.dialogForm(conf);
@@ -266,25 +247,21 @@ export class UserListComponent implements OnDestroy {
       ? (show = helptext.builtins_dialog.show)
       : (show = helptext.builtins_dialog.hide);
     this.translate.get(show).subscribe((action: string) => {
-      this.translate
-        .get(helptext.builtins_dialog.title)
-        .subscribe((title: string) => {
-          this.translate
-            .get(helptext.builtins_dialog.message)
-            .subscribe((message: string) => {
-              this.dialogService
-                .confirm(action + title, action + message, true, action)
-                .subscribe((res) => {
-                  if (res) {
-                    this.prefService.preferences.hide_builtin_users = !this
-                      .prefService.preferences.hide_builtin_users;
-                    this.prefService.savePreferences();
-                    this.entityList.needTableResize = false;
-                    this.entityList.getData();
-                  }
-                });
+      this.translate.get(helptext.builtins_dialog.title).subscribe((title: string) => {
+        this.translate.get(helptext.builtins_dialog.message).subscribe((message: string) => {
+          this.dialogService
+            .confirm(action + title, action + message, true, action)
+            .subscribe((res) => {
+              if (res) {
+                this.prefService.preferences.hide_builtin_users = !this.prefService.preferences
+                  .hide_builtin_users;
+                this.prefService.savePreferences();
+                this.entityList.needTableResize = false;
+                this.entityList.getData();
+              }
             });
         });
+      });
     });
   }
 

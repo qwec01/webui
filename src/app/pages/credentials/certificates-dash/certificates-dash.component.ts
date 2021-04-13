@@ -113,10 +113,7 @@ export class CertificatesDashComponent implements OnInit, OnDestroy {
           ],
           parent: this,
           add: function () {
-            this.parent.modalService.open(
-              "slide-in-form",
-              this.parent.certificateAddComponent
-            );
+            this.parent.modalService.open("slide-in-form", this.parent.certificateAddComponent);
           },
           edit: function (row) {
             this.parent.modalService.open(
@@ -234,17 +231,10 @@ export class CertificatesDashComponent implements OnInit, OnDestroy {
           ],
           parent: this,
           add: function () {
-            this.parent.modalService.open(
-              "slide-in-form",
-              this.parent.acmeDNSComponent
-            );
+            this.parent.modalService.open("slide-in-form", this.parent.acmeDNSComponent);
           },
           edit: function (row) {
-            this.parent.modalService.open(
-              "slide-in-form",
-              this.parent.acmeDNSComponent,
-              row.id
-            );
+            this.parent.modalService.open("slide-in-form", this.parent.acmeDNSComponent, row.id);
           },
         },
       },
@@ -330,64 +320,48 @@ export class CertificatesDashComponent implements OnInit, OnDestroy {
         name: "download",
 
         onClick: (rowinner) => {
-          const path = rowinner.CSR
-            ? rowinner.csr_path
-            : rowinner.certificate_path;
+          const path = rowinner.CSR ? rowinner.csr_path : rowinner.certificate_path;
           const fileName = rowinner.name + ".crt"; // what about for a csr?
-          this.ws
-            .call("core.download", ["filesystem.get", [path], fileName])
-            .subscribe(
-              (res) => {
-                const url = res[1];
-                const mimetype = "application/x-x509-user-cert";
-                this.storage
-                  .streamDownloadFile(this.http, url, fileName, mimetype)
-                  .subscribe(
-                    (file) => {
-                      this.storage.downloadBlob(file, fileName);
-                    },
-                    (err) => {
-                      this.dialogService.errorReport(
-                        helptext_system_certificates.list.download_error_dialog
-                          .title,
-                        helptext_system_certificates.list.download_error_dialog
-                          .cert_message,
-                        `${err.status} - ${err.statusText}`
-                      );
-                    }
+          this.ws.call("core.download", ["filesystem.get", [path], fileName]).subscribe(
+            (res) => {
+              const url = res[1];
+              const mimetype = "application/x-x509-user-cert";
+              this.storage.streamDownloadFile(this.http, url, fileName, mimetype).subscribe(
+                (file) => {
+                  this.storage.downloadBlob(file, fileName);
+                },
+                (err) => {
+                  this.dialogService.errorReport(
+                    helptext_system_certificates.list.download_error_dialog.title,
+                    helptext_system_certificates.list.download_error_dialog.cert_message,
+                    `${err.status} - ${err.statusText}`
                   );
-              },
-              (err) => {
-                new EntityUtils().handleWSError(this, err, this.dialog);
-              }
-            );
+                }
+              );
+            },
+            (err) => {
+              new EntityUtils().handleWSError(this, err, this.dialog);
+            }
+          );
           const keyName = rowinner.name + ".key";
           this.ws
-            .call("core.download", [
-              "filesystem.get",
-              [rowinner.privatekey_path],
-              keyName,
-            ])
+            .call("core.download", ["filesystem.get", [rowinner.privatekey_path], keyName])
             .subscribe(
               (res) => {
                 const url = res[1];
                 const mimetype = "text/plain";
-                this.storage
-                  .streamDownloadFile(this.http, url, keyName, mimetype)
-                  .subscribe(
-                    (file) => {
-                      this.storage.downloadBlob(file, keyName);
-                    },
-                    (err) => {
-                      this.dialogService.errorReport(
-                        helptext_system_certificates.list.download_error_dialog
-                          .title,
-                        helptext_system_certificates.list.download_error_dialog
-                          .key_message,
-                        `${err.status} - ${err.statusText}`
-                      );
-                    }
-                  );
+                this.storage.streamDownloadFile(this.http, url, keyName, mimetype).subscribe(
+                  (file) => {
+                    this.storage.downloadBlob(file, keyName);
+                  },
+                  (err) => {
+                    this.dialogService.errorReport(
+                      helptext_system_certificates.list.download_error_dialog.title,
+                      helptext_system_certificates.list.download_error_dialog.key_message,
+                      `${err.status} - ${err.statusText}`
+                    );
+                  }
+                );
               },
               (err) => {
                 new EntityUtils().handleWSError(this, err, this.dialog);
@@ -407,11 +381,7 @@ export class CertificatesDashComponent implements OnInit, OnDestroy {
       name: "create_ACME",
       matTooltip: T("Create ACME Certificate"),
       onClick: (rowinner) => {
-        this.modalService.open(
-          "slide-in-form",
-          this.acmeAddComponent,
-          rowinner.id
-        );
+        this.modalService.open("slide-in-form", this.acmeAddComponent, rowinner.id);
         event.stopPropagation();
       },
     };
@@ -475,23 +445,17 @@ export class CertificatesDashComponent implements OnInit, OnDestroy {
       name: entityDialog.formGroup.controls.name.value,
     };
     entityDialog.loader.open();
-    entityDialog.ws
-      .call("certificateauthority.ca_sign_csr", [payload])
-      .subscribe(
-        () => {
-          entityDialog.loader.close();
-          self.dialogService.closeAllDialogs();
-          self.getCards();
-        },
-        (err) => {
-          entityDialog.loader.close();
-          self.dialogService.errorReport(
-            helptext_system_ca.error,
-            err.reason,
-            err.trace.formatted
-          );
-        }
-      );
+    entityDialog.ws.call("certificateauthority.ca_sign_csr", [payload]).subscribe(
+      () => {
+        entityDialog.loader.close();
+        self.dialogService.closeAllDialogs();
+        self.getCards();
+      },
+      (err) => {
+        entityDialog.loader.close();
+        self.dialogService.errorReport(helptext_system_ca.error, err.reason, err.trace.formatted);
+      }
+    );
   }
 
   ngOnDestroy() {

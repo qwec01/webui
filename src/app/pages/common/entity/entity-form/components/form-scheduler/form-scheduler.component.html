@@ -11,8 +11,7 @@
 >
   <div class="label-container">
     <mat-label class="label input-text"
-      >{{ config.placeholder }}
-      <span *ngIf="config.required">*</span></mat-label
+      >{{ config.placeholder }} <span *ngIf="config.required">*</span></mat-label
     >
     <tooltip
       *ngIf="config.tooltip"
@@ -48,10 +47,7 @@
     </mat-select>
   </mat-form-field>
   <div class="margin-for-error">
-    <form-errors
-      [control]="group.controls[config.name]"
-      [config]="config"
-    ></form-errors>
+    <form-errors [control]="group.controls[config.name]" [config]="config"></form-errors>
     <mat-error *ngIf="config['hasErrors']">{{ config["errors"] }}</mat-error>
   </div>
 
@@ -69,14 +65,8 @@
         <h4 class="preview-label">
           {{ "Schedule Preview" | translate }}
           <div class="controls">
-            <button
-              mat-icon-button
-              [disabled]="disablePrevious"
-              (click)="setCalendar('previous')"
-            >
-              <mat-icon aria-label="Previous Month"
-                >keyboard_arrow_left</mat-icon
-              >
+            <button mat-icon-button [disabled]="disablePrevious" (click)="setCalendar('previous')">
+              <mat-icon aria-label="Previous Month">keyboard_arrow_left</mat-icon>
             </button>
             <button mat-icon-button (click)="setCalendar('next')">
               <mat-icon aria-label="Next Month">keyboard_arrow_right</mat-icon>
@@ -133,9 +123,7 @@
             </h4>
           </div>
           <div id="no-spaces">
-            ({{
-              "Separate values with commas, and without spaces." | translate
-            }})
+            ({{ "Separate values with commas, and without spaces." | translate }})
           </div>
 
           <div class="form-element" *ngIf="!config.noMinutes">

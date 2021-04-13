@@ -15,18 +15,8 @@ export class RSYNCconfigurationListComponent {
   public busy: Subscription;
   public wsDelete = "rsyncmod.delete";
   protected route_add: string[] = ["services", "rsync", "rsync-module", "add"];
-  protected route_edit: string[] = [
-    "services",
-    "rsync",
-    "rsync-module",
-    "edit",
-  ];
-  protected route_delete: string[] = [
-    "services",
-    "rsync",
-    "rsync-module",
-    "delete",
-  ];
+  protected route_edit: string[] = ["services", "rsync", "rsync-module", "edit"];
+  protected route_delete: string[] = ["services", "rsync", "rsync-module", "delete"];
 
   public columns: Array<any> = [
     { name: T("Name"), prop: "name" },

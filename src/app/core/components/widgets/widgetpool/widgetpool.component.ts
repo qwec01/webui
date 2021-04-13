@@ -172,16 +172,14 @@ export class WidgetPoolComponent
       let unhealthy = []; // Disks with errors
       this.poolState.topology.data.forEach((item) => {
         if (item.type == "DISK") {
-          let diskErrors =
-            item.read_errors + item.write_errors + item.checksum_errors;
+          let diskErrors = item.read_errors + item.write_errors + item.checksum_errors;
 
           if (diskErrors > 0) {
             unhealthy.push(item.disk);
           }
         } else {
           item.children.forEach((device) => {
-            let diskErrors =
-              device.read_errors + device.write_errors + device.checksum_errors;
+            let diskErrors = device.read_errors + device.write_errors + device.checksum_errors;
 
             if (diskErrors > 0) {
               unhealthy.push(device.disk);
@@ -269,9 +267,7 @@ export class WidgetPoolComponent
       .subscribe((evt: CoreEvent) => {
         this.currentMultipathDetails = evt.data[0];
 
-        const activeDisk = evt.data[0].children.filter(
-          (prop) => prop.status == "ACTIVE"
-        );
+        const activeDisk = evt.data[0].children.filter((prop) => prop.status == "ACTIVE");
         this.core.emit({
           name: "DisksRequest",
           data: [[["name", "=", activeDisk[0].name]]],
@@ -282,27 +278,17 @@ export class WidgetPoolComponent
       .register({ observerClass: this, eventName: "DisksData" })
       .subscribe((evt: CoreEvent) => {
         let currentName =
-          this.path[this.currentSlideIndex] &&
-          this.path[this.currentSlideIndex].dataSource
+          this.path[this.currentSlideIndex] && this.path[this.currentSlideIndex].dataSource
             ? this.currentMultipathDetails
-              ? this.checkMultipathLabel(
-                  this.path[this.currentSlideIndex].dataSource.disk
-                )
+              ? this.checkMultipathLabel(this.path[this.currentSlideIndex].dataSource.disk)
               : this.path[this.currentSlideIndex].dataSource.disk
               ? this.path[this.currentSlideIndex].dataSource.disk
               : "unknown"
             : "unknown";
 
-        if (
-          (!currentName || currentName === "unknown") &&
-          evt.data.length == 0
-        ) {
+        if ((!currentName || currentName === "unknown") && evt.data.length == 0) {
           this.currentDiskDetails = null;
-        } else if (
-          currentName &&
-          evt.data.length > 0 &&
-          currentName === evt.data[0].name
-        ) {
+        } else if (currentName && evt.data.length > 0 && currentName === evt.data[0].name) {
           delete evt.data[0].enclosure;
           delete evt.data[0].name;
           delete evt.data[0].devname;
@@ -359,9 +345,7 @@ export class WidgetPoolComponent
       data: [availableValue],
     };
 
-    let percentage = this.volumeData.used_pct
-      ? this.volumeData.used_pct.split("%")
-      : "";
+    let percentage = this.volumeData.used_pct ? this.volumeData.used_pct.split("%") : "";
     this.core.emit({ name: "PoolDisksRequest", data: [this.poolState.id] });
 
     this.displayValue = (<any>window).filesize(this.volumeData.avail, {
@@ -369,14 +353,10 @@ export class WidgetPoolComponent
     });
     if (this.displayValue.slice(-2) === " B") {
       this.diskSizeLabel = this.displayValue.slice(-1);
-      this.diskSize = new Intl.NumberFormat().format(
-        parseFloat(this.displayValue.slice(0, -2))
-      );
+      this.diskSize = new Intl.NumberFormat().format(parseFloat(this.displayValue.slice(0, -2)));
     } else {
       this.diskSizeLabel = this.displayValue.slice(-3);
-      this.diskSize = new Intl.NumberFormat().format(
-        parseFloat(this.displayValue.slice(0, -4))
-      );
+      this.diskSize = new Intl.NumberFormat().format(parseFloat(this.displayValue.slice(0, -4)));
     }
     // Adds a zero to numbers with one (and only one) digit after the decimal
     if (
@@ -453,11 +433,8 @@ export class WidgetPoolComponent
     if (name !== "overview" && !verified) {
       return;
     }
-    const dataSource = vdev
-      ? vdev
-      : { children: this.poolState.topology[topology] };
-    const direction =
-      parseInt(this.currentSlide) < slideIndex ? "forward" : "back";
+    const dataSource = vdev ? vdev : { children: this.poolState.topology[topology] };
+    const direction = parseInt(this.currentSlide) < slideIndex ? "forward" : "back";
     if (direction == "forward") {
       // Setup next path segment
       let slide: Slide = {
@@ -485,9 +462,7 @@ export class WidgetPoolComponent
       return;
     }
 
-    const carousel = this.carouselParent.nativeElement.querySelector(
-      ".carousel"
-    );
+    const carousel = this.carouselParent.nativeElement.querySelector(".carousel");
     const slide = this.carouselParent.nativeElement.querySelector(".slide");
 
     let el = styler(carousel);
@@ -511,44 +486,24 @@ export class WidgetPoolComponent
       case "HEALTHY":
         break;
       case "LOCKED":
-        this.updateVolumeHealth(
-          "Pool status is " + this.poolState.status,
-          false,
-          "locked"
-        );
+        this.updateVolumeHealth("Pool status is " + this.poolState.status, false, "locked");
         break;
       case "UNKNOWN":
       case "OFFLINE":
-        this.updateVolumeHealth(
-          "Pool status is " + this.poolState.status,
-          false,
-          "unknown"
-        );
+        this.updateVolumeHealth("Pool status is " + this.poolState.status, false, "unknown");
         break;
       case "DEGRADED":
-        this.updateVolumeHealth(
-          "Pool status is " + this.poolState.status,
-          false,
-          "degraded"
-        );
+        this.updateVolumeHealth("Pool status is " + this.poolState.status, false, "degraded");
         break;
       case "FAULTED":
       case "UNAVAIL":
       case "REMOVED":
-        this.updateVolumeHealth(
-          "Pool status is " + this.poolState.status,
-          true,
-          "faulted"
-        );
+        this.updateVolumeHealth("Pool status is " + this.poolState.status, true, "faulted");
         break;
     }
   }
 
-  updateVolumeHealth(
-    symptom: string,
-    isCritical?: boolean,
-    condition?: string
-  ) {
+  updateVolumeHealth(symptom: string, isCritical?: boolean, condition?: string) {
     if (isCritical) {
       this.poolHealth.errors.push(symptom);
     } else {

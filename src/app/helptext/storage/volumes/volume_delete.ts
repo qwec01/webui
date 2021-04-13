@@ -11,12 +11,8 @@ export default {
  this pool when the detach operation is confirmed."
   ),
 
-  volume_delete_confirm_detach_checkbox_label: T(
-    "Confirm it is okay to proceed with Detach."
-  ),
+  volume_delete_confirm_detach_checkbox_label: T("Confirm it is okay to proceed with Detach."),
   volume_delete_confirm_detach_checkbox_placeholder: T("Confirm detach"),
-  volume_delete_confirm_detach_checkbox_tooltip: T(
-    "Set to confirm detaching the pool."
-  ),
+  volume_delete_confirm_detach_checkbox_tooltip: T("Set to confirm detaching the pool."),
   volume_delete_confirm_detach_checkbox_validation: [Validators.required],
 };

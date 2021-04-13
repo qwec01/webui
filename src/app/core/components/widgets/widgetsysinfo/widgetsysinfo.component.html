@@ -8,12 +8,7 @@
   }"
 >
   <div class="card-container front">
-    <mat-card
-      class="front"
-      fxLayout="row"
-      fxLayoutWrap
-      fxLayoutAlign="space-between stretch"
-    >
+    <mat-card class="front" fxLayout="row" fxLayoutWrap fxLayoutAlign="space-between stretch">
       <mat-card-content
         fxLayout="row wrap"
         fxLayout.gt-xs="row wrap"
@@ -45,10 +40,8 @@
               fxFlex.xs="250px"
               fxFlex="40"
               [ngClass]="{
-                'fn-theme-contrast-lighter':
-                  themeService.activeTheme == themeService.defaultTheme,
-                'fn-theme-primary':
-                  themeService.activeTheme != themeService.defaultTheme
+                'fn-theme-contrast-lighter': themeService.activeTheme == themeService.defaultTheme,
+                'fn-theme-primary': themeService.activeTheme != themeService.defaultTheme
               }"
               class="left {{ isPassive ? 'passive' : 'active' }}"
               fxLayout="column"
@@ -61,15 +54,10 @@
                 mat-icon-button
                 color="default"
               >
-                <mat-icon (click)="goBack()" class="back-arrow"
-                  >chevron_left</mat-icon
-                >
+                <mat-icon (click)="goBack()" class="back-arrow">chevron_left</mat-icon>
               </button>
 
-              <div
-                class="platform-logo-wrapper {{ product_type.toLowerCase() }}"
-                fxFlex="20"
-              >
+              <div class="platform-logo-wrapper {{ product_type.toLowerCase() }}" fxFlex="20">
                 <ng-container *ngIf="product_image || isPassive; else textOnly">
                   <mat-icon
                     *ngIf="retroLogo == 1"
@@ -127,11 +115,7 @@
 
               <div
                 class="content-left"
-                [fxFlex.xs]="
-                  product_type === 'ENTERPRISE' && product_image == 'X10'
-                    ? 80
-                    : 60
-                "
+                [fxFlex.xs]="product_type === 'ENTERPRISE' && product_image == 'X10' ? 80 : 60"
                 fxFlex.gt-xs="60"
                 fxLayout="column"
                 fxLayoutAlign="center center"
@@ -154,16 +138,12 @@
                       svgIcon="freenas_logomark"
                     ></mat-icon>
                     <mat-icon
-                      *ngIf="
-                        product_type === 'CORE' && !certified && retroLogo == 0
-                      "
+                      *ngIf="product_type === 'CORE' && !certified && retroLogo == 0"
                       class="generic"
                       svgIcon="truenas_core_logomark"
                     ></mat-icon>
                     <mat-icon
-                      *ngIf="
-                        product_type === 'CORE' && certified && retroLogo == 0
-                      "
+                      *ngIf="product_type === 'CORE' && certified && retroLogo == 0"
                       class="generic certified"
                       svgIcon="freenas_certified"
                     ></mat-icon>
@@ -180,8 +160,7 @@
                     ></mat-icon>
                     <mat-icon
                       *ngIf="
-                        (product_type === 'SCALE' ||
-                          product_type == 'SCALE_ENTERPRISE') &&
+                        (product_type === 'SCALE' || product_type == 'SCALE_ENTERPRISE') &&
                         !certified &&
                         retroLogo == 0 &&
                         !isHA
@@ -191,8 +170,7 @@
                     ></mat-icon>
                     <mat-icon
                       *ngIf="
-                        (product_type === 'SCALE' ||
-                          product_type == 'SCALE_ENTERPRISE') &&
+                        (product_type === 'SCALE' || product_type == 'SCALE_ENTERPRISE') &&
                         certified &&
                         retroLogo == 0 &&
                         !isHA
@@ -203,23 +181,15 @@
                   </ng-template>
                   <div
                     class="generic alert"
-                    *ngIf="
-                      !product_image && isPassive && ha_status !== 'HA Enabled'
-                    "
+                    *ngIf="!product_image && isPassive && ha_status !== 'HA Enabled'"
                   >
-                    <mat-icon
-                      role="img"
-                      fontSet="mdi-set"
-                      fontIcon="mdi-alert"
-                    ></mat-icon>
+                    <mat-icon role="img" fontSet="mdi-set" fontIcon="mdi-alert"></mat-icon>
                   </div>
                   <div *ngIf="product_image && isHA" class="ha-node-status">
                     ({{ isPassive ? "Standby" : ("Active" | translate) }})
                   </div>
                   <div
-                    *ngIf="
-                      ready && !product_image && product_type == 'ENTERPRISE'
-                    "
+                    *ngIf="ready && !product_image && product_type == 'ENTERPRISE'"
                     class="ha-node-status"
                   >
                     (Unsupported Hardware)
@@ -263,22 +233,13 @@
                 class="data-container ha-status"
               >
                 <div class="spinner-wrapper">
-                  <mat-spinner
-                    [diameter]="40"
-                    style="margin: 0 auto"
-                  ></mat-spinner>
+                  <mat-spinner [diameter]="40" style="margin: 0 auto"></mat-spinner>
                 </div>
               </div>
 
               <div
                 fxFlex
-                *ngIf="
-                  !data &&
-                  isHA &&
-                  isPassive &&
-                  ha_status &&
-                  ha_status !== 'HA Enabled'
-                "
+                *ngIf="!data && isHA && isPassive && ha_status && ha_status !== 'HA Enabled'"
                 class="data-container ha-status"
               >
                 <h3>{{ ha_status }}</h3>
@@ -286,11 +247,7 @@
 
               <div fxFlex *ngIf="data" class="data-container">
                 <div fxHide.gt-xs class="list-subheader">
-                  {{
-                    isPassive
-                      ? "System Information (Standby)"
-                      : "System Information"
-                  }}
+                  {{ isPassive ? "System Information (Standby)" : "System Information" }}
                 </div>
                 <div fxHide.xs class="list-subheader">
                   {{ "Overview" | translate }}
@@ -298,8 +255,7 @@
 
                 <mat-list>
                   <mat-list-item
-                    ><strong>{{ "Platform" | translate }}:</strong>
-                    &nbsp;&nbsp;{{
+                    ><strong>{{ "Platform" | translate }}:</strong> &nbsp;&nbsp;{{
                       data.system_product && manufacturer == "ixsystems"
                         ? data.system_product
                         : "Generic"
@@ -325,32 +281,26 @@
                     {{ data.license.contract_end.$value }}
                   </mat-list-item>
 
-                  <mat-list-item
-                    *ngIf="data.system_serial && manufacturer == 'ixsystems'"
-                  >
+                  <mat-list-item *ngIf="data.system_serial && manufacturer == 'ixsystems'">
                     <span
-                      ><strong>{{ "Serial Number" | translate }}:</strong
-                      >&nbsp;&nbsp;{{ data.system_serial }}</span
+                      ><strong>{{ "Serial Number" | translate }}:</strong>&nbsp;&nbsp;{{
+                        data.system_serial
+                      }}</span
                     >
                   </mat-list-item>
 
                   <mat-list-item
-                    ><strong>{{ "HostName" | translate }}:</strong>
-                    &nbsp;&nbsp;{{ data.hostname }}</mat-list-item
+                    ><strong>{{ "HostName" | translate }}:</strong> &nbsp;&nbsp;{{
+                      data.hostname
+                    }}</mat-list-item
                   >
                   <mat-list-item *ngIf="uptimeString"
-                    ><strong>{{ "Uptime" | translate }}:</strong> &nbsp;&nbsp;{{
-                      uptimeString
-                    }}
-                    as of {{ dateTime }}
+                    ><strong>{{ "Uptime" | translate }}:</strong> &nbsp;&nbsp;{{ uptimeString }} as
+                    of {{ dateTime }}
                   </mat-list-item>
                 </mat-list>
 
-                <div
-                  fxHide.gt-xs
-                  class="mobile-update-action update-action"
-                  *ngIf="ready"
-                >
+                <div fxHide.gt-xs class="mobile-update-action update-action" *ngIf="ready">
                   <button
                     *ngIf="!isPassive"
                     class=""

@@ -37,11 +37,6 @@ import { SessionsRoutes } from "./sessions.routing";
     TranslateModule,
     RouterModule.forChild(SessionsRoutes),
   ],
-  declarations: [
-    ForgotPasswordComponent,
-    LockscreenComponent,
-    SigninComponent,
-    SignupComponent,
-  ],
+  declarations: [ForgotPasswordComponent, LockscreenComponent, SigninComponent, SignupComponent],
 })
 export class SessionsModule {}

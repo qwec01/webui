@@ -1,9 +1,5 @@
 <section class="wrapper__details">
-  <div
-    *ngFor="let column of this.columns"
-    fxLayoutAlign="start center"
-    fxLayoutGap="16px"
-  >
+  <div *ngFor="let column of this.columns" fxLayoutAlign="start center" fxLayoutGap="16px">
     <h4>{{ column.name | translate }}:</h4>
     <div fxLayoutAlign="start center" fxLayoutGap="4px">
       <ng-container *ngIf="column?.widget?.component; else notScheduleList">

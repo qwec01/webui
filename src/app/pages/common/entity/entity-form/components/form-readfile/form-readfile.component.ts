@@ -18,10 +18,7 @@ export class FormReadFileComponent implements Field {
   fieldShow: string;
   public fileString;
 
-  constructor(
-    private entityFormService: EntityFormService,
-    public translate: TranslateService
-  ) {}
+  constructor(private entityFormService: EntityFormService, public translate: TranslateService) {}
 
   changeListener($event): void {
     this.readFile($event.target);

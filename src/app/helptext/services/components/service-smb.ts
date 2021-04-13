@@ -14,23 +14,15 @@ export default {
  of the system. This name is limited to 15 characters and\
  cannot be the <b>Workgroup</b> name."
   ),
-  cifs_srv_netbiosname_validation: [
-    Validators.required,
-    Validators.maxLength(15),
-  ],
+  cifs_srv_netbiosname_validation: [Validators.required, Validators.maxLength(15)],
 
-  cifs_srv_netbiosname_b_placeholder: T(
-    `NetBIOS Name (${globalHelptext.Ctrlr} 2)`
-  ),
+  cifs_srv_netbiosname_b_placeholder: T(`NetBIOS Name (${globalHelptext.Ctrlr} 2)`),
   cifs_srv_netbiosname_b_tooltip: T(
     "Automatically populated with the original hostname\
  of the system. This name is limited to 15 characters and\
  cannot be the <b>Workgroup</b> name."
   ),
-  cifs_srv_netbiosname_b_validation: [
-    Validators.required,
-    Validators.maxLength(15),
-  ],
+  cifs_srv_netbiosname_b_validation: [Validators.required, Validators.maxLength(15)],
 
   cifs_srv_netbiosalias_placeholder: T("NetBIOS Alias"),
   cifs_srv_netbiosalias_tooltip: T(
@@ -83,9 +75,7 @@ export default {
  are present."
   ),
 
-  cifs_srv_aapl_extensions_placeholder: T(
-    "Enable Apple SMB2/3 Protocol Extensions"
-  ),
+  cifs_srv_aapl_extensions_placeholder: T("Enable Apple SMB2/3 Protocol Extensions"),
   cifs_srv_aapl_extensions_tooltip: T(
     'These \
  <a href="https://support.apple.com/en-us/HT210803" target="_blank">protocol extensions</a> \

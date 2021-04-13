@@ -189,14 +189,12 @@ export class VolumeStatusComponent implements OnInit {
         if (res[0]) {
           // if pool is passphrase protected, abled passphrase field.
           if (res[0].encrypt === 2) {
-            [this.replaceDiskFormFields, this.extendVdevFormFields].forEach(
-              (formFields) => {
-                _.find(formFields, { name: "passphrase" })["isHidden"] = false;
-                _.find(formFields, { name: "passphrase" }).disabled = false;
-                _.find(formFields, { name: "passphrase2" })["isHidden"] = false;
-                _.find(formFields, { name: "passphrase2" }).disabled = false;
-              }
-            );
+            [this.replaceDiskFormFields, this.extendVdevFormFields].forEach((formFields) => {
+              _.find(formFields, { name: "passphrase" })["isHidden"] = false;
+              _.find(formFields, { name: "passphrase" }).disabled = false;
+              _.find(formFields, { name: "passphrase2" })["isHidden"] = false;
+              _.find(formFields, { name: "passphrase2" }).disabled = false;
+            });
           }
           this.poolScan = res[0].scan;
           // subscribe zfs.pool.scan to get scrub job info
@@ -223,10 +221,7 @@ export class VolumeStatusComponent implements OnInit {
         });
         availableDisksForExtend.push({
           label:
-            res[i].devname +
-            " (" +
-            (<any>window).filesize(res[i].size, { standard: "iec" }) +
-            ")",
+            res[i].devname + " (" + (<any>window).filesize(res[i].size, { standard: "iec" }) + ")",
           value: res[i].name,
         });
       }
@@ -297,14 +292,11 @@ export class VolumeStatusComponent implements OnInit {
         label: helptext.actions_label.edit,
         onClick: (row) => {
           const pIndex = row.name.lastIndexOf("p");
-          const diskName =
-            pIndex > -1 ? row.name.substring(0, pIndex) : row.name;
+          const diskName = pIndex > -1 ? row.name.substring(0, pIndex) : row.name;
 
-          this.ws
-            .call("disk.query", [[["devname", "=", diskName]]])
-            .subscribe((res) => {
-              this.onClickEdit(res[0].identifier);
-            });
+          this.ws.call("disk.query", [[["devname", "=", diskName]]]).subscribe((res) => {
+            this.onClickEdit(res[0].identifier);
+          });
         },
         isHidden: false,
       },
@@ -324,9 +316,7 @@ export class VolumeStatusComponent implements OnInit {
               helptext.offline_disk.message +
                 name +
                 "?" +
-                (this.pool.encrypt == 0
-                  ? ""
-                  : helptext.offline_disk.encryptPoolWarning),
+                (this.pool.encrypt == 0 ? "" : helptext.offline_disk.encryptPoolWarning),
               false,
               helptext.offline_disk.buttonMsg
             )
@@ -341,11 +331,7 @@ export class VolumeStatusComponent implements OnInit {
                   },
                   (err) => {
                     this.loader.close();
-                    new EntityUtils().handleWSError(
-                      this,
-                      err,
-                      this.dialogService
-                    );
+                    new EntityUtils().handleWSError(this, err, this.dialogService);
                   }
                 );
               }
@@ -358,8 +344,7 @@ export class VolumeStatusComponent implements OnInit {
         label: helptext.actions_label.online,
         onClick: (row) => {
           const pIndex = row.name.lastIndexOf("p");
-          const diskName =
-            pIndex > -1 ? row.name.substring(0, pIndex) : row.name;
+          const diskName = pIndex > -1 ? row.name.substring(0, pIndex) : row.name;
 
           this.dialogService
             .confirm(
@@ -379,18 +364,13 @@ export class VolumeStatusComponent implements OnInit {
                   },
                   (err) => {
                     this.loader.close();
-                    new EntityUtils().handleWSError(
-                      this,
-                      err,
-                      this.dialogService
-                    );
+                    new EntityUtils().handleWSError(this, err, this.dialogService);
                   }
                 );
               }
             });
         },
-        isHidden:
-          data.status == "ONLINE" || this.pool.encrypt !== 0 ? true : false,
+        isHidden: data.status == "ONLINE" || this.pool.encrypt !== 0 ? true : false,
       },
       {
         id: "replace",
@@ -402,8 +382,7 @@ export class VolumeStatusComponent implements OnInit {
             name = pIndex > -1 ? name.substring(0, pIndex) : name;
           }
           const pk = this.pk;
-          _.find(this.replaceDiskFormFields, { name: "label" }).value =
-            row.guid;
+          _.find(this.replaceDiskFormFields, { name: "label" }).value = row.guid;
 
           const conf: DialogFormConfiguration = {
             title: helptext.replace_disk.form_title + name,
@@ -413,20 +392,12 @@ export class VolumeStatusComponent implements OnInit {
             customSubmit: function (entityDialog: any) {
               delete entityDialog.formValue["passphrase2"];
 
-              const dialogRef = entityDialog.parent.matDialog.open(
-                EntityJobComponent,
-                {
-                  data: { title: helptext.replace_disk.title },
-                  disableClose: true,
-                }
-              );
-              dialogRef.componentInstance.setDescription(
-                helptext.replace_disk.description
-              );
-              dialogRef.componentInstance.setCall("pool.replace", [
-                pk,
-                entityDialog.formValue,
-              ]);
+              const dialogRef = entityDialog.parent.matDialog.open(EntityJobComponent, {
+                data: { title: helptext.replace_disk.title },
+                disableClose: true,
+              });
+              dialogRef.componentInstance.setDescription(helptext.replace_disk.description);
+              dialogRef.componentInstance.setCall("pool.replace", [pk, entityDialog.formValue]);
               dialogRef.componentInstance.submit();
               dialogRef.componentInstance.success.subscribe((res) => {
                 dialogRef.close(true);
@@ -480,22 +451,16 @@ export class VolumeStatusComponent implements OnInit {
             .subscribe((res) => {
               if (res) {
                 this.loader.open();
-                this.ws
-                  .call("pool.remove", [this.pk, { label: row.guid }])
-                  .subscribe(
-                    (res) => {
-                      this.getData();
-                      this.loader.close();
-                    },
-                    (err) => {
-                      this.loader.close();
-                      new EntityUtils().handleWSError(
-                        this,
-                        err,
-                        this.dialogService
-                      );
-                    }
-                  );
+                this.ws.call("pool.remove", [this.pk, { label: row.guid }]).subscribe(
+                  (res) => {
+                    this.getData();
+                    this.loader.close();
+                  },
+                  (err) => {
+                    this.loader.close();
+                    new EntityUtils().handleWSError(this, err, this.dialogService);
+                  }
+                );
               }
             });
         },
@@ -506,8 +471,7 @@ export class VolumeStatusComponent implements OnInit {
         label: helptext.actions_label.detach,
         onClick: (row) => {
           const pIndex = row.name.lastIndexOf("p");
-          const diskName =
-            pIndex > -1 ? row.name.substring(0, pIndex) : row.name;
+          const diskName = pIndex > -1 ? row.name.substring(0, pIndex) : row.name;
 
           this.dialogService
             .confirm(
@@ -519,23 +483,17 @@ export class VolumeStatusComponent implements OnInit {
             .subscribe((res) => {
               if (res) {
                 this.loader.open();
-                this.ws
-                  .call("pool.detach", [this.pk, { label: row.guid }])
-                  .subscribe(
-                    (res) => {
-                      this.getData();
-                      this.getUnusedDisk();
-                      this.loader.close();
-                    },
-                    (err) => {
-                      this.loader.close();
-                      new EntityUtils().handleWSError(
-                        this,
-                        err,
-                        this.dialogService
-                      );
-                    }
-                  );
+                this.ws.call("pool.detach", [this.pk, { label: row.guid }]).subscribe(
+                  (res) => {
+                    this.getData();
+                    this.getUnusedDisk();
+                    this.loader.close();
+                  },
+                  (err) => {
+                    this.loader.close();
+                    new EntityUtils().handleWSError(this, err, this.dialogService);
+                  }
+                );
               }
             });
         },
@@ -554,11 +512,7 @@ export class VolumeStatusComponent implements OnInit {
       _.find(actions, { id: "offline" }).isHidden = true;
     }
 
-    if (
-      vdev_type === "MIRROR" ||
-      vdev_type === "REPLACING" ||
-      vdev_type === "SPARE"
-    ) {
+    if (vdev_type === "MIRROR" || vdev_type === "REPLACING" || vdev_type === "SPARE") {
       _.find(actions, { id: "detach" }).isHidden = false;
     }
 
@@ -576,8 +530,7 @@ export class VolumeStatusComponent implements OnInit {
         label: helptext.actions_label.extend,
         onClick: (row) => {
           const pk = this.pk;
-          _.find(this.extendVdevFormFields, { name: "target_vdev" }).value =
-            row.guid;
+          _.find(this.extendVdevFormFields, { name: "target_vdev" }).value = row.guid;
           const conf: DialogFormConfiguration = {
             title: helptext.extend_disk.form_title,
             fieldConfig: this.extendVdevFormFields,
@@ -586,20 +539,12 @@ export class VolumeStatusComponent implements OnInit {
             customSubmit: function (entityDialog: any) {
               delete entityDialog.formValue["passphrase2"];
 
-              const dialogRef = entityDialog.parent.matDialog.open(
-                EntityJobComponent,
-                {
-                  data: { title: helptext.extend_disk.title },
-                  disableClose: true,
-                }
-              );
-              dialogRef.componentInstance.setDescription(
-                helptext.extend_disk.description
-              );
-              dialogRef.componentInstance.setCall("pool.attach", [
-                pk,
-                entityDialog.formValue,
-              ]);
+              const dialogRef = entityDialog.parent.matDialog.open(EntityJobComponent, {
+                data: { title: helptext.extend_disk.title },
+                disableClose: true,
+              });
+              dialogRef.componentInstance.setDescription(helptext.extend_disk.description);
+              dialogRef.componentInstance.setCall("pool.attach", [pk, entityDialog.formValue]);
               dialogRef.componentInstance.submit();
               dialogRef.componentInstance.success.subscribe((res) => {
                 dialogRef.close(true);
@@ -652,22 +597,16 @@ export class VolumeStatusComponent implements OnInit {
             .subscribe((res) => {
               if (res) {
                 this.loader.open();
-                this.ws
-                  .call("pool.remove", [this.pk, { label: row.guid }])
-                  .subscribe(
-                    (res) => {
-                      this.getData();
-                      this.loader.close();
-                    },
-                    (err) => {
-                      this.loader.close();
-                      new EntityUtils().handleWSError(
-                        this,
-                        err,
-                        this.dialogService
-                      );
-                    }
-                  );
+                this.ws.call("pool.remove", [this.pk, { label: row.guid }]).subscribe(
+                  (res) => {
+                    this.getData();
+                    this.loader.close();
+                  },
+                  (err) => {
+                    this.loader.close();
+                    new EntityUtils().handleWSError(this, err, this.dialogService);
+                  }
+                );
               }
             });
         },
@@ -713,9 +652,7 @@ export class VolumeStatusComponent implements OnInit {
           },
         ];
       } else if (data.type === "MIRROR") {
-        item.actions = [
-          { title: "Mirror Actions", actions: this.extendAction(data) },
-        ];
+        item.actions = [{ title: "Mirror Actions", actions: this.extendAction(data) }];
       }
     }
     return item;
@@ -734,9 +671,7 @@ export class VolumeStatusComponent implements OnInit {
       }
       vdev_type = data.name;
       for (let i = 0; i < data.children.length; i++) {
-        node.children.push(
-          this.parseTopolgy(data.children[i], category, vdev_type)
-        );
+        node.children.push(this.parseTopolgy(data.children[i], category, vdev_type));
       }
     }
     delete node.data.children;
@@ -759,13 +694,9 @@ export class VolumeStatusComponent implements OnInit {
 
       for (let i = 0; i < pool.topology[category].length; i++) {
         if (category != "data") {
-          topoNode.children.push(
-            this.parseTopolgy(pool.topology[category][i], category)
-          );
+          topoNode.children.push(this.parseTopolgy(pool.topology[category][i], category));
         } else {
-          node.children.push(
-            this.parseTopolgy(pool.topology[category][i], category)
-          );
+          node.children.push(this.parseTopolgy(pool.topology[category][i], category));
         }
       }
       if (category != "data" && pool.topology[category].length > 0) {
@@ -787,12 +718,7 @@ export class VolumeStatusComponent implements OnInit {
   }
 
   onClickEdit(pk) {
-    let diskForm = new DiskFormComponent(
-      this.router,
-      this.rest,
-      this.ws,
-      this.aroute
-    );
+    let diskForm = new DiskFormComponent(this.router, this.rest, this.ws, this.aroute);
     diskForm.inIt(pk);
     this.modalService.open("slide-in-form", diskForm);
   }

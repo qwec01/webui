@@ -24,9 +24,7 @@ fs.readdir(translations, function (err, files) {
   });
 
   exec(
-    "ngx-translate-extract --input src --output " +
-      pos +
-      " --clean --sort --format pot -m T",
+    "ngx-translate-extract --input src --output " + pos + " --clean --sort --format pot -m T",
     (err, stdout, stderr) => {
       if (err) {
         console.error(err);

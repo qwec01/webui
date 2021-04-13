@@ -8,15 +8,7 @@ import { EntityUtils } from "app/pages/common/entity/utils";
 import { T } from "app/translate-marker";
 import * as _ from "lodash";
 import { combineLatest, of, Subscription } from "rxjs";
-import {
-  catchError,
-  map,
-  switchMap,
-  take,
-  tap,
-  filter,
-  debounceTime,
-} from "rxjs/operators";
+import { catchError, map, switchMap, take, tap, filter, debounceTime } from "rxjs/operators";
 import {
   AppLoaderService,
   DialogService,
@@ -303,16 +295,11 @@ export class SMBFormComponent implements OnDestroy {
     private activatedRoute: ActivatedRoute,
     private sysGeneralService: SystemGeneralService
   ) {
-    combineLatest(
-      this.ws.call("sharing.smb.query", []),
-      this.activatedRoute.paramMap
-    )
+    combineLatest(this.ws.call("sharing.smb.query", []), this.activatedRoute.paramMap)
       .pipe(
         map(([shares, pm]) => {
           const pk = parseInt(pm.get("pk"), 10);
-          return shares
-            .filter((share) => isNaN(pk) || share.id !== pk)
-            .map((share) => share.name);
+          return shares.filter((share) => isNaN(pk) || share.id !== pk).map((share) => share.name);
         })
       )
       .subscribe((shareNames) => {
@@ -361,10 +348,7 @@ export class SMBFormComponent implements OnDestroy {
   }
 
   afterSave(entityForm) {
-    if (
-      entityForm.formGroup.controls["timemachine"].value &&
-      !this.isTimeMachineOn
-    ) {
+    if (entityForm.formGroup.controls["timemachine"].value && !this.isTimeMachineOn) {
       this.restartService(entityForm, "timemachine");
     } else {
       this.checkAllowDeny(entityForm);
@@ -373,14 +357,8 @@ export class SMBFormComponent implements OnDestroy {
 
   checkAllowDeny(entityForm) {
     if (
-      !_.isEqual(
-        this.hostsAllowOnLoad,
-        entityForm.formGroup.controls["hostsallow"].value
-      ) ||
-      !_.isEqual(
-        this.hostsDenyOnLoad,
-        entityForm.formGroup.controls["hostsdeny"].value
-      )
+      !_.isEqual(this.hostsAllowOnLoad, entityForm.formGroup.controls["hostsallow"].value) ||
+      !_.isEqual(this.hostsDenyOnLoad, entityForm.formGroup.controls["hostsdeny"].value)
     ) {
       this.restartService(entityForm, "allowdeny");
     } else {
@@ -441,15 +419,7 @@ export class SMBFormComponent implements OnDestroy {
     const datasetId = sharePath.replace("/mnt/", "");
     const poolName = datasetId.split("/")[0];
     const homeShare = entityForm.formGroup.get("home").value;
-    const ACLRoute = [
-      "storage",
-      "pools",
-      "id",
-      poolName,
-      "dataset",
-      "acl",
-      datasetId,
-    ];
+    const ACLRoute = ["storage", "pools", "id", poolName, "dataset", "acl", datasetId];
 
     if (homeShare && entityForm.isNew) {
       return this.router.navigate(["/"].concat(ACLRoute), {
@@ -471,9 +441,7 @@ export class SMBFormComponent implements OnDestroy {
             this.ws.call("filesystem.acl_is_trivial", [sharePath]).pipe(
               switchMap((isTrivialACL: boolean) =>
                 /* If share does not have trivial ACL, move on. Otherwise, perform some async data-gathering operations */
-                !isTrivialACL ||
-                !datasetId.includes("/") ||
-                this.productType.includes("SCALE")
+                !isTrivialACL || !datasetId.includes("/") || this.productType.includes("SCALE")
                   ? combineLatest(of(false), of({}))
                   : combineLatest(
                       /* Check if user wants to edit the share's ACL */
@@ -506,27 +474,15 @@ export class SMBFormComponent implements OnDestroy {
                  * dataset ACL.
                  */
                 return this.dialog
-                  .confirm(
-                    shared.dialog_title,
-                    shared.dialog_message,
-                    true,
-                    shared.dialog_button
-                  )
+                  .confirm(shared.dialog_title, shared.dialog_message, true, shared.dialog_button)
                   .pipe(
                     switchMap((doEnableService) => {
                       if (doEnableService) {
                         entityForm.loader.open();
                         return this.ws
-                          .call("service.update", [
-                            cifsService.id,
-                            { enable: true },
-                          ])
+                          .call("service.update", [cifsService.id, { enable: true }])
                           .pipe(
-                            switchMap(() =>
-                              this.ws.call("service.start", [
-                                cifsService.service,
-                              ])
-                            ),
+                            switchMap(() => this.ws.call("service.start", [cifsService.service])),
                             tap(() => {
                               entityForm.loader.close();
                             }),
@@ -555,8 +511,7 @@ export class SMBFormComponent implements OnDestroy {
             )
             .subscribe(
               () => {},
-              (error) =>
-                new EntityUtils().handleWSError(this, error, this.dialog)
+              (error) => new EntityUtils().handleWSError(this, error, this.dialog)
             );
         }
       },
@@ -601,9 +556,7 @@ export class SMBFormComponent implements OnDestroy {
       entityForm.formGroup.controls["browsable"].setValue(true);
     } else {
       setTimeout(() => {
-        entityForm.formGroup.controls[
-          "aapl_name_mangling"
-        ].valueChanges.subscribe((value) => {
+        entityForm.formGroup.controls["aapl_name_mangling"].valueChanges.subscribe((value) => {
           if (value !== this.mangle && !this.mangleWarningSent) {
             this.mangleWarningSent = true;
             this.dialog.confirm(
@@ -642,20 +595,16 @@ export class SMBFormComponent implements OnDestroy {
     });
 
     const path_fc = entityForm.formGroup.controls["path"];
-    entityForm.formGroup.controls["acl"].valueChanges
-      .pipe(debounceTime(100))
-      .subscribe((res) => {
-        if (!res && path_fc.value && !this.stripACLWarningSent) {
-          this.ws
-            .call("filesystem.acl_is_trivial", [path_fc.value])
-            .subscribe((res) => {
-              if (!res) {
-                this.stripACLWarningSent = true;
-                this.showStripACLWarning();
-              }
-            });
-        }
-      });
+    entityForm.formGroup.controls["acl"].valueChanges.pipe(debounceTime(100)).subscribe((res) => {
+      if (!res && path_fc.value && !this.stripACLWarningSent) {
+        this.ws.call("filesystem.acl_is_trivial", [path_fc.value]).subscribe((res) => {
+          if (!res) {
+            this.stripACLWarningSent = true;
+            this.showStripACLWarning();
+          }
+        });
+      }
+    });
 
     setTimeout(() => {
       if (entityForm.formGroup.controls["timemachine"].value) {
@@ -663,12 +612,10 @@ export class SMBFormComponent implements OnDestroy {
       }
     }, 700);
 
-    this.getAdvancedConfig = this.sysGeneralService.getAdvancedConfig.subscribe(
-      (res) => {
-        this.isBasicMode = !res.advancedmode;
-        this.updateForm();
-      }
-    );
+    this.getAdvancedConfig = this.sysGeneralService.getAdvancedConfig.subscribe((res) => {
+      this.isBasicMode = !res.advancedmode;
+      this.updateForm();
+    });
 
     entityForm.formGroup.controls["purpose"].valueChanges.subscribe((res) => {
       this.clearPresets();

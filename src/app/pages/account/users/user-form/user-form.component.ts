@@ -122,9 +122,7 @@ export class UserFormComponent {
           placeholder: helptext.user_form_password_edit_confirm_placeholder,
           inputType: "password",
           togglePw: true,
-          validation: this.validationService.matchOtherValidator(
-            "password_edit"
-          ),
+          validation: this.validationService.matchOtherValidator("password_edit"),
           isHidden: true,
         },
       ],
@@ -326,9 +324,7 @@ export class UserFormComponent {
     this.isNew = entityForm.isNew;
     this.password_disabled = entityForm.formGroup.controls["password_disabled"];
     if (!entityForm.isNew) {
-      this.fieldSets
-        .showConfig("password_edit")
-        .showConfig("password_conf_edit");
+      this.fieldSets.showConfig("password_edit").showConfig("password_conf_edit");
       entityForm.setDisabled("password", true, true);
       entityForm.setDisabled("password_conf", true, true);
       this.password_disabled.valueChanges.subscribe((password_disabled) => {
@@ -369,16 +365,10 @@ export class UserFormComponent {
         .subscribe((res) => {
           if (res.length > 0) {
             this.homeSharePath = res[0].path;
-            this.entityForm.formGroup.controls["home"].setValue(
-              this.homeSharePath
-            );
+            this.entityForm.formGroup.controls["home"].setValue(this.homeSharePath);
             // ...then add on /<username>
-            this.entityForm.formGroup.controls[
-              "username"
-            ].valueChanges.subscribe((value) => {
-              this.entityForm.formGroup.controls["home"].setValue(
-                `${this.homeSharePath}/${value}`
-              );
+            this.entityForm.formGroup.controls["username"].valueChanges.subscribe((value) => {
+              this.entityForm.formGroup.controls["home"].setValue(`${this.homeSharePath}/${value}`);
             });
           }
         });
@@ -427,14 +417,10 @@ export class UserFormComponent {
         }, 500);
         entityForm.formGroup.controls["full_name"].setValue(res[0].full_name);
         entityForm.formGroup.controls["email"].setValue(res[0].email);
-        entityForm.formGroup.controls["password_disabled"].setValue(
-          res[0].password_disabled
-        );
+        entityForm.formGroup.controls["password_disabled"].setValue(res[0].password_disabled);
         entityForm.formGroup.controls["locked"].setValue(res[0].locked);
         entityForm.formGroup.controls["sudo"].setValue(res[0].sudo);
-        entityForm.formGroup.controls["microsoft_account"].setValue(
-          res[0].microsoft_account
-        );
+        entityForm.formGroup.controls["microsoft_account"].setValue(res[0].microsoft_account);
         entityForm.formGroup.controls["sshpubkey"].setValue(res[0].sshpubkey);
         entityForm.formGroup.controls["groups"].setValue(res[0].groups);
         entityForm.formGroup.controls["home"].setValue(res[0].home);
@@ -473,11 +459,7 @@ export class UserFormComponent {
         this.shell = this.fieldSets.config("shell");
         this.shell.options = this.shells;
 
-        if (
-          entityForm.isNew &&
-          Array.isArray(this.shells) &&
-          this.shells.length > 0
-        ) {
+        if (entityForm.isNew && Array.isArray(this.shells) && this.shells.length > 0) {
           entityForm.formGroup.controls["shell"].setValue(this.shells[0].value);
         }
       });
@@ -499,9 +481,7 @@ export class UserFormComponent {
     entityForm.email = entityForm.email === "" ? null : entityForm.email;
 
     if (this.isNew) {
-      const home_user = entityForm.home.substr(
-        entityForm.home.length - entityForm.username.length
-      );
+      const home_user = entityForm.home.substr(entityForm.home.length - entityForm.username.length);
       if (entityForm.home !== "/nonexistent") {
         if (entityForm.username.toLowerCase() !== home_user.toLowerCase()) {
           entityForm.home = entityForm.home + "/" + entityForm.username;
@@ -520,10 +500,7 @@ export class UserFormComponent {
         entityForm["password"] = entityForm["password_edit"];
         delete entityForm["password_edit"];
         delete entityForm["password_conf_edit"];
-      } else if (
-        entityForm["password_edit"] === "" &&
-        entityForm["password_conf_edit"] === ""
-      ) {
+      } else if (entityForm["password_edit"] === "" && entityForm["password_conf_edit"] === "") {
         delete entityForm["password_edit"];
         delete entityForm["password_conf_edit"];
       }
@@ -537,9 +514,7 @@ export class UserFormComponent {
   blurEvent(parent) {
     if (parent.entityForm && parent.entityForm.isNew) {
       let username: string;
-      const fullname = parent.entityForm.formGroup.controls.full_name.value.split(
-        /[\s,]+/
-      );
+      const fullname = parent.entityForm.formGroup.controls.full_name.value.split(/[\s,]+/);
       if (fullname.length === 1) {
         username = fullname[0];
       } else {
@@ -549,17 +524,12 @@ export class UserFormComponent {
         username = username.substring(0, 8);
       }
       if (username !== "") {
-        parent.entityForm.formGroup.controls["username"].setValue(
-          username.toLocaleLowerCase()
-        );
+        parent.entityForm.formGroup.controls["username"].setValue(username.toLocaleLowerCase());
         parent.entityForm.formGroup.controls["username"].markAsTouched();
       }
     }
   }
-  blurEvent2(parent: {
-    fieldSets: FieldSets;
-    entityForm: EntityFormComponent;
-  }) {
+  blurEvent2(parent: { fieldSets: FieldSets; entityForm: EntityFormComponent }) {
     if (parent.entityForm) {
       const username = parent.entityForm.formGroup.controls.username.value;
       parent.fieldSets.config("username").warnings =

@@ -32,21 +32,18 @@ export class AssociatedTargetFormComponent {
         {
           type: "select",
           name: "target",
-          placeholder:
-            helptext_sharing_iscsi.associated_target_placeholder_target,
+          placeholder: helptext_sharing_iscsi.associated_target_placeholder_target,
           tooltip: helptext_sharing_iscsi.associated_target_tooltip_target,
           options: [],
           value: "",
           required: true,
-          validation:
-            helptext_sharing_iscsi.associated_target_validators_target,
+          validation: helptext_sharing_iscsi.associated_target_validators_target,
         },
         {
           type: "input",
           inputType: "number",
           name: "lunid",
-          placeholder:
-            helptext_sharing_iscsi.associated_target_placeholder_lunid,
+          placeholder: helptext_sharing_iscsi.associated_target_placeholder_lunid,
           tooltip: helptext_sharing_iscsi.associated_target_tooltip_lunid,
           value: "",
           validation: helptext_sharing_iscsi.associated_target_validators_lunid,
@@ -54,14 +51,12 @@ export class AssociatedTargetFormComponent {
         {
           type: "select",
           name: "extent",
-          placeholder:
-            helptext_sharing_iscsi.associated_target_placeholder_extent,
+          placeholder: helptext_sharing_iscsi.associated_target_placeholder_extent,
           tooltip: helptext_sharing_iscsi.associated_target_tooltip_extent,
           options: [],
           value: "",
           required: true,
-          validation:
-            helptext_sharing_iscsi.associated_target_validators_extent,
+          validation: helptext_sharing_iscsi.associated_target_validators_extent,
         },
       ],
     },

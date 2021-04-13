@@ -26,21 +26,15 @@ export default {
   add_key_invalid_button: T("Invalidate Existing Key"),
   add_key_custom_cancel: T("Cancel"),
 
-  add_key_password_tooltip: T(
-    "Enter the root password to authorize this operation."
-  ),
+  add_key_password_tooltip: T("Enter the root password to authorize this operation."),
   add_key_password_validation: [Validators.required],
 
   addkey_download_failed_title: T("Download Key"),
-  addkey_download_failed_message: T(
-    "Unable to download key, check network connection."
-  ),
+  addkey_download_failed_message: T("Unable to download key, check network connection."),
 
   // Change key form
   changekey_adminpw_placeholder: T("Root Password"),
-  changekey_adminpw_tooltip: T(
-    "Enter the root password to authorize this operation."
-  ),
+  changekey_adminpw_tooltip: T("Enter the root password to authorize this operation."),
   changekey_adminpw_validation: [Validators.required],
 
   changekey_headline: T("Encryption Key for Pool "),
@@ -76,14 +70,10 @@ export default {
   ),
   rekey_password_label: T("Encryption Passphrase"),
   rekey_password_placeholder: T("Administrator password"),
-  rekey_password_tooltip: T(
-    "Enter the administrator password to authorize this operation."
-  ),
+  rekey_password_tooltip: T("Enter the administrator password to authorize this operation."),
   rekey_password_validation: [Validators.required],
 
-  encryptionkey_passphrase_instructions: T(
-    "Optional: Add passphrase and recovery key"
-  ),
+  encryptionkey_passphrase_instructions: T("Optional: Add passphrase and recovery key"),
   encryptionkey_passphrase_placeholder: T("Encryption Key Passphrase"),
   encryptionkey_passphrase_tooltip: T(
     "Add a passphrase to the new \

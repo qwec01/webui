@@ -107,19 +107,16 @@ export class TableComponent implements OnInit, AfterViewInit, AfterViewChecked {
         return;
       }
       this.limitRows = Math.floor(
-        (this.tableHeight -
-          (this._tableConf.hideHeader ? 0 : this.TABLE_HEADER_HEIGHT)) /
+        (this.tableHeight - (this._tableConf.hideHeader ? 0 : this.TABLE_HEADER_HEIGHT)) /
           this.TABLE_ROW_HEIGHT
       );
       this.limitRows = Math.max(this.limitRows, this.TABLE_MIN_ROWS);
 
       if (this.dataSource) {
         this.displayedDataSource = this.dataSource.slice(0, this.limitRows);
-        this.showViewMore =
-          this.dataSource.length !== this.displayedDataSource.length;
+        this.showViewMore = this.dataSource.length !== this.displayedDataSource.length;
         if (this.showCollapse) {
-          this.showCollapse =
-            this.dataSource.length !== this.displayedDataSource.length;
+          this.showCollapse = this.dataSource.length !== this.displayedDataSource.length;
         }
       }
     }
@@ -158,16 +155,12 @@ export class TableComponent implements OnInit, AfterViewInit, AfterViewChecked {
 
     if (this._tableConf.getActions || this._tableConf.deleteCall) {
       this.displayedColumns.push("action"); // add action column to table
-      this.actions = this._tableConf.getActions
-        ? this._tableConf.getActions()
-        : []; // get all row actions
+      this.actions = this._tableConf.getActions ? this._tableConf.getActions() : []; // get all row actions
     }
     this.getData();
 
     this.idProp =
-      this._tableConf.deleteMsg === undefined
-        ? "id"
-        : this._tableConf.deleteMsg.id_prop || "id";
+      this._tableConf.deleteMsg === undefined ? "id" : this._tableConf.deleteMsg.id_prop || "id";
     this._tableConf.tableComponent = this;
   }
 

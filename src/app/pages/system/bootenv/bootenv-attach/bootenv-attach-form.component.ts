@@ -3,11 +3,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { ActivatedRoute, Router } from "@angular/router";
 import { helptext_system_bootenv } from "app/helptext/system/bootenv";
 import * as _ from "lodash";
-import {
-  RestService,
-  WebSocketService,
-  DialogService,
-} from "../../../../services/";
+import { RestService, WebSocketService, DialogService } from "../../../../services/";
 import { FieldConfig } from "../../../common/entity/entity-form/models/field-config.interface";
 import { EntityJobComponent } from "../../../common/entity/entity-job/entity-job.component";
 
@@ -82,10 +78,7 @@ export class BootEnvAttachFormComponent {
       disableClose: true,
     });
     this.dialogRef.componentInstance.setDescription("Attaching Device...");
-    this.dialogRef.componentInstance.setCall("boot.attach", [
-      entityForm.dev,
-      payload,
-    ]);
+    this.dialogRef.componentInstance.setCall("boot.attach", [entityForm.dev, payload]);
     this.dialogRef.componentInstance.submit();
     this.dialogRef.componentInstance.success.subscribe(() => {
       this.dialogRef.close(true);

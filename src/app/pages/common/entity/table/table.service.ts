@@ -41,23 +41,15 @@ export class TableService {
           title: T("No ") + table.title + T(" configured"),
         };
         if (table.tableConf.add) {
-          table.emptyConf.message =
-            T("To configure ") + table.title + ', click the "Add" button.';
+          table.emptyConf.message = T("To configure ") + table.title + ', click the "Add" button.';
         }
       }
       if (table.limitRows) {
         if (table.enableViewMore) {
-          table.displayedDataSource = table.dataSource.slice(
-            0,
-            table.dataSource.length
-          );
+          table.displayedDataSource = table.dataSource.slice(0, table.dataSource.length);
         } else {
-          table.displayedDataSource = table.dataSource.slice(
-            0,
-            table.limitRows - 1
-          );
-          table.showViewMore =
-            table.dataSource.length !== table.displayedDataSource.length;
+          table.displayedDataSource = table.dataSource.slice(0, table.limitRows - 1);
+          table.showViewMore = table.dataSource.length !== table.displayedDataSource.length;
         }
       }
       if (table.loaderOpen) {
@@ -71,8 +63,7 @@ export class TableService {
 
   delete(table, item, action?) {
     const deleteMsg =
-      table.tableConf.confirmDeleteDialog &&
-      table.tableConf.confirmDeleteDialog.isMessageComplete
+      table.tableConf.confirmDeleteDialog && table.tableConf.confirmDeleteDialog.isMessageComplete
         ? ""
         : this.getDeleteMessage(table, item, action);
 
@@ -86,23 +77,17 @@ export class TableService {
 
     if (table.tableConf.deleteMsg && table.tableConf.deleteMsg.doubleConfirm) {
       // double confirm: input delete item's name to confirm deletion
-      table.tableConf.deleteMsg
-        .doubleConfirm(item)
-        .subscribe((doubleConfirmDialog) => {
-          if (doubleConfirmDialog) {
-            this.doDelete(table, item);
-          }
-        });
+      table.tableConf.deleteMsg.doubleConfirm(item).subscribe((doubleConfirmDialog) => {
+        if (doubleConfirmDialog) {
+          this.doDelete(table, item);
+        }
+      });
     } else {
       this.dialogService
         .confirm(
           dialog.hasOwnProperty("title") ? dialog["title"] : T("Delete"),
-          dialog.hasOwnProperty("message")
-            ? dialog["message"] + deleteMsg
-            : deleteMsg,
-          dialog.hasOwnProperty("hideCheckbox")
-            ? dialog["hideCheckbox"]
-            : false,
+          dialog.hasOwnProperty("message") ? dialog["message"] + deleteMsg : deleteMsg,
+          dialog.hasOwnProperty("hideCheckbox") ? dialog["hideCheckbox"] : false,
           dialog.hasOwnProperty("button") ? dialog["button"] : T("Delete")
         )
         .subscribe((res) => {
@@ -122,10 +107,7 @@ export class TableService {
       if (table.tableConf.deleteMsg.key_props.length > 1) {
         for (let i = 1; i < table.tableConf.deleteMsg.key_props.length; i++) {
           if (item[table.tableConf.deleteMsg.key_props[i]] != "") {
-            msg_content =
-              msg_content +
-              " - " +
-              item[table.tableConf.deleteMsg.key_props[i]];
+            msg_content = msg_content + " - " + item[table.tableConf.deleteMsg.key_props[i]];
           }
         }
       }
@@ -176,10 +158,7 @@ export class TableService {
         data: { title: T("Deleting...") },
         disableClose: false,
       });
-      this.dialogRef.componentInstance.setCall(
-        table.tableConf.deleteCall,
-        params
-      );
+      this.dialogRef.componentInstance.setCall(table.tableConf.deleteCall, params);
       this.dialogRef.componentInstance.submit();
       this.dialogRef.componentInstance.success.subscribe(() => {
         this.dialogRef.close(true);

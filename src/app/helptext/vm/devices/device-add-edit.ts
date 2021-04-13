@@ -64,9 +64,7 @@ export default {
   mac_validation: [regexValidator(/\b([0-9A-F]{2}[:-]){5}([0-9A-F]){2}\b/i)],
 
   nic_attach_placeholder: T("Nic to attach:"),
-  nic_attach_tooltip: T(
-    "Select a physical interface to associate with the VM."
-  ),
+  nic_attach_tooltip: T("Select a physical interface to associate with the VM."),
   nic_attach_validation: [Validators.required],
 
   raw_file_path_placeholder: T("Raw File"),

@@ -5,11 +5,7 @@ import * as _ from "lodash";
 import { Subscription } from "rxjs";
 
 import { UserService } from "../../../../../services/user.service";
-import {
-  WebSocketService,
-  StorageService,
-  DialogService,
-} from "../../../../../services/";
+import { WebSocketService, StorageService, DialogService } from "../../../../../services/";
 import { FieldConfig } from "../../../../common/entity/entity-form/models/field-config.interface";
 import { AppLoaderService } from "../../../../../services/app-loader/app-loader.service";
 import { FieldSet } from "app/pages/common/entity/entity-form/models/fieldset.interface";
@@ -229,9 +225,7 @@ export class DatasetPosixAclComponent implements OnDestroy {
       id: "use_perm_editor",
       name: helptext.permissions_editor_button,
       function: () => {
-        this.router.navigate(
-          new Array("/").concat(["storage", "permissions", this.datasetId])
-        );
+        this.router.navigate(new Array("/").concat(["storage", "permissions", this.datasetId]));
       },
     },
     {
@@ -302,22 +296,20 @@ export class DatasetPosixAclComponent implements OnDestroy {
   afterInit(entityEdit: any) {
     this.entityForm = entityEdit;
     this.recursive = entityEdit.formGroup.controls["recursive"];
-    this.recursive_subscription = this.recursive.valueChanges.subscribe(
-      (value) => {
-        if (value === true) {
-          this.dialogService
-            .confirm(
-              helptext.dataset_acl_recursive_dialog_warning,
-              helptext.dataset_acl_recursive_dialog_warning_message
-            )
-            .subscribe((res) => {
-              if (!res) {
-                this.recursive.setValue(false);
-              }
-            });
-        }
+    this.recursive_subscription = this.recursive.valueChanges.subscribe((value) => {
+      if (value === true) {
+        this.dialogService
+          .confirm(
+            helptext.dataset_acl_recursive_dialog_warning,
+            helptext.dataset_acl_recursive_dialog_warning_message
+          )
+          .subscribe((res) => {
+            if (!res) {
+              this.recursive.setValue(false);
+            }
+          });
       }
-    );
+    });
     this.ws.call("filesystem.acl_is_trivial", [this.path]).subscribe(
       (acl_is_trivial) => {
         this.aclIsTrivial = acl_is_trivial;
@@ -335,11 +327,7 @@ export class DatasetPosixAclComponent implements OnDestroy {
       let group_fc;
       const listFields = this.aces_fc.listFields;
       let canSave = true;
-      if (
-        listFields &&
-        listFields.length > 0 &&
-        res.length === listFields.length
-      ) {
+      if (listFields && listFields.length > 0 && res.length === listFields.length) {
         for (let i = 0; i < listFields.length; i++) {
           controls = listFields[i];
           if (controls) {
@@ -351,54 +339,21 @@ export class DatasetPosixAclComponent implements OnDestroy {
             if (!user_fc["parent"]) {
               user_fc.parent = this;
             }
-            if (
-              group_fc.options === undefined ||
-              group_fc.options.length === 0
-            ) {
+            if (group_fc.options === undefined || group_fc.options.length === 0) {
               group_fc.options = this.groupOptions;
             }
             if (!group_fc["parent"]) {
               group_fc.parent = this;
             }
             if (res[i].tag === "USER") {
-              this.setDisabled(
-                user_fc,
-                this.aces.controls[i].controls["user"],
-                false,
-                false
-              );
-              this.setDisabled(
-                group_fc,
-                this.aces.controls[i].controls["group"],
-                true,
-                true
-              );
+              this.setDisabled(user_fc, this.aces.controls[i].controls["user"], false, false);
+              this.setDisabled(group_fc, this.aces.controls[i].controls["group"], true, true);
             } else if (res[i].tag === "GROUP") {
-              this.setDisabled(
-                user_fc,
-                this.aces.controls[i].controls["user"],
-                true,
-                true
-              );
-              this.setDisabled(
-                group_fc,
-                this.aces.controls[i].controls["group"],
-                false,
-                false
-              );
+              this.setDisabled(user_fc, this.aces.controls[i].controls["user"], true, true);
+              this.setDisabled(group_fc, this.aces.controls[i].controls["group"], false, false);
             } else {
-              this.setDisabled(
-                user_fc,
-                this.aces.controls[i].controls["user"],
-                true,
-                true
-              );
-              this.setDisabled(
-                group_fc,
-                this.aces.controls[i].controls["group"],
-                true,
-                true
-              );
+              this.setDisabled(user_fc, this.aces.controls[i].controls["user"], true, true);
+              this.setDisabled(group_fc, this.aces.controls[i].controls["group"], true, true);
             }
           }
         }
@@ -429,10 +384,7 @@ export class DatasetPosixAclComponent implements OnDestroy {
   handleEmptyACL() {
     this.loader.close();
     this.dialogService
-      .errorReport(
-        helptext.empty_acl_dialog.title,
-        helptext.empty_acl_dialog.message
-      )
+      .errorReport(helptext.empty_acl_dialog.title, helptext.empty_acl_dialog.message)
       .subscribe(() => {
         this.router.navigate(new Array("/").concat(this.route_success));
       });
@@ -504,9 +456,7 @@ export class DatasetPosixAclComponent implements OnDestroy {
         const templateListField = _.cloneDeep(
           _.find(this.fieldConfig, { name: propName }).templateListField
         );
-        aces_fg.push(
-          entityForm.entityFormService.createFormGroup(templateListField)
-        );
+        aces_fg.push(entityForm.entityFormService.createFormGroup(templateListField));
         this.aces_fc.listFields.push(templateListField);
       }
 
@@ -569,10 +519,7 @@ export class DatasetPosixAclComponent implements OnDestroy {
     const doesNotWantToEditDataset =
       this.storageService.isDatasetTopLevel(body.path.replace("mnt/", "")) &&
       !(await this.dialogService
-        .confirm(
-          helptext.dataset_acl_dialog_warning,
-          helptext.dataset_acl_toplevel_dialog_message
-        )
+        .confirm(helptext.dataset_acl_dialog_warning, helptext.dataset_acl_toplevel_dialog_message)
         .toPromise());
 
     if (doesNotWantToEditDataset) {
@@ -582,9 +529,7 @@ export class DatasetPosixAclComponent implements OnDestroy {
     this.dialogRef = this.dialog.open(EntityJobComponent, {
       data: { title: helptext.save_dialog.title },
     });
-    this.dialogRef.componentInstance.setDescription(
-      helptext.save_dialog.message
-    );
+    this.dialogRef.componentInstance.setDescription(helptext.save_dialog.message);
     let dacl = body.dacl;
 
     await this.userService
@@ -734,34 +679,30 @@ export class DatasetPosixAclComponent implements OnDestroy {
   }
 
   loadMoreOptions(length, parent, searchText, config) {
-    parent.userService
-      .userQueryDSCache(searchText, length)
-      .subscribe((items) => {
-        const users = [];
-        for (let i = 0; i < items.length; i++) {
-          users.push({ label: items[i].username, value: items[i].username });
-        }
-        if (searchText == "") {
-          config.options = config.options.concat(users);
-        } else {
-          config.searchOptions = config.searchOptions.concat(users);
-        }
-      });
+    parent.userService.userQueryDSCache(searchText, length).subscribe((items) => {
+      const users = [];
+      for (let i = 0; i < items.length; i++) {
+        users.push({ label: items[i].username, value: items[i].username });
+      }
+      if (searchText == "") {
+        config.options = config.options.concat(users);
+      } else {
+        config.searchOptions = config.searchOptions.concat(users);
+      }
+    });
   }
 
   loadMoreGroupOptions(length, parent, searchText, config) {
-    parent.userService
-      .groupQueryDSCache(searchText, false, length)
-      .subscribe((items) => {
-        const groups = [];
-        for (let i = 0; i < items.length; i++) {
-          groups.push({ label: items[i].group, value: items[i].group });
-        }
-        if (searchText == "") {
-          config.options = config.options.concat(groups);
-        } else {
-          config.searchOptions = config.searchOptions.concat(groups);
-        }
-      });
+    parent.userService.groupQueryDSCache(searchText, false, length).subscribe((items) => {
+      const groups = [];
+      for (let i = 0; i < items.length; i++) {
+        groups.push({ label: items[i].group, value: items[i].group });
+      }
+      if (searchText == "") {
+        config.options = config.options.concat(groups);
+      } else {
+        config.searchOptions = config.searchOptions.concat(groups);
+      }
+    });
   }
 }

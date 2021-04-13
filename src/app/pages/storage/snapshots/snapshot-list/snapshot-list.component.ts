@@ -180,12 +180,8 @@ export class SnapshotListComponent {
     ////
     rows.forEach((row) => {
       if (row.properties) {
-        row.used = this.storageService.convertBytestoHumanReadable(
-          row.properties.used.rawvalue
-        );
-        row.created = this.localeService.formatDateTime(
-          row.properties.creation.parsed.$date
-        );
+        row.used = this.storageService.convertBytestoHumanReadable(row.properties.used.rawvalue);
+        row.created = this.localeService.formatDateTime(row.properties.creation.parsed.$date);
         row.referenced = this.storageService.convertBytestoHumanReadable(
           row.properties.referenced.rawvalue
         );
@@ -222,12 +218,7 @@ export class SnapshotListComponent {
         label: helptext.label_clone,
         onClick: (snapshot) =>
           this._router.navigate(
-            new Array("/").concat([
-              "storage",
-              "snapshots",
-              "clone",
-              snapshot.name,
-            ])
+            new Array("/").concat(["storage", "snapshots", "clone", snapshot.name])
           ),
       },
       {
@@ -261,19 +252,13 @@ export class SnapshotListComponent {
             entityList.handleData(res1, true);
           },
           (err) => {
-            new EntityUtils().handleWSError(
-              this,
-              res,
-              entityList.dialogService
-            );
+            new EntityUtils().handleWSError(this, res, entityList.dialogService);
           }
         );
       });
   }
 
-  dataHandler(list: {
-    rows: { name: string; dataset: string; snapshot: string }[];
-  }): void {
+  dataHandler(list: { rows: { name: string; dataset: string; snapshot: string }[] }): void {
     list.rows = list.rows.map((ss) => {
       const [datasetName, snapshotName] = ss.name.split("@");
       ss.dataset = datasetName;
@@ -285,9 +270,7 @@ export class SnapshotListComponent {
   wsMultiDeleteParams(selected: any) {
     let params: Array<any> = ["zfs.snapshot.delete"];
 
-    const snapshots = selected.map((item) => [
-      item.dataset + "@" + item.snapshot,
-    ]);
+    const snapshots = selected.map((item) => [item.dataset + "@" + item.snapshot]);
     params.push(snapshots);
     params.push("{0}");
 
@@ -307,11 +290,7 @@ export class SnapshotListComponent {
               this.entityList.getData();
             },
             (res) => {
-              new EntityUtils().handleWSError(
-                this,
-                res,
-                this.entityList.dialogService
-              );
+              new EntityUtils().handleWSError(this, res, this.entityList.dialogService);
               this.entityList.loaderOpen = false;
               this.entityList.loader.close();
             }
@@ -322,13 +301,11 @@ export class SnapshotListComponent {
 
   doMultiDelete(selected) {
     let multiDeleteMsg = this.entityList.getMultiDeleteMessage(selected);
-    this.dialogService
-      .confirm("Delete", multiDeleteMsg, false, T("Delete"))
-      .subscribe((res) => {
-        if (res) {
-          this.startMultiDeleteProgress(selected);
-        }
-      });
+    this.dialogService.confirm("Delete", multiDeleteMsg, false, T("Delete")).subscribe((res) => {
+      if (res) {
+        this.startMultiDeleteProgress(selected);
+      }
+    });
   }
 
   startMultiDeleteProgress(selected) {
@@ -394,9 +371,7 @@ export class SnapshotListComponent {
         this.entityList.loader.close();
         this.entityList.loaderOpen = false;
         const msg =
-          T(
-            `Use snapshot <i>${item.snapshot}</i> to roll <b>${item.dataset}</b> back to `
-          ) +
+          T(`Use snapshot <i>${item.snapshot}</i> to roll <b>${item.dataset}</b> back to `) +
           new Date(snapshot.properties.creation.parsed.$date).toLocaleString() +
           "?";
         this.rollbackFormConf.message = msg;
@@ -406,11 +381,7 @@ export class SnapshotListComponent {
       (err) => {
         this.entityList.loader.close();
         this.entityList.loaderOpen = false;
-        new EntityUtils().handleWSError(
-          this.entityList,
-          err,
-          this.entityList.dialogService
-        );
+        new EntityUtils().handleWSError(this.entityList, err, this.entityList.dialogService);
       }
     );
   }
@@ -435,11 +406,7 @@ export class SnapshotListComponent {
         parent.entityList.loaderOpen = false;
         parent.entityList.loader.close();
         entityDialog.dialogRef.close();
-        new EntityUtils().handleWSError(
-          parent.entityList,
-          err,
-          parent.entityList.dialogService
-        );
+        new EntityUtils().handleWSError(parent.entityList, err, parent.entityList.dialogService);
       }
     );
   }
@@ -455,18 +422,13 @@ export class SnapshotListComponent {
       message = helptext.extra_cols.message_show;
       button = helptext.extra_cols.button_show;
     }
-    this.dialogService
-      .confirm(title, message, true, button)
-      .subscribe((res) => {
-        if (res) {
-          this.entityList.loader.open();
-          this.snapshotXtraCols = !this.snapshotXtraCols;
-          window.localStorage.setItem(
-            "snapshotXtraCols",
-            this.snapshotXtraCols.toString()
-          );
-          document.location.reload(true);
-        }
-      });
+    this.dialogService.confirm(title, message, true, button).subscribe((res) => {
+      if (res) {
+        this.entityList.loader.open();
+        this.snapshotXtraCols = !this.snapshotXtraCols;
+        window.localStorage.setItem("snapshotXtraCols", this.snapshotXtraCols.toString());
+        document.location.reload(true);
+      }
+    });
   }
 }

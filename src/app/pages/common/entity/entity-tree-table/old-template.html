@@ -25,12 +25,7 @@
       <th *ngIf="showActions"></th>
     </tr>
   </ng-template>
-  <ng-template
-    pTemplate="body"
-    let-rowNode
-    let-rowData="rowData"
-    let-columns="columns"
-  >
+  <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
     <tr>
       <td
         *ngFor="let col of columns; let i = index"
@@ -49,9 +44,7 @@
         <span *ngIf="col.filesizePipe"
           >{{ (rowData[col.prop] || 0) | filesize : {standard : "iec"} }}</span
         >
-        <span *ngIf="!col.filesizePipe"
-          >{{ rowData[col.prop]?.value || rowData[col.prop] }}</span
-        >
+        <span *ngIf="!col.filesizePipe">{{ rowData[col.prop]?.value || rowData[col.prop] }}</span>
         <span class="icons">
           <span
             *ngIf="col.prop === 'name' && rowData.hasOwnProperty('is_encrypted_root') && rowData.hasOwnProperty('non_encrypted_on_encrypted')"
@@ -114,10 +107,7 @@
           </span>
           <ng-template #groupMenu>
             <span *ngFor="let group of rowData.actions">
-              <div
-                class="group-menu-header"
-                *ngIf="group.actions && group.actions.length > 0"
-              >
+              <div class="group-menu-header" *ngIf="group.actions && group.actions.length > 0">
                 <mat-divider></mat-divider>
                 <div class="title">
                   <strong>{{group?.title | translate}}</strong>

@@ -79,25 +79,19 @@ export class SMBListComponent {
         name: "share_acl",
         label: helptext_sharing_smb.action_share_acl,
         onClick: (row) => {
-          this.ws
-            .call("pool.dataset.path_in_locked_datasets", [row.path])
-            .subscribe((res) => {
-              if (res) {
-                this.lockedPathDialog(row.path);
-              } else {
-                // A home share has a name (homes) set; row.name works for other shares
-                const searchName = row.home ? "homes" : row.name;
-                this.ws
-                  .call("smb.sharesec.query", [
-                    [["share_name", "=", searchName]],
-                  ])
-                  .subscribe((res) => {
-                    this.router.navigate(
-                      ["/"].concat(["sharing", "smb", "acl", res[0].id])
-                    );
-                  });
-              }
-            });
+          this.ws.call("pool.dataset.path_in_locked_datasets", [row.path]).subscribe((res) => {
+            if (res) {
+              this.lockedPathDialog(row.path);
+            } else {
+              // A home share has a name (homes) set; row.name works for other shares
+              const searchName = row.home ? "homes" : row.name;
+              this.ws
+                .call("smb.sharesec.query", [[["share_name", "=", searchName]]])
+                .subscribe((res) => {
+                  this.router.navigate(["/"].concat(["sharing", "smb", "acl", res[0].id]));
+                });
+            }
+          });
         },
       },
       {
@@ -109,47 +103,30 @@ export class SMBListComponent {
         label: helptext_sharing_smb.action_edit_acl,
         onClick: (row) => {
           const datasetId = rowName;
-          this.ws
-            .call("pool.dataset.path_in_locked_datasets", [row.path])
-            .subscribe(
-              (res) => {
-                if (res) {
-                  this.lockedPathDialog(row.path);
+          this.ws.call("pool.dataset.path_in_locked_datasets", [row.path]).subscribe(
+            (res) => {
+              if (res) {
+                this.lockedPathDialog(row.path);
+              } else {
+                if (this.productType.includes("SCALE")) {
+                  this.router.navigate(
+                    ["/"].concat(["storage", "id", poolName, "dataset", "posix-acl", datasetId])
+                  );
                 } else {
-                  if (this.productType.includes("SCALE")) {
-                    this.router.navigate(
-                      ["/"].concat([
-                        "storage",
-                        "id",
-                        poolName,
-                        "dataset",
-                        "posix-acl",
-                        datasetId,
-                      ])
-                    );
-                  } else {
-                    this.router.navigate(
-                      ["/"].concat([
-                        "storage",
-                        "pools",
-                        "id",
-                        poolName,
-                        "dataset",
-                        "acl",
-                        datasetId,
-                      ])
-                    );
-                  }
+                  this.router.navigate(
+                    ["/"].concat(["storage", "pools", "id", poolName, "dataset", "acl", datasetId])
+                  );
                 }
-              },
-              (err) => {
-                this.dialogService.errorReport(
-                  helptext_sharing_smb.action_edit_acl_dialog.title,
-                  err.reason,
-                  err.trace.formatted
-                );
               }
-            );
+            },
+            (err) => {
+              this.dialogService.errorReport(
+                helptext_sharing_smb.action_edit_acl_dialog.title,
+                err.reason,
+                err.trace.formatted
+              );
+            }
+          );
         },
       },
       {
@@ -169,17 +146,13 @@ export class SMBListComponent {
   }
 
   lockedPathDialog(path: string) {
-    this.translate
-      .get(helptext_sharing_smb.action_edit_acl_dialog.message1)
-      .subscribe((msg1) => {
-        this.translate
-          .get(helptext_sharing_smb.action_edit_acl_dialog.message2)
-          .subscribe((msg2) => {
-            this.dialogService.errorReport(
-              helptext_sharing_smb.action_edit_acl_dialog.title,
-              `${msg1} <i>${path}</i> ${msg2}`
-            );
-          });
+    this.translate.get(helptext_sharing_smb.action_edit_acl_dialog.message1).subscribe((msg1) => {
+      this.translate.get(helptext_sharing_smb.action_edit_acl_dialog.message2).subscribe((msg2) => {
+        this.dialogService.errorReport(
+          helptext_sharing_smb.action_edit_acl_dialog.title,
+          `${msg1} <i>${path}</i> ${msg2}`
+        );
       });
+    });
   }
 }

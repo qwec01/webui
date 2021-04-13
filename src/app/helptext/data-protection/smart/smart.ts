@@ -21,9 +21,7 @@ export default {
   smarttest_type_validation: [Validators.required],
 
   smarttest_desc_placeholder: T("Description"),
-  smarttest_desc_tooltip: T(
-    "Enter any information about this S.M.A.R.T. test."
-  ),
+  smarttest_desc_tooltip: T("Enter any information about this S.M.A.R.T. test."),
 
   smarttest_picker_placeholder: T("Schedule"),
   smarttest_picker_tooltip: T(

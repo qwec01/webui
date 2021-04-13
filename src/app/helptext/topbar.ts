@@ -11,19 +11,13 @@ export default {
   ha_disabled_reasons: {
     NO_VOLUME: T("No pools are configured."),
     NO_VIP: T("No interfaces configured with Virtual IP."),
-    NO_SYSTEM_READY: T(
-      `Other ${globalHelptext.ctrlr} has not finished booting.`
-    ),
+    NO_SYSTEM_READY: T(`Other ${globalHelptext.ctrlr} has not finished booting.`),
     NO_PONG: T(`Other ${globalHelptext.ctrlr} cannot be reached.`),
     NO_FAILOVER: T("Failover is administratively disabled."),
     NO_LICENSE: T(`Other ${globalHelptext.ctrlr} has no license.`),
     DISAGREE_CARP: T(`Nodes CARP states do not agree.`),
-    MISMATCH_DISKS: T(
-      `The ${globalHelptext.ctrlrs} do not have the same quantity of disks.`
-    ),
-    NO_CRITICAL_INTERFACES: T(
-      "No network interfaces are marked critical for failover."
-    ),
+    MISMATCH_DISKS: T(`The ${globalHelptext.ctrlrs} do not have the same quantity of disks.`),
+    NO_CRITICAL_INTERFACES: T("No network interfaces are marked critical for failover."),
   },
   legacyUIWarning: `${globalHelptext.legacyUIWarning}`,
   updateRunning_dialog: {
@@ -89,9 +83,7 @@ Login or signup is required.'
   tcDeregisterDialog: {
     title: T("Deregister TrueCommand Cloud Service"),
     icon: "warning",
-    message: T(
-      "Are you sure you want to deregister TrueCommand Cloud Service?"
-    ),
+    message: T("Are you sure you want to deregister TrueCommand Cloud Service?"),
     confirmBtnMsg: T("Confirm"),
   },
 
@@ -103,9 +95,7 @@ Login or signup is required.'
   stopTCConnectingDialog: {
     title: T("Stop TrueCommand Cloud Connection"),
     icon: "warning",
-    message: T(
-      "Are you sure you want to stop connecting to the TrueCommand Cloud Service?"
-    ),
+    message: T("Are you sure you want to stop connecting to the TrueCommand Cloud Service?"),
     confirmBtnMsg: T("Confirm"),
   },
 

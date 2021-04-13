@@ -23,10 +23,7 @@ export class FieldSets {
 
   public config(configName: string) {
     return this.list()
-      .find(
-        (set) =>
-          set.config && set.config.some((config) => config.name === configName)
-      )
+      .find((set) => set.config && set.config.some((config) => config.name === configName))
       .config.find((config) => config.name === configName);
   }
 

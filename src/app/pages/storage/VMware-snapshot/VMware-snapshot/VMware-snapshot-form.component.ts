@@ -106,9 +106,7 @@ export class VMwareSnapshotFormComponent {
         ) {
           this.dialogService.Info(
             T("VM Snapshot"),
-            T(
-              "Enter valid VMware ESXI/vSphere credentials to fetch datastores."
-            )
+            T("Enter valid VMware ESXI/vSphere credentials to fetch datastores.")
           );
         } else {
           this.blurEvent(this);
@@ -153,17 +151,13 @@ export class VMwareSnapshotFormComponent {
       this.datastore.options.length = 0;
     }
 
-    this.entityForm.formGroup.controls["datastore"].valueChanges.subscribe(
-      (res) => {
-        this.datastoreList.forEach((e) => {
-          if (res === e.name) {
-            this.entityForm.formGroup.controls["filesystem"].setValue(
-              e.filesystems[0]
-            );
-          }
-        });
-      }
-    );
+    this.entityForm.formGroup.controls["datastore"].valueChanges.subscribe((res) => {
+      this.datastoreList.forEach((e) => {
+        if (res === e.name) {
+          this.entityForm.formGroup.controls["filesystem"].setValue(e.filesystems[0]);
+        }
+      });
+    });
   }
 
   beforeSubmit(entityForm: any) {
@@ -181,20 +175,14 @@ export class VMwareSnapshotFormComponent {
       password: entityForm.password,
     };
     // Looks for a mismatch and raises a confirm dialog if there is one; otherwise saves w/o the dialog
-    const dataStoreMatch = this.datastoreList.find(
-      (item) => item.name === entityForm.datastore
-    );
+    const dataStoreMatch = this.datastoreList.find((item) => item.name === entityForm.datastore);
     if (
       !dataStoreMatch ||
       (dataStoreMatch.name === entityForm.datastore &&
         dataStoreMatch.filesystems[0] !== entityForm.filesystem)
     ) {
-      let firstObj = this.fileSystemList.find(
-        (item) => item.name === entityForm.filesystem
-      );
-      let secondObj = this.dataListComplete.find(
-        (item) => item.name === entityForm.datastore
-      );
+      let firstObj = this.fileSystemList.find((item) => item.name === entityForm.filesystem);
+      let secondObj = this.dataListComplete.find((item) => item.name === entityForm.datastore);
       if (secondObj.description === "") {
         secondObj.description = T("(No description)");
       }
@@ -252,11 +240,7 @@ export class VMwareSnapshotFormComponent {
         },
         (error) => {
           this.loader.close();
-          this.dialogService.errorReport(
-            error.error,
-            error.reason,
-            error.trace.formatted
-          );
+          this.dialogService.errorReport(error.error, error.reason, error.trace.formatted);
         }
       );
     } else {
@@ -268,11 +252,7 @@ export class VMwareSnapshotFormComponent {
         },
         (error) => {
           this.loader.close();
-          this.dialogService.errorReport(
-            error.error,
-            error.reason,
-            error.trace.formatted
-          );
+          this.dialogService.errorReport(error.error, error.reason, error.trace.formatted);
         }
       );
     }
@@ -285,62 +265,51 @@ export class VMwareSnapshotFormComponent {
       payload["username"] = parent.entityForm.formGroup.value.username;
       payload["password"] = parent.entityForm.formGroup.value.password;
 
-      if (
-        payload["password"] !== "" &&
-        typeof payload["password"] !== "undefined"
-      ) {
+      if (payload["password"] !== "" && typeof payload["password"] !== "undefined") {
         parent.loader.open();
-        parent.ws
-          .call("vmware.match_datastores_with_datasets", [payload])
-          .subscribe(
-            (res) => {
-              res.filesystems.forEach((filesystem_item) => {
-                _.find(parent.fieldConfig, { name: "filesystem" })[
-                  "options"
-                ].push({
-                  label: filesystem_item.name,
-                  value: filesystem_item.name,
-                });
+        parent.ws.call("vmware.match_datastores_with_datasets", [payload]).subscribe(
+          (res) => {
+            res.filesystems.forEach((filesystem_item) => {
+              _.find(parent.fieldConfig, { name: "filesystem" })["options"].push({
+                label: filesystem_item.name,
+                value: filesystem_item.name,
               });
+            });
 
-              res.datastores.forEach((i) => {
-                if (i.filesystems.length > 0) {
-                  parent.datastoreList.push(i);
-                }
-              });
-              if (this.datastore.options.length > 0) {
-                this.datastore.options.length = 0;
+            res.datastores.forEach((i) => {
+              if (i.filesystems.length > 0) {
+                parent.datastoreList.push(i);
               }
-              for (const key in res.datastores) {
-                const datastores = res.datastores[key];
-                this.datastore.options.push({
-                  label: datastores.name,
-                  value: datastores.name,
-                });
-              }
-
-              parent.fileSystemList = res.filesystems;
-              parent.dataListComplete = res.datastores;
-              parent.loader.close();
-            },
-            (error) => {
+            });
+            if (this.datastore.options.length > 0) {
               this.datastore.options.length = 0;
-              parent.loader.close();
-              if (error.reason && error.reason.includes("[ETIMEDOUT]")) {
-                parent.dialogService.errorReport(
-                  helptext.connect_err_dialog.title,
-                  helptext.connect_err_dialog.msg,
-                  ""
-                );
-              } else {
-                new EntityUtils().handleWSError(
-                  this,
-                  error,
-                  this.dialogService
-                );
-              }
             }
-          );
+            for (const key in res.datastores) {
+              const datastores = res.datastores[key];
+              this.datastore.options.push({
+                label: datastores.name,
+                value: datastores.name,
+              });
+            }
+
+            parent.fileSystemList = res.filesystems;
+            parent.dataListComplete = res.datastores;
+            parent.loader.close();
+          },
+          (error) => {
+            this.datastore.options.length = 0;
+            parent.loader.close();
+            if (error.reason && error.reason.includes("[ETIMEDOUT]")) {
+              parent.dialogService.errorReport(
+                helptext.connect_err_dialog.title,
+                helptext.connect_err_dialog.msg,
+                ""
+              );
+            } else {
+              new EntityUtils().handleWSError(this, error, this.dialogService);
+            }
+          }
+        );
       }
     }
   }

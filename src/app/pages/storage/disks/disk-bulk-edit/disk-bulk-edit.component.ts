@@ -143,10 +143,7 @@ export class DiskBulkEditComponent {
           let success_state = true;
           for (let i = 0; i < res.result.length; i++) {
             if (res.result[i].error != null) {
-              this.dialogService.errorReport(
-                helptext.dialog_error,
-                res.result[i].error
-              );
+              this.dialogService.errorReport(helptext.dialog_error, res.result[i].error);
               success_state = false;
               break;
             }
@@ -158,11 +155,7 @@ export class DiskBulkEditComponent {
       },
       (err) => {
         this.loader.close();
-        this.dialogService.errorReport(
-          helptext.dialog_error,
-          err.reason,
-          err.trace.formatted
-        );
+        this.dialogService.errorReport(helptext.dialog_error, err.reason, err.trace.formatted);
       }
     );
   }

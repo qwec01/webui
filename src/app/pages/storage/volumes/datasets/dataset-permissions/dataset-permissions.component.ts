@@ -146,33 +146,31 @@ export class DatasetPermissionsComponent implements OnDestroy {
       id: "use_acl",
       name: helptext.acl_manager_button,
       function: () => {
-        this.ws
-          .call("filesystem.getacl", [this.datasetPath])
-          .subscribe((res) => {
-            if (res.acltype === "POSIX1E") {
-              this.router.navigate(
-                new Array("/").concat([
-                  "storage",
-                  "id",
-                  this.datasetId.split("/")[0],
-                  "dataset",
-                  "posix-acl",
-                  this.datasetId,
-                ])
-              );
-            } else {
-              this.router.navigate(
-                new Array("/").concat([
-                  "storage",
-                  "id",
-                  this.datasetId.split("/")[0],
-                  "dataset",
-                  "acl",
-                  this.datasetId,
-                ])
-              );
-            }
-          });
+        this.ws.call("filesystem.getacl", [this.datasetPath]).subscribe((res) => {
+          if (res.acltype === "POSIX1E") {
+            this.router.navigate(
+              new Array("/").concat([
+                "storage",
+                "id",
+                this.datasetId.split("/")[0],
+                "dataset",
+                "posix-acl",
+                this.datasetId,
+              ])
+            );
+          } else {
+            this.router.navigate(
+              new Array("/").concat([
+                "storage",
+                "id",
+                this.datasetId.split("/")[0],
+                "dataset",
+                "acl",
+                this.datasetId,
+              ])
+            );
+          }
+        });
       },
     },
   ];
@@ -195,8 +193,7 @@ export class DatasetPermissionsComponent implements OnDestroy {
       this.datasetId = params["pk"];
       this.datasetPath = "/mnt/" + this.datasetId;
       const idField = _.find(
-        this.fieldSets.find((set) => set.name === helptext.heading_dataset_path)
-          .config,
+        this.fieldSets.find((set) => set.name === helptext.heading_dataset_path).config,
         { name: "id" }
       );
       idField.value = this.datasetPath;
@@ -208,8 +205,7 @@ export class DatasetPermissionsComponent implements OnDestroy {
         users.push({ label: items[i].username, value: items[i].username });
       }
       this.userField = _.find(
-        this.fieldSets.find((set) => set.name === helptext.heading_owner)
-          .config,
+        this.fieldSets.find((set) => set.name === helptext.heading_owner).config,
         { name: "user" }
       );
       this.userField.options = users;
@@ -221,8 +217,7 @@ export class DatasetPermissionsComponent implements OnDestroy {
         groups.push({ label: items[i].group, value: items[i].group });
       }
       this.groupField = _.find(
-        this.fieldSets.find((set) => set.name === helptext.heading_owner)
-          .config,
+        this.fieldSets.find((set) => set.name === helptext.heading_owner).config,
         { name: "group" }
       );
       this.groupField.options = groups;
@@ -238,24 +233,22 @@ export class DatasetPermissionsComponent implements OnDestroy {
       entityEdit.formGroup.controls["group"].setValue(res.group);
     });
     this.recursive = entityEdit.formGroup.controls["recursive"];
-    this.recursive_subscription = this.recursive.valueChanges.subscribe(
-      (value) => {
-        if (value === true) {
-          this.dialog
-            .confirm(
-              T("Warning"),
-              T(
-                "Setting permissions recursively will affect this directory and any others below it. This might make data inaccessible."
-              )
+    this.recursive_subscription = this.recursive.valueChanges.subscribe((value) => {
+      if (value === true) {
+        this.dialog
+          .confirm(
+            T("Warning"),
+            T(
+              "Setting permissions recursively will affect this directory and any others below it. This might make data inaccessible."
             )
-            .subscribe((res) => {
-              if (!res) {
-                this.recursive.setValue(false);
-              }
-            });
-        }
+          )
+          .subscribe((res) => {
+            if (!res) {
+              this.recursive.setValue(false);
+            }
+          });
       }
-    );
+    });
   }
 
   ngOnDestroy() {
@@ -313,10 +306,7 @@ export class DatasetPermissionsComponent implements OnDestroy {
       data: { title: T("Saving Permissions") },
     });
     this.dialogRef.componentInstance.setDescription(T("Saving Permissions..."));
-    this.dialogRef.componentInstance.setCall(this.updateCall, [
-      this.datasetId,
-      data,
-    ]);
+    this.dialogRef.componentInstance.setCall(this.updateCall, [this.datasetId, data]);
     this.dialogRef.componentInstance.submit();
     this.dialogRef.componentInstance.success.subscribe((res) => {
       this.entityForm.success = true;
@@ -329,38 +319,30 @@ export class DatasetPermissionsComponent implements OnDestroy {
   }
 
   loadMoreOptions(length, parent, searchText) {
-    parent.userService
-      .userQueryDSCache(searchText, length)
-      .subscribe((items) => {
-        const users = [];
-        for (let i = 0; i < items.length; i++) {
-          users.push({ label: items[i].username, value: items[i].username });
-        }
-        if (searchText == "") {
-          parent.userField.options = parent.userField.options.concat(users);
-        } else {
-          parent.userField.searchOptions = parent.userField.searchOptions.concat(
-            users
-          );
-        }
-      });
+    parent.userService.userQueryDSCache(searchText, length).subscribe((items) => {
+      const users = [];
+      for (let i = 0; i < items.length; i++) {
+        users.push({ label: items[i].username, value: items[i].username });
+      }
+      if (searchText == "") {
+        parent.userField.options = parent.userField.options.concat(users);
+      } else {
+        parent.userField.searchOptions = parent.userField.searchOptions.concat(users);
+      }
+    });
   }
 
   loadMoreGroupOptions(length, parent, searchText) {
-    parent.userService
-      .groupQueryDSCache(searchText, false, length)
-      .subscribe((items) => {
-        const groups = [];
-        for (let i = 0; i < items.length; i++) {
-          groups.push({ label: items[i].group, value: items[i].group });
-        }
-        if (searchText == "") {
-          parent.groupField.options = parent.groupField.options.concat(groups);
-        } else {
-          parent.groupField.searchOptions = parent.groupField.searchOptions.concat(
-            groups
-          );
-        }
-      });
+    parent.userService.groupQueryDSCache(searchText, false, length).subscribe((items) => {
+      const groups = [];
+      for (let i = 0; i < items.length; i++) {
+        groups.push({ label: items[i].group, value: items[i].group });
+      }
+      if (searchText == "") {
+        parent.groupField.options = parent.groupField.options.concat(groups);
+      } else {
+        parent.groupField.searchOptions = parent.groupField.searchOptions.concat(groups);
+      }
+    });
   }
 }

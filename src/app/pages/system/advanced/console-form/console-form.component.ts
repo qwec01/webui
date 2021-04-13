@@ -118,11 +118,9 @@ export class ConsoleFormComponent implements OnDestroy {
     private sysGeneralService: SystemGeneralService,
     private modalService: ModalService
   ) {
-    this.getDataFromDash = this.sysGeneralService.sendConfigData$.subscribe(
-      (res) => {
-        this.configData = res;
-      }
-    );
+    this.getDataFromDash = this.sysGeneralService.sendConfigData$.subscribe((res) => {
+      this.configData = res;
+    });
   }
 
   preInit() {}

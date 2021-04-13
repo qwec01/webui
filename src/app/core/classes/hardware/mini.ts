@@ -11,10 +11,8 @@ export class MINI extends Chassis {
     this.front = new ChassisView();
     this.front.container = new PIXI.Container();
     this.front.chassisPath = "assets/images/hardware/mini/mini_673w.png";
-    this.front.driveTrayBackgroundPath =
-      "assets/images/hardware/mini/mini_hdd_drivetray_bg.png";
-    this.front.driveTrayHandlePath =
-      "assets/images/hardware/mini/mini_hdd_drivetray_bg.png";
+    this.front.driveTrayBackgroundPath = "assets/images/hardware/mini/mini_hdd_drivetray_bg.png";
+    this.front.driveTrayHandlePath = "assets/images/hardware/mini/mini_hdd_drivetray_bg.png";
     this.front.driveTraysOffsetX = 104;
     this.front.driveTraysOffsetY = 38;
     this.front.vertical = false;

@@ -5,9 +5,7 @@ import { T } from "app/translate-marker";
 
 @Component({
   selector: "app-iscsi-initiator-list",
-  template: `
-    <entity-table [conf]="this" [title]="tableTitle"></entity-table>
-  `,
+  template: ` <entity-table [conf]="this" [title]="tableTitle"></entity-table> `,
 })
 export class InitiatorListComponent {
   public tableTitle = T("Initiators Groups");

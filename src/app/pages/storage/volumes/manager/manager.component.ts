@@ -17,11 +17,7 @@ import { of, Subscription } from "rxjs";
 import { switchMap, take } from "rxjs/operators";
 import { DownloadKeyModalDialog } from "../../../../components/common/dialog/downloadkey/downloadkey-dialog.component";
 import helptext from "../../../../helptext/storage/volumes/manager/manager";
-import {
-  DialogService,
-  WebSocketService,
-  SystemGeneralService,
-} from "../../../../services/";
+import { DialogService, WebSocketService, SystemGeneralService } from "../../../../services/";
 import { AppLoaderService } from "../../../../services/app-loader/app-loader.service";
 import { StorageService } from "../../../../services/storage.service";
 import { T } from "../../../../translate-marker";
@@ -88,8 +84,7 @@ export class ManagerComponent implements OnInit, OnDestroy, AfterViewInit {
   protected existing_pool: any;
   protected needs_disk = true;
   protected needsDiskMessage = helptext.manager_needsDiskMessage;
-  protected extendedNeedsDiskMessage =
-    helptext.manager_extendedNeedsDiskMessage;
+  protected extendedNeedsDiskMessage = helptext.manager_extendedNeedsDiskMessage;
   public size;
   protected extendedAvailable;
   public sizeMessage = helptext.manager_sizeMessage;
@@ -97,10 +92,8 @@ export class ManagerComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public disknumError = null;
   public disknumErrorMessage = helptext.manager_disknumErrorMessage;
-  public disknumErrorConfirmMessage =
-    helptext.manager_disknumErrorConfirmMessage;
-  public disknumExtendConfirmMessage =
-    helptext.manager_disknumExtendConfirmMessage;
+  public disknumErrorConfirmMessage = helptext.manager_disknumErrorConfirmMessage;
+  public disknumExtendConfirmMessage = helptext.manager_disknumExtendConfirmMessage;
 
   public vdevtypeError = null;
   public vdevtypeErrorMessage = helptext.manager_vdevtypeErrorMessage;
@@ -108,8 +101,7 @@ export class ManagerComponent implements OnInit, OnDestroy, AfterViewInit {
   public emptyDataVdev = true;
 
   public stripeVdevTypeError = null;
-  public stripeVdevTypeErrorMessage =
-    helptext.manager_stripeVdevTypeErrorMessage;
+  public stripeVdevTypeErrorMessage = helptext.manager_stripeVdevTypeErrorMessage;
 
   public vdevdisksError = false;
   public vdevdisksSizeError = false;
@@ -162,9 +154,7 @@ export class ManagerComponent implements OnInit, OnDestroy, AfterViewInit {
     const duplicable_disks = this.duplicable_disks;
     let maxVdevs = 0;
     if (this.first_data_vdev_disknum && this.first_data_vdev_disknum > 0) {
-      maxVdevs = Math.floor(
-        this.duplicable_disks.length / this.first_data_vdev_disknum
-      );
+      maxVdevs = Math.floor(this.duplicable_disks.length / this.first_data_vdev_disknum);
     }
     const vdevs_options = [];
     for (let i = maxVdevs; i > 0; i--) {
@@ -249,11 +239,9 @@ export class ManagerComponent implements OnInit, OnDestroy, AfterViewInit {
           copy_desc.paraText = paraText;
         };
         setParatext(entityDialog.formGroup.controls["vdevs"].value);
-        entityDialog.formGroup.controls["vdevs"].valueChanges.subscribe(
-          (vdevs) => {
-            setParatext(vdevs);
-          }
-        );
+        entityDialog.formGroup.controls["vdevs"].valueChanges.subscribe((vdevs) => {
+          setParatext(vdevs);
+        });
       },
     };
     this.dialog.dialogForm(conf);
@@ -284,14 +272,10 @@ export class ManagerComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   getStripeVdevTypeErrorMsg(group) {
-    this.translate
-      .get(this.stripeVdevTypeErrorMessage)
-      .subscribe((errorMessage) => {
-        const vdevType = group === "special" ? "metadata" : group;
-        this.stripeVdevTypeError = `${T(
-          "A stripe"
-        )} ${vdevType} ${errorMessage}`;
-      });
+    this.translate.get(this.stripeVdevTypeErrorMessage).subscribe((errorMessage) => {
+      const vdevType = group === "special" ? "metadata" : group;
+      this.stripeVdevTypeError = `${T("A stripe")} ${vdevType} ${errorMessage}`;
+    });
   }
 
   getPoolData() {
@@ -302,29 +286,23 @@ export class ManagerComponent implements OnInit, OnDestroy, AfterViewInit {
           if (this.first_data_vdev_type === "raidz1") {
             this.first_data_vdev_type = "raidz";
           }
-          this.first_data_vdev_disknum =
-            res[0].topology.data[0].children.length;
+          this.first_data_vdev_disknum = res[0].topology.data[0].children.length;
 
           let first_disk;
-          if (
-            this.first_data_vdev_disknum === 0 &&
-            this.first_data_vdev_type === "disk"
-          ) {
+          if (this.first_data_vdev_disknum === 0 && this.first_data_vdev_type === "disk") {
             this.first_data_vdev_disknum = 1;
             this.first_data_vdev_type = "stripe";
             first_disk = res[0].topology.data[0];
           } else {
             first_disk = res[0].topology.data[0].children[0];
           }
-          this.ws
-            .call("disk.query", [[["name", "=", first_disk.disk]]])
-            .subscribe((disk) => {
-              if (disk[0]) {
-                this.first_data_vdev_disksize = disk[0].size;
-                this.first_data_vdev_disktype = disk[0].type;
-              }
-              this.getDuplicableDisks();
-            });
+          this.ws.call("disk.query", [[["name", "=", first_disk.disk]]]).subscribe((disk) => {
+            if (disk[0]) {
+              this.first_data_vdev_disksize = disk[0].size;
+              this.first_data_vdev_disktype = disk[0].type;
+            }
+            this.getDuplicableDisks();
+          });
           this.name = res[0].name;
           this.vol_encrypt = res[0].encrypt;
           if (this.vol_encrypt > 0) {
@@ -349,23 +327,19 @@ export class ManagerComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
-    this.ws
-      .call("pool.dataset.encryption_algorithm_choices")
-      .subscribe((algorithms) => {
-        for (const algorithm in algorithms) {
-          if (algorithms.hasOwnProperty(algorithm)) {
-            this.encryption_algorithm_options.push({
-              label: algorithm,
-              value: algorithm,
-            });
-          }
+    this.ws.call("pool.dataset.encryption_algorithm_choices").subscribe((algorithms) => {
+      for (const algorithm in algorithms) {
+        if (algorithms.hasOwnProperty(algorithm)) {
+          this.encryption_algorithm_options.push({
+            label: algorithm,
+            value: algorithm,
+          });
         }
-      });
-    this.getAdvancedConfig = this.sysGeneralService.getAdvancedConfig.subscribe(
-      (res) => {
-        this.swapondrive = res.swapondrive;
       }
-    );
+    });
+    this.getAdvancedConfig = this.sysGeneralService.getAdvancedConfig.subscribe((res) => {
+      this.swapondrive = res.swapondrive;
+    });
     this.route.params.subscribe((params) => {
       if (params["pk"]) {
         this.pk = parseInt(params["pk"], 10);
@@ -643,8 +617,7 @@ export class ManagerComponent implements OnInit, OnDestroy, AfterViewInit {
     if (!this.force) {
       let warnings = helptext.force_warning;
       if (this.vdevdisksSizeError) {
-        warnings =
-          warnings + "<br/><br/>" + helptext.force_warnings["diskSizeWarning"];
+        warnings = warnings + "<br/><br/>" + helptext.force_warnings["diskSizeWarning"];
       }
       if (this.stripeVdevTypeError) {
         warnings = warnings + "<br/><br/>" + this.stripeVdevTypeError;
@@ -663,95 +636,91 @@ export class ManagerComponent implements OnInit, OnDestroy, AfterViewInit {
       diskWarning = this.diskExtendWarning;
     }
 
-    this.dialog
-      .confirm(T("Warning"), diskWarning, false, confirmButton)
-      .subscribe((res) => {
-        if (res) {
-          this.error = null;
+    this.dialog.confirm(T("Warning"), diskWarning, false, confirmButton).subscribe((res) => {
+      if (res) {
+        this.error = null;
 
-          const layout = {};
-          this.vdevComponents.forEach((vdev) => {
-            const disks = [];
-            vdev.getDisks().forEach((disk) => {
-              disks.push(disk.devname);
-            });
-            if (disks.length > 0) {
-              let type = vdev.type.toUpperCase();
-              type = type === "RAIDZ" ? "RAIDZ1" : type;
-              const group = vdev.group;
-              if (!layout[group]) {
-                layout[group] = [];
-              }
-              if (group === "spares") {
-                layout[group] = disks;
-              } else {
-                layout[group].push({ type: type, disks: disks });
-              }
-            }
+        const layout = {};
+        this.vdevComponents.forEach((vdev) => {
+          const disks = [];
+          vdev.getDisks().forEach((disk) => {
+            disks.push(disk.devname);
           });
+          if (disks.length > 0) {
+            let type = vdev.type.toUpperCase();
+            type = type === "RAIDZ" ? "RAIDZ1" : type;
+            const group = vdev.group;
+            if (!layout[group]) {
+              layout[group] = [];
+            }
+            if (group === "spares") {
+              layout[group] = disks;
+            } else {
+              layout[group].push({ type: type, disks: disks });
+            }
+          }
+        });
 
-          let body = {};
-          if (this.isNew) {
-            body = {
-              name: this.name,
-              encryption: this.isEncrypted,
-              topology: layout,
+        let body = {};
+        if (this.isNew) {
+          body = {
+            name: this.name,
+            encryption: this.isEncrypted,
+            topology: layout,
+          };
+          if (this.isEncrypted) {
+            body["encryption_options"] = {
+              generate_key: true,
+              algorithm: this.encryption_algorithm,
             };
-            if (this.isEncrypted) {
-              body["encryption_options"] = {
-                generate_key: true,
-                algorithm: this.encryption_algorithm,
-              };
-            }
-          } else {
-            body = { topology: layout };
           }
-
-          const dialogRef = this.mdDialog.open(EntityJobComponent, {
-            data: { title: confirmButton, disableClose: true },
-          });
-          if (this.pk) {
-            dialogRef.componentInstance.setCall(this.editCall, [this.pk, body]);
-          } else {
-            dialogRef.componentInstance.setCall(this.addCall, [body]);
-          }
-          dialogRef.componentInstance.success
-            .pipe(
-              switchMap((r: any) => {
-                if (this.isEncrypted) {
-                  const downloadDialogRef = this.mdDialog.open(
-                    DownloadKeyModalDialog,
-                    { disableClose: true }
-                  );
-                  downloadDialogRef.componentInstance.new = true;
-                  downloadDialogRef.componentInstance.volumeId = r.result.id;
-                  downloadDialogRef.componentInstance.volumeName =
-                    r.result.name;
-                  downloadDialogRef.componentInstance.fileName =
-                    "dataset_" + r.result.name + "_keys.json";
-
-                  return downloadDialogRef.afterClosed();
-                }
-
-                return of(true);
-              }),
-              take(1)
-            )
-            .subscribe(
-              () => {},
-              (e) => new EntityUtils().handleWSError(this, e, this.dialog),
-              () => {
-                dialogRef.close(false);
-                this.goBack();
-              }
-            );
-          dialogRef.componentInstance.failure.subscribe((error) => {
-            dialogRef.close(false);
-            new EntityUtils().handleWSError(self, error, this.dialog);
-          });
-          dialogRef.componentInstance.submit();
+        } else {
+          body = { topology: layout };
         }
-      });
+
+        const dialogRef = this.mdDialog.open(EntityJobComponent, {
+          data: { title: confirmButton, disableClose: true },
+        });
+        if (this.pk) {
+          dialogRef.componentInstance.setCall(this.editCall, [this.pk, body]);
+        } else {
+          dialogRef.componentInstance.setCall(this.addCall, [body]);
+        }
+        dialogRef.componentInstance.success
+          .pipe(
+            switchMap((r: any) => {
+              if (this.isEncrypted) {
+                const downloadDialogRef = this.mdDialog.open(DownloadKeyModalDialog, {
+                  disableClose: true,
+                });
+                downloadDialogRef.componentInstance.new = true;
+                downloadDialogRef.componentInstance.volumeId = r.result.id;
+                downloadDialogRef.componentInstance.volumeName = r.result.name;
+                downloadDialogRef.componentInstance.fileName =
+                  "dataset_" + r.result.name + "_keys.json";
+
+                return downloadDialogRef.afterClosed();
+              }
+
+              return of(true);
+            }),
+            take(1)
+          )
+          .subscribe(
+            () => {},
+            (e) => new EntityUtils().handleWSError(this, e, this.dialog),
+            () => {
+              dialogRef.close(false);
+              this.goBack();
+            }
+          );
+        dialogRef.componentInstance.failure.subscribe((error) => {
+          dialogRef.close(false);
+          new EntityUtils().handleWSError(self, error, this.dialog);
+        });
+        dialogRef.componentInstance.submit();
+      }
+    });
   }
 
   goBack() {
@@ -761,12 +730,7 @@ export class ManagerComponent implements OnInit, OnDestroy, AfterViewInit {
   openDialog() {
     if (this.isEncrypted) {
       this.dialog
-        .confirm(
-          T("Warning"),
-          this.encryption_message,
-          false,
-          T("I Understand")
-        )
+        .confirm(T("Warning"), this.encryption_message, false, T("I Understand"))
         .subscribe((res) => {
           if (res) {
             this.isEncrypted = true;
@@ -897,20 +861,14 @@ export class ManagerComponent implements OnInit, OnDestroy, AfterViewInit {
 
   toggleExpandRow(row) {
     if (!this.startingHeight) {
-      this.startingHeight = document.getElementsByClassName(
-        "ngx-datatable"
-      )[0].clientHeight;
+      this.startingHeight = document.getElementsByClassName("ngx-datatable")[0].clientHeight;
     }
     this.table.rowDetail.toggleExpandRow(row);
     setTimeout(() => {
-      this.expandedRows = document.querySelectorAll(
-        ".datatable-row-detail"
-      ).length;
+      this.expandedRows = document.querySelectorAll(".datatable-row-detail").length;
       const newHeight = this.expandedRows * 100 + this.startingHeight;
       const heightStr = `height: ${newHeight}px`;
-      document
-        .getElementsByClassName("ngx-datatable")[0]
-        .setAttribute("style", heightStr);
+      document.getElementsByClassName("ngx-datatable")[0].setAttribute("style", heightStr);
     }, 100);
   }
 }

@@ -20,18 +20,14 @@ export default {
   },
   http_port_listen_backlog: {
     placeholder: T("HTTP Port Listen Backlog"),
-    tooltip: T(
-      "The maximum length of the queue of pending\
- connections. Default is 100."
-    ),
+    tooltip: T("The maximum length of the queue of pending\
+ connections. Default is 100."),
     validation: [Validators.required, regexValidator(/^\d+$/)],
   },
   bind: {
     placeholder: T("Bind to"),
-    tooltip: T(
-      "One or more IP addresses to which to bind the\
- Netdata service."
-    ),
+    tooltip: T("One or more IP addresses to which to bind the\
+ Netdata service."),
   },
   port: {
     placeholder: T("Bind to Port"),

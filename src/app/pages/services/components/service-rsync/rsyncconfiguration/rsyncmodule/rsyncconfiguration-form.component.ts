@@ -152,9 +152,7 @@ export class RYSNCConfigurationFormComponent {
       name: helptext.rsyncd_fieldset_access,
     });
 
-    this.rsyncmod_user = accessSet.config.find(
-      (config) => config.name === "user"
-    );
+    this.rsyncmod_user = accessSet.config.find((config) => config.name === "user");
     this.userService.userQueryDSCache().subscribe((users) => {
       users.forEach((user) => {
         this.rsyncmod_user.options.push({
@@ -164,9 +162,7 @@ export class RYSNCConfigurationFormComponent {
       });
     });
 
-    this.rsyncmod_group = accessSet.config.find(
-      (config) => config.name === "group"
-    );
+    this.rsyncmod_group = accessSet.config.find((config) => config.name === "group");
     this.userService.groupQueryDSCache().subscribe((groups) => {
       groups.forEach((group) => {
         this.rsyncmod_group.options.push({
@@ -183,15 +179,13 @@ export class RYSNCConfigurationFormComponent {
     this.route.params.subscribe((params) => {
       if (params["pk"]) {
         this.pk = parseInt(params["pk"], 10);
-        this.ws
-          .call("rsyncmod.query", [[["id", "=", this.pk]]])
-          .subscribe((res) => {
-            for (const i in res[0]) {
-              if (i !== "id") {
-                entityForm.formGroup.controls[i].setValue(res[0][i]);
-              }
+        this.ws.call("rsyncmod.query", [[["id", "=", this.pk]]]).subscribe((res) => {
+          for (const i in res[0]) {
+            if (i !== "id") {
+              entityForm.formGroup.controls[i].setValue(res[0][i]);
             }
-          });
+          }
+        });
       }
     });
 

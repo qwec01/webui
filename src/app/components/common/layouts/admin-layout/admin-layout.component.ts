@@ -13,11 +13,7 @@ import { NavigationEnd, Router } from "@angular/router";
 import { CoreEvent, CoreService } from "app/core/services/core.service";
 import { Subscription } from "rxjs";
 import * as domHelper from "../../../../helpers/dom.helper";
-import {
-  RestService,
-  WebSocketService,
-  SystemGeneralService,
-} from "../../../../services";
+import { RestService, WebSocketService, SystemGeneralService } from "../../../../services";
 import { LanguageService } from "../../../../services/language.service";
 import { ThemeService } from "../../../../services/theme/theme.service";
 import { ModalService } from "../../../../services/modal.service";
@@ -217,8 +213,8 @@ export class AdminLayoutComponent implements OnInit, AfterViewChecked {
   }
 
   checkIfConsoleMsgShows() {
-    this.getAdvancedConfig = this.sysGeneralService.getAdvancedConfig.subscribe(
-      (res) => this.onShowConsoleFooterBar(res.consolemsg)
+    this.getAdvancedConfig = this.sysGeneralService.getAdvancedConfig.subscribe((res) =>
+      this.onShowConsoleFooterBar(res.consolemsg)
     );
   }
 
@@ -251,11 +247,7 @@ export class AdminLayoutComponent implements OnInit, AfterViewChecked {
     if (num > this.consoleMSgList.length) {
       num = this.consoleMSgList.length;
     }
-    for (
-      let i = this.consoleMSgList.length - 1;
-      i >= this.consoleMSgList.length - num;
-      --i
-    ) {
+    for (let i = this.consoleMSgList.length - 1; i >= this.consoleMSgList.length - num; --i) {
       msgs = this.consoleMSgList[i] + "\n" + msgs;
     }
 
@@ -273,10 +265,7 @@ export class AdminLayoutComponent implements OnInit, AfterViewChecked {
   onShowConsolePanel() {
     let dialogRef = this.dialog.open(ConsolePanelModalDialog, {});
     const sub = dialogRef.componentInstance.onEventEmitter.subscribe(() => {
-      dialogRef.componentInstance.consoleMsg = this.accumulateConsoleMsg(
-        "",
-        500
-      );
+      dialogRef.componentInstance.consoleMsg = this.accumulateConsoleMsg("", 500);
     });
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -319,10 +308,7 @@ export class AdminLayoutComponent implements OnInit, AfterViewChecked {
 
   // For the slide-in menu
   toggleMenu(menuInfo?) {
-    if (
-      (this.isOpen && !menuInfo) ||
-      (this.isOpen && menuInfo[0] === this.menuName)
-    ) {
+    if ((this.isOpen && !menuInfo) || (this.isOpen && menuInfo[0] === this.menuName)) {
       this.isOpen = false;
     } else if (menuInfo) {
       this.menuName = menuInfo[0];

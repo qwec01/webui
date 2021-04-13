@@ -68,12 +68,7 @@ export class RestService {
     });
   }
 
-  request(
-    method: HttpClient,
-    path: string,
-    options: Object,
-    useBaseUrl?: boolean
-  ) {
+  request(method: HttpClient, path: string, options: Object, useBaseUrl?: boolean) {
     const headers = new Headers({
       "Content-Type": "application/json",
       Authorization: "Token " + this.ws.token,
@@ -85,9 +80,7 @@ export class RestService {
     }
 
     const requestUrl: string =
-      typeof useBaseUrl !== "undefined" && useBaseUrl === false
-        ? path
-        : this.baseUrl + path;
+      typeof useBaseUrl !== "undefined" && useBaseUrl === false ? path : this.baseUrl + path;
 
     const requestOptions: Object = Object.assign(
       { method: method, url: requestUrl, headers: headers },

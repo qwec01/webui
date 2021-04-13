@@ -176,9 +176,7 @@ export class ApiService {
       preProcessor(def: ApiCall) {
         let redef = Object.assign({}, def);
         redef.responseEvent =
-          def.args.length > 0
-            ? def.responseEvent + def.args.join()
-            : def.responseEvent;
+          def.args.length > 0 ? def.responseEvent + def.args.join() : def.responseEvent;
         return redef;
       },
       postProcessor(res, callArgs) {
@@ -622,9 +620,8 @@ export class ApiService {
     protected core: CoreService,
     protected ws: WebSocketService,
     protected rest: RestService,
-    private dialog: DialogService
-  ) //protected cache: DataService
-  {
+    private dialog: DialogService //protected cache: DataService
+  ) {
     this.ws.authStatus.subscribe((evt: any) => {
       this.core.emit({ name: "UserDataRequest", data: [[["id", "=", 1]]] });
       this.core.emit({ name: "Authenticated", data: evt, sender: this });
@@ -669,11 +666,7 @@ export class ApiService {
 
       let call = cloneDef.apiCall; //this.parseEventRest(evt);
       call.args = evt.data;
-      this.rest[call.operation](
-        baseUrl + call.namespace,
-        evt.data,
-        false
-      ).subscribe((res) => {
+      this.rest[call.operation](baseUrl + call.namespace, evt.data, false).subscribe((res) => {
         if (this.debug) {
           console.log("*** API Response:");
           console.log(res);
@@ -698,25 +691,23 @@ export class ApiService {
 
       let call = cloneDef.apiCall; //this.parseEventRest(evt);
       call.args = evt.data;
-      this.rest[call.operation](baseUrl + call.namespace, {}, false).subscribe(
-        (res) => {
-          if (this.debug) {
-            console.log("*** API Response:");
-            console.log(call);
-          }
-
-          // PostProcess
-          if (def.postProcessor) {
-            res = def.postProcessor(res, evt.data, this.core);
-          }
-
-          this.core.emit({
-            name: call.responseEvent,
-            data: res.data,
-            sender: evt.data,
-          });
+      this.rest[call.operation](baseUrl + call.namespace, {}, false).subscribe((res) => {
+        if (this.debug) {
+          console.log("*** API Response:");
+          console.log(call);
         }
-      );
+
+        // PostProcess
+        if (def.postProcessor) {
+          res = def.postProcessor(res, evt.data, this.core);
+        }
+
+        this.core.emit({
+          name: call.responseEvent,
+          data: res.data,
+          sender: evt.data,
+        });
+      });
     }
   }
 

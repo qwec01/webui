@@ -33,10 +33,7 @@ export default {
     "Required unless <b>Enable password login</b> is\
  <i>No</i>. Passwords cannot contain a <b>?</b>."
   ),
-  user_form_password_validation: [
-    Validators.pattern("^[^?]*$"),
-    Validators.required,
-  ],
+  user_form_password_validation: [Validators.pattern("^[^?]*$"), Validators.required],
   user_form_password_confirm_name: "password_conf",
   user_form_password_confirm_placeholder: T("Confirm Password"),
   user_form_password_edit_name: "password_edit",
@@ -121,9 +118,7 @@ export default {
   user_form_auth_pw_enable_label_no: T("No"),
   user_form_shell_name: "shell",
   user_form_shell_placeholder: T("Shell"),
-  user_form_shell_tooltip: T(
-    "Select the shell to use for local and SSH logins."
-  ),
+  user_form_shell_tooltip: T("Select the shell to use for local and SSH logins."),
   user_form_lockuser_name: "locked",
   user_form_lockuser_placeholder: T("Lock User"),
   user_form_lockuser_tooltip: T(
@@ -153,7 +148,5 @@ export default {
   user_form_download_key: T("Download SSH Public Key"),
   user_form_smb_name: "smb",
   user_form_smb_placeholder: T("Samba Authentication"),
-  user_form_smb_tooltip: T(
-    "Set to allow user to authenticate to Samba shares."
-  ),
+  user_form_smb_tooltip: T("Set to allow user to authenticate to Samba shares."),
 };

@@ -66,8 +66,7 @@ export class SyslogFormComponent implements OnDestroy {
         {
           type: "select",
           name: "syslog_tls_certificate",
-          placeholder:
-            helptext_system_advanced.syslog_tls_certificate.placeholder,
+          placeholder: helptext_system_advanced.syslog_tls_certificate.placeholder,
           tooltip: helptext_system_advanced.syslog_tls_certificate.tooltip,
           options: [],
           relation: [
@@ -111,11 +110,9 @@ export class SyslogFormComponent implements OnDestroy {
     private sysGeneralService: SystemGeneralService,
     private modalService: ModalService
   ) {
-    this.getDataFromDash = this.sysGeneralService.sendConfigData$.subscribe(
-      (res) => {
-        this.configData = res;
-      }
-    );
+    this.getDataFromDash = this.sysGeneralService.sendConfigData$.subscribe((res) => {
+      this.configData = res;
+    });
   }
 
   reconnect(href) {
@@ -132,11 +129,9 @@ export class SyslogFormComponent implements OnDestroy {
 
   afterInit(entityEdit: any) {
     this.entityForm = entityEdit;
-    this.getDatasetConfig = this.ws
-      .call("systemdataset.config")
-      .subscribe((res) => {
-        entityEdit.formGroup.controls.syslog.setValue(res.syslog);
-      });
+    this.getDatasetConfig = this.ws.call("systemdataset.config").subscribe((res) => {
+      entityEdit.formGroup.controls.syslog.setValue(res.syslog);
+    });
   }
 
   public customSubmit(body) {
@@ -146,30 +141,28 @@ export class SyslogFormComponent implements OnDestroy {
 
     return this.ws.call("system.advanced.update", [body]).subscribe(
       () => {
-        this.ws
-          .job("systemdataset.update", [{ syslog: syslog_value }])
-          .subscribe(
-            (res) => {
-              if (res.error) {
-                this.loader.close();
-                if (res.exc_info && res.exc_info.extra) {
-                  res.extra = res.exc_info.extra;
-                }
-                new EntityUtils().handleWSError(this, res);
-              }
-              if (res.state === "SUCCESS") {
-                this.loader.close();
-                this.entityForm.success = true;
-                this.entityForm.formGroup.markAsPristine();
-                this.modalService.close("slide-in-form");
-                this.sysGeneralService.refreshSysGeneral();
-              }
-            },
-            (err) => {
+        this.ws.job("systemdataset.update", [{ syslog: syslog_value }]).subscribe(
+          (res) => {
+            if (res.error) {
               this.loader.close();
-              new EntityUtils().handleWSError(this, err);
+              if (res.exc_info && res.exc_info.extra) {
+                res.extra = res.exc_info.extra;
+              }
+              new EntityUtils().handleWSError(this, res);
             }
-          );
+            if (res.state === "SUCCESS") {
+              this.loader.close();
+              this.entityForm.success = true;
+              this.entityForm.formGroup.markAsPristine();
+              this.modalService.close("slide-in-form");
+              this.sysGeneralService.refreshSysGeneral();
+            }
+          },
+          (err) => {
+            this.loader.close();
+            new EntityUtils().handleWSError(this, err);
+          }
+        );
       },
       (res) => {
         this.loader.close();

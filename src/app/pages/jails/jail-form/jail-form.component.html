@@ -47,13 +47,7 @@
         </ng-container>
       </div>
       <mat-action-row>
-        <button
-          mat-button
-          color="warn"
-          type="button"
-          *ngIf="i !== 0"
-          (click)="prevStep()"
-        >
+        <button mat-button color="warn" type="button" *ngIf="i !== 0" (click)="prevStep()">
           {{ "Previous" | translate }}
         </button>
         <button
@@ -77,13 +71,7 @@
       >
         {{ "Save" | translate }}
       </button>
-      <button
-        *ngIf="route_success"
-        (click)="goBack()"
-        mat-button
-        color="accent"
-        type="button"
-      >
+      <button *ngIf="route_success" (click)="goBack()" mat-button color="accent" type="button">
         {{ "Cancel" | translate }}
       </button>
     </mat-card-actions>

@@ -272,12 +272,8 @@ export class ServiceUPSComponent {
     entityForm.submitFunction = (body) => this.ws.call("ups.update", [body]);
     this.entityForm = entityForm;
 
-    const generalSet = this.fieldSets.find(
-      (set) => set.name === helptext.ups_fieldset_general
-    );
-    this.ups_driver = generalSet.config.find(
-      (config) => config.name === "driver"
-    );
+    const generalSet = this.fieldSets.find((set) => set.name === helptext.ups_fieldset_general);
+    this.ups_driver = generalSet.config.find((config) => config.name === "driver");
     this.ups_port = generalSet.config.find((config) => config.name === "port");
 
     this.ws.call("ups.driver_choices", []).subscribe((res) => {
@@ -296,19 +292,14 @@ export class ServiceUPSComponent {
     entityForm.formGroup.controls["driver"].valueChanges.subscribe((res) => {
       this.ups_driver_key = this.getKeyByValue(this.ups_drivers_list, res);
       if (this.ups_drivers_list[res]) {
-        entityForm.formGroup.controls["driver"].setValue(
-          this.ups_drivers_list[res]
-        );
+        entityForm.formGroup.controls["driver"].setValue(this.ups_drivers_list[res]);
       }
     });
 
     entityForm.formGroup.controls["mode"].valueChanges.subscribe((res) => {
-      generalSet.config.find((conf) => conf.name === "remotehost").isHidden =
-        res === "MASTER";
-      generalSet.config.find((conf) => conf.name === "remoteport").isHidden =
-        res === "MASTER";
-      generalSet.config.find((conf) => conf.name === "driver").isHidden =
-        res === "SLAVE";
+      generalSet.config.find((conf) => conf.name === "remotehost").isHidden = res === "MASTER";
+      generalSet.config.find((conf) => conf.name === "remoteport").isHidden = res === "MASTER";
+      generalSet.config.find((conf) => conf.name === "driver").isHidden = res === "SLAVE";
     });
   }
 

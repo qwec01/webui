@@ -50,9 +50,7 @@ export default {
  department to determine which systems are allowed to open ports."
   ),
 
-  netcat_active_side_listen_address_placeholder: T(
-    "Netcat Active Side Listen Address"
-  ),
+  netcat_active_side_listen_address_placeholder: T("Netcat Active Side Listen Address"),
   netcat_active_side_listen_address_tooltip: T(
     "IP address on which\
  the connection <b>Active Side</b> listens. Defaults to <i>0.0.0.0</i>."
@@ -71,9 +69,7 @@ export default {
  available port between the minimum and maximum is used."
   ),
 
-  netcat_passive_side_connect_address_placeholder: T(
-    "Netcat Active Side Connect Address"
-  ),
+  netcat_passive_side_connect_address_placeholder: T("Netcat Active Side Connect Address"),
   netcat_passive_side_connect_address_tooltip: T(
     "Hostname or IP \
  address used to connect to the active side system. When the active side \
@@ -124,10 +120,8 @@ export default {
   ),
 
   properties_placeholder: T("Include Dataset Properties"),
-  properties_tooltip: T(
-    "Include dataset properties with the replicated \
- snapshots."
-  ),
+  properties_tooltip: T("Include dataset properties with the replicated \
+ snapshots."),
 
   properties_override_placeholder: T("Properties Override"),
   properties_override_tooltip: T(
@@ -236,9 +230,7 @@ from the source dataset."
  after the <i>End</i> time will not be included in the replication."
   ),
 
-  only_matching_schedule_placeholder: T(
-    "Only Replicate Snapshots Matching Schedule"
-  ),
+  only_matching_schedule_placeholder: T("Only Replicate Snapshots Matching Schedule"),
   only_matching_schedule_tooltip: T(
     "Set to use the <i>Schedule</i> in place \
  of the <i>Replicate Specific Snapshots</i> time frame. The Schedule values are \
@@ -273,14 +265,10 @@ from the source dataset."
   ),
   encryption_key_location_truenasdb_tooltip: T(""),
 
-  encryption_key_location_placeholder: T(
-    "Encryption Key Location in Target System"
-  ),
+  encryption_key_location_placeholder: T("Encryption Key Location in Target System"),
   encryption_key_location_tooltip: T(""),
 
-  allow_from_scratch_placeholder: T(
-    "Synchronize Destination Snapshots With Source"
-  ),
+  allow_from_scratch_placeholder: T("Synchronize Destination Snapshots With Source"),
   allow_from_scratch_tooltip: T(
     "If the destination system has \
  snapshots but they do not have any data in common with the source \
@@ -325,13 +313,9 @@ from the source dataset."
  chosen for <i>Transport</i> type."
   ),
 
-  speed_limit_placeholder: T(
-    `Limit ${globalHelptext.human_readable.suggestion_label}`
-  ),
-  speed_limit_tooltip: T(
-    "Limit replication speed to this number of \
- bytes per second."
-  ),
+  speed_limit_placeholder: T(`Limit ${globalHelptext.human_readable.suggestion_label}`),
+  speed_limit_tooltip: T("Limit replication speed to this number of \
+ bytes per second."),
   speed_limit_errors: globalHelptext.human_readable.input_error,
 
   large_block_placeholder: T("Allow Blocks Larger than 128KB"),
@@ -367,10 +351,8 @@ from the source dataset."
   ),
 
   logging_level_placeholder: T("Logging Level"),
-  logging_level_tooltip: T(
-    "Message verbosity level in the replication \
- task log."
-  ),
+  logging_level_tooltip: T("Message verbosity level in the replication \
+ task log."),
 
   enabled_placeholder: T("Enabled"),
   enabled_tooltip: T("Activates the replication schedule."),

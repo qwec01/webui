@@ -79,15 +79,11 @@ export default {
 
   blocksize_warning: {
     a: T("Recommended block size based on pool topology:"),
-    b: T(
-      "A smaller block size can reduce sequential I/O performance and space efficiency."
-    ),
+    b: T("A smaller block size can reduce sequential I/O performance and space efficiency."),
   },
   zvol_save_errDialog: {
     title: T("Error saving ZVOL."),
-    msg: T(
-      "Shrinking a ZVOL is not allowed in the User Interface. This can lead to data loss."
-    ),
+    msg: T("Shrinking a ZVOL is not allowed in the User Interface. This can lead to data loss."),
   },
 
   dataset_form_encryption: {
@@ -95,9 +91,7 @@ export default {
     inherit_checkbox_placeholder: T("Inherit"),
     inherit_checkbox_notencrypted: T("Inherit (non-encrypted)"),
     inherit_checkbox_encrypted: T("Inherit (encrypted)"),
-    inherit_checkbox_tooltip: T(
-      "Use the encryption properties of the root dataset."
-    ),
+    inherit_checkbox_tooltip: T("Use the encryption properties of the root dataset."),
     encryption_checkbox_placeholder: T("Encryption"),
     encryption_checkbox_tooltip: T(
       "Secure data within this dataset. Data is unusable until \
@@ -144,9 +138,7 @@ export default {
      dataset. Store the encryption key in a secure location."
     ),
     key_placeholder: T("Key"),
-    key_tooltip: T(
-      "Enter or paste a string to use as the encryption key for this dataset."
-    ),
+    key_tooltip: T("Enter or paste a string to use as the encryption key for this dataset."),
     key_validation: [Validators.minLength(64), Validators.maxLength(64)],
     non_encrypted_warning_title: T("Warning"),
     non_encrypted_warning_warning: T(

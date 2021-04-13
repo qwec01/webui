@@ -1,9 +1,4 @@
-import {
-  Component,
-  ViewContainerRef,
-  ViewChild,
-  ElementRef,
-} from "@angular/core";
+import { Component, ViewContainerRef, ViewChild, ElementRef } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { TranslateService } from "@ngx-translate/core";
 

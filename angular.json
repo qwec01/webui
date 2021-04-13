@@ -147,22 +147,13 @@
               "src/assets/styles/charts.css",
               "src/assets/styles/egret_overrides.css"
             ],
-            "assets": [
-              "src/assets",
-              "src/favicon.ico",
-              "src/icons",
-              "src/assets/images"
-            ]
+            "assets": ["src/assets", "src/favicon.ico", "src/icons", "src/assets/images"]
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "src/tsconfig.app.json",
-              "src/tsconfig.spec.json",
-              "tsconfig.worker.json"
-            ],
+            "tsConfig": ["src/tsconfig.app.json", "src/tsconfig.spec.json", "tsconfig.worker.json"],
             "exclude": []
           }
         }

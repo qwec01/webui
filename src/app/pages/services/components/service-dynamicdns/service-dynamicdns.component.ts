@@ -2,11 +2,7 @@ import { ApplicationRef, Component, Injector } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import * as _ from "lodash";
 
-import {
-  RestService,
-  WebSocketService,
-  ValidationService,
-} from "../../../../services/";
+import { RestService, WebSocketService, ValidationService } from "../../../../services/";
 import { FieldConfig } from "../../../common/entity/entity-form/models/field-config.interface";
 import helptext from "../../../../helptext/services/components/service-dynamic-dns";
 import { FieldSets } from "app/pages/common/entity/entity-form/classes/field-sets";
@@ -137,17 +133,11 @@ export class ServiceDDNSComponent {
     entityForm.ws.call("dyndns.config").subscribe((res) => {
       entityForm.formGroup.controls["provider"].setValue(res.provider);
       entityForm.formGroup.controls["checkip_ssl"].setValue(res.checkip_ssl);
-      entityForm.formGroup.controls["checkip_server"].setValue(
-        res.checkip_server
-      );
+      entityForm.formGroup.controls["checkip_server"].setValue(res.checkip_server);
       entityForm.formGroup.controls["checkip_path"].setValue(res.checkip_path);
       entityForm.formGroup.controls["ssl"].setValue(res.ssl);
-      entityForm.formGroup.controls["custom_ddns_server"].setValue(
-        res.custom_ddns_server
-      );
-      entityForm.formGroup.controls["custom_ddns_path"].setValue(
-        res.custom_ddns_path
-      );
+      entityForm.formGroup.controls["custom_ddns_server"].setValue(res.custom_ddns_server);
+      entityForm.formGroup.controls["custom_ddns_path"].setValue(res.custom_ddns_path);
       if (!res.domain) {
         entityForm.formGroup.controls["domain"].setValue([]);
       } else {

@@ -103,9 +103,7 @@ export class ReportComponent
       trimmed = trimmed.replace(this.identifier, "");
       return trimmed;
     } else {
-      return this.identifier
-        ? trimmed.replace(/{identifier}/, this.identifier)
-        : this.report.title;
+      return this.identifier ? trimmed.replace(/{identifier}/, this.identifier) : this.report.title;
     }
   }
 
@@ -166,16 +164,10 @@ export class ReportComponent
   public chartColors: string[];
 
   get startTime() {
-    return this.localeService.formatDateTime(
-      new Date(this.currentStartDate),
-      this.timezone
-    );
+    return this.localeService.formatDateTime(new Date(this.currentStartDate), this.timezone);
   }
   get endTime() {
-    return this.localeService.formatDateTime(
-      new Date(this.currentEndDate),
-      this.timezone
-    );
+    return this.localeService.formatDateTime(new Date(this.currentEndDate), this.timezone);
   }
 
   formatTime(stamp) {
@@ -257,9 +249,7 @@ export class ReportComponent
           this.ready = true;
           this.setupData(changes);
         }, this.delay);
-      } else if (
-        changes.report.previousValue.title !== changes.report.currentValue.title
-      ) {
+      } else if (changes.report.previousValue.title !== changes.report.currentValue.title) {
         this.setupData(changes);
       }
       if (changes.multipathTitle && changes.multipathTitle.currentValue) {
@@ -301,9 +291,7 @@ export class ReportComponent
     this.currentStartDate = rrdOptions.start;
     this.currentEndDate = rrdOptions.end;
 
-    let identifier = this.report.identifiers
-      ? this.report.identifiers[0]
-      : null;
+    let identifier = this.report.identifiers ? this.report.identifiers[0] : null;
     this.fetchReportData(rrdOptions, this.report, identifier);
   }
 
@@ -319,42 +307,28 @@ export class ReportComponent
     this.currentStartDate = rrdOptions.start;
     this.currentEndDate = rrdOptions.end;
 
-    let identifier = this.report.identifiers
-      ? this.report.identifiers[0]
-      : null;
+    let identifier = this.report.identifiers ? this.report.identifiers[0] : null;
     this.fetchReportData(rrdOptions, this.report, identifier);
   }
 
   stepBack() {
     const zoom = this.zoomLevels[this.timeZoomIndex];
-    const rrdOptions = this.convertTimespan(
-      zoom.timespan,
-      "backward",
-      this.currentStartDate
-    );
+    const rrdOptions = this.convertTimespan(zoom.timespan, "backward", this.currentStartDate);
     this.currentStartDate = rrdOptions.start;
     this.currentEndDate = rrdOptions.end;
 
-    let identifier = this.report.identifiers
-      ? this.report.identifiers[0]
-      : null;
+    let identifier = this.report.identifiers ? this.report.identifiers[0] : null;
     this.fetchReportData(rrdOptions, this.report, identifier);
   }
 
   stepForward() {
     const zoom = this.zoomLevels[this.timeZoomIndex];
 
-    const rrdOptions = this.convertTimespan(
-      zoom.timespan,
-      "forward",
-      this.currentEndDate
-    );
+    const rrdOptions = this.convertTimespan(zoom.timespan, "forward", this.currentEndDate);
     this.currentStartDate = rrdOptions.start;
     this.currentEndDate = rrdOptions.end;
 
-    let identifier = this.report.identifiers
-      ? this.report.identifiers[0]
-      : null;
+    let identifier = this.report.identifiers ? this.report.identifiers[0] : null;
     this.fetchReportData(rrdOptions, this.report, identifier);
   }
 
@@ -371,11 +345,7 @@ export class ReportComponent
   }
 
   // Convert timespan to start/end options for RRDTool
-  convertTimespan(
-    timespan,
-    direction: string = "backward",
-    currentDate?: number
-  ): TimeData {
+  convertTimespan(timespan, direction: string = "backward", currentDate?: number): TimeData {
     let units: string;
     let value: number;
 
@@ -447,9 +417,7 @@ export class ReportComponent
 
   fetchReportData(rrdOptions, report: Report, identifier?: string) {
     // Report options
-    let params = identifier
-      ? { name: report.name, identifier: identifier }
-      : { name: report.name };
+    let params = identifier ? { name: report.name, identifier: identifier } : { name: report.name };
 
     // Time scale options
     const serverTime = this.getServerTime();

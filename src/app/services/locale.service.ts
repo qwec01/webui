@@ -162,8 +162,7 @@ export class LocaleService {
   getAngularFormat() {
     let ngTimeFormat: string;
     // Renders lowercase am and pm
-    ngTimeFormat =
-      this.timeFormat === "hh:mm:ss a" ? "hh:mm:ss aaaaa'm'" : this.timeFormat;
+    ngTimeFormat = this.timeFormat === "hh:mm:ss a" ? "hh:mm:ss aaaaa'm'" : this.timeFormat;
     let tempStr = `${this.dateFormat} ${ngTimeFormat}`;
     let dateStr = "";
     for (let i = 0; i < tempStr.length; i++) {

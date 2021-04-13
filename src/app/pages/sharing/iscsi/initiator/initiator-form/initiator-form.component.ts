@@ -6,11 +6,7 @@ import { EntityFormService } from "../../../../common/entity/entity-form/service
 import { FieldRelationService } from "../../../../common/entity/entity-form/services/field-relation.service";
 import { AppLoaderService } from "../../../../../services/app-loader/app-loader.service";
 import { EntityUtils } from "../../../../common/entity/utils";
-import {
-  WebSocketService,
-  DialogService,
-  NetworkService,
-} from "../../../../../services/";
+import { WebSocketService, DialogService, NetworkService } from "../../../../../services/";
 import { helptext_sharing_iscsi } from "app/helptext/sharing";
 import * as _ from "lodash";
 import { ipv4or6OptionalCidrValidator } from "../../../../common/entity/entity-form/validators/ip-validation";
@@ -45,14 +41,8 @@ export class InitiatorFormComponent implements OnInit {
       placeholder: helptext_sharing_iscsi.initiator_form_placeholder_initiators,
       tooltip: helptext_sharing_iscsi.initiator_form_tooltip_initiators,
       customEventMethod: (parent) => {
-        for (
-          let i = 0;
-          i < parent.source.selectedOptions.selected.length;
-          i++
-        ) {
-          parent.listControl.value.add(
-            parent.source.selectedOptions.selected[i].value.initiator
-          );
+        for (let i = 0; i < parent.source.selectedOptions.selected.length; i++) {
+          parent.listControl.value.add(parent.source.selectedOptions.selected[i].value.initiator);
         }
         parent.source.deselectAll();
       },
@@ -71,16 +61,11 @@ export class InitiatorFormComponent implements OnInit {
     {
       type: "input-list",
       name: "auth_network",
-      placeholder:
-        helptext_sharing_iscsi.initiator_form_placeholder_auth_network,
+      placeholder: helptext_sharing_iscsi.initiator_form_placeholder_auth_network,
       tooltip: helptext_sharing_iscsi.initiator_form_tooltip_auth_network,
       validation: [ipv4or6OptionalCidrValidator("auth_network")],
       customEventMethod: (parent) => {
-        for (
-          let i = 0;
-          i < parent.source.selectedOptions.selected.length;
-          i++
-        ) {
+        for (let i = 0; i < parent.source.selectedOptions.selected.length; i++) {
           parent.listControl.value.add(
             parent.source.selectedOptions.selected[i].value.initiator_addr
           );
@@ -173,10 +158,7 @@ export class InitiatorFormComponent implements OnInit {
               }
             }
           }
-          if (
-            res[0]["initiators"].length === 0 &&
-            res[0]["auth_network"].length === 0
-          ) {
+          if (res[0]["initiators"].length === 0 && res[0]["auth_network"].length === 0) {
             this.formGroup.controls["all"].setValue(true);
           }
         },
@@ -192,9 +174,7 @@ export class InitiatorFormComponent implements OnInit {
     const value = _.cloneDeep(this.formGroup.value);
 
     value["initiators"] = value["all"] ? [] : Array.from(value["initiators"]);
-    value["auth_network"] = value["all"]
-      ? []
-      : Array.from(value["auth_network"]);
+    value["auth_network"] = value["all"] ? [] : Array.from(value["auth_network"]);
     delete value["initiators_input"];
     delete value["auth_network_input"];
     delete value["all"];
@@ -224,18 +204,13 @@ export class InitiatorFormComponent implements OnInit {
   }
 
   setRelation(config: FieldConfig) {
-    const activations = this.fieldRelationService.findActivationRelation(
-      config.relation
-    );
+    const activations = this.fieldRelationService.findActivationRelation(config.relation);
     if (activations) {
       const tobeDisabled = this.fieldRelationService.isFormControlToBeDisabled(
         activations,
         this.formGroup
       );
-      const tobeHide = this.fieldRelationService.isFormControlToBeHide(
-        activations,
-        this.formGroup
-      );
+      const tobeHide = this.fieldRelationService.isFormControlToBeHide(activations, this.formGroup);
       this.setDisabled(config.name, tobeDisabled, tobeHide);
 
       this.fieldRelationService
@@ -253,10 +228,7 @@ export class InitiatorFormComponent implements OnInit {
       activations,
       this.formGroup
     );
-    const tobeHide = this.fieldRelationService.isFormControlToBeHide(
-      activations,
-      this.formGroup
-    );
+    const tobeHide = this.fieldRelationService.isFormControlToBeHide(activations, this.formGroup);
     this.setDisabled(config.name, tobeDisabled, tobeHide);
   }
 

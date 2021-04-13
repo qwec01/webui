@@ -8,10 +8,7 @@
     >help_outline</i
   >
 
-  <div
-    class="tooltip-container fn-theme-primary"
-    [ngClass]="{ wizard: isWizard, moved: isMoved }"
-  >
+  <div class="tooltip-container fn-theme-primary" [ngClass]="{ wizard: isWizard, moved: isMoved }">
     <div
       cdkDrag
       (cdkDragStarted)="hideTail($event)"
@@ -21,8 +18,7 @@
     >
       <div id="tooltip-header" cdkDragHandle>
         <div class="tooltip-header-text">
-          {{ "Help" | translate
-          }}{{ header ? ": " + (header | translate) : "" }}
+          {{ "Help" | translate }}{{ header ? ": " + (header | translate) : "" }}
         </div>
       </div>
 

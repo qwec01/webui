@@ -30,9 +30,7 @@ export function findClosest(el, className) {
 }
 export function hasClass(el, className) {
   if (!el) return;
-  return (
-    ` ${el.className} `.replace(/[\n\t]/g, " ").indexOf(` ${className} `) > -1
-  );
+  return ` ${el.className} `.replace(/[\n\t]/g, " ").indexOf(` ${className} `) > -1;
 }
 export function toggleClass(el, className) {
   if (!el) return;
@@ -54,10 +52,7 @@ export function changeTheme(themes: any[], themeName: string) {
   addClass(document.body, "ix-blue");
 }
 export function ieChatjsFix() {
-  if (
-    window.hasOwnProperty("MSInputMethodContext") ||
-    document.hasOwnProperty("documentMode")
-  ) {
+  if (window.hasOwnProperty("MSInputMethodContext") || document.hasOwnProperty("documentMode")) {
     document.body.style.width = "99.9%";
     setTimeout(() => {
       document.body.style.width = "100%";

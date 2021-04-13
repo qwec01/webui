@@ -14,11 +14,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
 import { CopyPasteMessageComponent } from "app/pages/shell/copy-paste-message.component";
 import * as _ from "lodash";
-import {
-  DialogService,
-  ShellService,
-  WebSocketService,
-} from "../../../services";
+import { DialogService, ShellService, WebSocketService } from "../../../services";
 import helptext from "./../../../helptext/shell/shell";
 import { Terminal } from "xterm";
 import { AttachAddon } from "xterm-addon-attach";
@@ -113,18 +109,14 @@ export class PodShellComponent implements OnInit, OnChanges, OnDestroy {
             this.getAuthToken().subscribe((res) => {
               this.initializeWebShell(res);
 
-              this.shellSubscription = this.ss.shellOutput.subscribe(
-                (value) => {
-                  if (value !== undefined) {
-                    if (_.trim(value) == "logout") {
-                      this.xterm.destroy();
-                      this.router.navigate(
-                        new Array("/").concat(this.route_success)
-                      );
-                    }
+              this.shellSubscription = this.ss.shellOutput.subscribe((value) => {
+                if (value !== undefined) {
+                  if (_.trim(value) == "logout") {
+                    this.xterm.destroy();
+                    this.router.navigate(new Array("/").concat(this.route_success));
                   }
                 }
-              );
+              });
             });
           }
         });
@@ -330,15 +322,13 @@ export class PodShellComponent implements OnInit, OnChanges, OnDestroy {
     this.initializeTerminal();
     this.refreshToolbarButtons();
 
-    this.shellConnectedSubscription = this.ss.shellConnected.subscribe(
-      (res) => {
-        this.shellConnected = res.connected;
-        this.connectionId = res.id;
-        this.updateTerminal();
-        this.refreshToolbarButtons();
-        this.resizeTerm();
-      }
-    );
+    this.shellConnectedSubscription = this.ss.shellConnected.subscribe((res) => {
+      this.shellConnected = res.connected;
+      this.connectionId = res.id;
+      this.updateTerminal();
+      this.refreshToolbarButtons();
+      this.resizeTerm();
+    });
   }
 
   getAuthToken() {

@@ -45,9 +45,7 @@ export class WebSocketService {
 
   get consoleMessages() {
     if (!this.consoleSub) {
-      this.consoleSub = this.sub(
-        "filesystem.file_tail_follow:/var/log/messages:499"
-      ).pipe(
+      this.consoleSub = this.sub("filesystem.file_tail_follow:/var/log/messages:499").pipe(
         filter((res) => res && res.data && typeof res.data === "string"),
         map((res) => res.data)
       );
@@ -63,9 +61,7 @@ export class WebSocketService {
 
   connect() {
     this.socket = new WebSocket(
-      (this.protocol == "https:" ? "wss://" : "ws://") +
-        this.remote +
-        "/websocket"
+      (this.protocol == "https:" ? "wss://" : "ws://") + this.remote + "/websocket"
     );
     this.socket.onmessage = this.onmessage.bind(this);
     this.socket.onopen = this.onopen.bind(this);
@@ -254,9 +250,7 @@ export class WebSocketService {
   }
 
   login(username, password, otp_token?): Observable<any> {
-    let params = otp_token
-      ? [username, password, otp_token]
-      : [username, password];
+    let params = otp_token ? [username, password, otp_token] : [username, password];
     return Observable.create((observer) => {
       this.call("auth.login", params).subscribe((result) => {
         this.loginCallback(result, observer);

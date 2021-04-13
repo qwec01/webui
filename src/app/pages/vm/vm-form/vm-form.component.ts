@@ -8,12 +8,7 @@ import { FieldSet } from "app/pages/common/entity/entity-form/models/fieldset.in
 import { T } from "../../../translate-marker";
 import helptext from "./../../../helptext/vm/vm-wizard/vm-wizard";
 import globalHelptext from "./../../../helptext/global-helptext";
-import {
-  WebSocketService,
-  StorageService,
-  VmService,
-  ValidationService,
-} from "../../../services/";
+import { WebSocketService, StorageService, VmService, ValidationService } from "../../../services/";
 import { Validators } from "@angular/forms";
 
 @Component({
@@ -107,11 +102,7 @@ export class VmFormComponent {
           inputType: "number",
           placeholder: helptext.vcpus_placeholder,
           tooltip: helptext.vcpus_tooltip,
-          validation: [
-            Validators.required,
-            Validators.min(1),
-            this.cpuValidator("threads"),
-          ],
+          validation: [Validators.required, Validators.min(1), this.cpuValidator("threads")],
         },
         {
           type: "input",
@@ -119,11 +110,7 @@ export class VmFormComponent {
           inputType: "number",
           placeholder: helptext.cores.placeholder,
           tooltip: helptext.cores.tooltip,
-          validation: [
-            Validators.required,
-            Validators.min(1),
-            this.cpuValidator("threads"),
-          ],
+          validation: [Validators.required, Validators.min(1), this.cpuValidator("threads")],
         },
         {
           type: "input",
@@ -131,11 +118,7 @@ export class VmFormComponent {
           inputType: "number",
           placeholder: helptext.threads.placeholder,
           tooltip: helptext.threads.tooltip,
-          validation: [
-            Validators.required,
-            Validators.min(1),
-            this.cpuValidator("threads"),
-          ],
+          validation: [Validators.required, Validators.min(1), this.cpuValidator("threads")],
         },
         {
           type: "select",
@@ -242,13 +225,9 @@ export class VmFormComponent {
 
   blurEvent(parent) {
     if (parent.entityForm) {
-      parent.entityForm.formGroup.controls["memory"].setValue(
-        parent.storageService.humanReadable
-      );
+      parent.entityForm.formGroup.controls["memory"].setValue(parent.storageService.humanReadable);
       let valString = parent.entityForm.formGroup.controls["memory"].value;
-      let valBytes = Math.round(
-        parent.storageService.convertHumanStringToNum(valString) / 1048576
-      );
+      let valBytes = Math.round(parent.storageService.convertHumanStringToNum(valString) / 1048576);
       if (valBytes < 256) {
         const mem = _.find(parent.fieldConfig, { name: "memory" });
         mem["hasErrors"] = true;
@@ -263,9 +242,7 @@ export class VmFormComponent {
       const config = self.fieldConfig.find((c) => c.name === name);
       setTimeout(() => {
         const errors =
-          self.vcpus * self.cores * self.threads > self.maxVCPUs
-            ? { validCPU: true }
-            : null;
+          self.vcpus * self.cores * self.threads > self.maxVCPUs ? { validCPU: true } : null;
 
         if (errors) {
           config.hasErrors = true;

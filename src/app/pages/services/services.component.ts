@@ -5,12 +5,7 @@ import { MatSlideToggle } from "@angular/material/slide-toggle";
 import { NavigationExtras, Router } from "@angular/router";
 
 import { environment } from "../../../environments/environment";
-import {
-  RestService,
-  WebSocketService,
-  IscsiService,
-  SystemGeneralService,
-} from "../../services/";
+import { RestService, WebSocketService, IscsiService, SystemGeneralService } from "../../services/";
 import { DialogService } from "../../services/dialog.service";
 
 import * as _ from "lodash";
@@ -99,14 +94,12 @@ export class Services implements OnInit {
   }
 
   ngOnInit() {
-    this.getAdvancedConfig = this.sysGeneralService.getAdvancedConfig.subscribe(
-      (res) => {
-        if (res) {
-          this.isFooterConsoleOpen = res.consolemsg;
-          this.getAdvancedConfig.unsubscribe();
-        }
+    this.getAdvancedConfig = this.sysGeneralService.getAdvancedConfig.subscribe((res) => {
+      if (res) {
+        this.isFooterConsoleOpen = res.consolemsg;
+        this.getAdvancedConfig.unsubscribe();
       }
-    );
+    });
   }
 
   getActions(parentRow) {
@@ -118,10 +111,7 @@ export class Services implements OnInit {
         id: "Configure",
         label: T("Configure"),
         onClick: (row) => {
-          if (
-            row.service === "openvpn_client" ||
-            row.service === "openvpn_server"
-          ) {
+          if (row.service === "openvpn_client" || row.service === "openvpn_server") {
             const navigationExtras: NavigationExtras = {
               state: { configureOpenVPN: row.service.replace("openvpn_", "") },
             };
@@ -177,12 +167,7 @@ export class Services implements OnInit {
                     " service and close these connections?"
                 );
           this.dialog
-            .confirm(
-              T("Alert"),
-              msg == "" ? T("Stop ") + service.name + "?" : msg,
-              true,
-              T("Stop")
-            )
+            .confirm(T("Alert"), msg == "" ? T("Stop ") + service.name + "?" : msg, true, T("Stop"))
             .subscribe((dialogRes) => {
               if (dialogRes) {
                 this.updateService(rpc, service);
@@ -232,11 +217,7 @@ export class Services implements OnInit {
         if (rpc === "service.stop") {
           message = T("Error stopping service ");
         }
-        this.dialog.errorReport(
-          message + this.name_MAP[service.title],
-          res.message,
-          res.stack
-        );
+        this.dialog.errorReport(message + this.name_MAP[service.title], res.message, res.stack);
         service["onChanging"] = false;
       }
     );

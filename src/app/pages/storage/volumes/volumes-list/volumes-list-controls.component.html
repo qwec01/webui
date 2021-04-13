@@ -10,15 +10,11 @@
   <!-- SEARCH -->
   <div class="form-element" id="row-filter">
     <mat-form-field floatPlaceholder="auto">
-      <span matPrefix style="cursor: default; user-select: none"
-        ><mat-icon>search</mat-icon></span
-      >
+      <span matPrefix style="cursor: default; user-select: none"><mat-icon>search</mat-icon></span>
       <input
         matInput
         #filter
-        placeholder="{{ 'Filter' | translate }} {{
-          'Dataset Names' | translate
-        }}"
+        placeholder="{{ 'Filter' | translate }} {{ 'Dataset Names' | translate }}"
         class="mat-input-element"
         ix-auto
         ix-auto-type="input"
@@ -42,11 +38,7 @@
   <!-- END SEARCH -->
 
   <!-- START COLUMN FILTER -->
-  <div
-    *ngIf="
-      entity.columnFilter && entity.allColumns && entity.allColumns.length > 0
-    "
-  >
+  <div *ngIf="entity.columnFilter && entity.allColumns && entity.allColumns.length > 0">
     <button
       mat-button
       [matMenuTriggerFor]="menu"
@@ -76,12 +68,8 @@
             <mat-icon *ngIf="entity.checkLength()">check_circle</mat-icon>
             <mat-icon *ngIf="!entity.checkLength()">remove</mat-icon>
           </span>
-          <span *ngIf="!entity.checkLength()">{{
-            "Select All" | translate
-          }}</span>
-          <span *ngIf="entity.checkLength()">{{
-            "Unselect All" | translate
-          }}</span>
+          <span *ngIf="!entity.checkLength()">{{ "Select All" | translate }}</span>
+          <span *ngIf="entity.checkLength()">{{ "Unselect All" | translate }}</span>
         </button>
       </div>
 

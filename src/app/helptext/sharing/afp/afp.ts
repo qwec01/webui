@@ -96,10 +96,8 @@ export const helptext_sharing_afp = {
   ),
 
   placeholder_nodev: T("Zero Device Numbers"),
-  tooltip_nodev: T(
-    "Enable when the device number is inconstant across\
- a reboot."
-  ),
+  tooltip_nodev: T("Enable when the device number is inconstant across\
+ a reboot."),
 
   placeholder_nostat: T("No Stat"),
   tooltip_nostat: T(

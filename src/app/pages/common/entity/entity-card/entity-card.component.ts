@@ -140,10 +140,7 @@ export class EntityCardComponent extends iXObject implements OnInit {
       });*/
   }
 
-  onChangeTable(
-    config,
-    page: any = { page: this.page, itemsPerPage: this.itemsPerPage }
-  ) {
+  onChangeTable(config, page: any = { page: this.page, itemsPerPage: this.itemsPerPage }) {
     if (config.filtering) {
       Object.assign(this.config.filtering, config.filtering);
     }

@@ -33,12 +33,7 @@ export class ServiceFTPComponent implements OnInit {
   protected fieldConfig;
   public title = helptext.formTitle;
 
-  protected bwFields = [
-    "localuserbw",
-    "localuserdlbw",
-    "anonuserbw",
-    "anonuserdlbw",
-  ];
+  protected bwFields = ["localuserbw", "localuserdlbw", "anonuserbw", "anonuserdlbw"];
 
   public fieldSets = new FieldSets([
     {
@@ -421,9 +416,10 @@ export class ServiceFTPComponent implements OnInit {
   ngOnInit() {
     this.systemGeneralService.getCertificates().subscribe((res: any[]) => {
       if (res.length > 0) {
-        this.fieldSets.config(
-          "ssltls_certificate"
-        ).options = res.map((cert) => ({ label: cert.name, value: cert.id }));
+        this.fieldSets.config("ssltls_certificate").options = res.map((cert) => ({
+          label: cert.name,
+          value: cert.id,
+        }));
       }
     });
   }
@@ -432,37 +428,35 @@ export class ServiceFTPComponent implements OnInit {
     this.entityForm = entityEdit;
     entityEdit.submitFunction = this.submitFunction;
     this.rootlogin_fg = entityEdit.formGroup.controls["rootlogin"];
-    this.rootloginSubscription = this.rootlogin_fg.valueChanges.subscribe(
-      (res) => {
-        if (res && !this.warned && !this.rootlogin) {
-          this.dialog
-            .confirm(
-              helptext.rootlogin_dialog_title,
-              helptext.rootlogin_dialog_message,
-              false,
-              T("Continue"),
-              false,
-              "",
-              null,
-              {},
-              null,
-              false,
-              T("Cancel"),
-              true
-            )
-            .subscribe((confirm) => {
-              if (!confirm) {
-                this.rootlogin_fg.setValue(false);
-              } else {
-                this.warned = true;
-              }
-            });
-        }
-        if (!res && !this.warned && this.rootlogin) {
-          this.rootlogin = res;
-        }
+    this.rootloginSubscription = this.rootlogin_fg.valueChanges.subscribe((res) => {
+      if (res && !this.warned && !this.rootlogin) {
+        this.dialog
+          .confirm(
+            helptext.rootlogin_dialog_title,
+            helptext.rootlogin_dialog_message,
+            false,
+            T("Continue"),
+            false,
+            "",
+            null,
+            {},
+            null,
+            false,
+            T("Cancel"),
+            true
+          )
+          .subscribe((confirm) => {
+            if (!confirm) {
+              this.rootlogin_fg.setValue(false);
+            } else {
+              this.warned = true;
+            }
+          });
       }
-    );
+      if (!res && !this.warned && this.rootlogin) {
+        this.rootlogin = res;
+      }
+    });
 
     this.bwFields.forEach((field) =>
       entityEdit.formGroup.controls[field].valueChanges.subscribe((value) => {
@@ -519,9 +513,7 @@ export class ServiceFTPComponent implements OnInit {
 
   beforeSubmit(data) {
     this.bwFields.forEach(
-      (field) =>
-        (data[field] =
-          this.storageService.convertHumanStringToNum(data[field]) / 1024)
+      (field) => (data[field] = this.storageService.convertHumanStringToNum(data[field]) / 1024)
     );
 
     let fileperm = parseInt(data["filemask"], 8);

@@ -18,9 +18,7 @@ export const helptext_system_ca = {
       placeholder: T("Name"),
       tooltip: T("Descriptive identifier for this certificate authority."),
       validation: [Validators.required, Validators.pattern("[A-Za-z0-9_-]+$")],
-      errors: T(
-        "Allowed characters: letters, numbers, underscore (_), and dash (-)."
-      ),
+      errors: T("Allowed characters: letters, numbers, underscore (_), and dash (-)."),
     },
 
     create_type: {
@@ -113,10 +111,8 @@ matches your certificate usage scenario."
 
     city: {
       placeholder: T("Locality"),
-      tooltip: T(
-        "Enter the location of the organization. For example,\
- the city."
-      ),
+      tooltip: T("Enter the location of the organization. For example,\
+ the city."),
       validation: [Validators.required],
     },
 
@@ -133,10 +129,8 @@ matches your certificate usage scenario."
 
     email: {
       placeholder: T("Email"),
-      tooltip: T(
-        "Enter the email address of the person responsible for\
- the CA."
-      ),
+      tooltip: T("Enter the email address of the person responsible for\
+ the CA."),
       validation: [Validators.email, Validators.required],
     },
 
@@ -199,9 +193,7 @@ matches your certificate usage scenario."
       },
       ca: {
         placeholder: T("CA"),
-        tooltip: T(
-          "Identify this certificate as a Certificate Authority (CA)."
-        ),
+        tooltip: T("Identify this certificate as a Certificate Authority (CA)."),
       },
       enabled: {
         placeholder: T("Basic Constraints"),
@@ -331,15 +323,11 @@ non-repudiation service."
       },
       data_encipherment: {
         placeholder: T("Data Encipherment"),
-        tooltip: T(
-          "This certificate's public key is used to encipher user data."
-        ),
+        tooltip: T("This certificate's public key is used to encipher user data."),
       },
       key_agreement: {
         placeholder: T("Key Agreement"),
-        tooltip: T(
-          "This certificate's public key is used to manage key agreement."
-        ),
+        tooltip: T("This certificate's public key is used to manage key agreement."),
       },
       key_cert_sign: {
         placeholder: T("Key Cert Sign"),
@@ -431,10 +419,8 @@ certificate still approved."
 
     csr_cert_id: {
       placeholder: T("CSRs"),
-      tooltip: T(
-        "Select the Certificate Signing Request to sign the\
- Certificate Authority with."
-      ),
+      tooltip: T("Select the Certificate Signing Request to sign the\
+ Certificate Authority with."),
       validation: [Validators.required],
     },
 

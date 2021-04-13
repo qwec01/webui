@@ -240,9 +240,7 @@ export class ConfigurationComponent {
   constructor(protected router: Router, protected ws: WebSocketService) {}
 
   preInit() {
-    const outbound_network_value_field = this.fieldSets.config(
-      "outbound_network_value"
-    );
+    const outbound_network_value_field = this.fieldSets.config("outbound_network_value");
     this.ws.call("network.configuration.activity_choices").subscribe((res) => {
       for (const [value, label] of res) {
         outbound_network_value_field.options.push({
@@ -254,11 +252,7 @@ export class ConfigurationComponent {
   }
   afterInit(entityEdit: any) {
     this.entityEdit = entityEdit;
-    if (
-      ["ENTERPRISE", "SCALE_ENTERPRISE"].includes(
-        window.localStorage.getItem("product_type")
-      )
-    ) {
+    if (["ENTERPRISE", "SCALE_ENTERPRISE"].includes(window.localStorage.getItem("product_type"))) {
       this.ws.call("failover.licensed").subscribe((is_ha) => {
         //fixme, stupid race condition makes me need to call this again
         for (let i = 0; i < this.failover_fields.length; i++) {

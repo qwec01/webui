@@ -1,11 +1,7 @@
 import { Component, OnInit, Input } from "@angular/core";
 import { Router } from "@angular/router";
 
-import {
-  WebSocketService,
-  JailService,
-  DialogService,
-} from "../../../services";
+import { WebSocketService, JailService, DialogService } from "../../../services";
 import { PreferencesService } from "app/core/services/preferences.service";
 import * as _ from "lodash";
 import { EntityUtils } from "../../common/entity/utils";
@@ -53,18 +49,14 @@ export class AvailablePluginsComponent implements OnInit {
             true
           );
         } else {
-          const officialRepo = this.availableRepo.filter(
-            (repo) => repo.name === "iXsystems"
-          );
+          const officialRepo = this.availableRepo.filter((repo) => repo.name === "iXsystems");
           this.selectedRepo =
             officialRepo.length > 0
               ? officialRepo[0]["git_repository"]
               : this.availableRepo[0]["git_repository"];
 
           this.ws
-            .job(this.queryCall, [
-              { plugin_repository: this.availableRepo[0]["git_repository"] },
-            ])
+            .job(this.queryCall, [{ plugin_repository: this.availableRepo[0]["git_repository"] }])
             .subscribe((community) => {
               this.ws
                 .job(this.queryCall, [
@@ -80,11 +72,7 @@ export class AvailablePluginsComponent implements OnInit {
         }
       },
       (err) => {
-        new EntityUtils().handleWSError(
-          this.parent,
-          err,
-          this.parent.dialogService
-        );
+        new EntityUtils().handleWSError(this.parent, err, this.parent.dialogService);
       }
     );
   }
@@ -128,19 +116,11 @@ export class AvailablePluginsComponent implements OnInit {
           this.parent.conf.availablePlugins = this.plugins;
         }
         if (res.error) {
-          this.parent.dialogService.errorReport(
-            "Get Plugins Failed",
-            res.error,
-            res.exception
-          );
+          this.parent.dialogService.errorReport("Get Plugins Failed", res.error, res.exception);
         }
       },
       (err) => {
-        new EntityUtils().handleWSError(
-          this.parent,
-          err,
-          this.parent.dialogService
-        );
+        new EntityUtils().handleWSError(this.parent, err, this.parent.dialogService);
       },
       () => {
         if (this.parent.loaderOpen) {

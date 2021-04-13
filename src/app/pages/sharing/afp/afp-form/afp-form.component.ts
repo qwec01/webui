@@ -302,16 +302,7 @@ export class AFPFormComponent implements OnDestroy {
     "deny",
     "timemachine_quota",
   ];
-  advanced_sets = [
-    "perms",
-    "other",
-    "allow",
-    "deny",
-    "ro",
-    "rw",
-    "hallow",
-    "hdeny",
-  ];
+  advanced_sets = ["perms", "other", "allow", "deny", "ro", "rw", "hallow", "hdeny"];
   advanced_dividers = ["divider_access", "divider_other"];
   public custActions: Array<any> = [
     {
@@ -319,9 +310,7 @@ export class AFPFormComponent implements OnDestroy {
       name: globalHelptext.basic_options,
       function: () => {
         this.isBasicMode = !this.isBasicMode;
-        this.fieldSets
-          .toggleSets(this.advanced_sets)
-          .toggleDividers(this.advanced_dividers);
+        this.fieldSets.toggleSets(this.advanced_sets).toggleDividers(this.advanced_dividers);
       },
     },
     {
@@ -329,9 +318,7 @@ export class AFPFormComponent implements OnDestroy {
       name: globalHelptext.advanced_options,
       function: () => {
         this.isBasicMode = !this.isBasicMode;
-        this.fieldSets
-          .toggleSets(this.advanced_sets)
-          .toggleDividers(this.advanced_dividers);
+        this.fieldSets.toggleSets(this.advanced_sets).toggleDividers(this.advanced_dividers);
       },
     },
   ];
@@ -348,9 +335,7 @@ export class AFPFormComponent implements OnDestroy {
       .pipe(
         map(([shares, pm]) => {
           const pk = parseInt(pm.get("pk"), 10);
-          return shares
-            .filter((share) => isNaN(pk) || share.id !== pk)
-            .map((share) => share.name);
+          return shares.filter((share) => isNaN(pk) || share.id !== pk).map((share) => share.name);
         })
       )
       .subscribe((shareNames) => {
@@ -387,22 +372,18 @@ export class AFPFormComponent implements OnDestroy {
       entityForm.formGroup.controls["upriv"].setValue(true);
       this.fieldSets.config("allow").initialCount = this.fieldSets.config(
         "deny"
-      ).initialCount = this.fieldSets.config(
-        "ro"
-      ).initialCount = this.fieldSets.config(
+      ).initialCount = this.fieldSets.config("ro").initialCount = this.fieldSets.config(
         "rw"
-      ).initialCount = this.fieldSets.config(
-        "hostsallow"
-      ).initialCount = this.fieldSets.config("hostsdeny").initialCount = 1;
+      ).initialCount = this.fieldSets.config("hostsallow").initialCount = this.fieldSets.config(
+        "hostsdeny"
+      ).initialCount = 1;
     }
     this.afp_timemachine_quota = this.fieldSets.config("timemachine_quota");
     this.afp_timemachine = entityForm.formGroup.controls["timemachine"];
     this.afp_timemachine_quota["isHidden"] = !this.afp_timemachine.value;
-    this.afp_timemachine_subscription = this.afp_timemachine.valueChanges.subscribe(
-      (value) => {
-        this.afp_timemachine_quota["isHidden"] = !value;
-      }
-    );
+    this.afp_timemachine_subscription = this.afp_timemachine.valueChanges.subscribe((value) => {
+      this.afp_timemachine_quota["isHidden"] = !value;
+    });
 
     /*  If name is empty, auto-populate after path selection */
     entityForm.formGroup.controls["path"].valueChanges.subscribe((path) => {
@@ -436,9 +417,7 @@ export class AFPFormComponent implements OnDestroy {
     share.hostsallow = share.hostsallow
       .filter((a) => !!a.address)
       .map((address) => address.address);
-    share.hostsdeny = share.hostsdeny
-      .filter((a) => !!a.address)
-      .map((address) => address.address);
+    share.hostsdeny = share.hostsdeny.filter((a) => !!a.address).map((address) => address.address);
 
     return share;
   }
@@ -450,59 +429,38 @@ export class AFPFormComponent implements OnDestroy {
         this.router.navigate(new Array("/").concat(this.route_success));
       } else {
         this.dialog
-          .confirm(
-            shared.dialog_title,
-            shared.dialog_message,
-            true,
-            shared.dialog_button
-          )
+          .confirm(shared.dialog_title, shared.dialog_message, true, shared.dialog_button)
           .subscribe((dialogRes) => {
             if (dialogRes) {
               entityForm.loader.open();
-              this.ws
-                .call("service.update", [service["id"], { enable: true }])
-                .subscribe(
-                  (updateRes) => {
-                    this.ws.call("service.start", [service.service]).subscribe(
-                      (startRes) => {
-                        entityForm.loader.close();
-                        this.dialog
-                          .Info(
-                            T("AFP") + shared.dialog_started_title,
-                            T("The AFP") + shared.dialog_started_message,
-                            "250px"
-                          )
-                          .subscribe(() => {
-                            this.router.navigate(
-                              new Array("/").concat(this.route_success)
-                            );
-                          });
-                      },
-                      (err) => {
-                        entityForm.loader.close();
-                        this.dialog.errorReport(
-                          err.error,
-                          err.reason,
-                          err.trace.formatted
-                        );
-                        this.router.navigate(
-                          new Array("/").concat(this.route_success)
-                        );
-                      }
-                    );
-                  },
-                  (err) => {
-                    entityForm.loader.close();
-                    this.dialog.errorReport(
-                      err.error,
-                      err.reason,
-                      err.trace.formatted
-                    );
-                    this.router.navigate(
-                      new Array("/").concat(this.route_success)
-                    );
-                  }
-                );
+              this.ws.call("service.update", [service["id"], { enable: true }]).subscribe(
+                (updateRes) => {
+                  this.ws.call("service.start", [service.service]).subscribe(
+                    (startRes) => {
+                      entityForm.loader.close();
+                      this.dialog
+                        .Info(
+                          T("AFP") + shared.dialog_started_title,
+                          T("The AFP") + shared.dialog_started_message,
+                          "250px"
+                        )
+                        .subscribe(() => {
+                          this.router.navigate(new Array("/").concat(this.route_success));
+                        });
+                    },
+                    (err) => {
+                      entityForm.loader.close();
+                      this.dialog.errorReport(err.error, err.reason, err.trace.formatted);
+                      this.router.navigate(new Array("/").concat(this.route_success));
+                    }
+                  );
+                },
+                (err) => {
+                  entityForm.loader.close();
+                  this.dialog.errorReport(err.error, err.reason, err.trace.formatted);
+                  this.router.navigate(new Array("/").concat(this.route_success));
+                }
+              );
             } else {
               this.router.navigate(new Array("/").concat(this.route_success));
             }

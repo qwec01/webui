@@ -1,9 +1,4 @@
-import {
-  Component,
-  ViewContainerRef,
-  ViewChild,
-  ElementRef,
-} from "@angular/core";
+import { Component, ViewContainerRef, ViewChild, ElementRef } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { TranslateService } from "@ngx-translate/core";
 
@@ -27,10 +22,7 @@ export class FormTextareaButtonComponent implements Field {
   constructor(public translate: TranslateService) {}
 
   customEventMethod($event) {
-    if (
-      this.config.customEventMethod !== undefined &&
-      this.config.customEventMethod != null
-    ) {
+    if (this.config.customEventMethod !== undefined && this.config.customEventMethod != null) {
       this.config.customEventMethod({
         event: $event,
         textAreaSSH: this.textAreaSSH,

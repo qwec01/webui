@@ -3,11 +3,7 @@ import { Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 
 import * as _ from "lodash";
-import {
-  WebSocketService,
-  AppLoaderService,
-  DialogService,
-} from "../../../../services/";
+import { WebSocketService, AppLoaderService, DialogService } from "../../../../services/";
 import { FieldConfig } from "../../../common/entity/entity-form/models/field-config.interface";
 import { FieldSet } from "../../../common/entity/entity-form/models/fieldset.interface";
 import { EntityFormService } from "../../../common/entity/entity-form/services/entity-form.service";
@@ -831,26 +827,16 @@ export class AlertServiceComponent {
       name: T("SEND TEST ALERT"),
       function: () => {
         this.entityFormService.clearFormError(this.fieldConfig);
-        const testPayload = this.generatePayload(
-          _.cloneDeep(this.entityForm.formGroup.value)
-        );
+        const testPayload = this.generatePayload(_.cloneDeep(this.entityForm.formGroup.value));
 
         this.loader.open();
         this.ws.call(this.testCall, [testPayload]).subscribe(
           (res) => {
             this.loader.close();
             if (res) {
-              this.dialogService.Info(
-                T("Succeeded"),
-                T("Test alert sent!"),
-                "500px",
-                "info"
-              );
+              this.dialogService.Info(T("Succeeded"), T("Test alert sent!"), "500px", "info");
             } else {
-              this.dialogService.Info(
-                T("Failed"),
-                T("Failed sending test alert!")
-              );
+              this.dialogService.Info(T("Failed"), T("Failed sending test alert!"));
             }
           },
           (err) => {
@@ -895,9 +881,7 @@ export class AlertServiceComponent {
         ) {
           entityForm.wsResponseIdx[i] = "";
         }
-        entityForm.formGroup.controls[field_name].setValue(
-          entityForm.wsResponseIdx[i]
-        );
+        entityForm.formGroup.controls[field_name].setValue(entityForm.wsResponseIdx[i]);
       }
     }
   }
@@ -915,9 +899,7 @@ export class AlertServiceComponent {
     if (wrongChatIds.length > 0) {
       this.dialogService.Info(
         T("Failed"),
-        T("The following Telegram chat ID(s) must be numbers!") +
-          "\n\n" +
-          wrongChatIds.join(", ")
+        T("The following Telegram chat ID(s) must be numbers!") + "\n\n" + wrongChatIds.join(", ")
       );
       throw new Error("Telegram-chat_ids must be an array of integer");
     }

@@ -89,9 +89,7 @@ export class ServiceSMBComponent {
           tooltip: helptext.cifs_srv_netbiosalias_tooltip,
           validation: [
             (control: FormControl): ValidationErrors => {
-              const config = this.fieldConfig.find(
-                (c) => c.name === "netbiosalias"
-              );
+              const config = this.fieldConfig.find((c) => c.name === "netbiosalias");
               const aliasArr = control.value ? control.value : [];
               let counter = 0;
               aliasArr.forEach((alias) => {
@@ -99,8 +97,7 @@ export class ServiceSMBComponent {
                   counter++;
                 }
               });
-              const errors =
-                control.value && counter > 0 ? { error: true } : null;
+              const errors = control.value && counter > 0 ? { error: true } : null;
 
               if (errors) {
                 config.hasErrors = true;
@@ -249,12 +246,9 @@ export class ServiceSMBComponent {
       name: global_helptext.basic_options,
       function: () => {
         this.hiddenFieldSets.forEach(
-          (setId) =>
-            (this.fieldSets.find((set) => set.name === setId).label = false)
+          (setId) => (this.fieldSets.find((set) => set.name === setId).label = false)
         );
-        this.fieldSets.filter(
-          (set) => set.name === "divider"
-        )[0].divider = false;
+        this.fieldSets.filter((set) => set.name === "divider")[0].divider = false;
         this.isBasicMode = !this.isBasicMode;
       },
     },
@@ -263,8 +257,7 @@ export class ServiceSMBComponent {
       name: global_helptext.advanced_options,
       function: () => {
         this.hiddenFieldSets.forEach(
-          (setId) =>
-            (this.fieldSets.find((set) => set.name === setId).label = true)
+          (setId) => (this.fieldSets.find((set) => set.name === setId).label = true)
         );
         this.fieldSets
           .filter((set) => set.name === "divider")
@@ -296,9 +289,7 @@ export class ServiceSMBComponent {
     });
     const otherColTwoSet = _.find(this.fieldSets, { name: "otherColTwo" });
 
-    this.cifs_srv_unixcharset = otherSet.config.find(
-      (config) => config.name === "unixcharset"
-    );
+    this.cifs_srv_unixcharset = otherSet.config.find((config) => config.name === "unixcharset");
     this.ws.call("smb.unixcharset_choices").subscribe((res) => {
       const values = Object.values(res);
       for (let i = 0; i < values.length; i++) {
@@ -311,9 +302,7 @@ export class ServiceSMBComponent {
 
     this.servicesService.getSmbBindIPChoices().subscribe((res) => {
       this.validBindIps = res;
-      this.cifs_srv_bindip = otherColTwoSet.config.find(
-        (config) => config.name === "bindip"
-      );
+      this.cifs_srv_bindip = otherColTwoSet.config.find((config) => config.name === "bindip");
       for (let key in res) {
         if (res.hasOwnProperty(key)) {
           this.cifs_srv_bindip.options.push({
@@ -325,9 +314,7 @@ export class ServiceSMBComponent {
     });
 
     this.ws.call("user.query").subscribe((res) => {
-      this.cifs_srv_guest = otherColTwoSet.config.find(
-        (config) => config.name === "guest"
-      );
+      this.cifs_srv_guest = otherColTwoSet.config.find((config) => config.name === "guest");
       res.forEach((user) => {
         this.cifs_srv_guest.options.push({
           label: user.username,
@@ -341,9 +328,7 @@ export class ServiceSMBComponent {
       items.forEach((item) => {
         groups.push({ label: item.group, value: item.group });
       });
-      this.cifs_srv_admin_group = otherSet.config.find(
-        (config) => config.name === "admin_group"
-      );
+      this.cifs_srv_admin_group = otherSet.config.find((config) => config.name === "admin_group");
       groups.forEach((group) => {
         this.cifs_srv_admin_group.options.push({
           label: group.label,

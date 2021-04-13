@@ -81,9 +81,7 @@ export class InteractionManagerService {
         console.log("Inserting into layout...");
         let layout = this.getLayoutById(evt.data.layout);
         let element;
-        let elementIsRegistered = this.displayList.some(
-          (reg) => reg.displayObject == evt.sender
-        );
+        let elementIsRegistered = this.displayList.some((reg) => reg.displayObject == evt.sender);
         if (!elementIsRegistered) {
           element = this.registerElement(evt.data.element, layout); // Expects CSS id selector for element
         } else {
@@ -103,10 +101,7 @@ export class InteractionManagerService {
     messageBus
       .register({ observerClass: this, eventName: "DisplayObjectSelected" })
       .subscribe((evt: CoreEvent) => {
-        if (
-          evt.sender != this.displayObjectWithFocus ||
-          !this.displayObjectWithFocus
-        ) {
+        if (evt.sender != this.displayObjectWithFocus || !this.displayObjectWithFocus) {
           this.releaseAll();
           if (this.displayObjectWithFocus) {
             this.displayObjectWithFocus.hasFocus = false;
@@ -131,10 +126,7 @@ export class InteractionManagerService {
           //console.log(this.displayList);
           layout.endInteractiveMovement(evt.sender);
         }
-        if (
-          this.displayObjectWithFocus &&
-          this.displayObjectWithFocus == evt.sender
-        ) {
+        if (this.displayObjectWithFocus && this.displayObjectWithFocus == evt.sender) {
           //this.displayObjectWithFocus.hasFocus = false;
           //this.displayObjectWithFocus = null;
         }
@@ -156,18 +148,10 @@ export class InteractionManagerService {
     const selector = config.id;
     const observable = multicast();
     const el = (<any>document).querySelector(selector);
-    const resizeHandleTop = (<any>document).querySelector(
-      selector + " .resize-handle-top"
-    );
-    const resizeHandleRight = (<any>document).querySelector(
-      selector + " .resize-handle-right"
-    );
-    const resizeHandleBottom = (<any>document).querySelector(
-      selector + " .resize-handle-bottom"
-    );
-    const resizeHandleLeft = (<any>document).querySelector(
-      selector + " .resize-handle-left"
-    );
+    const resizeHandleTop = (<any>document).querySelector(selector + " .resize-handle-top");
+    const resizeHandleRight = (<any>document).querySelector(selector + " .resize-handle-right");
+    const resizeHandleBottom = (<any>document).querySelector(selector + " .resize-handle-bottom");
+    const resizeHandleLeft = (<any>document).querySelector(selector + " .resize-handle-left");
 
     let tracker: DisplayObject;
     if (config.moveHandle) {

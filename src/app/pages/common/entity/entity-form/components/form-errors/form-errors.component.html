@@ -34,10 +34,7 @@
     {{ control.errors.rangeValue.max }}.
   </mat-error>
   <mat-error
-    *ngIf="
-      control.hasError('regex') ||
-      (control.hasError('pattern') && !config.hideErrMsg)
-    "
+    *ngIf="control.hasError('regex') || (control.hasError('pattern') && !config.hideErrMsg)"
   >
     {{ "Invalid format or character." | translate }}
   </mat-error>
@@ -46,8 +43,7 @@
     {{ " to include all " | translate }}
     {{ control.errors.info[0] | translate }}
     {{
-      " addresses. When this has been chosen, additional addresses cannot be selected."
-        | translate
+      " addresses. When this has been chosen, additional addresses cannot be selected." | translate
     }}
   </mat-error>
   <mat-error *ngIf="control.hasError('ip2')">

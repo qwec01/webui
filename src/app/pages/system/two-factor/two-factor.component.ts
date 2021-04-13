@@ -2,16 +2,8 @@ import { Component, Inject } from "@angular/core";
 import * as _ from "lodash";
 import { FieldSet } from "app/pages/common/entity/entity-form/models/fieldset.interface";
 import { FieldConfig } from "app/pages/common/entity/entity-form/models/field-config.interface";
-import {
-  WebSocketService,
-  DialogService,
-  AppLoaderService,
-} from "app/services/";
-import {
-  MatDialog,
-  MatDialogRef,
-  MAT_DIALOG_DATA,
-} from "@angular/material/dialog";
+import { WebSocketService, DialogService, AppLoaderService } from "app/services/";
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { helptext } from "app/helptext/system/2FA";
 
 @Component({
@@ -148,24 +140,22 @@ export class TwoFactorComponent {
           .subscribe((res) => {
             if (res) {
               this.loader.open();
-              this.ws
-                .call("auth.twofactor.update", [{ enabled: true }])
-                .subscribe(
-                  () => {
-                    this.loader.close();
-                    this.TwoFactorEnabled = true;
-                    this.updateEnabledStatus();
-                    this.updateSecretAndUri();
-                  },
-                  (err) => {
-                    this.loader.close();
-                    this.dialog.errorReport(
-                      helptext.two_factor.error,
-                      err.reason,
-                      err.trace.formatted
-                    );
-                  }
-                );
+              this.ws.call("auth.twofactor.update", [{ enabled: true }]).subscribe(
+                () => {
+                  this.loader.close();
+                  this.TwoFactorEnabled = true;
+                  this.updateEnabledStatus();
+                  this.updateSecretAndUri();
+                },
+                (err) => {
+                  this.loader.close();
+                  this.dialog.errorReport(
+                    helptext.two_factor.error,
+                    err.reason,
+                    err.trace.formatted
+                  );
+                }
+              );
             }
           });
       },
@@ -182,11 +172,7 @@ export class TwoFactorComponent {
             this.updateEnabledStatus();
           },
           (err) => {
-            this.dialog.errorReport(
-              helptext.two_factor.error,
-              err.reason,
-              err.trace.formatted
-            );
+            this.dialog.errorReport(helptext.two_factor.error, err.reason, err.trace.formatted);
           }
         );
       },
@@ -227,10 +213,7 @@ export class TwoFactorComponent {
   isCustActionVisible(actionId: string) {
     if (actionId === "enable_action" && this.TwoFactorEnabled === true) {
       return false;
-    } else if (
-      actionId === "disable_action" &&
-      this.TwoFactorEnabled === false
-    ) {
+    } else if (actionId === "disable_action" && this.TwoFactorEnabled === false) {
       return false;
     }
     return true;
@@ -266,11 +249,7 @@ export class TwoFactorComponent {
       },
       (err) => {
         this.loader.close();
-        this.dialog.errorReport(
-          helptext.two_factor.error,
-          err.reason,
-          err.trace.formatted
-        );
+        this.dialog.errorReport(helptext.two_factor.error, err.reason, err.trace.formatted);
       }
     );
   }
@@ -283,10 +262,7 @@ export class TwoFactorComponent {
   }
 
   customSubmit(data) {
-    if (
-      data.otp_digits === this.digitsOnLoad &&
-      data.interval === this.intervalOnLoad
-    ) {
+    if (data.otp_digits === this.digitsOnLoad && data.interval === this.intervalOnLoad) {
       this.doSubmit(data);
     } else {
       this.dialog
@@ -323,11 +299,7 @@ export class TwoFactorComponent {
       },
       (err) => {
         this.loader.close();
-        this.dialog.errorReport(
-          helptext.two_factor.error,
-          err.reason,
-          err.trace.formatted
-        );
+        this.dialog.errorReport(helptext.two_factor.error, err.reason, err.trace.formatted);
       }
     );
   }
@@ -357,11 +329,7 @@ export class TwoFactorComponent {
             },
             (err) => {
               this.loader.close();
-              this.dialog.errorReport(
-                helptext.two_factor.error,
-                err.reason,
-                err.trace.formatted
-              );
+              this.dialog.errorReport(helptext.two_factor.error, err.reason, err.trace.formatted);
             }
           );
         }
@@ -377,11 +345,7 @@ export class TwoFactorComponent {
       },
       (err) => {
         this.loader.close();
-        this.dialog.errorReport(
-          helptext.two_factor.error,
-          err.reason,
-          err.trace.formatted
-        );
+        this.dialog.errorReport(helptext.two_factor.error, err.reason, err.trace.formatted);
       }
     );
   }
@@ -392,10 +356,7 @@ export class TwoFactorComponent {
   templateUrl: "qr-dialog.html",
 })
 export class QRDialog {
-  constructor(
-    public dialogRef: MatDialogRef<QRDialog>,
-    @Inject(MAT_DIALOG_DATA) public data
-  ) {}
+  constructor(public dialogRef: MatDialogRef<QRDialog>, @Inject(MAT_DIALOG_DATA) public data) {}
 
   onNoClick(): void {
     this.dialogRef.close();

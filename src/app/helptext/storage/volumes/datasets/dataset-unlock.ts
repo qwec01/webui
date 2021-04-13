@@ -4,13 +4,9 @@ import { T } from "../../../../translate-marker";
 export default {
   dataset_unlock_title: T("Unlock Datasets"),
   unlock_key_file_placeholder: T("Unlock with Key file"),
-  unlock_key_file_tooltip: T(
-    "Use an exported encryption key file to unlock datasets."
-  ),
+  unlock_key_file_tooltip: T("Use an exported encryption key file to unlock datasets."),
   unlock_children_placeholder: T("Unlock Children"),
-  unlock_children_tooltip: T(
-    "Also unlock any encrypted dataset stored within this dataset."
-  ),
+  unlock_children_tooltip: T("Also unlock any encrypted dataset stored within this dataset."),
   restart_services_placeholder: T("Restart attached VMs, Jails and Services"),
   restart_services_tooltip: T(
     "Restarting system services after unlocking the dataset makes \
@@ -26,9 +22,7 @@ export default {
   dataset_key_validation: [Validators.minLength(64), Validators.maxLength(64)],
   dataset_name_paratext: T("<strong>Dataset:</strong> "),
   dataset_passphrase_placeholder: T("Dataset Passphrase"),
-  dataset_passphrase_tooltip: T(
-    "The user-defined string that can unlock this dataset."
-  ),
+  dataset_passphrase_tooltip: T("The user-defined string that can unlock this dataset."),
   dataset_passphrase_validation: [Validators.minLength(8)],
   fetching_encryption_summary_title: T("Fetching Encryption Summary"),
   fetching_encryption_summary_message: T("Fetching Encryption Summary for "),
@@ -40,9 +34,7 @@ export default {
     errors_message: T("The following datasets cannot be unlocked."),
     error_dialog_title: T("Error details for "),
     unlock: T("Unlock"),
-    unlock_message: T(
-      "These datasets will be unlocked with the provided credentials."
-    ),
+    unlock_message: T("These datasets will be unlocked with the provided credentials."),
     ok_button: T("Continue"),
     cancel_button: T("Cancel"),
   },

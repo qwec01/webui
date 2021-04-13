@@ -10,15 +10,8 @@
   ix-auto-type="list"
   ix-auto-identifier="{{ config.placeholder }}"
 >
-  <div
-    fxLayout="row"
-    fxFlex="100%"
-    fxLayoutAlign="space-between center"
-    class="list-top-bar"
-  >
-    <label class="list-label">{{
-      config.label ? config.label : "Add " + config.name
-    }}</label>
+  <div fxLayout="row" fxFlex="100%" fxLayoutAlign="space-between center" class="list-top-bar">
+    <label class="list-label">{{ config.label ? config.label : "Add " + config.name }}</label>
     <button
       mat-button
       class="addBtn"
@@ -51,11 +44,7 @@
           }"
           fxFlex.gt-xs="calc({{ field.width }} - 100px - 32px)"
         >
-          <div
-            dynamicField
-            [config]="field"
-            [group]="listsFromArray.controls[i]"
-          ></div>
+          <div dynamicField [config]="field" [group]="listsFromArray.controls[i]"></div>
         </div>
       </ng-container>
       <div
@@ -81,15 +70,8 @@
     </div>
   </ng-container>
   <ng-template #empty>
-    <span class="form-list-item">{{
-      "No items have been added yet." | translate
-    }}</span>
+    <span class="form-list-item">{{ "No items have been added yet." | translate }}</span>
   </ng-template>
-  <form-errors
-    [control]="group.controls[config.name]"
-    [config]="config"
-  ></form-errors>
-  <mat-error *ngIf="config['hasErrors']"
-    ><div [innerHTML]="config['errors']"></div
-  ></mat-error>
+  <form-errors [control]="group.controls[config.name]" [config]="config"></form-errors>
+  <mat-error *ngIf="config['hasErrors']"><div [innerHTML]="config['errors']"></div></mat-error>
 </div>

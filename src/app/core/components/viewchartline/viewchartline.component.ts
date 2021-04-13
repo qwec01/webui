@@ -16,9 +16,7 @@ interface TimeData {
   selector: "viewchartline",
   template: ViewChartMetadata.template,
 })
-export class ViewChartLineComponent
-  extends ViewChartComponent
-  implements OnInit {
+export class ViewChartLineComponent extends ViewChartComponent implements OnInit {
   //public chartType: string;
   public timeSeries: boolean;
   public timeFormat: string;
@@ -41,18 +39,10 @@ export class ViewChartLineComponent
   }
 
   set chartType(str: string) {
-    if (
-      str == "line" ||
-      str == "area" ||
-      str == "spline" ||
-      str == "area-spline" ||
-      !str
-    ) {
+    if (str == "line" || str == "area" || str == "spline" || str == "area-spline" || !str) {
       this._chartType = str;
     } else {
-      console.warn(
-        "chartType must be a valid line chart type (line, area, spline or area-spline)"
-      );
+      console.warn("chartType must be a valid line chart type (line, area, spline or area-spline)");
     }
   }
 

@@ -33,9 +33,7 @@ export class LdapComponent {
       name: global_helptext.basic_options,
       function: () => {
         this.isBasicMode = !this.isBasicMode;
-        this.fieldSets.find(
-          (set) => set.name === helptext.ldap_advanced
-        ).label = false;
+        this.fieldSets.find((set) => set.name === helptext.ldap_advanced).label = false;
         this.fieldSets.find((set) => set.name === "divider").divider = false;
       },
     },
@@ -44,9 +42,7 @@ export class LdapComponent {
       name: global_helptext.advanced_options,
       function: () => {
         this.isBasicMode = !this.isBasicMode;
-        this.fieldSets.find(
-          (set) => set.name === "Advanced Settings"
-        ).label = true;
+        this.fieldSets.find((set) => set.name === "Advanced Settings").label = true;
         this.fieldSets.find((set) => set.name === "divider").divider = true;
       },
     },
@@ -54,23 +50,19 @@ export class LdapComponent {
       id: helptext.ldap_custactions_edit_imap_id,
       name: helptext.ldap_custactions_edit_imap_name,
       function: () => {
-        this.router.navigate(
-          new Array("").concat(["directoryservice", "idmap"])
-        );
+        this.router.navigate(new Array("").concat(["directoryservice", "idmap"]));
       },
     },
     {
       id: helptext.ldap_custactions_clearcache_id,
       name: helptext.ldap_custactions_clearcache_name,
       function: async () => {
-        this.systemGeneralService
-          .refreshDirServicesCache()
-          .subscribe((cache_status) => {
-            this.dialogservice.Info(
-              helptext.ldap_custactions_clearcache_dialog_title,
-              helptext.ldap_custactions_clearcache_dialog_message
-            );
-          });
+        this.systemGeneralService.refreshDirServicesCache().subscribe((cache_status) => {
+          this.dialogservice.Info(
+            helptext.ldap_custactions_clearcache_dialog_title,
+            helptext.ldap_custactions_clearcache_dialog_message
+          );
+        });
       },
     },
   ];
@@ -281,19 +273,17 @@ export class LdapComponent {
       });
     });
 
-    this.ws
-      .call("kerberos.keytab.kerberos_principal_choices")
-      .subscribe((res) => {
-        this.ldap_kerberos_principal = _.find(this.fieldConfig, {
-          name: "kerberos_principal",
-        });
-        res.forEach((item) => {
-          this.ldap_kerberos_principal.options.push({
-            label: item,
-            value: item,
-          });
+    this.ws.call("kerberos.keytab.kerberos_principal_choices").subscribe((res) => {
+      this.ldap_kerberos_principal = _.find(this.fieldConfig, {
+        name: "kerberos_principal",
+      });
+      res.forEach((item) => {
+        this.ldap_kerberos_principal.options.push({
+          label: item,
+          value: item,
         });
       });
+    });
 
     this.ws.call("ldap.ssl_choices").subscribe((res) => {
       this.ldap_ssl = _.find(this.fieldConfig, { name: "ssl" });
@@ -339,9 +329,7 @@ export class LdapComponent {
     });
     entityEdit.submitFunction = this.submitFunction;
     setTimeout(() => {
-      this.entityForm.formGroup.controls["hostname"].setValue(
-        this.ldap_hostname
-      );
+      this.entityForm.formGroup.controls["hostname"].setValue(this.ldap_hostname);
     }, 500);
   }
 

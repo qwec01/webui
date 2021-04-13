@@ -3,12 +3,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { Router } from "@angular/router";
 import { helptext_system_email } from "app/helptext/system/email";
 import * as _ from "lodash";
-import {
-  DialogService,
-  RestService,
-  WebSocketService,
-  AppLoaderService,
-} from "../../../services/";
+import { DialogService, RestService, WebSocketService, AppLoaderService } from "../../../services/";
 import { FieldConfig } from "../../common/entity/entity-form/models/field-config.interface";
 import { EntityJobComponent } from "../../common/entity/entity-job/entity-job.component";
 import { EntityUtils } from "app/pages/common/entity/utils";
@@ -64,10 +59,7 @@ export class EmailComponent implements OnDestroy {
               data: { title: "EMAIL" },
               disableClose: true,
             });
-            this.dialogRef.componentInstance.setCall("mail.send", [
-              mailObj,
-              value,
-            ]);
+            this.dialogRef.componentInstance.setCall("mail.send", [mailObj, value]);
             this.dialogRef.componentInstance.submit();
             this.dialogRef.componentInstance.success.subscribe((s_res) => {
               this.dialogRef.close(false);
@@ -78,10 +70,7 @@ export class EmailComponent implements OnDestroy {
             });
           });
         } else {
-          this.dialogservice.Info(
-            T("email"),
-            T("Configure the root user email address.")
-          );
+          this.dialogservice.Info(T("email"), T("Configure the root user email address."));
         }
       },
     },
@@ -282,20 +271,18 @@ export class EmailComponent implements OnDestroy {
       this.sendMailMethod.setValue(!value.client_id);
     });
 
-    this.sendMailMethodSubscription = this.sendMailMethod.valueChanges.subscribe(
-      (value) => {
-        this.toggleSmtpControls();
-        this.toggleSmtpAuthControls();
-        this.pass.hideButton = !value;
+    this.sendMailMethodSubscription = this.sendMailMethod.valueChanges.subscribe((value) => {
+      this.toggleSmtpControls();
+      this.toggleSmtpAuthControls();
+      this.pass.hideButton = !value;
 
-        if (!value) {
-          this.checkForOauthCreds();
-        } else {
-          entityEdit.setDisabled("oauth_applied", true, true);
-          entityEdit.setDisabled("oauth_not_applied", true, true);
-        }
+      if (!value) {
+        this.checkForOauthCreds();
+      } else {
+        entityEdit.setDisabled("oauth_applied", true, true);
+        entityEdit.setDisabled("oauth_not_applied", true, true);
       }
-    );
+    });
     this.smtpSubscription = this.smtp.valueChanges.subscribe((value) => {
       this.toggleSmtpAuthControls();
     });
@@ -329,16 +316,8 @@ export class EmailComponent implements OnDestroy {
       !this.sendMailMethod.value,
       !this.sendMailMethod.value
     );
-    this.entityEdit.setDisabled(
-      "port",
-      !this.sendMailMethod.value,
-      !this.sendMailMethod.value
-    );
-    this.entityEdit.setDisabled(
-      "security",
-      !this.sendMailMethod.value,
-      !this.sendMailMethod.value
-    );
+    this.entityEdit.setDisabled("port", !this.sendMailMethod.value, !this.sendMailMethod.value);
+    this.entityEdit.setDisabled("security", !this.sendMailMethod.value, !this.sendMailMethod.value);
     this.entityEdit.setDisabled("smtp", false, !this.sendMailMethod.value);
     this.entityEdit.setDisabled(
       "login-gmail",

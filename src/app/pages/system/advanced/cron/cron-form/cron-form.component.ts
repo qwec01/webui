@@ -106,10 +106,7 @@ export class CronFormComponent {
 
   @ViewChild("form", { static: true }) form: EntityFormComponent;
 
-  constructor(
-    protected userService: UserService,
-    protected modalService: ModalService
-  ) {}
+  constructor(protected userService: UserService, protected modalService: ModalService) {}
 
   updateUserSearchOptions(value = "", parent) {
     parent.userService.userQueryDSCache(value).subscribe((items) => {
@@ -125,9 +122,7 @@ export class CronFormComponent {
     this.entityForm = entityForm;
     this.pk = entityForm.pk;
     this.isNew = entityForm.isNew;
-    this.title = entityForm.isNew
-      ? helptext.cron_job_add
-      : helptext.cron_job_edit;
+    this.title = entityForm.isNew ? helptext.cron_job_add : helptext.cron_job_edit;
 
     // Setup user field options
     this.user_field = _.find(this.fieldSets[0].config, { name: "user" });

@@ -4,11 +4,7 @@ import { MatDialog } from "@angular/material/dialog";
 import * as _ from "lodash";
 import { FieldConfig } from "../../common/entity/entity-form/models/field-config.interface";
 import { FieldSet } from "../../common/entity/entity-form/models/fieldset.interface";
-import {
-  ValidationService,
-  IdmapService,
-  DialogService,
-} from "../../../services/";
+import { ValidationService, IdmapService, DialogService } from "../../../services/";
 import { EntityJobComponent } from "app/pages/common/entity/entity-job/entity-job.component";
 import { EntityUtils } from "../../../pages/common/entity/utils";
 import helptext from "../../../helptext/directoryservice/idmap";
@@ -32,18 +28,12 @@ export class IdmapFormComponent {
   public rangeHighValidation = [
     ...helptext.idmap.required_validator,
     this.validationService.rangeValidator(1000, 2147483647),
-    this.validationService.greaterThan("range_low", [
-      helptext.idmap.range_low.placeholder,
-    ]),
+    this.validationService.greaterThan("range_low", [helptext.idmap.range_low.placeholder]),
   ];
   private entityForm: any;
   protected backendChoices: any;
   protected dialogRef: any;
-  protected requiredDomains = [
-    "DS_TYPE_ACTIVEDIRECTORY",
-    "DS_TYPE_DEFAULT_DOMAIN",
-    "DS_TYPE_LDAP",
-  ];
+  protected requiredDomains = ["DS_TYPE_ACTIVEDIRECTORY", "DS_TYPE_DEFAULT_DOMAIN", "DS_TYPE_LDAP"];
   protected readOnly = false;
   protected fieldConfig: FieldConfig[] = [];
 
@@ -303,9 +293,7 @@ export class IdmapFormComponent {
     if (data.certificate) {
       data.certificate = data.certificate.id;
     }
-    this.requiredDomains.includes(data.name)
-      ? (this.readOnly = true)
-      : (this.readOnly = false);
+    this.requiredDomains.includes(data.name) ? (this.readOnly = true) : (this.readOnly = false);
     return data;
   }
 
@@ -331,29 +319,27 @@ export class IdmapFormComponent {
       });
     });
 
-    entityEdit.formGroup.controls["idmap_backend"].valueChanges.subscribe(
-      (value) => {
+    entityEdit.formGroup.controls["idmap_backend"].valueChanges.subscribe((value) => {
+      this.optionsFields.forEach((option) => {
+        this.hideField(option, true, entityEdit);
+      });
+      for (let i in this.backendChoices[value].parameters) {
         this.optionsFields.forEach((option) => {
-          this.hideField(option, true, entityEdit);
-        });
-        for (let i in this.backendChoices[value].parameters) {
-          this.optionsFields.forEach((option) => {
-            if (option === i) {
-              const params = this.backendChoices[value].parameters[option];
-              this.hideField(option, false, entityEdit);
-              let field = _.find(this.fieldConfig, { name: option });
-              field["required"] = params.required;
-              entityEdit.formGroup.controls[option].setValue(params.default);
-              if (value === "LDAP" || value === "RFC2307") {
-                this.hideField("certificate", false, entityEdit);
-              } else {
-                this.hideField("certificate", true, entityEdit);
-              }
+          if (option === i) {
+            const params = this.backendChoices[value].parameters[option];
+            this.hideField(option, false, entityEdit);
+            let field = _.find(this.fieldConfig, { name: option });
+            field["required"] = params.required;
+            entityEdit.formGroup.controls[option].setValue(params.default);
+            if (value === "LDAP" || value === "RFC2307") {
+              this.hideField("certificate", false, entityEdit);
+            } else {
+              this.hideField("certificate", true, entityEdit);
             }
-          });
-        }
+          }
+        });
       }
-    );
+    });
 
     entityEdit.formGroup.controls["name"].valueChanges.subscribe((value) => {
       if (value === "DS_TYPE_DEFAULT_DOMAIN") {

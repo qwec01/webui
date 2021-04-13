@@ -53,24 +53,22 @@ export class FailoverComponent implements OnDestroy {
         ds.afterClosed().subscribe((status) => {
           if (status) {
             this.load.open();
-            this.ws
-              .call(ds.componentInstance.method, ds.componentInstance.data)
-              .subscribe(
-                (res) => {
-                  this.load.close();
-                  this.dialog.Info(
-                    helptext_system_failover.confirm_dialogs.sync_title,
-                    helptext_system_failover.confirm_dialogs.sync_to_message,
-                    "",
-                    "info",
-                    true
-                  );
-                },
-                (err) => {
-                  this.load.close();
-                  new EntityUtils().handleWSError(this.entityForm, err);
-                }
-              );
+            this.ws.call(ds.componentInstance.method, ds.componentInstance.data).subscribe(
+              (res) => {
+                this.load.close();
+                this.dialog.Info(
+                  helptext_system_failover.confirm_dialogs.sync_title,
+                  helptext_system_failover.confirm_dialogs.sync_to_message,
+                  "",
+                  "info",
+                  true
+                );
+              },
+              (err) => {
+                this.load.close();
+                new EntityUtils().handleWSError(this.entityForm, err);
+              }
+            );
           }
         });
       },
@@ -196,11 +194,9 @@ export class FailoverComponent implements OnDestroy {
           });
       }
       if (res) {
-        this.entityForm.saveSubmitText =
-          helptext_system_failover.save_button_text;
+        this.entityForm.saveSubmitText = helptext_system_failover.save_button_text;
       } else {
-        this.entityForm.saveSubmitText =
-          helptext_system_failover.failover_button_text;
+        this.entityForm.saveSubmitText = helptext_system_failover.failover_button_text;
       }
     });
   }
@@ -211,13 +207,11 @@ export class FailoverComponent implements OnDestroy {
       (res) => {
         this.alreadyDisabled = body["disabled"];
         this.load.close();
-        this.dialog
-          .Info(T("Settings saved."), "", "300px", "info", true)
-          .subscribe((saved) => {
-            if (body.disabled && !body.master) {
-              this.ws.logout();
-            }
-          });
+        this.dialog.Info(T("Settings saved."), "", "300px", "info", true).subscribe((saved) => {
+          if (body.disabled && !body.master) {
+            this.ws.logout();
+          }
+        });
       },
       (res) => {
         this.load.close();

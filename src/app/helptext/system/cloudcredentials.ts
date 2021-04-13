@@ -164,9 +164,7 @@ a new application key, log in to the Backblaze account, go to the \
 
   port_ftp: {
     placeholder: T("Port"),
-    tooltip: T(
-      "FTP Port number. Leave blank to use the default port <i>21</i>."
-    ),
+    tooltip: T("FTP Port number. Leave blank to use the default port <i>21</i>."),
   },
 
   user_ftp: {
@@ -233,18 +231,14 @@ a new application key, log in to the Backblaze account, go to the \
 
   user_mega: {
     placeholder: T("Username"),
-    tooltip: T(
-      '<a href="https://mega.nz/" target="_blank">MEGA</a> account \
- username.'
-    ),
+    tooltip: T('<a href="https://mega.nz/" target="_blank">MEGA</a> account \
+ username.'),
   },
 
   pass_mega: {
     placeholder: T("Password"),
-    tooltip: T(
-      '<a href="https://mega.nz/" target="_blank">MEGA</a> account \
- password.'
-    ),
+    tooltip: T('<a href="https://mega.nz/" target="_blank">MEGA</a> account \
+ password.'),
   },
 
   account_azureblob: {
@@ -440,10 +434,8 @@ target="_blank">OpenStack credentials file</a>.'
 
   port_sftp: {
     placeholder: T("Port"),
-    tooltip: T(
-      "SSH port number. Leave empty to use the default port\
- <i>22</i>."
-    ),
+    tooltip: T("SSH port number. Leave empty to use the default port\
+ <i>22</i>."),
   },
 
   user_sftp: {

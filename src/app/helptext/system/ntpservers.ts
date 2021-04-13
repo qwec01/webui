@@ -23,10 +23,8 @@ export const helptext_system_ntpservers = {
 
     iburst: {
       placeholder: T("IBurst"),
-      tooltip: T(
-        "Speeds up the initial synchronization\
- (seconds instead of minutes)."
-      ),
+      tooltip: T("Speeds up the initial synchronization\
+ (seconds instead of minutes)."),
     },
 
     prefer: {
@@ -68,10 +66,8 @@ export const helptext_system_ntpservers = {
   edit: {
     address: {
       placeholder: T("Address"),
-      tooltip: T(
-        "Enter the hostname or IP address of the <b>NTP</b>\
-   server."
-      ),
+      tooltip: T("Enter the hostname or IP address of the <b>NTP</b>\
+   server."),
     },
 
     burst: {
@@ -86,10 +82,8 @@ export const helptext_system_ntpservers = {
 
     iburst: {
       placeholder: T("IBurst"),
-      tooltip: T(
-        "Speeds up the initial synchronization\
-   (seconds instead of minutes)."
-      ),
+      tooltip: T("Speeds up the initial synchronization\
+   (seconds instead of minutes)."),
     },
 
     prefer: {

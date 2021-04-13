@@ -20,10 +20,8 @@ export default {
 
   // rsyncconfiguration-form
   rsyncmod_name_placeholder: T("Name"),
-  rsyncmod_name_tooltip: T(
-    "Module name that matches the name requested by \
- the rsync client."
-  ),
+  rsyncmod_name_tooltip: T("Module name that matches the name requested by \
+ the rsync client."),
   rsyncmod_name_validation: Validators.required,
 
   rsyncmod_comment_placeholder: T("Comment"),
@@ -36,10 +34,8 @@ field to deactivate the module without completely removing it."
   ),
 
   rsyncmod_path_placeholder: T("Path"),
-  rsyncmod_path_tooltip: T(
-    "Browse to the pool or dataset to store received \
- data."
-  ),
+  rsyncmod_path_tooltip: T("Browse to the pool or dataset to store received \
+ data."),
   rsyncmod_path_validation: Validators.required,
 
   rsyncmod_mode_placeholder: T("Access Mode"),
@@ -59,16 +55,12 @@ field to deactivate the module without completely removing it."
   ),
 
   rsyncmod_user_placeholder: T("User"),
-  rsyncmod_user_tooltip: T(
-    "User to run as during file transfers to and from \
- this module."
-  ),
+  rsyncmod_user_tooltip: T("User to run as during file transfers to and from \
+ this module."),
 
   rsyncmod_group_placeholder: T("Group"),
-  rsyncmod_group_tooltip: T(
-    "Group to run as during file transfers to and \
- from this module."
-  ),
+  rsyncmod_group_tooltip: T("Group to run as during file transfers to and \
+ from this module."),
 
   rsyncmod_hostsallow_placeholder: T("Hosts Allow"),
   rsyncmod_hostsallow_tooltip: T(

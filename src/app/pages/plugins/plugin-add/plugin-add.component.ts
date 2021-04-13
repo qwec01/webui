@@ -56,10 +56,7 @@ export class PluginAddComponent implements OnInit {
       placeholder: helptext.jail_name_placeholder,
       tooltip: helptext.uuid_tooltip,
       required: true,
-      validation: [
-        Validators.required,
-        regexValidator(this.jailService.jailNameRegex),
-      ],
+      validation: [Validators.required, regexValidator(this.jailService.jailNameRegex)],
     },
     {
       type: "checkbox",
@@ -461,12 +458,10 @@ export class PluginAddComponent implements OnInit {
             for (let i in defaults.properties) {
               if (this.formGroup.controls[i]) {
                 if (_.indexOf(this.TFfields, i) > -1) {
-                  defaults.properties[i] =
-                    defaults.properties[i] == "1" ? true : false;
+                  defaults.properties[i] = defaults.properties[i] == "1" ? true : false;
                 }
                 if (_.indexOf(this.OFfields, i) > -1) {
-                  defaults.properties[i] =
-                    defaults.properties[i] == "on" ? true : false;
+                  defaults.properties[i] = defaults.properties[i] == "on" ? true : false;
                 }
                 this.formGroup.controls[i].setValue(defaults.properties[i]);
               }
@@ -496,22 +491,14 @@ export class PluginAddComponent implements OnInit {
 
     if (value["ip4_addr"] != undefined) {
       value["ip4_addr"] =
-        value["ip4_interface"] +
-        "|" +
-        value["ip4_addr"] +
-        "/" +
-        value["ip4_netmask"];
+        value["ip4_interface"] + "|" + value["ip4_addr"] + "/" + value["ip4_netmask"];
       delete value["ip4_interface"];
       delete value["ip4_netmask"];
     }
 
     if (value["ip6_addr"] != undefined) {
       value["ip6_addr"] =
-        value["ip6_interface"] +
-        "|" +
-        value["ip6_addr"] +
-        "/" +
-        value["ip6_prefix"];
+        value["ip6_interface"] + "|" + value["ip6_addr"] + "/" + value["ip6_prefix"];
       delete value["ip6_interface"];
       delete value["ip6_prefix"];
     }
@@ -547,9 +534,7 @@ export class PluginAddComponent implements OnInit {
     this.dialogRef.componentInstance.setCall(this.addCall, [value]);
     this.dialogRef.componentInstance.submit();
     this.dialogRef.componentInstance.success.subscribe((res) => {
-      this.dialogRef.componentInstance.setTitle(
-        T("Plugin installed successfully")
-      );
+      this.dialogRef.componentInstance.setTitle(T("Plugin installed successfully"));
       let install_notes = "<p><b>Install Notes:</b></p>";
       for (const msg of res.result.install_notes.split("\n")) {
         install_notes += "<p>" + msg + "</p>";
@@ -579,9 +564,7 @@ export class PluginAddComponent implements OnInit {
   }
 
   setRelation(config: FieldConfig) {
-    let activations = this.fieldRelationService.findActivationRelation(
-      config.relation
-    );
+    let activations = this.fieldRelationService.findActivationRelation(config.relation);
     if (activations) {
       let tobeDisabled = this.fieldRelationService.isFormControlToBeDisabled(
         activations,

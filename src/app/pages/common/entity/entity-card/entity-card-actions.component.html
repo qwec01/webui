@@ -3,8 +3,7 @@
     mat-button
     color="primary"
     *ngIf="
-      !entity.conf.isActionVisible ||
-      entity.conf.isActionVisible.bind(entity.conf)(action.id, row)
+      !entity.conf.isActionVisible || entity.conf.isActionVisible.bind(entity.conf)(action.id, row)
     "
     (click)="action.onClick(this.row)"
   >

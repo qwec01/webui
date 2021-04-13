@@ -107,10 +107,7 @@ export class SmartFormComponent {
     { name: "divider", divider: true },
   ]);
 
-  constructor(
-    protected ws: WebSocketService,
-    protected modalService: ModalService
-  ) {
+  constructor(protected ws: WebSocketService, protected modalService: ModalService) {
     this.disk_field = this.fieldSets.config("disks");
     this.ws.call("smart.test.disk_choices").subscribe(
       (res) => {
@@ -136,9 +133,7 @@ export class SmartFormComponent {
     this.entityForm = entityForm;
     this.pk = entityForm.pk;
     this.isNew = entityForm.isNew;
-    this.title = !!entityForm.isNew
-      ? helptext.smart_test_add
-      : helptext.smart_test_edit;
+    this.title = !!entityForm.isNew ? helptext.smart_test_add : helptext.smart_test_edit;
   }
 
   beforeSubmit(value) {

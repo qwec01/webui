@@ -13,15 +13,10 @@ import { Subject } from "rxjs/Subject";
   template: `
     <div class="form-element dynamic-field form-select">
       <mat-form-field>
-        <mat-select
-          [(ngModel)]="config.selectedValue"
-          (selectionChange)="onChange($event)"
-        >
+        <mat-select [(ngModel)]="config.selectedValue" (selectionChange)="onChange($event)">
           <div>
             <mat-selection-list>
-              <ng-container
-                *ngFor="let option of config.options; let i = index"
-              >
+              <ng-container *ngFor="let option of config.options; let i = index">
                 <mat-option [value]="option.value">
                   {{ option.label | translate }}
                 </mat-option>

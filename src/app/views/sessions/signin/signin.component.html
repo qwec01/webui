@@ -1,10 +1,6 @@
 <div class="page-wrap height-100 login-form">
   <div class="session-form-hold">
-    <mat-progress-bar
-      mode="determinate"
-      value="0"
-      class="session-progress"
-    ></mat-progress-bar>
+    <mat-progress-bar mode="determinate" value="0" class="session-progress"></mat-progress-bar>
     <mat-card>
       <mat-card-content>
         <div [hidden]="!(connected() && logo_ready)">
@@ -33,9 +29,7 @@
                 alt="TrueNAS ENTERPRISE logo"
               ></mat-icon>
               <mat-icon
-                *ngIf="
-                  product_type === 'SCALE' || product_type == 'SCALE_ENTERPRISE'
-                "
+                *ngIf="product_type === 'SCALE' || product_type == 'SCALE_ENTERPRISE'"
                 class="logo"
                 svgIcon="truenas_scale_logo_full"
                 alt="TrueNAS SCALE logo"
@@ -45,11 +39,7 @@
 
           <div class="card-bottom">
             <div class="form-container" [hidden]="!canLogin()">
-              <form
-                #signinForm="ngForm"
-                (ngSubmit)="signin()"
-                [hidden]="!has_root_password"
-              >
+              <form #signinForm="ngForm" (ngSubmit)="signin()" [hidden]="!has_root_password">
                 <div class="form-element username">
                   <div class="label-container">
                     <label class="label input-text">Username</label>
@@ -83,9 +73,7 @@
                         username.errors.required
                       "
                     >
-                      <span *ngIf="!failed">{{
-                        "Please enter your username" | translate
-                      }}</span>
+                      <span *ngIf="!failed">{{ "Please enter your username" | translate }}</span>
                       <span *ngIf="failed">{{
                         "Please enter your username again" | translate
                       }}</span>
@@ -98,8 +86,7 @@
                   </div>
                   <mat-form-field class="full-width">
                     <span matPrefix
-                      ><mat-icon
-                        style="color: var(--fg1); position: relative; top: 4px"
+                      ><mat-icon style="color: var(--fg1); position: relative; top: 4px"
                         >lock</mat-icon
                       >&nbsp;&nbsp;</span
                     >
@@ -120,9 +107,7 @@
                         password.errors.required
                       "
                     >
-                      <span *ngIf="!failed">{{
-                        "Please enter your password" | translate
-                      }}</span>
+                      <span *ngIf="!failed">{{ "Please enter your password" | translate }}</span>
                       <span *ngIf="failed">{{
                         "Please enter your password again" | translate
                       }}</span>
@@ -132,8 +117,7 @@
                 <div *ngIf="isTwoFactor" class="form-element">
                   <mat-form-field class="full-width">
                     <span matPrefix
-                      ><mat-icon
-                        style="color: var(--fg1); position: relative; top: 2px"
+                      ><mat-icon style="color: var(--fg1); position: relative; top: 2px"
                         >phonelink</mat-icon
                       >&nbsp;&nbsp;</span
                     >
@@ -144,14 +128,10 @@
                       #otp="ngModel"
                       required
                       autocomplete="off"
-                      placeholder="{{
-                        'Two-Factor Authentication Code' | translate
-                      }}"
+                      placeholder="{{ 'Two-Factor Authentication Code' | translate }}"
                     />
                     <mat-error>
-                      <span *ngIf="!failed">{{
-                        "Please enter your 2FA code" | translate
-                      }}</span>
+                      <span *ngIf="!failed">{{ "Please enter your 2FA code" | translate }}</span>
                       <span *ngIf="failed">{{
                         "Please enter your 2FA code again" | translate
                       }}</span>
@@ -176,15 +156,11 @@
                   #setPasswordForm="ngForm"
                 >
                   <div>
-                    <span>{{
-                      "Set new root account password:" | translate
-                    }}</span>
+                    <span>{{ "Set new root account password:" | translate }}</span>
                   </div>
                   <div class="form-element">
                     <div class="label-container">
-                      <label class="label input-text">{{
-                        "Password" | translate
-                      }}</label>
+                      <label class="label input-text">{{ "Password" | translate }}</label>
                     </div>
                     <mat-form-field class="full-width">
                       <input
@@ -195,12 +171,7 @@
                         required
                         placeholder="{{ 'Password' | translate }}"
                       />
-                      <mat-error
-                        *ngIf="
-                          password.errors &&
-                          (password.dirty || password.touched)
-                        "
-                      >
+                      <mat-error *ngIf="password.errors && (password.dirty || password.touched)">
                         <span *ngIf="password.errors.required">{{
                           "This field is required" | translate
                         }}</span>
@@ -209,9 +180,7 @@
                   </div>
                   <div class="form-element">
                     <div class="label-container">
-                      <label class="label input-text">{{
-                        "Reenter Password" | translate
-                      }}</label>
+                      <label class="label input-text">{{ "Reenter Password" | translate }}</label>
                     </div>
                     <mat-form-field class="full-width">
                       <input
@@ -222,12 +191,7 @@
                         required
                         placeholder="{{ 'Confirm Password' | translate }}"
                       />
-                      <mat-error
-                        *ngIf="
-                          password2.errors &&
-                          (password2.dirty || password2.touched)
-                        "
-                      >
+                      <mat-error *ngIf="password2.errors && (password2.dirty || password2.touched)">
                         <span *ngIf="password2.errors">{{
                           "Passwords do not match" | translate
                         }}</span>
@@ -260,10 +224,7 @@
               </div>
             </div>
 
-            <span
-              *ngIf="
-                product_type === 'ENTERPRISE' && failover_status != 'SINGLE'
-              "
+            <span *ngIf="product_type === 'ENTERPRISE' && failover_status != 'SINGLE'"
               ><div class="ha-status">
                 <div class="ha-status-txt">
                   <p>{{ ha_status_text }}</p>
@@ -291,14 +252,8 @@
             </div>
 
             <div class="copyright-line">
-              <span class="copyright-txt"
-                >TrueNAS {{ product_type }} ® © {{ copyrightYear }}
-              </span>
-              <img
-                id="full-logo"
-                (click)="openIX()"
-                src="assets/images/ix_logo_full.png"
-              />
+              <span class="copyright-txt">TrueNAS {{ product_type }} ® © {{ copyrightYear }} </span>
+              <img id="full-logo" (click)="openIX()" src="assets/images/ix_logo_full.png" />
             </div>
           </div>
         </div>
@@ -308,16 +263,10 @@
             <p *ngIf="!ha_status">
               {{ "Connecting to " | translate }} {{ product }}
               {{ "... Make sure the " | translate }} {{ product }}
-              {{
-                " system is powered on and connected to the network."
-                  | translate
-              }}
+              {{ " system is powered on and connected to the network." | translate }}
             </p>
             <p *ngIf="ha_status">
-              {{
-                "Waiting for Active TrueNAS controller to come up..."
-                  | translate
-              }}
+              {{ "Waiting for Active TrueNAS controller to come up..." | translate }}
             </p>
           </div>
         </div>

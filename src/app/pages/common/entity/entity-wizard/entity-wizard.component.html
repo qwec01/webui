@@ -1,16 +1,7 @@
 <!-- <ng-template [ngTemplateOutlet]="templateTop" [ngTemplateOutletContext]="this"></ng-template> -->
 <mat-card>
-  <mat-spinner
-    [diameter]="40"
-    id="entity-spinner"
-    *ngIf="showSpinner"
-    #entityspinner
-  ></mat-spinner>
-  <form
-    [formGroup]="formGroup"
-    #entityForm="ngForm"
-    (keydown.enter)="$event.preventDefault()"
-  >
+  <mat-spinner [diameter]="40" id="entity-spinner" *ngIf="showSpinner" #entityspinner></mat-spinner>
+  <form [formGroup]="formGroup" #entityForm="ngForm" (keydown.enter)="$event.preventDefault()">
     <mat-vertical-stepper
       [linear]="conf?.isLinear"
       formArrayName="formArray"
@@ -26,9 +17,7 @@
         >
           <ng-template matStepLabel>{{ step.label | translate }}</ng-template>
           <div class="form-wrap">
-            <ng-container
-              *ngFor="let fieldSet of step.fieldSets; let j = index"
-            >
+            <ng-container *ngFor="let fieldSet of step.fieldSets; let j = index">
               <div
                 [ngClass]="[
                   fieldSet.class ? fieldSet.class : '',
@@ -41,19 +30,14 @@
                 fxFlex.gt-xs="calc({{ fieldSet.width }} - 16px)"
               >
                 <mat-divider *ngIf="fieldSet.divider && i > 0"></mat-divider>
-                <h4
-                  *ngIf="fieldSet.label && isFieldsetAvailabel(fieldSet)"
-                  class="fieldset-label"
-                >
+                <h4 *ngIf="fieldSet.label && isFieldsetAvailabel(fieldSet)" class="fieldset-label">
                   {{ fieldSet.name | translate }}
                 </h4>
                 <div
                   *ngFor="let field of fieldSet.config; let k = index"
                   fxFlex="100%"
                   fxFlex.gt-xs="calc({{ field.width }} - 16px)"
-                  [ngClass]="
-                    field.class == 'inline' ? 'form-inline' : 'form-line'
-                  "
+                  [ngClass]="field.class == 'inline' ? 'form-inline' : 'form-line'"
                   id="{{ k }}"
                 >
                   <div
@@ -69,10 +53,7 @@
           </div>
           <mat-card-actions
             class="wizard-action"
-            *ngIf="
-              conf.summary || i !== conf.wizardConfig.length - 1;
-              else lastStepAction
-            "
+            *ngIf="conf.summary || i !== conf.wizardConfig.length - 1; else lastStepAction"
           >
             <button
               id="cancel_button_{{ i }}"
@@ -134,10 +115,7 @@
                 id="cust_button_{{ custBtn.name }}"
                 mat-button
                 color="primary"
-                *ngIf="
-                  !conf.isCustActionVisible ||
-                  conf.isCustActionVisible(custBtn.id, i)
-                "
+                *ngIf="!conf.isCustActionVisible || conf.isCustActionVisible(custBtn.id, i)"
                 type="button"
                 (click)="custBtn['function']()"
                 ix-auto
@@ -192,9 +170,7 @@
         </mat-step>
       </div>
       <mat-step *ngIf="conf.summary">
-        <ng-template matStepLabel>{{
-          "Confirm Options" | translate
-        }}</ng-template>
+        <ng-template matStepLabel>{{ "Confirm Options" | translate }}</ng-template>
         <div *ngIf="conf.summary">
           <div>{{ conf.summary_title }}</div>
           <ul>
@@ -202,9 +178,7 @@
               <div *ngIf="item.value | keyvalue; else inobject">
                 <label>{{ item.key }}:</label>
                 <ul class="wizard-ul">
-                  <li
-                    *ngFor="let subitem of item.value | keyvalue: originalOrder"
-                  >
+                  <li *ngFor="let subitem of item.value | keyvalue: originalOrder">
                     <div *ngIf="subitem.value">
                       {{ subitem.key | translate }}: {{ subitem.value }}
                     </div>
@@ -212,9 +186,7 @@
                 </ul>
               </div>
               <ng-template #inobject>
-                <div *ngIf="item.value">
-                  {{ item.key | translate }}: {{ item.value }}
-                </div>
+                <div *ngIf="item.value">{{ item.key | translate }}: {{ item.value }}</div>
               </ng-template>
             </li>
           </ul>

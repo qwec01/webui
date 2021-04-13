@@ -10,11 +10,7 @@ import { ModalService } from "../../../services/modal.service";
 import { EntityJobComponent } from "../../common/entity/entity-job/entity-job.component";
 import { CommonUtils } from "app/core/classes/common-utils";
 import helptext from "../../../helptext/apps/apps";
-import {
-  EntityUtils,
-  FORM_KEY_SEPERATOR,
-  FORM_LABEL_KEY_PREFIX,
-} from "../../common/entity/utils";
+import { EntityUtils, FORM_KEY_SEPERATOR, FORM_LABEL_KEY_PREFIX } from "../../common/entity/utils";
 
 @Component({
   selector: "chart-form",
@@ -47,10 +43,7 @@ export class ChartFormComponent {
   ) {
     this.getRow = this.modalService.getRow$.subscribe((rowName: string) => {
       this.rowName = rowName;
-      this.customFilter = [
-        [["id", "=", rowName]],
-        { extra: { include_chart_schema: true } },
-      ];
+      this.customFilter = [[["id", "=", rowName]], { extra: { include_chart_schema: true } }];
       this.getRow.unsubscribe();
     });
     this.utils = new CommonUtils();
@@ -91,20 +84,14 @@ export class ChartFormComponent {
         });
       });
       this.catalogApp.schema.questions.forEach((question) => {
-        const fieldSet = this.fieldSets.find(
-          (fieldSet) => fieldSet.name == question.group
-        );
+        const fieldSet = this.fieldSets.find((fieldSet) => fieldSet.name == question.group);
         if (fieldSet) {
-          const fieldConfigs = this.entityUtils.parseSchemaFieldConfig(
-            question
-          );
+          const fieldConfigs = this.entityUtils.parseSchemaFieldConfig(question);
           fieldSet.config = fieldSet.config.concat(fieldConfigs);
         }
       });
 
-      this.fieldSets = this.fieldSets.filter(
-        (fieldSet) => fieldSet.config.length > 0
-      );
+      this.fieldSets = this.fieldSets.filter((fieldSet) => fieldSet.config.length > 0);
     } catch (error) {
       return this.dialogService.errorReport(
         helptext.chartForm.parseError.title,

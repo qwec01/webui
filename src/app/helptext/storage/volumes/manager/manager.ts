@@ -4,15 +4,11 @@ import { T } from "../../../../translate-marker";
 export default {
   manager_needsDiskMessage: T("Add one or more disks to be used for data."),
 
-  manager_extendedNeedsDiskMessage: T(
-    "Add one or more disks to extend the pool."
-  ),
+  manager_extendedNeedsDiskMessage: T("Add one or more disks to extend the pool."),
 
   manager_sizeMessage: T("Estimated total raw data capacity"),
 
-  manager_extendedSizeMessage: T(
-    "Estimated data capacity available after extension."
-  ),
+  manager_extendedSizeMessage: T("Estimated data capacity available after extension."),
 
   manager_disknumErrorMessage: T(
     "WARNING: Adding data vdevs with different numbers of\
@@ -29,9 +25,7 @@ export default {
  more vdevs containing different numbers of disks. Continue?"
   ),
 
-  manager_vdevtypeErrorMessage: T(
-    "Adding data vdevs of different types is not supported."
-  ),
+  manager_vdevtypeErrorMessage: T("Adding data vdevs of different types is not supported."),
 
   manager_stripeVdevTypeErrorMessage: T(
     "vdev is highly discouraged and will result in data loss if it fails"
@@ -56,10 +50,8 @@ export default {
  for this pool and add an encryption algorithm selector.'
   ),
 
-  manager_suggested_layout_tooltip: T(
-    "Create a recommended formation\
- of vdevs in a pool."
-  ),
+  manager_suggested_layout_tooltip: T("Create a recommended formation\
+ of vdevs in a pool."),
 
   manager_encryption_message: T(
     "This type of encryption is for users storing sensitive data.\
@@ -75,10 +67,8 @@ export default {
   manager_duplicate_button: T("Repeat Vdev"),
 
   force_title: T("Warning"),
-  force_warning: T(
-    "The current pool layout is not recommended.\
- Override the following errors?"
-  ),
+  force_warning: T("The current pool layout is not recommended.\
+ Override the following errors?"),
   force_warnings: {
     diskSizeWarning: T("One or more data vdevs has disks of different sizes."),
   },

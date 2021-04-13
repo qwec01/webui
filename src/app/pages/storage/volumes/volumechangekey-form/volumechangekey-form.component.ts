@@ -42,8 +42,7 @@ export class VolumeChangekeyFormComponent implements Formconfiguration {
     {
       type: "paragraph",
       name: "encrypt-headline",
-      paraText:
-        '<i class="material-icons">lock</i>' + helptext.changekey2_headline,
+      paraText: '<i class="material-icons">lock</i>' + helptext.changekey2_headline,
     },
     {
       type: "paragraph",
@@ -85,23 +84,13 @@ export class VolumeChangekeyFormComponent implements Formconfiguration {
       name: T("Download Encryption Key"),
       disabled: true,
       function: () => {
-        this.ws
-          .call("auth.check_user", ["root", this.admin_pw])
-          .subscribe((res) => {
-            if (res) {
-              this.encryptionService.openEncryptDialog(
-                this.pk,
-                this.route_return,
-                this.poolName
-              );
-            } else {
-              this.dialogService.Info(
-                "Error",
-                "The administrator password is incorrect.",
-                "340px"
-              );
-            }
-          });
+        this.ws.call("auth.check_user", ["root", this.admin_pw]).subscribe((res) => {
+          if (res) {
+            this.encryptionService.openEncryptDialog(this.pk, this.route_return, this.poolName);
+          } else {
+            this.dialogService.Info("Error", "The administrator password is incorrect.", "340px");
+          }
+        });
       },
     },
     {
@@ -142,22 +131,18 @@ export class VolumeChangekeyFormComponent implements Formconfiguration {
   }
 
   afterInit(entityForm: any) {
-    entityForm.formGroup.controls["remove_passphrase"].valueChanges.subscribe(
-      (res) => {
-        if (res) {
-          entityForm.setDisabled("passphrase", true);
-          entityForm.setDisabled("passphrase2", true);
-        } else {
-          entityForm.setDisabled("passphrase", false);
-          entityForm.setDisabled("passphrase2", false);
-        }
+    entityForm.formGroup.controls["remove_passphrase"].valueChanges.subscribe((res) => {
+      if (res) {
+        entityForm.setDisabled("passphrase", true);
+        entityForm.setDisabled("passphrase2", true);
+      } else {
+        entityForm.setDisabled("passphrase", false);
+        entityForm.setDisabled("passphrase2", false);
       }
-    );
+    });
     entityForm.formGroup.controls["adminpw"].valueChanges.subscribe((res) => {
       this.admin_pw = res;
-      let btn = <HTMLInputElement>(
-        document.getElementById("cust_button_Download Encryption Key")
-      );
+      let btn = <HTMLInputElement>document.getElementById("cust_button_Download Encryption Key");
       this.admin_pw !== "" ? (btn.disabled = false) : (btn.disabled = true);
     });
   }
@@ -179,27 +164,21 @@ export class VolumeChangekeyFormComponent implements Formconfiguration {
     };
     params.push(payload);
 
-    this.ws
-      .call("auth.check_user", ["root", value.adminpw])
-      .subscribe((res) => {
-        if (res) {
-          this.encryptionService.setPassphrase(
-            this.pk,
-            value.passphrase,
-            value.adminpw,
-            value.name,
-            this.route_return,
-            false,
-            true,
-            success_msg
-          );
-        } else {
-          this.dialogService.Info(
-            "Error",
-            "The administrator password is incorrect.",
-            "340px"
-          );
-        }
-      });
+    this.ws.call("auth.check_user", ["root", value.adminpw]).subscribe((res) => {
+      if (res) {
+        this.encryptionService.setPassphrase(
+          this.pk,
+          value.passphrase,
+          value.adminpw,
+          value.name,
+          this.route_return,
+          false,
+          true,
+          success_msg
+        );
+      } else {
+        this.dialogService.Info("Error", "The administrator password is incorrect.", "340px");
+      }
+    });
   }
 }

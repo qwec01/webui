@@ -1,8 +1,5 @@
 <div id="entity-form-embedded.component_html">
-  <ng-template
-    [ngTemplateOutlet]="templateTop"
-    [ngTemplateOutletContext]="this"
-  ></ng-template>
+  <ng-template [ngTemplateOutlet]="templateTop" [ngTemplateOutletContext]="this"></ng-template>
   <p *ngIf="!hasConf">
     {{ "Please" | translate }}
     <button
@@ -83,10 +80,7 @@
         >
           {{ saveSubmitText | translate }}
         </button>
-        <form-status
-          *ngIf="conf.multiStateSubmit"
-          [statusIcon]="saveSubmitStatus"
-        ></form-status>
+        <form-status *ngIf="conf.multiStateSubmit" [statusIcon]="saveSubmitStatus"></form-status>
         <button
           *ngIf="conf.goBack"
           id="goback_button"
@@ -107,9 +101,7 @@
             mat-button
             color="default"
             class="mat-basic"
-            *ngIf="
-              !conf.isCustActionVisible || conf.isCustActionVisible(custBtn.id)
-            "
+            *ngIf="!conf.isCustActionVisible || conf.isCustActionVisible(custBtn.id)"
             type="submit"
             (click)="onSubmit($event, custBtn.eventName)"
             ix-auto

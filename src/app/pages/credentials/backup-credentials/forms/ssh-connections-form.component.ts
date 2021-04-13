@@ -53,10 +53,7 @@ export class SshConnectionsFormComponent {
           placeholder: helptext.name_placeholder,
           tooltip: helptext.name_tooltip,
           required: true,
-          validation: [
-            Validators.required,
-            forbiddenValues(this.namesInUseConnection),
-          ],
+          validation: [Validators.required, forbiddenValues(this.namesInUseConnection)],
         },
         {
           type: "select",
@@ -321,50 +318,36 @@ export class SshConnectionsFormComponent {
     this.fieldConfig = entityForm.fieldConfig;
     this.updateDiscoverButtonDisabled();
     if (this.entityForm.isNew) {
-      this.addCall = this.sshCalls[
-        this.entityForm.formGroup.controls["setup_method"].value
-      ];
-      this.entityForm.formGroup.controls["setup_method"].valueChanges.subscribe(
-        (res) => {
-          this.addCall = this.sshCalls[res];
-          this.updateDiscoverButtonDisabled();
-        }
-      );
+      this.addCall = this.sshCalls[this.entityForm.formGroup.controls["setup_method"].value];
+      this.entityForm.formGroup.controls["setup_method"].valueChanges.subscribe((res) => {
+        this.addCall = this.sshCalls[res];
+        this.updateDiscoverButtonDisabled();
+      });
     } else {
       this.entityForm.formGroup.controls["setup_method"].setValue("manual");
     }
 
     const nameCtrl = this.entityForm.formGroup.controls["name"];
     let preValue = this.entityForm.formGroup.controls["private_key"].value;
-    this.entityForm.formGroup.controls["private_key"].valueChanges.subscribe(
-      (res) => {
-        if (res === "NEW") {
-          nameCtrl.setValidators([
-            Validators.required,
-            forbiddenValues(this.namesInUse),
-          ]);
-          nameCtrl.updateValueAndValidity();
-        } else if (preValue === "NEW") {
-          nameCtrl.setValidators([
-            Validators.required,
-            forbiddenValues(this.namesInUseConnection),
-          ]);
-          nameCtrl.updateValueAndValidity();
-        }
-        preValue = res;
-        this.updateDiscoverButtonDisabled();
+    this.entityForm.formGroup.controls["private_key"].valueChanges.subscribe((res) => {
+      if (res === "NEW") {
+        nameCtrl.setValidators([Validators.required, forbiddenValues(this.namesInUse)]);
+        nameCtrl.updateValueAndValidity();
+      } else if (preValue === "NEW") {
+        nameCtrl.setValidators([Validators.required, forbiddenValues(this.namesInUseConnection)]);
+        nameCtrl.updateValueAndValidity();
       }
-    );
+      preValue = res;
+      this.updateDiscoverButtonDisabled();
+    });
 
     this.entityForm.formGroup.controls["host"].valueChanges.subscribe((res) => {
       this.updateDiscoverButtonDisabled();
     });
 
-    this.entityForm.formGroup.controls["username"].valueChanges.subscribe(
-      (res) => {
-        this.updateDiscoverButtonDisabled();
-      }
-    );
+    this.entityForm.formGroup.controls["username"].valueChanges.subscribe((res) => {
+      this.updateDiscoverButtonDisabled();
+    });
   }
 
   updateDiscoverButtonDisabled() {
@@ -376,12 +359,7 @@ export class SshConnectionsFormComponent {
         false
       );
     } else {
-      this.setDisabled(
-        this.fieldSets[1].config,
-        "remote_host_key_button",
-        true,
-        true
-      );
+      this.setDisabled(this.fieldSets[1].config, "remote_host_key_button", true, true);
     }
   }
 
@@ -393,12 +371,7 @@ export class SshConnectionsFormComponent {
     );
   }
 
-  setDisabled(
-    fieldConfig: any,
-    fieldName: string,
-    disable: boolean,
-    hide: boolean = false
-  ) {
+  setDisabled(fieldConfig: any, fieldName: string, disable: boolean, hide: boolean = false) {
     if (hide) {
       disable = hide;
     }
@@ -423,18 +396,16 @@ export class SshConnectionsFormComponent {
       connect_timeout: this.entityForm.value["connect_timeout"],
     };
 
-    this.ws
-      .call("keychaincredential.remote_ssh_host_key_scan", [payload])
-      .subscribe(
-        (res) => {
-          this.loader.close();
-          this.entityForm.formGroup.controls["remote_host_key"].setValue(res);
-        },
-        (err) => {
-          this.loader.close();
-          new EntityUtils().handleWSError(this, err, this.dialogService);
-        }
-      );
+    this.ws.call("keychaincredential.remote_ssh_host_key_scan", [payload]).subscribe(
+      (res) => {
+        this.loader.close();
+        this.entityForm.formGroup.controls["remote_host_key"].setValue(res);
+      },
+      (err) => {
+        this.loader.close();
+        new EntityUtils().handleWSError(this, err, this.dialogService);
+      }
+    );
   }
 
   resourceTransformIncomingRestData(wsResponse) {
@@ -464,11 +435,7 @@ export class SshConnectionsFormComponent {
               },
               (sshKey_err) => {
                 this.loader.close();
-                new EntityUtils().handleWSError(
-                  this,
-                  sshKey_err,
-                  this.dialogService
-                );
+                new EntityUtils().handleWSError(this, sshKey_err, this.dialogService);
               }
             );
         },
@@ -482,8 +449,7 @@ export class SshConnectionsFormComponent {
     if (data["setup_method"] === "manual") {
       const attributes = {};
       for (const item in this.manualMethodFields) {
-        attributes[this.manualMethodFields[item]] =
-          data[this.manualMethodFields[item]];
+        attributes[this.manualMethodFields[item]] = data[this.manualMethodFields[item]];
         delete data[this.manualMethodFields[item]];
       }
       data["attributes"] = attributes;

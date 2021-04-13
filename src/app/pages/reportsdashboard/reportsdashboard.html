@@ -14,10 +14,7 @@
     (scrolledIndexChange)="nextBatch($event, visibleReports[visibleReports.length - 1])"
   >
     <!-- Report Cards -->
-    <div
-      class="report-container"
-      *cdkVirtualFor="let key of visibleReports; let i = index;"
-    >
+    <div class="report-container" *cdkVirtualFor="let key of visibleReports; let i = index;">
       <report
         *ngIf="retroLogo && activeReports[key] && activeReports[key].identifiers.length > 0"
         [retroLogo]="retroLogo"

@@ -28,9 +28,7 @@ export class TooltipComponent {
   showTooltip($event) {
     this.isShowTooltip = $event;
     let formParent = this.findParent();
-    let posRight =
-      this.tooltip.nativeElement.offsetLeft +
-      this.tooltip.nativeElement.offsetWidth;
+    let posRight = this.tooltip.nativeElement.offsetLeft + this.tooltip.nativeElement.offsetWidth;
     this.tooltipMsgStyle = {
       right: "32px",
       top: "-32px",
@@ -44,11 +42,7 @@ export class TooltipComponent {
       }
     }
 
-    let insideJob = formParent
-      ? formParent.clientWidth - posRight > 300
-        ? true
-        : false
-      : null;
+    let insideJob = formParent ? (formParent.clientWidth - posRight > 300 ? true : false) : null;
 
     if (this.positionOverride) {
       this.positionString = this.positionOverride;
@@ -106,8 +100,7 @@ export class TooltipComponent {
       card = formParent.offsetParent.offsetParent;
     } else if (
       formParent.offsetParent.offsetParent.offsetParent &&
-      formParent.offsetParent.offsetParent.offsetParent.tagName.toLowerCase() ==
-        "mat-card"
+      formParent.offsetParent.offsetParent.offsetParent.tagName.toLowerCase() == "mat-card"
     ) {
       card = formParent.offsetParent.offsetParent.offsetParent;
     } else if (
@@ -117,9 +110,7 @@ export class TooltipComponent {
     ) {
       card = formParent.offsetParent.offsetParent.offsetParent.offsetParent;
     }
-    this.isSlideInForm = card.parentNode.classList.value.includes(
-      "slidein-entity-form"
-    );
+    this.isSlideInForm = card.parentNode.classList.value.includes("slidein-entity-form");
 
     if (card && card.parentNode.nodeName.toLowerCase() == "entity-wizard") {
       this.isWizard = true;

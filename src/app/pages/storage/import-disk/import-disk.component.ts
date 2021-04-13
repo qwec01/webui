@@ -114,11 +114,7 @@ export class ImportDiskComponent implements OnDestroy, Formconfiguration {
         }
       },
       (res) => {
-        this.dialogService.errorReport(
-          T("Error getting locales"),
-          res.message,
-          res.stack
-        );
+        this.dialogService.errorReport(T("Error getting locales"), res.message, res.stack);
         this.initialized = true;
       }
     );
@@ -132,16 +128,14 @@ export class ImportDiskComponent implements OnDestroy, Formconfiguration {
     });
 
     entityForm.formGroup.controls["volume"].valueChanges.subscribe((res) => {
-      this.ws
-        .call("pool.import_disk_autodetect_fs_type", [res])
-        .subscribe((res) => {
-          // If ws call fails to return type, no type is selected; otherwise, type is autoselected.
-          for (let option of this.fs_type_list.options) {
-            if (res === option.value) {
-              this.fs_type.setValue(option.value);
-            }
+      this.ws.call("pool.import_disk_autodetect_fs_type", [res]).subscribe((res) => {
+        // If ws call fails to return type, no type is selected; otherwise, type is autoselected.
+        for (let option of this.fs_type_list.options) {
+          if (res === option.value) {
+            this.fs_type.setValue(option.value);
           }
-        });
+        }
+      });
     });
 
     this.makeList();
@@ -170,11 +164,7 @@ export class ImportDiskComponent implements OnDestroy, Formconfiguration {
         this.initialized = true;
       },
       (res) => {
-        this.dialogService.errorReport(
-          T("Error getting disk data"),
-          res.message,
-          res.stack
-        );
+        this.dialogService.errorReport(T("Error getting disk data"), res.message, res.stack);
         this.initialized = true;
       }
     );

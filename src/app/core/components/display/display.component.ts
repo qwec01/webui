@@ -39,9 +39,7 @@ export class Display implements OnInit, AfterViewInit {
 
   create(component: any) {
     let compRef = <any>(
-      this.resolver
-        .resolveComponentFactory(component)
-        .create(this.viewContainerRef.injector)
+      this.resolver.resolveComponentFactory(component).create(this.viewContainerRef.injector)
     );
     this.children.push(compRef);
     return compRef.instance;

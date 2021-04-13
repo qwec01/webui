@@ -73,10 +73,7 @@
       (mouseup)="selectedItems.mouseUp(item, $event)"
     >
       <mat-list *ngIf="templateItem; else noTemplateItem">
-        <ng-container
-          [ngTemplateOutlet]="templateItem"
-          [ngTemplateOutletContext]="{ data: item }"
-        >
+        <ng-container [ngTemplateOutlet]="templateItem" [ngTemplateOutletContext]="{ data: item }">
         </ng-container>
       </mat-list>
       <ng-template #noTemplateItem>

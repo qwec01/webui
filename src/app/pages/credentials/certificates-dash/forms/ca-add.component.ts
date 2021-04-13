@@ -270,16 +270,14 @@ export class CertificateAuthorityAddComponent {
         {
           type: "checkbox",
           name: "BasicConstraints-enabled",
-          placeholder:
-            helptext_system_ca.add.basic_constraints.enabled.placeholder,
+          placeholder: helptext_system_ca.add.basic_constraints.enabled.placeholder,
           tooltip: helptext_system_ca.add.basic_constraints.enabled.tooltip,
         },
         {
           type: "input",
           inputType: "number",
           name: "BasicConstraints-path_length",
-          placeholder:
-            helptext_system_ca.add.basic_constraints.path_length.placeholder,
+          placeholder: helptext_system_ca.add.basic_constraints.path_length.placeholder,
           tooltip: helptext_system_ca.add.basic_constraints.path_length.tooltip,
           relation: [
             {
@@ -297,8 +295,7 @@ export class CertificateAuthorityAddComponent {
           type: "select",
           multiple: true,
           name: "BasicConstraints",
-          placeholder:
-            helptext_system_ca.add.basic_constraints.config.placeholder,
+          placeholder: helptext_system_ca.add.basic_constraints.config.placeholder,
           tooltip: helptext_system_ca.add.basic_constraints.config.tooltip,
           options: [
             {
@@ -308,12 +305,8 @@ export class CertificateAuthorityAddComponent {
             },
             {
               value: "extension_critical",
-              label:
-                helptext_system_ca.add.basic_constraints.extension_critical
-                  .placeholder,
-              tooltip:
-                helptext_system_ca.add.basic_constraints.extension_critical
-                  .tooltip,
+              label: helptext_system_ca.add.basic_constraints.extension_critical.placeholder,
+              tooltip: helptext_system_ca.add.basic_constraints.extension_critical.tooltip,
             },
           ],
           relation: [
@@ -331,37 +324,27 @@ export class CertificateAuthorityAddComponent {
         {
           type: "checkbox",
           name: "AuthorityKeyIdentifier-enabled",
-          placeholder:
-            helptext_system_ca.add.authority_key_identifier.enabled.placeholder,
-          tooltip:
-            helptext_system_ca.add.authority_key_identifier.enabled.tooltip,
+          placeholder: helptext_system_ca.add.authority_key_identifier.enabled.placeholder,
+          tooltip: helptext_system_ca.add.authority_key_identifier.enabled.tooltip,
         },
         {
           type: "select",
           multiple: true,
           name: "AuthorityKeyIdentifier",
-          placeholder:
-            helptext_system_ca.add.authority_key_identifier.config.placeholder,
-          tooltip:
-            helptext_system_ca.add.authority_key_identifier.config.tooltip,
+          placeholder: helptext_system_ca.add.authority_key_identifier.config.placeholder,
+          tooltip: helptext_system_ca.add.authority_key_identifier.config.tooltip,
           options: [
             {
               value: "authority_cert_issuer",
               label:
-                helptext_system_ca.add.authority_key_identifier
-                  .authority_cert_issuer.placeholder,
+                helptext_system_ca.add.authority_key_identifier.authority_cert_issuer.placeholder,
               tooltip:
-                helptext_system_ca.add.authority_key_identifier
-                  .authority_cert_issuer.tooltip,
+                helptext_system_ca.add.authority_key_identifier.authority_cert_issuer.tooltip,
             },
             {
               value: "extension_critical",
-              label:
-                helptext_system_ca.add.authority_key_identifier
-                  .extension_critical.placeholder,
-              tooltip:
-                helptext_system_ca.add.authority_key_identifier
-                  .extension_critical.tooltip,
+              label: helptext_system_ca.add.authority_key_identifier.extension_critical.placeholder,
+              tooltip: helptext_system_ca.add.authority_key_identifier.extension_critical.tooltip,
             },
           ],
           relation: [
@@ -379,16 +362,14 @@ export class CertificateAuthorityAddComponent {
         {
           type: "checkbox",
           name: "ExtendedKeyUsage-enabled",
-          placeholder:
-            helptext_system_ca.add.extended_key_usage.enabled.placeholder,
+          placeholder: helptext_system_ca.add.extended_key_usage.enabled.placeholder,
           tooltip: helptext_system_ca.add.extended_key_usage.enabled.tooltip,
         },
         {
           type: "select",
           multiple: true,
           name: "ExtendedKeyUsage-usages",
-          placeholder:
-            helptext_system_ca.add.extended_key_usage.usages.placeholder,
+          placeholder: helptext_system_ca.add.extended_key_usage.usages.placeholder,
           tooltip: helptext_system_ca.add.extended_key_usage.usages.tooltip,
           options: [],
           required: false,
@@ -407,12 +388,8 @@ export class CertificateAuthorityAddComponent {
         {
           type: "checkbox",
           name: "ExtendedKeyUsage-extension_critical",
-          placeholder:
-            helptext_system_ca.add.extended_key_usage.extension_critical
-              .placeholder,
-          tooltip:
-            helptext_system_ca.add.extended_key_usage.extension_critical
-              .tooltip,
+          placeholder: helptext_system_ca.add.extended_key_usage.extension_critical.placeholder,
+          tooltip: helptext_system_ca.add.extended_key_usage.extension_critical.tooltip,
           relation: [
             {
               action: "SHOW",
@@ -440,31 +417,23 @@ export class CertificateAuthorityAddComponent {
           options: [
             {
               value: "digital_signature",
-              label:
-                helptext_system_ca.add.key_usage.digital_signature.placeholder,
-              tooltip:
-                helptext_system_ca.add.key_usage.digital_signature.tooltip,
+              label: helptext_system_ca.add.key_usage.digital_signature.placeholder,
+              tooltip: helptext_system_ca.add.key_usage.digital_signature.tooltip,
             },
             {
               value: "content_commitment",
-              label:
-                helptext_system_ca.add.key_usage.content_commitment.placeholder,
-              tooltip:
-                helptext_system_ca.add.key_usage.content_commitment.tooltip,
+              label: helptext_system_ca.add.key_usage.content_commitment.placeholder,
+              tooltip: helptext_system_ca.add.key_usage.content_commitment.tooltip,
             },
             {
               value: "key_encipherment",
-              label:
-                helptext_system_ca.add.key_usage.key_encipherment.placeholder,
-              tooltip:
-                helptext_system_ca.add.key_usage.key_encipherment.tooltip,
+              label: helptext_system_ca.add.key_usage.key_encipherment.placeholder,
+              tooltip: helptext_system_ca.add.key_usage.key_encipherment.tooltip,
             },
             {
               value: "data_encipherment",
-              label:
-                helptext_system_ca.add.key_usage.data_encipherment.placeholder,
-              tooltip:
-                helptext_system_ca.add.key_usage.data_encipherment.tooltip,
+              label: helptext_system_ca.add.key_usage.data_encipherment.placeholder,
+              tooltip: helptext_system_ca.add.key_usage.data_encipherment.tooltip,
             },
             {
               value: "key_agreement",
@@ -493,10 +462,8 @@ export class CertificateAuthorityAddComponent {
             },
             {
               value: "extension_critical",
-              label:
-                helptext_system_ca.add.key_usage.extension_critical.placeholder,
-              tooltip:
-                helptext_system_ca.add.key_usage.extension_critical.tooltip,
+              label: helptext_system_ca.add.key_usage.extension_critical.placeholder,
+              tooltip: helptext_system_ca.add.key_usage.extension_critical.tooltip,
             },
           ],
           relation: [
@@ -579,12 +546,7 @@ export class CertificateAuthorityAddComponent {
     "common",
     "san",
   ];
-  private importcaFields: Array<any> = [
-    "certificate",
-    "privatekey",
-    "passphrase",
-    "passphrase2",
-  ];
+  private importcaFields: Array<any> = ["certificate", "privatekey", "passphrase", "passphrase2"];
   private extensionFields: Array<any> = [
     "BasicConstraints-enabled",
     "BasicConstraints-path_length",
@@ -638,14 +600,12 @@ export class CertificateAuthorityAddComponent {
       }
     });
 
-    this.systemGeneralService
-      .getCertificateCountryChoices()
-      .subscribe((res) => {
-        this.country = this.getTarget("country");
-        for (const item in res) {
-          this.country.options.push({ label: res[item], value: item });
-        }
-      });
+    this.systemGeneralService.getCertificateCountryChoices().subscribe((res) => {
+      this.country = this.getTarget("country");
+      for (const item in res) {
+        this.country.options.push({ label: res[item], value: item });
+      }
+    });
 
     this.usageField = this.getTarget("ExtendedKeyUsage-usages");
     this.ws.call("certificate.extended_key_usage_choices").subscribe((res) => {
@@ -669,9 +629,7 @@ export class CertificateAuthorityAddComponent {
 
   getSummaryValueLabel(fieldConfig, value) {
     if (fieldConfig.type == "select") {
-      const option = fieldConfig.options.find(
-        (option) => option.value == value
-      );
+      const option = fieldConfig.options.find((option) => option.value == value);
       if (option) {
         value = option.label;
       }
@@ -691,10 +649,7 @@ export class CertificateAuthorityAddComponent {
         );
       }
       this.getField(fieldName).valueChanges.subscribe((res) => {
-        this.summary[fieldConfig.placeholder] = this.getSummaryValueLabel(
-          fieldConfig,
-          res
-        );
+        this.summary[fieldConfig.placeholder] = this.getSummaryValueLabel(fieldConfig, res);
       });
     }
   }
@@ -807,13 +762,9 @@ export class CertificateAuthorityAddComponent {
     this.getField("ExtendedKeyUsage-enabled").valueChanges.subscribe((res) => {
       const usagesRequired = res !== undefined ? res : false;
       this.usageField.required = usagesRequired;
-      this.summary[
-        this.getTarget("ExtendedKeyUsage-enabled").placeholder
-      ] = usagesRequired;
+      this.summary[this.getTarget("ExtendedKeyUsage-enabled").placeholder] = usagesRequired;
       if (usagesRequired) {
-        this.getField("ExtendedKeyUsage-usages").setValidators([
-          Validators.required,
-        ]);
+        this.getField("ExtendedKeyUsage-usages").setValidators([Validators.required]);
       } else {
         this.getField("ExtendedKeyUsage-usages").clearValidators();
       }
@@ -847,10 +798,7 @@ export class CertificateAuthorityAddComponent {
             Object.keys(value["cert_extensions"][type]).forEach((prop) => {
               let ctrl = this.getField(`${type}-${prop}`);
               if (ctrl) {
-                if (
-                  reset &&
-                  ctrl.value === value["cert_extensions"][type][prop]
-                ) {
+                if (reset && ctrl.value === value["cert_extensions"][type][prop]) {
                   ctrl.setValue(undefined);
                 } else if (!reset) {
                   ctrl.setValue(value["cert_extensions"][type][prop]);
@@ -859,23 +807,13 @@ export class CertificateAuthorityAddComponent {
                 ctrl = this.getField(type);
                 const config = ctrl.value || [];
                 const optionIndex = config.indexOf(prop);
-                if (
-                  reset &&
-                  value["cert_extensions"][type][prop] === true &&
-                  optionIndex > -1
-                ) {
+                if (reset && value["cert_extensions"][type][prop] === true && optionIndex > -1) {
                   config.splice(optionIndex, 1);
                   ctrl.setValue(config);
                 } else if (!reset) {
-                  if (
-                    value["cert_extensions"][type][prop] === true &&
-                    optionIndex === -1
-                  ) {
+                  if (value["cert_extensions"][type][prop] === true && optionIndex === -1) {
                     config.push(prop);
-                  } else if (
-                    value["cert_extensions"][type][prop] === false &&
-                    optionIndex > -1
-                  ) {
+                  } else if (value["cert_extensions"][type][prop] === false && optionIndex > -1) {
                     config.splice(optionIndex, 1);
                   }
                   ctrl.setValue(config);
@@ -884,10 +822,7 @@ export class CertificateAuthorityAddComponent {
             });
           });
         } else {
-          if (
-            reset &&
-            this.entityForm.formGroup.controls[item].value === value[item]
-          ) {
+          if (reset && this.entityForm.formGroup.controls[item].value === value[item]) {
             this.entityForm.formGroup.controls[item].setValue(undefined);
           } else if (!reset) {
             this.entityForm.formGroup.controls[item].setValue(value[item]);
@@ -911,8 +846,7 @@ export class CertificateAuthorityAddComponent {
   getField(fieldName: any) {
     const stepNumber = this.getStep(fieldName);
     if (stepNumber > -1) {
-      const target = (<FormGroup>this.entityWizard.formArray.get([stepNumber]))
-        .controls[fieldName];
+      const target = (<FormGroup>this.entityWizard.formArray.get([stepNumber])).controls[fieldName];
       return target;
     } else {
       return null;

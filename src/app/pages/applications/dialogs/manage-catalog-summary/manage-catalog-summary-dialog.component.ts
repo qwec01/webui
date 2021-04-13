@@ -56,10 +56,7 @@ export class ManageCatalogSummaryDialog implements OnInit {
   onOptionChanged() {
     this.filteredItems = this.catalogItems.filter((item) => {
       let isSeletectedTrain = false;
-      if (
-        this.selectedTrain == this.trainOptions[0] ||
-        this.selectedTrain == item.train
-      ) {
+      if (this.selectedTrain == this.trainOptions[0] || this.selectedTrain == item.train) {
         isSeletectedTrain = true;
       }
 

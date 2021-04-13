@@ -49,13 +49,9 @@ export class ShellService {
   onopen(event) {
     this.onOpenSubject.next(true);
     if (this.jailId) {
-      this.send(
-        JSON.stringify({ token: this.token, options: { jail: this.jailId } })
-      );
+      this.send(JSON.stringify({ token: this.token, options: { jail: this.jailId } }));
     } else if (this.vmId) {
-      this.send(
-        JSON.stringify({ token: this.token, options: { vm_id: this.vmId } })
-      );
+      this.send(JSON.stringify({ token: this.token, options: { vm_id: this.vmId } }));
     } else if (this.podInfo) {
       this.send(
         JSON.stringify({

@@ -1,11 +1,4 @@
-import {
-  Directive,
-  OnInit,
-  Input,
-  ElementRef,
-  Renderer2,
-  HostListener,
-} from "@angular/core";
+import { Directive, OnInit, Input, ElementRef, Renderer2, HostListener } from "@angular/core";
 
 /*
  * This directive hides elements with the provided selector

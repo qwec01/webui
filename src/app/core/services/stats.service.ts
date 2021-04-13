@@ -27,11 +27,9 @@ export class StatsService extends BaseService {
     const queryOptions = { select: ["name", "type"] };
 
     if (this.subscribers > 0 && !this.realtimeEvents) {
-      this.realtimeEvents = this.websocket
-        .sub("reporting.realtime")
-        .subscribe((res) => {
-          this.core.emit({ name: "RealtimeStats", data: res, sender: this });
-        });
+      this.realtimeEvents = this.websocket.sub("reporting.realtime").subscribe((res) => {
+        this.core.emit({ name: "RealtimeStats", data: res, sender: this });
+      });
     }
   }
 }

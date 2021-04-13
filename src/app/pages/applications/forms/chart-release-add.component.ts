@@ -105,15 +105,13 @@ export class ChartReleaseAddComponent implements OnDestroy {
             {
               type: "input",
               name: "name",
-              placeholder:
-                helptext.chartForm.container.env_vars.key.placeholder,
+              placeholder: helptext.chartForm.container.env_vars.key.placeholder,
               tooltip: helptext.chartForm.container.env_vars.key.tooltip,
             },
             {
               type: "input",
               name: "value",
-              placeholder:
-                helptext.chartForm.container.env_vars.value.placeholder,
+              placeholder: helptext.chartForm.container.env_vars.value.placeholder,
               tooltip: helptext.chartForm.container.env_vars.value.tooltip,
             },
           ],
@@ -142,16 +140,14 @@ export class ChartReleaseAddComponent implements OnDestroy {
             {
               type: "select",
               name: "hostInterface",
-              placeholder:
-                helptext.chartForm.externalInterfaces.host.placeholder,
+              placeholder: helptext.chartForm.externalInterfaces.host.placeholder,
               tooltip: helptext.chartForm.externalInterfaces.host.tooltip,
               options: this.interfaceList,
             },
             {
               type: "select",
               name: "ipam",
-              placeholder:
-                helptext.chartForm.externalInterfaces.ipam.placeholder,
+              placeholder: helptext.chartForm.externalInterfaces.ipam.placeholder,
               tooltip: helptext.chartForm.externalInterfaces.ipam.tooltip,
               options: helptext.chartForm.externalInterfaces.ipam.options,
             },
@@ -163,9 +159,7 @@ export class ChartReleaseAddComponent implements OnDestroy {
                 {
                   type: "ipwithnetmask",
                   name: "staticIP",
-                  placeholder:
-                    helptext.chartForm.externalInterfaces.staticConfig
-                      .placeholder,
+                  placeholder: helptext.chartForm.externalInterfaces.staticConfig.placeholder,
                   relation: [
                     {
                       action: "ENABLE",
@@ -190,15 +184,13 @@ export class ChartReleaseAddComponent implements OnDestroy {
                   type: "ipwithnetmask",
                   name: "destination",
                   placeholder:
-                    helptext.chartForm.externalInterfaces.staticRoutes
-                      .destination.placeholder,
+                    helptext.chartForm.externalInterfaces.staticRoutes.destination.placeholder,
                 },
                 {
                   type: "input",
                   name: "gateway",
                   placeholder:
-                    helptext.chartForm.externalInterfaces.staticRoutes.gateway
-                      .placeholder,
+                    helptext.chartForm.externalInterfaces.staticRoutes.gateway.placeholder,
                 },
               ],
               listFields: [],
@@ -247,27 +239,21 @@ export class ChartReleaseAddComponent implements OnDestroy {
             {
               type: "input",
               name: "containerPort",
-              placeholder:
-                helptext.chartForm.portForwardingList.containerPort.placeholder,
-              validation:
-                helptext.chartForm.portForwardingList.containerPort.validation,
+              placeholder: helptext.chartForm.portForwardingList.containerPort.placeholder,
+              validation: helptext.chartForm.portForwardingList.containerPort.validation,
             },
             {
               type: "input",
               name: "nodePort",
-              placeholder:
-                helptext.chartForm.portForwardingList.nodePort.placeholder,
-              validation:
-                helptext.chartForm.portForwardingList.nodePort.validation,
+              placeholder: helptext.chartForm.portForwardingList.nodePort.placeholder,
+              validation: helptext.chartForm.portForwardingList.nodePort.validation,
             },
             {
               type: "select",
               name: "protocol",
-              placeholder:
-                helptext.chartForm.portForwardingList.protocol.placeholder,
+              placeholder: helptext.chartForm.portForwardingList.protocol.placeholder,
               options: helptext.chartForm.portForwardingList.protocol.options,
-              value:
-                helptext.chartForm.portForwardingList.protocol.options[0].value,
+              value: helptext.chartForm.portForwardingList.protocol.options[0].value,
             },
           ],
           listFields: [],
@@ -289,22 +275,19 @@ export class ChartReleaseAddComponent implements OnDestroy {
               initial: "/mnt",
               explorerType: "directory",
               hideDirs: "ix-applications",
-              placeholder:
-                helptext.chartForm.hostPathVolumes.hostPath.placeholder,
+              placeholder: helptext.chartForm.hostPathVolumes.hostPath.placeholder,
               tooltip: helptext.chartForm.hostPathVolumes.hostPath.tooltip,
             },
             {
               type: "input",
               name: "mountPath",
-              placeholder:
-                helptext.chartForm.hostPathVolumes.mountPath.placeholder,
+              placeholder: helptext.chartForm.hostPathVolumes.mountPath.placeholder,
               tooltip: helptext.chartForm.hostPathVolumes.mountPath.tooltip,
             },
             {
               type: "checkbox",
               name: "readOnly",
-              placeholder:
-                helptext.chartForm.hostPathVolumes.readOnly.placeholder,
+              placeholder: helptext.chartForm.hostPathVolumes.readOnly.placeholder,
               value: false,
             },
           ],
@@ -390,9 +373,7 @@ export class ChartReleaseAddComponent implements OnDestroy {
       );
 
       if (gpuConfiguration && gpuConfiguration.schema.attrs.length > 0) {
-        const fieldConfigs = this.entityUtils.parseSchemaFieldConfig(
-          gpuConfiguration
-        );
+        const fieldConfigs = this.entityUtils.parseSchemaFieldConfig(gpuConfiguration);
         const gpuWizardConfig = {
           label: gpuConfiguration.group,
           fieldConfig: fieldConfigs,
@@ -409,39 +390,28 @@ export class ChartReleaseAddComponent implements OnDestroy {
   }
 
   onChangeExternalInterfaces(listComponent: FormListComponent) {
-    listComponent.listsFromArray.controls.forEach(
-      (externalInterface, index) => {
-        const staticRoutesFC = _.find(listComponent.config.listFields[index], {
-          name: "staticRoutes",
-        });
-        const staticIPConfigurationsFC = _.find(
-          listComponent.config.listFields[index],
-          { name: "staticIPConfigurations" }
-        );
+    listComponent.listsFromArray.controls.forEach((externalInterface, index) => {
+      const staticRoutesFC = _.find(listComponent.config.listFields[index], {
+        name: "staticRoutes",
+      });
+      const staticIPConfigurationsFC = _.find(listComponent.config.listFields[index], {
+        name: "staticIPConfigurations",
+      });
 
-        (<FormGroup>externalInterface).controls["ipam"].valueChanges.subscribe(
-          (value) => {
-            if (value === "static") {
-              staticIPConfigurationsFC.isHidden = false;
-              staticRoutesFC.isHidden = false;
-            } else {
-              staticIPConfigurationsFC.isHidden = true;
-              staticRoutesFC.isHidden = true;
-            }
-          }
-        );
-      }
-    );
+      (<FormGroup>externalInterface).controls["ipam"].valueChanges.subscribe((value) => {
+        if (value === "static") {
+          staticIPConfigurationsFC.isHidden = false;
+          staticRoutesFC.isHidden = false;
+        } else {
+          staticIPConfigurationsFC.isHidden = true;
+          staticRoutesFC.isHidden = true;
+        }
+      });
+    });
   }
 
-  makeSummary(
-    step: string | number,
-    fieldName: string | number,
-    label: string | number
-  ) {
-    (<FormGroup>(
-      this.entityWizard.formArray.get([step]).get(fieldName)
-    )).valueChanges
+  makeSummary(step: string | number, fieldName: string | number, label: string | number) {
+    (<FormGroup>this.entityWizard.formArray.get([step]).get(fieldName)).valueChanges
       .pipe(takeUntil(this.destroy$))
       .subscribe((res) => {
         this.summary[label] = res;
@@ -486,11 +456,7 @@ export class ChartReleaseAddComponent implements OnDestroy {
     }
 
     let volList = [];
-    if (
-      data.volumes &&
-      data.volumes.length > 0 &&
-      data.volumes[0].datasetName
-    ) {
+    if (data.volumes && data.volumes.length > 0 && data.volumes[0].datasetName) {
       volList = data.volumes;
     }
 

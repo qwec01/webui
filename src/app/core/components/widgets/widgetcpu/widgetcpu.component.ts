@@ -1,11 +1,4 @@
-import {
-  Component,
-  AfterViewInit,
-  Input,
-  ViewChild,
-  OnDestroy,
-  ElementRef,
-} from "@angular/core";
+import { Component, AfterViewInit, Input, ViewChild, OnDestroy, ElementRef } from "@angular/core";
 import { CoreServiceInjector } from "app/core/services/coreserviceinjector";
 import { CoreService, CoreEvent } from "app/core/services/core.service";
 import { ThemeUtils } from "app/core/classes/theme-utils";
@@ -49,9 +42,7 @@ interface DataSet {
   templateUrl: "./widgetcpu.component.html",
   styleUrls: ["./widgetcpu.component.css"],
 })
-export class WidgetCpuComponent
-  extends WidgetComponent
-  implements AfterViewInit, OnDestroy {
+export class WidgetCpuComponent extends WidgetComponent implements AfterViewInit, OnDestroy {
   @ViewChild("load", { static: true }) cpuLoad: ViewChartGaugeComponent;
   @ViewChild("cores", { static: true }) cpuCores: ViewChartBarComponent;
   @Input() data: Subject<CoreEvent>;
@@ -133,24 +124,15 @@ export class WidgetCpuComponent
     this.core
       .register({ observerClass: this, eventName: "ThemeChanged" })
       .subscribe((evt: CoreEvent) => {
-        d3.select("#grad1 .begin").style(
-          "stop-color",
-          this.getHighlightColor(0)
-        );
+        d3.select("#grad1 .begin").style("stop-color", this.getHighlightColor(0));
 
-        d3.select("#grad1 .end").style(
-          "stop-color",
-          this.getHighlightColor(0.15)
-        );
+        d3.select("#grad1 .end").style("stop-color", this.getHighlightColor(0.15));
       });
 
     this.data.subscribe((evt: CoreEvent) => {
       if (evt.name == "CpuStats") {
         if (evt.data.average) {
-          this.setCpuLoadData([
-            "Load",
-            parseInt(evt.data.average.usage.toFixed(1)),
-          ]);
+          this.setCpuLoadData(["Load", parseInt(evt.data.average.usage.toFixed(1))]);
           this.setCpuData(evt.data);
         }
       }
@@ -159,9 +141,7 @@ export class WidgetCpuComponent
 
   parseCpuData(data) {
     this.tempAvailable =
-      data.temperature && Object.keys(data.temperature).length > 0
-        ? "true"
-        : "false";
+      data.temperature && Object.keys(data.temperature).length > 0 ? "true" : "false";
     let usageColumn: any[] = ["Usage"];
     let temperatureColumn: any[] = ["Temperature"];
 
@@ -175,16 +155,11 @@ export class WidgetCpuComponent
     for (let i = 0; i < this.coreCount; i++) {
       usageColumn.push(parseInt(data[i.toString()].usage.toFixed(1)));
       if (data.temperature && data.temperature[i]) {
-        temperatureColumn.push(
-          parseInt((data.temperature[i] / 10 - 273.05).toFixed(1))
-        );
+        temperatureColumn.push(parseInt((data.temperature[i] / 10 - 273.05).toFixed(1)));
       }
     }
 
-    this.setMobileStats(
-      Object.assign([], usageColumn),
-      Object.assign([], temperatureColumn)
-    );
+    this.setMobileStats(Object.assign([], usageColumn), Object.assign([], temperatureColumn));
 
     return [usageColumn, temperatureColumn];
   }
@@ -431,13 +406,10 @@ export class WidgetCpuComponent
 
     // convert to rgb
     let rgb =
-      valueType == "hex"
-        ? this.utils.hexToRGB(txtColor).rgb
-        : this.utils.rgbToArray(txtColor);
+      valueType == "hex" ? this.utils.hexToRGB(txtColor).rgb : this.utils.rgbToArray(txtColor);
 
     // return rgba
-    let rgba =
-      "rgba(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + "," + opacity + ")";
+    let rgba = "rgba(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + "," + opacity + ")";
 
     return rgba;
   }

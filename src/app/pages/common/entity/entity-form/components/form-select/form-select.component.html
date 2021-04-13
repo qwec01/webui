@@ -1,8 +1,6 @@
 <div
   id="{{ config.name }}"
-  class="form-element dynamic-field form-select {{
-    config.inlineLabel ? 'inline-label' : 'not'
-  }}"
+  class="form-element dynamic-field form-select {{ config.inlineLabel ? 'inline-label' : 'not' }}"
   [formGroup]="group"
   [ngClass]="fieldShow"
   [class.has-tooltip]="config.tooltip"
@@ -83,20 +81,12 @@
               ix-auto-identifier="{{ config.placeholder }}_{{ option.label }}"
             >
               <span *ngIf="config.multiple">
-                <mat-icon *ngIf="selectStates[i]" class="fn-checked"
-                  >check_circle</mat-icon
-                >
-                <mat-icon *ngIf="!selectStates[i]" class="fn-unchecked"
-                  >remove</mat-icon
-                >
+                <mat-icon *ngIf="selectStates[i]" class="fn-checked">check_circle</mat-icon>
+                <mat-icon *ngIf="!selectStates[i]" class="fn-unchecked">remove</mat-icon>
               </span>
               {{ option.label | translate }}
               <span *ngIf="shouldAlertOnOption(option)" class="alert-icon">
-                <mat-icon
-                  role="img"
-                  fontSet="mdi-set"
-                  fontIcon="mdi-alert"
-                ></mat-icon>
+                <mat-icon role="img" fontSet="mdi-set" fontIcon="mdi-alert"></mat-icon>
               </span>
             </mat-option>
 
@@ -110,20 +100,12 @@
               ix-auto-identifier="{{ config.placeholder }}_{{ option.label }}"
             >
               <span *ngIf="config.multiple">
-                <mat-icon *ngIf="selectStates[i]" class="fn-checked"
-                  >check_circle</mat-icon
-                >
-                <mat-icon *ngIf="!selectStates[i]" class="fn-unchecked"
-                  >remove</mat-icon
-                >
+                <mat-icon *ngIf="selectStates[i]" class="fn-checked">check_circle</mat-icon>
+                <mat-icon *ngIf="!selectStates[i]" class="fn-unchecked">remove</mat-icon>
               </span>
               {{ option.label | translate }}
               <span *ngIf="shouldAlertOnOption(option)" class="alert-icon">
-                <mat-icon
-                  role="img"
-                  fontSet="mdi-set"
-                  fontIcon="mdi-alert"
-                ></mat-icon>
+                <mat-icon role="img" fontSet="mdi-set" fontIcon="mdi-alert"></mat-icon>
               </span>
             </mat-option>
           </ng-container>
@@ -146,13 +128,8 @@
     </mat-select>
   </mat-form-field>
   <div class="margin-for-error">
-    <form-errors
-      [control]="group.controls[config.name]"
-      [config]="config"
-    ></form-errors>
-    <mat-error *ngIf="config['hasErrors']"
-      ><div [innerHTML]="config['errors']"></div
-    ></mat-error>
+    <form-errors [control]="group.controls[config.name]" [config]="config"></form-errors>
+    <mat-error *ngIf="config['hasErrors']"><div [innerHTML]="config['errors']"></div></mat-error>
     <mat-error *ngIf="config.warnings"
       ><div [innerHTML]="config.warnings | translate"></div
     ></mat-error>

@@ -33,11 +33,7 @@
       </div>
       <div fxFlex="90%" class="medium-font">
         {{ helptext.docsA | translate }}
-        <a
-          href="https://www.truenas.com/docs/"
-          target="_blank"
-          class="external-link"
-        >
+        <a href="https://www.truenas.com/docs/" target="_blank" class="external-link">
           {{ helptext.docsB | translate }}</a
         >
         {{ helptext.docsC | translate }}
@@ -48,15 +44,10 @@
       <div fxFlex="10%"><mat-icon class="bullet-icon">group</mat-icon></div>
       <div fxFlex="90%" class="medium-font">
         {{ helptext.forumsA | translate }}
-        <a
-          href="https://www.ixsystems.com/community/"
-          target="_blank"
-          class="external-link"
-        >
+        <a href="https://www.ixsystems.com/community/" target="_blank" class="external-link">
           {{ helptext.forumsB | translate }}</a
         >
-        {{ helptext.forumsC | translate }} {{ systemType }}
-        {{ helptext.forumsD }}.
+        {{ helptext.forumsC | translate }} {{ systemType }} {{ helptext.forumsD }}.
       </div>
     </div>
 
@@ -84,12 +75,9 @@
     </div>
     <div id="open-source">
       TrueNAS {{ systemType }} {{ helptext.opensourceA | translate }}
-      <a
-        href="https://github.com/freenas/"
-        target="_blank"
-        class="external-link"
-        >{{ helptext.opensourceB | translate }}</a
-      >
+      <a href="https://github.com/freenas/" target="_blank" class="external-link">{{
+        helptext.opensourceB | translate
+      }}</a>
       {{ helptext.opensourceC | translate }}
     </div>
     <div id="findme" *ngIf="extraMsg">

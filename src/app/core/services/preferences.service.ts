@@ -284,8 +284,7 @@ export class PreferencesService {
     newKeys = currentKeys.filter((key) => {
       return savedKeys.indexOf(key) == -1;
     });
-    if (this.debug && newKeys.length > 0)
-      console.log(newKeys.length + " New Preferences Found!");
+    if (this.debug && newKeys.length > 0) console.log(newKeys.length + " New Preferences Found!");
 
     const report: PropertyReport = {
       middlewareProperties: savedKeys, // Inbound from Middleware

@@ -13,9 +13,7 @@ export default {
     },
     remote: {
       placeholder: T("Remote"),
-      tooltip: T(
-        "A valid IP address or domain name to which OpenVPN will connect."
-      ),
+      tooltip: T("A valid IP address or domain name to which OpenVPN will connect."),
     },
     tls_crypt_auth: {
       placeholder: T("TLS Crypt Auth"),
@@ -151,9 +149,7 @@ target="_blank">here.</a>'
   },
   protocol: {
     placeholder: T("Protocol"),
-    tooltip: T(
-      "Choose the protocol to use when connecting with the remote system."
-    ),
+    tooltip: T("Choose the protocol to use when connecting with the remote system."),
     enum: [
       {
         label: "UDP",

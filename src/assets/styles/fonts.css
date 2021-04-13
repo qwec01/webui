@@ -104,6 +104,5 @@
   font-weight: normal;
   font-display: swap;
   src: local("Inconsolata"),
-    url("assets/fonts/Inconsolata/Inconsolata-VariableFont_wdth_wght.ttf")
-      format("truetype");
+    url("assets/fonts/Inconsolata/Inconsolata-VariableFont_wdth_wght.ttf") format("truetype");
 }

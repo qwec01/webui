@@ -1,11 +1,4 @@
-import {
-  Component,
-  AfterViewInit,
-  Input,
-  ViewChild,
-  OnDestroy,
-  ElementRef,
-} from "@angular/core";
+import { Component, AfterViewInit, Input, ViewChild, OnDestroy, ElementRef } from "@angular/core";
 import {
   DomSanitizer,
   SafeHtml,
@@ -59,9 +52,7 @@ interface DataSet {
   templateUrl: "./widgetmemory.component.html",
   styleUrls: ["./widgetmemory.component.css"],
 })
-export class WidgetMemoryComponent
-  extends WidgetComponent
-  implements AfterViewInit, OnDestroy {
+export class WidgetMemoryComponent extends WidgetComponent implements AfterViewInit, OnDestroy {
   @ViewChild("memorygauge", { static: true }) cpuLoad: ViewChartGaugeComponent;
   @ViewChild("cores", { static: true }) cpuCores: ViewChartBarComponent;
   @Input() data: Subject<CoreEvent>;
@@ -204,9 +195,7 @@ export class WidgetMemoryComponent
   // chart.js renderer
   renderChart() {
     if (!this.ctx) {
-      const el = this.el.nativeElement.querySelector(
-        "#memory-usage-chart canvas"
-      );
+      const el = this.el.nativeElement.querySelector("#memory-usage-chart canvas");
       if (!el) {
         return;
       }
@@ -275,9 +264,7 @@ export class WidgetMemoryComponent
       const borderColorType = this.utils.getValueType(borderColor);
 
       const bgRGB =
-        bgColorType == "hex"
-          ? this.utils.hexToRGB(bgColor).rgb
-          : this.utils.rgbToArray(bgColor);
+        bgColorType == "hex" ? this.utils.hexToRGB(bgColor).rgb : this.utils.rgbToArray(bgColor);
       const borderRGB =
         borderColorType == "hex"
           ? this.utils.hexToRGB(borderColor).rgb

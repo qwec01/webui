@@ -13,9 +13,7 @@ export default {
 
   forumsA: T("The"),
   forumsB: T("TrueNAS Community Forums"),
-  forumsC: T(
-    "are the best place to ask questions and interact with fellow TrueNAS"
-  ),
+  forumsC: T("are the best place to ask questions and interact with fellow TrueNAS"),
   forumsD: T("users"),
 
   contactA: T("Does your business need"),

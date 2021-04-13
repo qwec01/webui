@@ -14,9 +14,7 @@ export default {
   conf_password_placeholder: T("Confirm Password"),
 
   dhcp_placeholder: T("DHCP"),
-  dhcp_tooltip: T(
-    "Use DHCP. Unset to manually configure a static IPv4 connection."
-  ),
+  dhcp_tooltip: T("Use DHCP. Unset to manually configure a static IPv4 connection."),
 
   ipaddress_placeholder: T("IPv4 Address"),
   ipaddress_tooltip: T("Static IPv4 address of the IPMI web interface."),

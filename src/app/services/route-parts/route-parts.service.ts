@@ -25,9 +25,7 @@ export class RoutePartsService {
     var routeParts = <any[]>[];
     if (snapshot) {
       if (snapshot.firstChild) {
-        routeParts = routeParts.concat(
-          this.generateRouteParts(snapshot.firstChild)
-        );
+        routeParts = routeParts.concat(this.generateRouteParts(snapshot.firstChild));
       }
       if (snapshot.data["title"] && snapshot.url.length) {
         let targetUrl: any = snapshot.url[0];

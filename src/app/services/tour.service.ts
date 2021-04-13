@@ -1,10 +1,5 @@
 import { Injectable } from "@angular/core";
-import {
-  Router,
-  NavigationEnd,
-  ActivatedRoute,
-  ActivatedRouteSnapshot,
-} from "@angular/router";
+import { Router, NavigationEnd, ActivatedRoute, ActivatedRouteSnapshot } from "@angular/router";
 import { HttpClient } from "@angular/common/http";
 import { Observable, Subject, Subscription } from "rxjs";
 
@@ -59,9 +54,7 @@ export class TourService {
     {
       title: T("Pools & Snapshots"),
       content: T("Create a new Pool."),
-      target: document.querySelector(
-        ".sidebar-list-item .mat-list-item-ripple"
-      ),
+      target: document.querySelector(".sidebar-list-item .mat-list-item-ripple"),
       placement: "right",
       yOffset: 200,
     },
@@ -93,18 +86,14 @@ export class TourService {
     {
       title: T("Users & Groups"),
       content: T("Setup Users and Groups."),
-      target: document.querySelector(
-        ".sidebar-list-item .mat-list-item-ripple"
-      ),
+      target: document.querySelector(".sidebar-list-item .mat-list-item-ripple"),
       placement: "right",
       yOffset: 50,
     },
     {
       title: T("Pools & Snapshots"),
       content: T("Create a new Pool."),
-      target: document.querySelector(
-        ".sidebar-list-item .mat-list-item-ripple"
-      ),
+      target: document.querySelector(".sidebar-list-item .mat-list-item-ripple"),
       placement: "right",
       yOffset: 200,
     },
@@ -150,11 +139,9 @@ export class TourService {
       id: "hello-egret",
       showPrevButton: true,
       onEnd: function () {
-        self.snackBar.open(
-          T("Awesome! Now let's explore FreeNAS's cool features."),
-          T("close"),
-          { duration: 5000 }
-        );
+        self.snackBar.open(T("Awesome! Now let's explore FreeNAS's cool features."), T("close"), {
+          duration: 5000,
+        });
       },
       // onClose: function() {
       //   self.snackBar.open(T('You just closed User Tour!'), T('close'), { duration: 3000 });
@@ -188,11 +175,9 @@ export class TourService {
       id: "hello-egret",
       showPrevButton: true,
       onEnd: function () {
-        self.snackBar.open(
-          T("Awesome! Now let's explore FreeNAS's cool features."),
-          T("close"),
-          { duration: 5000 }
-        );
+        self.snackBar.open(T("Awesome! Now let's explore FreeNAS's cool features."), T("close"), {
+          duration: 5000,
+        });
       },
       // onClose: function() {
       //   self.snackBar.open(T('You just closed User Tour!'), T('close'), { duration: 3000 });
@@ -232,9 +217,7 @@ export class TourService {
         {
           title: T("Pools & Snapshots"),
           content: T("Create a new Pool."),
-          target: document.querySelector(
-            ".sidebar-list-item .mat-list-item-ripple"
-          ),
+          target: document.querySelector(".sidebar-list-item .mat-list-item-ripple"),
           placement: "right",
           yOffset: 200,
         },

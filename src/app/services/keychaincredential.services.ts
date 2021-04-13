@@ -7,14 +7,10 @@ export class KeychainCredentialService {
   constructor(protected ws: WebSocketService) {}
 
   getSSHKeys() {
-    return this.ws.call("keychaincredential.query", [
-      [["type", "=", "SSH_KEY_PAIR"]],
-    ]);
+    return this.ws.call("keychaincredential.query", [[["type", "=", "SSH_KEY_PAIR"]]]);
   }
 
   getSSHConnections() {
-    return this.ws.call("keychaincredential.query", [
-      [["type", "=", "SSH_CREDENTIALS"]],
-    ]);
+    return this.ws.call("keychaincredential.query", [[["type", "=", "SSH_CREDENTIALS"]]]);
   }
 }

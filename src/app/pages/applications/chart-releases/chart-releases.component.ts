@@ -4,11 +4,7 @@ import { TranslateService } from "@ngx-translate/core";
 import { Subject, Subscription } from "rxjs";
 import * as _ from "lodash";
 
-import {
-  DialogService,
-  SystemGeneralService,
-  WebSocketService,
-} from "../../../services/index";
+import { DialogService, SystemGeneralService, WebSocketService } from "../../../services/index";
 import { ApplicationsService } from "../applications.service";
 import { ModalService } from "../../../services/modal.service";
 import { EntityJobComponent } from "../../common/entity/entity-job/entity-job.component";
@@ -16,10 +12,7 @@ import { DialogFormConfiguration } from "../../common/entity/entity-dialog/dialo
 import { ChartReleaseEditComponent } from "../forms/chart-release-edit.component";
 import { CommonUtils } from "app/core/classes/common-utils";
 import { ChartFormComponent } from "../forms/chart-form.component";
-import {
-  EmptyConfig,
-  EmptyType,
-} from "../../common/entity/entity-empty/entity-empty.component";
+import { EmptyConfig, EmptyType } from "../../common/entity/entity-empty/entity-empty.component";
 
 import helptext from "../../../helptext/apps/apps";
 import { CoreService, CoreEvent } from "app/core/services/core.service";
@@ -216,41 +209,37 @@ export class ChartReleasesComponent implements OnInit {
   }
 
   addChartReleaseChangedEventListner() {
-    this.chartReleaseChangedListener = this.ws
-      .subscribe("chart.release.query")
-      .subscribe((evt) => {
-        const app = this.chartItems[evt.id];
+    this.chartReleaseChangedListener = this.ws.subscribe("chart.release.query").subscribe((evt) => {
+      const app = this.chartItems[evt.id];
 
-        if (app && evt && evt.fields) {
-          app.status = evt.fields.status;
-          app.version = evt.fields.chart_metadata.version;
-          app.count = `${evt.fields.pod_status.available}/${evt.fields.pod_status.desired}`;
-          app.desired = evt.fields.pod_status.desired;
-          app.catalog = evt.fields.catalog;
-          (app.update_available = evt.fields.update_available),
-            (app.container_images_update_available =
-              evt.fields.container_images_update_available),
-            (app.human_version = evt.fields.human_version),
-            (app.human_latest_version = evt.fields.human_latest_version),
-            (app.latest_version =
-              evt.fields.chart_metadata.latest_chart_version);
-          app.repository = evt.fields.config.image.repository;
-          app.tag = evt.fields.config.image.tag;
-          app.portal =
-            evt.fields.portals && evt.fields.portals.web_portal
-              ? evt.fields.portals.web_portal[0]
-              : "";
-          app.history = !_.isEmpty(evt.fields.history);
+      if (app && evt && evt.fields) {
+        app.status = evt.fields.status;
+        app.version = evt.fields.chart_metadata.version;
+        app.count = `${evt.fields.pod_status.available}/${evt.fields.pod_status.desired}`;
+        app.desired = evt.fields.pod_status.desired;
+        app.catalog = evt.fields.catalog;
+        (app.update_available = evt.fields.update_available),
+          (app.container_images_update_available = evt.fields.container_images_update_available),
+          (app.human_version = evt.fields.human_version),
+          (app.human_latest_version = evt.fields.human_latest_version),
+          (app.latest_version = evt.fields.chart_metadata.latest_chart_version);
+        app.repository = evt.fields.config.image.repository;
+        app.tag = evt.fields.config.image.tag;
+        app.portal =
+          evt.fields.portals && evt.fields.portals.web_portal
+            ? evt.fields.portals.web_portal[0]
+            : "";
+        app.history = !_.isEmpty(evt.fields.history);
 
-          let ports = [];
-          if (evt.fields.used_ports) {
-            evt.fields.used_ports.forEach((item) => {
-              ports.push(`${item.port}\\${item.protocol}`);
-            });
-            app["used_ports"] = ports.join(", ");
-          }
+        let ports = [];
+        if (evt.fields.used_ports) {
+          evt.fields.used_ports.forEach((item) => {
+            ports.push(`${item.port}\\${item.protocol}`);
+          });
+          app["used_ports"] = ports.join(", ");
         }
-      });
+      }
+    });
   }
 
   refreshChartReleases() {
@@ -285,8 +274,7 @@ export class ChartReleasesComponent implements OnInit {
                   version: chart.chart_metadata.version,
                   human_version: chart.human_version,
                   human_latest_version: chart.human_latest_version,
-                  container_images_update_available:
-                    chart.container_images_update_available,
+                  container_images_update_available: chart.container_images_update_available,
                   latest_version: chart.chart_metadata.latest_chart_version,
                   description: chart.chart_metadata.description,
                   update_available: chart.update_available,
@@ -294,13 +282,9 @@ export class ChartReleasesComponent implements OnInit {
                   repository: chart.config.image.repository,
                   tag: chart.config.image.tag,
                   portal:
-                    chart.portals && chart.portals.web_portal
-                      ? chart.portals.web_portal[0]
-                      : "",
+                    chart.portals && chart.portals.web_portal ? chart.portals.web_portal[0] : "",
                   id: chart.chart_metadata.name,
-                  icon: chart.chart_metadata.icon
-                    ? chart.chart_metadata.icon
-                    : this.ixIcon,
+                  icon: chart.chart_metadata.icon ? chart.chart_metadata.icon : this.ixIcon,
                   count: `${chart.pod_status.available}/${chart.pod_status.desired}`,
                   desired: chart.pod_status.desired,
                   history: !_.isEmpty(chart.history),
@@ -369,9 +353,7 @@ export class ChartReleasesComponent implements OnInit {
               data: { title: helptext.charts.upgrade_dialog.job },
               disableClose: true,
             });
-            this.dialogRef.componentInstance.setCall("chart.release.upgrade", [
-              name,
-            ]);
+            this.dialogRef.componentInstance.setCall("chart.release.upgrade", [name]);
             this.dialogRef.componentInstance.submit();
             this.dialogRef.componentInstance.success.subscribe((res) => {
               this.dialogService.closeAllDialogs();
@@ -475,21 +457,13 @@ export class ChartReleasesComponent implements OnInit {
           });
 
           this.translate.get(helptext.bulkActions.finished).subscribe((msg) => {
-            this.dialogService.Info(
-              helptext.bulkActions.success,
-              msg,
-              "500px",
-              "info",
-              true
-            );
+            this.dialogService.Info(helptext.bulkActions.success, msg, "500px", "info", true);
           });
         }
       } else {
-        this.translate
-          .get(helptext.bulkActions.no_selected)
-          .subscribe((msg) => {
-            this.dialogService.errorReport(helptext.bulkActions.error, msg);
-          });
+        this.translate.get(helptext.bulkActions.no_selected).subscribe((msg) => {
+          this.dialogService.errorReport(helptext.bulkActions.error, msg);
+        });
       }
     }
   }
@@ -504,9 +478,7 @@ export class ChartReleasesComponent implements OnInit {
               data: { title: helptext.charts.delete_dialog.job },
               disableClose: true,
             });
-            this.dialogRef.componentInstance.setCall("chart.release.delete", [
-              name,
-            ]);
+            this.dialogRef.componentInstance.setCall("chart.release.delete", [name]);
             this.dialogRef.componentInstance.submit();
             this.dialogRef.componentInstance.success.subscribe((res) => {
               this.dialogService.closeAllDialogs();
@@ -544,10 +516,7 @@ export class ChartReleasesComponent implements OnInit {
 
               if (message !== "") {
                 message = "<ul>" + message + "</ul>";
-                this.dialogService.errorReport(
-                  helptext.bulkActions.title,
-                  message
-                );
+                this.dialogService.errorReport(helptext.bulkActions.title, message);
               }
               this.modalService.close("slide-in-form");
               this.refreshChartReleases();
@@ -560,10 +529,7 @@ export class ChartReleasesComponent implements OnInit {
   filerChartItems() {
     if (this.filterString) {
       this.filteredChartItems = this.getChartItems().filter(
-        (chart: any) =>
-          chart.name
-            .toLowerCase()
-            .indexOf(this.filterString.toLocaleLowerCase()) > -1
+        (chart: any) => chart.name.toLowerCase().indexOf(this.filterString.toLocaleLowerCase()) > -1
       );
     } else {
       this.filteredChartItems = this.getChartItems();
@@ -576,103 +542,89 @@ export class ChartReleasesComponent implements OnInit {
     this.podList = [];
     this.podDetails = {};
     this.selectedAppName = name;
-    this.ws
-      .call("chart.release.pod_console_choices", [this.selectedAppName])
-      .subscribe((res) => {
-        this.podDetails = Object.assign({}, res);
-        this.podList = Object.keys(this.podDetails);
-        if (this.podList.length == 0) {
-          this.dialogService.confirm(
-            helptext.podConsole.nopod.title,
-            helptext.podConsole.nopod.message,
-            true,
-            "Close",
-            false,
-            null,
-            null,
-            null,
-            null,
-            true
-          );
-        } else {
-          this.choosePod.fieldConfig[0].value = this.podList[0];
-          this.choosePod.fieldConfig[0].options = this.podList.map((item) => {
-            return {
-              label: item,
-              value: item,
-            };
-          });
-          this.choosePod.fieldConfig[1].value = this.podDetails[
-            this.podList[0]
-          ][0];
-          this.choosePod.fieldConfig[1].options = this.podDetails[
-            this.podList[0]
-          ].map((item) => {
-            return {
-              label: item,
-              value: item,
-            };
-          });
-          this.dialogService.dialogForm(this.choosePod, true);
-        }
-      });
+    this.ws.call("chart.release.pod_console_choices", [this.selectedAppName]).subscribe((res) => {
+      this.podDetails = Object.assign({}, res);
+      this.podList = Object.keys(this.podDetails);
+      if (this.podList.length == 0) {
+        this.dialogService.confirm(
+          helptext.podConsole.nopod.title,
+          helptext.podConsole.nopod.message,
+          true,
+          "Close",
+          false,
+          null,
+          null,
+          null,
+          null,
+          true
+        );
+      } else {
+        this.choosePod.fieldConfig[0].value = this.podList[0];
+        this.choosePod.fieldConfig[0].options = this.podList.map((item) => {
+          return {
+            label: item,
+            value: item,
+          };
+        });
+        this.choosePod.fieldConfig[1].value = this.podDetails[this.podList[0]][0];
+        this.choosePod.fieldConfig[1].options = this.podDetails[this.podList[0]].map((item) => {
+          return {
+            label: item,
+            value: item,
+          };
+        });
+        this.dialogService.dialogForm(this.choosePod, true);
+      }
+    });
   }
 
   openLogs(name: string) {
     this.podList = [];
     this.podDetails = {};
     this.selectedAppName = name;
-    this.ws
-      .call("chart.release.pod_console_choices", [this.selectedAppName])
-      .subscribe((res) => {
-        this.podDetails = Object.assign({}, res);
-        this.podList = Object.keys(this.podDetails);
-        if (this.podList.length == 0) {
-          this.dialogService.confirm(
-            helptext.podConsole.nopod.title,
-            helptext.podConsole.nopod.message,
-            true,
-            "Close",
-            false,
-            null,
-            null,
-            null,
-            null,
-            true
-          );
-        } else {
-          this.choosePodForLogs.fieldConfig[0].value = this.podList[0];
-          this.choosePodForLogs.fieldConfig[0].options = this.podList.map(
-            (item) => {
-              return {
-                label: item,
-                value: item,
-              };
-            }
-          );
-          this.choosePodForLogs.fieldConfig[1].value = this.podDetails[
-            this.podList[0]
-          ][0];
-          this.choosePodForLogs.fieldConfig[1].options = this.podDetails[
-            this.podList[0]
-          ].map((item) => {
+    this.ws.call("chart.release.pod_console_choices", [this.selectedAppName]).subscribe((res) => {
+      this.podDetails = Object.assign({}, res);
+      this.podList = Object.keys(this.podDetails);
+      if (this.podList.length == 0) {
+        this.dialogService.confirm(
+          helptext.podConsole.nopod.title,
+          helptext.podConsole.nopod.message,
+          true,
+          "Close",
+          false,
+          null,
+          null,
+          null,
+          null,
+          true
+        );
+      } else {
+        this.choosePodForLogs.fieldConfig[0].value = this.podList[0];
+        this.choosePodForLogs.fieldConfig[0].options = this.podList.map((item) => {
+          return {
+            label: item,
+            value: item,
+          };
+        });
+        this.choosePodForLogs.fieldConfig[1].value = this.podDetails[this.podList[0]][0];
+        this.choosePodForLogs.fieldConfig[1].options = this.podDetails[this.podList[0]].map(
+          (item) => {
             return {
               label: item,
               value: item,
             };
-          });
-          this.dialogService.dialogForm(this.choosePodForLogs, true);
-        }
-      });
+          }
+        );
+        this.dialogService.dialogForm(this.choosePodForLogs, true);
+      }
+    });
   }
 
   doPodSelect(entityDialog: any) {
     const self = entityDialog.parent;
     const pod = entityDialog.formGroup.controls["pods"].value;
     const command = entityDialog.formGroup.controls["command"].value;
-    self.router.navigate(
-      new Array("/apps/1/shell/").concat([self.selectedAppName, pod, command])
-    );
+    self.router.navigate(new Array("/apps/1/shell/").concat([self.selectedAppName, pod, command]));
     self.dialogService.closeAllDialogs();
   }
 
@@ -682,12 +634,7 @@ export class ChartReleasesComponent implements OnInit {
     const container = entityDialog.formGroup.controls["containers"].value;
     const tailLines = entityDialog.formGroup.controls["tail_lines"].value;
     self.router.navigate(
-      new Array("/apps/1/logs/").concat([
-        self.selectedAppName,
-        pod,
-        container,
-        tailLines,
-      ])
+      new Array("/apps/1/logs/").concat([self.selectedAppName, pod, container, tailLines])
     );
     self.dialogService.closeAllDialogs();
   }
@@ -746,9 +693,7 @@ export class ChartReleasesComponent implements OnInit {
   //Refresh Toolbar menus
   refreshToolbarMenus() {
     const isSelectedOneMore: boolean = this.getSelectedItems().length > 0;
-    const isSelectedAll: boolean = !this.filteredChartItems.find(
-      (item) => !item.selected
-    );
+    const isSelectedAll: boolean = !this.filteredChartItems.find((item) => !item.selected);
     this.updateTab.emit({
       name: "UpdateToolbar",
       value: isSelectedOneMore,

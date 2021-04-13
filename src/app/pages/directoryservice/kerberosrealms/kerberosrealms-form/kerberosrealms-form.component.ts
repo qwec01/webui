@@ -59,8 +59,7 @@ export class KerberosRealmsFormComponent {
     },
   ];
 
-  protected advanced_field: Array<any> =
-    helptext.krbrealm_form_advanced_field_array;
+  protected advanced_field: Array<any> = helptext.krbrealm_form_advanced_field_array;
 
   public custActions: Array<any> = [
     {

@@ -136,9 +136,7 @@ export class ChassisView {
         .add(this.model + "_alt_drivetray_handle", this.altDriveTrayHandlePath);
     }
 
-    this.loader
-      .on("progress", this.loadProgressHandler)
-      .load(this.onLoaded.bind(this));
+    this.loader.on("progress", this.loadProgressHandler).load(this.onLoaded.bind(this));
   }
 
   onLoaded() {
@@ -159,10 +157,8 @@ export class ChassisView {
     );
     this.chassis.name = this.model + "_chassis";
     this.chassis.alpha = 0;
-    this.chassis.scale.x =
-      this.chassisScale && this.chassisScale.x ? this.chassisScale.x : 1;
-    this.chassis.scale.y =
-      this.chassisScale && this.chassisScale.y ? this.chassisScale.y : 1;
+    this.chassis.scale.x = this.chassisScale && this.chassisScale.x ? this.chassisScale.x : 1;
+    this.chassis.scale.y = this.chassisScale && this.chassisScale.y ? this.chassisScale.y : 1;
     this.container.addChild(this.chassis);
 
     // Render DriveTrays
@@ -173,8 +169,7 @@ export class ChassisView {
       const slot: number = this.slotRange.start + i;
 
       let dt =
-        this.altDriveTraySlots.length > 0 &&
-        this.altDriveTraySlots.indexOf(slot) != -1
+        this.altDriveTraySlots.length > 0 && this.altDriveTraySlots.indexOf(slot) != -1
           ? this.makeDriveTray(true)
           : this.makeDriveTray();
       dt.id = slot.toString(); // Slot
@@ -298,19 +293,12 @@ export class ChassisView {
     return dt;
   }
 
-  generatePosition(
-    displayObject,
-    index,
-    xOffset: number = 0,
-    yOffset: number = 0
-  ): Position {
+  generatePosition(displayObject, index, xOffset: number = 0, yOffset: number = 0): Position {
     let gapX = 10;
     let gapY = 2;
     let mod = index % this.columns;
     let nextPositionX = mod * (displayObject.width + gapX) + xOffset;
-    let nextPositionY =
-      Math.floor(index / this.columns) * (displayObject.height + gapY) +
-      yOffset;
+    let nextPositionY = Math.floor(index / this.columns) * (displayObject.height + gapY) + yOffset;
 
     return { x: nextPositionX, y: nextPositionY };
   }
@@ -332,13 +320,7 @@ export class ChassisView {
   colorDriveTray(slot, color) {
     const driveIndex = slot - this.slotRange.start;
     if (driveIndex < 0 || driveIndex >= this.totalDriveTrays) {
-      console.warn(
-        "IGNORING DRIVE AT INDEX " +
-          driveIndex +
-          " SLOT " +
-          slot +
-          " IS OUT OF RANGE"
-      );
+      console.warn("IGNORING DRIVE AT INDEX " + driveIndex + " SLOT " + slot + " IS OUT OF RANGE");
       return;
     }
     let dt = this.driveTrayObjects[driveIndex];

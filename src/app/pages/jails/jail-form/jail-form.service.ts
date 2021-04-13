@@ -87,43 +87,24 @@ export class JailFormService {
     return formGroup;
   }
   setRelation(formGroup, formFields, config: FieldConfig) {
-    const activations = this.fieldRelationService.findActivationRelation(
-      config.relation
-    );
+    const activations = this.fieldRelationService.findActivationRelation(config.relation);
     if (activations) {
       const tobeDisabled = this.fieldRelationService.isFormControlToBeDisabled(
         activations,
         formGroup
       );
-      const tobeHide = this.fieldRelationService.isFormControlToBeHide(
-        activations,
-        formGroup
-      );
-      this.setDisabled(
-        formGroup,
-        formFields,
-        config.name,
-        tobeDisabled,
-        tobeHide
-      );
+      const tobeHide = this.fieldRelationService.isFormControlToBeHide(activations, formGroup);
+      this.setDisabled(formGroup, formFields, config.name, tobeDisabled, tobeHide);
 
-      this.fieldRelationService
-        .getRelatedFormControls(config, formGroup)
-        .forEach((control) => {
-          control.valueChanges.subscribe(() => {
-            this.relationUpdate(formGroup, formFields, config, activations);
-          });
+      this.fieldRelationService.getRelatedFormControls(config, formGroup).forEach((control) => {
+        control.valueChanges.subscribe(() => {
+          this.relationUpdate(formGroup, formFields, config, activations);
         });
+      });
     }
   }
 
-  setDisabled(
-    formGroup,
-    formFields,
-    name: string,
-    disable: boolean,
-    hide?: boolean
-  ) {
+  setDisabled(formGroup, formFields, name: string, disable: boolean, hide?: boolean) {
     if (hide) {
       disable = hide;
     } else {
@@ -149,27 +130,14 @@ export class JailFormService {
       activations,
       formGroup
     );
-    const tobeHide = this.fieldRelationService.isFormControlToBeHide(
-      activations,
-      formGroup
-    );
-    this.setDisabled(
-      formGroup,
-      formFields,
-      config.name,
-      tobeDisabled,
-      tobeHide
-    );
+    const tobeHide = this.fieldRelationService.isFormControlToBeHide(activations, formGroup);
+    this.setDisabled(formGroup, formFields, config.name, tobeDisabled, tobeHide);
   }
 
   updateInterface(formGroup, basicfieldConfig, addVnet?) {
     for (const ipType of ["ip4", "ip6"]) {
       const targetPropName = ipType + "_addr";
-      for (
-        let i = 0;
-        i < formGroup.controls[targetPropName].controls.length;
-        i++
-      ) {
+      for (let i = 0; i < formGroup.controls[targetPropName].controls.length; i++) {
         const subipInterfaceField = _.find(
           _.find(basicfieldConfig, { name: targetPropName }).listFields[i],
           { name: ipType + "_interface" }
@@ -195,12 +163,9 @@ export class JailFormService {
     let full_address = ip;
     if (ipInterface != "") {
       const validInterface =
-        _.find(
-          type === "ip4"
-            ? ip4_interfaceField.options
-            : ip6_interfaceField.options,
-          { value: ipInterface }
-        ) !== undefined;
+        _.find(type === "ip4" ? ip4_interfaceField.options : ip6_interfaceField.options, {
+          value: ipInterface,
+        }) !== undefined;
       full_address = validInterface ? ipInterface + "|" + ip : ip;
     }
     if (netmask != "") {
@@ -246,19 +211,11 @@ export class JailFormService {
         formGroup.controls["nat_forwards"].push(
           this.entityFormService.createFormGroup(templateListField)
         );
-        _.find(networkfieldConfig, { name: "nat_forwards" }).listFields.push(
-          templateListField
-        );
+        _.find(networkfieldConfig, { name: "nat_forwards" }).listFields.push(templateListField);
       }
-      formGroup.controls["nat_forwards"].controls[i].controls[
-        "protocol"
-      ].setValue(nat_forward[0]);
-      formGroup.controls["nat_forwards"].controls[i].controls[
-        "jail_port"
-      ].setValue(nat_forward[1]);
-      formGroup.controls["nat_forwards"].controls[i].controls[
-        "host_port"
-      ].setValue(nat_forward[2]);
+      formGroup.controls["nat_forwards"].controls[i].controls["protocol"].setValue(nat_forward[0]);
+      formGroup.controls["nat_forwards"].controls[i].controls["jail_port"].setValue(nat_forward[1]);
+      formGroup.controls["nat_forwards"].controls[i].controls["host_port"].setValue(nat_forward[2]);
     }
   }
 
@@ -267,10 +224,7 @@ export class JailFormService {
       const multi_nat_forwards = [];
       for (let i = 0; i < value["nat_forwards"].length; i++) {
         const subNatForward = value["nat_forwards"][i];
-        if (
-          subNatForward["host_port"] === undefined ||
-          subNatForward["host_port"].trim() === ""
-        ) {
+        if (subNatForward["host_port"] === undefined || subNatForward["host_port"].trim() === "") {
           delete subNatForward["host_port"];
         }
         if (
@@ -295,8 +249,7 @@ export class JailFormService {
           }
         }
       }
-      value["nat_forwards"] =
-        multi_nat_forwards.length > 0 ? multi_nat_forwards.join(",") : "none";
+      value["nat_forwards"] = multi_nat_forwards.length > 0 ? multi_nat_forwards.join(",") : "none";
     } else {
       value["nat_forwards"] = "none";
     }
@@ -343,18 +296,16 @@ export class JailFormService {
         formGroup.controls[propName].push(
           this.entityFormService.createFormGroup(templateListField)
         );
-        _.find(basicfieldConfig, { name: propName }).listFields.push(
-          templateListField
-        );
+        _.find(basicfieldConfig, { name: propName }).listFields.push(templateListField);
       }
       if (ipType == "ip6" && value[i] == "vnet0|accept_rtadv") {
         formGroup.controls["auto_configure_ip6"].setValue(true);
       }
 
       if (value[i].indexOf("|") > 0) {
-        formGroup.controls[propName].controls[i].controls[
-          ipType + "_interface"
-        ].setValue(value[i].split("|")[0]);
+        formGroup.controls[propName].controls[i].controls[ipType + "_interface"].setValue(
+          value[i].split("|")[0]
+        );
         value[i] = value[i].split("|")[1];
       }
       if (value[i].indexOf("/") > 0) {
@@ -372,12 +323,7 @@ export class JailFormService {
     }
   }
 
-  getPluginDefaults(
-    plugin,
-    pluginRepository,
-    formGroup,
-    networkfieldConfig
-  ): Promise<boolean> {
+  getPluginDefaults(plugin, pluginRepository, formGroup, networkfieldConfig): Promise<boolean> {
     return new Promise(async (resolve, reject) => {
       await this.ws
         .call("plugin.defaults", [
@@ -393,11 +339,7 @@ export class JailFormService {
             for (let i in defaults.properties) {
               if (formGroup.controls[i]) {
                 if (i === "nat_forwards") {
-                  this.deparseNatForwards(
-                    defaults.properties[i],
-                    formGroup,
-                    networkfieldConfig
-                  );
+                  this.deparseNatForwards(defaults.properties[i], formGroup, networkfieldConfig);
                   continue;
                 }
                 this.handleTFfiledValues(defaults.properties, i);

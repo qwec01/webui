@@ -45,23 +45,19 @@ export class ActiveDirectoryComponent {
       id: helptext.activedirectory_custactions_edit_imap_id,
       name: helptext.activedirectory_custactions_edit_imap_name,
       function: () => {
-        this.router.navigate(
-          new Array("").concat(["directoryservice", "idmap"])
-        );
+        this.router.navigate(new Array("").concat(["directoryservice", "idmap"]));
       },
     },
     {
       id: helptext.activedirectory_custactions_clearcache_id,
       name: helptext.activedirectory_custactions_clearcache_name,
       function: async () => {
-        this.systemGeneralService
-          .refreshDirServicesCache()
-          .subscribe((cache_status) => {
-            this.dialogservice.Info(
-              helptext.activedirectory_custactions_clearcache_dialog_title,
-              helptext.activedirectory_custactions_clearcache_dialog_message
-            );
-          });
+        this.systemGeneralService.refreshDirServicesCache().subscribe((cache_status) => {
+          this.dialogservice.Info(
+            helptext.activedirectory_custactions_clearcache_dialog_title,
+            helptext.activedirectory_custactions_clearcache_dialog_message
+          );
+        });
       },
     },
     {
@@ -336,8 +332,7 @@ export class ActiveDirectoryComponent {
     },
   ];
 
-  protected advanced_field: Array<any> =
-    helptext.activedirectory_advanced_fields;
+  protected advanced_field: Array<any> = helptext.activedirectory_advanced_fields;
 
   isCustActionVisible(actionname: string) {
     if (actionname === "advanced_mode" && this.isBasicMode === false) {
@@ -387,9 +382,7 @@ export class ActiveDirectoryComponent {
       });
     }
     this.ws.call("directoryservices.get_state").subscribe((res) => {
-      res.activedirectory === "HEALTHY"
-        ? (this.adStatus = true)
-        : (this.adStatus = false);
+      res.activedirectory === "HEALTHY" ? (this.adStatus = true) : (this.adStatus = false);
     });
   }
 
@@ -404,16 +397,14 @@ export class ActiveDirectoryComponent {
       });
     });
 
-    this.ws
-      .call("kerberos.keytab.kerberos_principal_choices")
-      .subscribe((res) => {
-        this.kerberos_principal = _.find(this.fieldConfig, {
-          name: "kerberos_principal",
-        });
-        res.forEach((item) => {
-          this.kerberos_principal.options.push({ label: item, value: item });
-        });
+    this.ws.call("kerberos.keytab.kerberos_principal_choices").subscribe((res) => {
+      this.kerberos_principal = _.find(this.fieldConfig, {
+        name: "kerberos_principal",
       });
+      res.forEach((item) => {
+        this.kerberos_principal.options.push({ label: item, value: item });
+      });
+    });
 
     this.ws.call("activedirectory.nss_info_choices").subscribe((res) => {
       this.nss_info = _.find(this.fieldConfig, { name: "nss_info" });
@@ -426,21 +417,19 @@ export class ActiveDirectoryComponent {
       _.find(this.fieldConfig, { name: "bindpw" })["required"] = res;
     });
 
-    entityEdit.formGroup.controls["kerberos_principal"].valueChanges.subscribe(
-      (res) => {
-        if (res) {
-          entityEdit.setDisabled("bindname", true);
-          entityEdit.setDisabled("bindpw", true);
-          _.find(this.fieldConfig, { name: "bindname" })["isHidden"] = true;
-          _.find(this.fieldConfig, { name: "bindpw" })["isHidden"] = true;
-        } else {
-          entityEdit.setDisabled("bindname", false);
-          entityEdit.setDisabled("bindpw", false);
-          _.find(this.fieldConfig, { name: "bindname" })["isHidden"] = false;
-          _.find(this.fieldConfig, { name: "bindpw" })["isHidden"] = false;
-        }
+    entityEdit.formGroup.controls["kerberos_principal"].valueChanges.subscribe((res) => {
+      if (res) {
+        entityEdit.setDisabled("bindname", true);
+        entityEdit.setDisabled("bindpw", true);
+        _.find(this.fieldConfig, { name: "bindname" })["isHidden"] = true;
+        _.find(this.fieldConfig, { name: "bindpw" })["isHidden"] = true;
+      } else {
+        entityEdit.setDisabled("bindname", false);
+        entityEdit.setDisabled("bindpw", false);
+        _.find(this.fieldConfig, { name: "bindname" })["isHidden"] = false;
+        _.find(this.fieldConfig, { name: "bindpw" })["isHidden"] = false;
       }
-    );
+    });
 
     entityEdit.submitFunction = this.submitFunction;
   }
@@ -482,12 +471,8 @@ export class ActiveDirectoryComponent {
   }
 
   responseOnSubmit(value) {
-    this.entityEdit.formGroup.controls["kerberos_principal"].setValue(
-      value.kerberos_principal
-    );
-    this.entityEdit.formGroup.controls["kerberos_realm"].setValue(
-      value["kerberos_realm"]
-    );
+    this.entityEdit.formGroup.controls["kerberos_principal"].setValue(value.kerberos_principal);
+    this.entityEdit.formGroup.controls["kerberos_realm"].setValue(value["kerberos_realm"]);
 
     if (value.enable) {
       this.adStatus = true;
@@ -502,17 +487,15 @@ export class ActiveDirectoryComponent {
       });
     });
 
-    this.ws
-      .call("kerberos.keytab.kerberos_principal_choices")
-      .subscribe((res) => {
-        this.kerberos_principal = _.find(this.fieldConfig, {
-          name: "kerberos_principal",
-        });
-        this.kerberos_principal.options.length = 0;
-        this.kerberos_principal.options.push({ label: "---", value: null });
-        res.forEach((item) => {
-          this.kerberos_principal.options.push({ label: item, value: item });
-        });
+    this.ws.call("kerberos.keytab.kerberos_principal_choices").subscribe((res) => {
+      this.kerberos_principal = _.find(this.fieldConfig, {
+        name: "kerberos_principal",
       });
+      this.kerberos_principal.options.length = 0;
+      this.kerberos_principal.options.push({ label: "---", value: null });
+      res.forEach((item) => {
+        this.kerberos_principal.options.push({ label: item, value: item });
+      });
+    });
   }
 }

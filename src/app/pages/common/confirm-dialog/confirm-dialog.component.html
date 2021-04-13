@@ -18,9 +18,7 @@
   </span>
   <div class="message-content">
     <span *ngIf="!keyTextArea" [innerHTML]="message | translate"></span>
-    <textarea *ngIf="keyTextArea" class="key-textarea" readonly>{{
-      message
-    }}</textarea>
+    <textarea *ngIf="keyTextArea" class="key-textarea" readonly>{{ message }}</textarea>
   </div>
 </div>
 
@@ -37,11 +35,7 @@
     >{{ "Confirm" | translate }}</mat-checkbox
   >
   <span fxFlex></span>
-  <copy-btn
-    [text]="textToCopy"
-    *ngIf="textToCopy"
-    [showPopup]="false"
-  ></copy-btn>
+  <copy-btn [text]="textToCopy" *ngIf="textToCopy" [showPopup]="false"></copy-btn>
   <button
     *ngIf="!hideCancel"
     id="confirm-dialog__cancel-button"

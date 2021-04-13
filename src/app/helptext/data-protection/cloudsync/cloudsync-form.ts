@@ -36,9 +36,7 @@ export default {
   bucket_input_validation: [Validators.required],
 
   folder_placeholder: T("Folder"),
-  folder_tooltip: T(
-    "Enter or select the cloud storage location to use for this task."
-  ),
+  folder_tooltip: T("Enter or select the cloud storage location to use for this task."),
 
   encryption_placeholder: T("Server Side Encryption"),
   encryption_tooltip: T("Choose <i>AES-256</i> or <i>None</i>."),
@@ -97,9 +95,7 @@ export default {
   ),
 
   snapshot_placeholder: T("Take Snapshot"),
-  snapshot_tooltip: T(
-    "Set to take a snapshot of the dataset before a <i>PUSH</i>."
-  ),
+  snapshot_tooltip: T("Set to take a snapshot of the dataset before a <i>PUSH</i>."),
 
   pre_script_placeholder: T("Pre-script"),
   pre_script_tooltip: T("Script to execute before running sync."),
@@ -166,9 +162,7 @@ export default {
   ),
 
   follow_symlinks_placeholder: T("Follow Symlinks"),
-  follow_symlinks_tooltip: T(
-    "Follow symlinks and copy the items to which they link."
-  ),
+  follow_symlinks_tooltip: T("Follow symlinks and copy the items to which they link."),
 
   transfers_placeholder: T("Transfers"),
   transfers_tooltip: T(

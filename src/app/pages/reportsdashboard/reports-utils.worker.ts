@@ -83,9 +83,7 @@ function convertKMGT(input: number, units: string, fixed?: number) {
 
   if (units == "bits") {
     shortName = shortName.replace(/i/, "").trim();
-    shortName = ` ${shortName.charAt(0).toUpperCase()}${shortName
-      .substr(1)
-      .toLowerCase()}`;
+    shortName = ` ${shortName.charAt(0).toUpperCase()}${shortName.substr(1).toLowerCase()}`;
   }
 
   //if(fixed && fixed !== -1){
@@ -179,9 +177,7 @@ function optimizeLegend(input) {
       output.legend = ["temperature"];
       break;
     case "memory":
-      output.legend = output.legend.map((label) =>
-        label.replace(/memory-/, "")
-      );
+      output.legend = output.legend.map((label) => label.replace(/memory-/, ""));
       output.legend = output.legend.map((label) => label.replace(/_value/, ""));
       break;
     case "swap":
@@ -190,34 +186,22 @@ function optimizeLegend(input) {
       break;
     case "interface":
       output.legend = output.legend.map((label) => label.replace(/if_/, ""));
-      output.legend = output.legend.map((label) =>
-        label.replace(/octets_/, "octets ")
-      );
+      output.legend = output.legend.map((label) => label.replace(/octets_/, "octets "));
       break;
     case "nfsstat":
-      output.legend = output.legend.map((label) =>
-        label.replace(/nfsstat-/, "")
-      );
+      output.legend = output.legend.map((label) => label.replace(/nfsstat-/, ""));
       output.legend = output.legend.map((label) => label.replace(/_value/, ""));
       break;
     case "nfsstatbytes":
-      output.legend = output.legend.map((label) =>
-        label.replace(/nfsstat-/, "")
-      );
-      output.legend = output.legend.map((label) =>
-        label.replace(/_bytes_value/, "")
-      );
+      output.legend = output.legend.map((label) => label.replace(/nfsstat-/, ""));
+      output.legend = output.legend.map((label) => label.replace(/_bytes_value/, ""));
       break;
     case "df":
-      output.legend = output.legend.map((label) =>
-        label.replace(/df_complex-/, "")
-      );
+      output.legend = output.legend.map((label) => label.replace(/df_complex-/, ""));
       output.legend = output.legend.map((label) => label.replace(/_value/, ""));
       break;
     case "processes":
-      output.legend = output.legend.map((label) =>
-        label.replace(/ps_state-/, "")
-      );
+      output.legend = output.legend.map((label) => label.replace(/ps_state-/, ""));
       output.legend = output.legend.map((label) => label.replace(/_value/, ""));
       break;
     case "uptime":
@@ -225,50 +209,38 @@ function optimizeLegend(input) {
       break;
     case "ctl":
     case "disk":
-      output.legend = output.legend.map((label) =>
-        label.replace(/disk_octets_/, "")
-      );
+      output.legend = output.legend.map((label) => label.replace(/disk_octets_/, ""));
       break;
     case "diskgeombusy":
       output.legend = output.legend.map((label) => "busy");
       break;
     case "diskgeomlatency":
-      output.legend = output.legend.map((label) =>
-        label.replace(/geom_latency-/, "")
-      );
+      output.legend = output.legend.map((label) => label.replace(/geom_latency-/, ""));
       output.legend = output.legend.map((label) => {
         let spl = label.split("_");
         return spl[1];
       });
       break;
     case "diskgeomopsrwd":
-      output.legend = output.legend.map((label) =>
-        label.replace(/geom_ops_rwd-/, "")
-      );
+      output.legend = output.legend.map((label) => label.replace(/geom_ops_rwd-/, ""));
       output.legend = output.legend.map((label) => {
         let spl = label.split("_");
         return spl[1];
       });
       break;
     case "diskgeomqueue":
-      output.legend = output.legend.map((label) =>
-        label.replace(/geom_queue-/, "")
-      );
+      output.legend = output.legend.map((label) => label.replace(/geom_queue-/, ""));
       output.legend = output.legend.map((label) => {
         let spl = label.split("_");
         return spl[1];
       });
       break;
     case "arcsize":
-      output.legend = output.legend.map((label) =>
-        label.replace(/cache_size-/, "")
-      );
+      output.legend = output.legend.map((label) => label.replace(/cache_size-/, ""));
       output.legend = output.legend.map((label) => label.replace(/_value/, ""));
       break;
     case "arcratio":
-      output.legend = output.legend.map((label) =>
-        label.replace(/cache_ratio-/, "")
-      );
+      output.legend = output.legend.map((label) => label.replace(/cache_ratio-/, ""));
       output.legend = output.legend.map((label) => label.replace(/_value/, ""));
       break;
     case "arcresult":
@@ -357,8 +329,7 @@ const commands = {
 function processCommands(list) {
   let output;
   list.forEach((item, index) => {
-    let input =
-      item.input == "--pipe" || item.input == "|" ? output : item.input;
+    let input = item.input == "--pipe" || item.input == "|" ? output : item.input;
     output = item.options
       ? commands[item.command](input, item.options)
       : commands[item.command](input);

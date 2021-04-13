@@ -1,10 +1,5 @@
 import { Component } from "@angular/core";
-import {
-  Validators,
-  FormControl,
-  ValidationErrors,
-  FormGroup,
-} from "@angular/forms";
+import { Validators, FormControl, ValidationErrors, FormGroup } from "@angular/forms";
 import { Router, ActivatedRoute } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
 import globalHelptext from "../../../../../helptext/global-helptext";
@@ -13,11 +8,7 @@ import { EntityFormComponent } from "app/pages/common/entity/entity-form";
 import { FieldSets } from "app/pages/common/entity/entity-form/classes/field-sets";
 import { forbiddenValues } from "app/pages/common/entity/entity-form/validators/forbidden-values-validation";
 import { EntityUtils } from "app/pages/common/entity/utils";
-import {
-  RestService,
-  WebSocketService,
-  StorageService,
-} from "../../../../../services/";
+import { RestService, WebSocketService, StorageService } from "../../../../../services/";
 import { AppLoaderService } from "../../../../../services/app-loader/app-loader.service";
 import { DialogService } from "app/services/dialog.service";
 import { ModalService } from "app/services/modal.service";
@@ -166,23 +157,15 @@ export class ZvolWizardComponent {
           parent: this,
           validation: [
             (control: FormControl): ValidationErrors => {
-              const config = this.wizardConfig[1].fieldConfig.find(
-                (c) => c.name === "volsize"
-              );
+              const config = this.wizardConfig[1].fieldConfig.find((c) => c.name === "volsize");
 
               const size =
                 control.value && typeof control.value == "string"
-                  ? this.storageService.convertHumanStringToNum(
-                      control.value,
-                      true
-                    )
+                  ? this.storageService.convertHumanStringToNum(control.value, true)
                   : null;
               const humanSize = control.value;
 
-              let errors =
-                control.value && isNaN(size)
-                  ? { invalid_byte_string: true }
-                  : null;
+              let errors = control.value && isNaN(size) ? { invalid_byte_string: true } : null;
 
               if (errors) {
                 config.hasErrors = true;
@@ -313,10 +296,7 @@ export class ZvolWizardComponent {
     if (this.isBasicMode === true) {
     }
     if (this.origHuman !== data.volsize) {
-      data.volsize = this.storageService.convertHumanStringToNum(
-        data.volsize,
-        true
-      );
+      data.volsize = this.storageService.convertHumanStringToNum(data.volsize, true);
     } else {
       delete data.volsize;
     }
@@ -344,24 +324,12 @@ export class ZvolWizardComponent {
     const zvolEntityForm = <FormGroup>entityWizard.formArray.get([1]);
     if (!this.parent) return;
 
-    const name = this.wizardConfig[1].fieldConfig.find(
-      (c) => c.name === "name"
-    );
-    const sparse = this.wizardConfig[1].fieldConfig.find(
-      (c) => c.name === "sparse"
-    );
-    const sync = this.wizardConfig[1].fieldConfig.find(
-      (c) => c.name === "sync"
-    );
-    const compression = this.wizardConfig[1].fieldConfig.find(
-      (c) => c.name === "compression"
-    );
-    const deduplication = this.wizardConfig[1].fieldConfig.find(
-      (c) => c.name === "deduplication"
-    );
-    const volblocksize = this.wizardConfig[1].fieldConfig.find(
-      (c) => c.name === "volblocksize"
-    );
+    const name = this.wizardConfig[1].fieldConfig.find((c) => c.name === "name");
+    const sparse = this.wizardConfig[1].fieldConfig.find((c) => c.name === "sparse");
+    const sync = this.wizardConfig[1].fieldConfig.find((c) => c.name === "sync");
+    const compression = this.wizardConfig[1].fieldConfig.find((c) => c.name === "compression");
+    const deduplication = this.wizardConfig[1].fieldConfig.find((c) => c.name === "deduplication");
+    const volblocksize = this.wizardConfig[1].fieldConfig.find((c) => c.name === "volblocksize");
 
     this.isNew = true;
 
@@ -396,20 +364,12 @@ export class ZvolWizardComponent {
                 value: "INHERIT",
               },
             ];
-            const volblocksize_inherit = [
-              { label: `${inheritTr}`, value: "INHERIT" },
-            ];
+            const volblocksize_inherit = [{ label: `${inheritTr}`, value: "INHERIT" }];
 
             sync.options = sync_inherit.concat(sync.options);
-            compression.options = compression_inherit.concat(
-              compression.options
-            );
-            deduplication.options = deduplication_inherit.concat(
-              deduplication.options
-            );
-            volblocksize.options = volblocksize_inherit.concat(
-              volblocksize.options
-            );
+            compression.options = compression_inherit.concat(compression.options);
+            deduplication.options = deduplication_inherit.concat(deduplication.options);
+            volblocksize.options = volblocksize_inherit.concat(volblocksize.options);
 
             zvolEntityForm.controls["sync"].setValue("INHERIT");
             zvolEntityForm.controls["compression"].setValue("INHERIT");
@@ -418,12 +378,10 @@ export class ZvolWizardComponent {
             this.title = helptext.zvol_title_add;
 
             const root = this.parent.split("/")[0];
-            this.ws
-              .call("pool.dataset.recommended_zvol_blocksize", [root])
-              .subscribe((res) => {
-                zvolEntityForm.controls["volblocksize"].setValue(res);
-                this.minimum_recommended_zvol_volblocksize = res;
-              });
+            this.ws.call("pool.dataset.recommended_zvol_blocksize", [root]).subscribe((res) => {
+              zvolEntityForm.controls["volblocksize"].setValue(res);
+              this.minimum_recommended_zvol_volblocksize = res;
+            });
           } else {
             let parent_dataset = pk_dataset[0].name.split("/");
             parent_dataset.pop();
@@ -436,9 +394,9 @@ export class ZvolWizardComponent {
                 this.entityWizard.setDisabled("name", true, 1);
                 sparse["isHidden"] = true;
                 volblocksize["isHidden"] = true;
-                this.wizardConfig[1].fieldConfig.find(
-                  (c) => c.name === "sparse"
-                )["isHidden"] = true;
+                this.wizardConfig[1].fieldConfig.find((c) => c.name === "sparse")[
+                  "isHidden"
+                ] = true;
                 this.customFilter = [[["id", "=", this.parent]]];
 
                 let sync_collection = [
@@ -469,16 +427,12 @@ export class ZvolWizardComponent {
                 // decimal has to be truncated to three decimal places
                 this.origVolSize = volumesize;
 
-                const humansize = this.storageService.convertBytestoHumanReadable(
-                  volumesize
-                );
+                const humansize = this.storageService.convertBytestoHumanReadable(volumesize);
                 this.origHuman = humansize;
 
                 zvolEntityForm.controls["name"].setValue(pk_dataset[0].name);
                 if (pk_dataset[0].comments) {
-                  zvolEntityForm.controls["comments"].setValue(
-                    pk_dataset[0].comments.value
-                  );
+                  zvolEntityForm.controls["comments"].setValue(pk_dataset[0].comments.value);
                 } else {
                   zvolEntityForm.controls["comments"].setValue("");
                 }
@@ -502,9 +456,7 @@ export class ZvolWizardComponent {
                       value: "INHERIT",
                     },
                   ];
-                  zvolEntityForm.controls["sync"].setValue(
-                    pk_dataset[0].sync.value
-                  );
+                  zvolEntityForm.controls["sync"].setValue(pk_dataset[0].sync.value);
                 }
 
                 sync.options = sync_collection.concat(sync.options);
@@ -526,14 +478,10 @@ export class ZvolWizardComponent {
                       value: "INHERIT",
                     },
                   ];
-                  zvolEntityForm.controls["compression"].setValue(
-                    pk_dataset[0].compression.value
-                  );
+                  zvolEntityForm.controls["compression"].setValue(pk_dataset[0].compression.value);
                 }
 
-                compression.options = compression_collection.concat(
-                  compression.options
-                );
+                compression.options = compression_collection.concat(compression.options);
 
                 if (
                   pk_dataset[0].deduplication.source === "INHERITED" ||
@@ -557,21 +505,15 @@ export class ZvolWizardComponent {
                   );
                 }
 
-                deduplication.options = deduplication_collection.concat(
-                  deduplication.options
-                );
+                deduplication.options = deduplication_collection.concat(deduplication.options);
 
-                zvolEntityForm.controls["sync"].setValue(
-                  pk_dataset[0].sync.value
-                );
+                zvolEntityForm.controls["sync"].setValue(pk_dataset[0].sync.value);
                 if (pk_dataset[0].compression.value === "GZIP") {
                   zvolEntityForm.controls["compression"].setValue(
                     pk_dataset[0].compression.value + "-6"
                   );
                 } else {
-                  zvolEntityForm.controls["compression"].setValue(
-                    pk_dataset[0].compression.value
-                  );
+                  zvolEntityForm.controls["compression"].setValue(pk_dataset[0].compression.value);
                 }
                 zvolEntityForm.controls["deduplication"].setValue(
                   pk_dataset[0].deduplication.value
@@ -597,9 +539,7 @@ export class ZvolWizardComponent {
             }
           }
           this.summary[T("Dataset Path")] = this.parent;
-          (<FormGroup>entityWizard.formArray.get([0])).controls[
-            "path"
-          ].setValue(this.parent);
+          (<FormGroup>entityWizard.formArray.get([0])).controls["path"].setValue(this.parent);
         }
       });
     zvolEntityForm.controls["name"].valueChanges.subscribe((name) => {
@@ -611,24 +551,18 @@ export class ZvolWizardComponent {
     zvolEntityForm.controls["volsize"].valueChanges.subscribe((volsize) => {
       this.summary[T("Zvol Size")] = volsize;
     });
-    zvolEntityForm.controls["force_size"].valueChanges.subscribe(
-      (force_size) => {
-        this.summary[T("Force Size")] = force_size;
-      }
-    );
+    zvolEntityForm.controls["force_size"].valueChanges.subscribe((force_size) => {
+      this.summary[T("Force Size")] = force_size;
+    });
     zvolEntityForm.controls["sync"].valueChanges.subscribe((sync) => {
       this.summary[T("Sync")] = sync;
     });
-    zvolEntityForm.controls["compression"].valueChanges.subscribe(
-      (compression) => {
-        this.summary[T("Compression Level")] = compression;
-      }
-    );
-    zvolEntityForm.controls["deduplication"].valueChanges.subscribe(
-      (deduplication) => {
-        this.summary[T("ZFS Deduplication")] = deduplication;
-      }
-    );
+    zvolEntityForm.controls["compression"].valueChanges.subscribe((compression) => {
+      this.summary[T("Compression Level")] = compression;
+    });
+    zvolEntityForm.controls["deduplication"].valueChanges.subscribe((deduplication) => {
+      this.summary[T("ZFS Deduplication")] = deduplication;
+    });
     zvolEntityForm.controls["sparse"].valueChanges.subscribe((sparse) => {
       this.summary[T("Sparse")] = sparse;
     });
@@ -636,27 +570,19 @@ export class ZvolWizardComponent {
       const res_number = parseInt(this.reverseZvolBlockSizeMap[res], 10);
       if (this.minimum_recommended_zvol_volblocksize) {
         const recommended_size_number = parseInt(
-          this.reverseZvolBlockSizeMap[
-            this.minimum_recommended_zvol_volblocksize
-          ],
+          this.reverseZvolBlockSizeMap[this.minimum_recommended_zvol_volblocksize],
           0
         );
         if (res_number < recommended_size_number) {
-          this.translate
-            .get(helptext.blocksize_warning.a)
-            .subscribe((blockMsgA) =>
-              this.translate
-                .get(helptext.blocksize_warning.b)
-                .subscribe((blockMsgB) => {
-                  this.wizardConfig[1].fieldConfig.find(
-                    (c) => c.name === "volblocksize"
-                  ).warnings = `${blockMsgA} ${this.minimum_recommended_zvol_volblocksize}. ${blockMsgB}`;
-                })
-            );
+          this.translate.get(helptext.blocksize_warning.a).subscribe((blockMsgA) =>
+            this.translate.get(helptext.blocksize_warning.b).subscribe((blockMsgB) => {
+              this.wizardConfig[1].fieldConfig.find(
+                (c) => c.name === "volblocksize"
+              ).warnings = `${blockMsgA} ${this.minimum_recommended_zvol_volblocksize}. ${blockMsgB}`;
+            })
+          );
         } else {
-          this.wizardConfig[1].fieldConfig.find(
-            (c) => c.name === "volblocksize"
-          ).warnings = null;
+          this.wizardConfig[1].fieldConfig.find((c) => c.name === "volblocksize").warnings = null;
         }
       }
       this.summary[T("Block Size")] = res;
@@ -665,9 +591,7 @@ export class ZvolWizardComponent {
 
   blurVolsize(parent) {
     if (parent.entityForm) {
-      parent.entityForm.formGroup.controls["volsize"].setValue(
-        parent.storageService.humanReadable
-      );
+      parent.entityForm.formGroup.controls["volsize"].setValue(parent.storageService.humanReadable);
     }
   }
 
@@ -698,9 +622,7 @@ export class ZvolWizardComponent {
       }
 
       data.volsize =
-        data.volsize +
-        (volblocksize_integer_value -
-          (data.volsize % volblocksize_integer_value));
+        data.volsize + (volblocksize_integer_value - (data.volsize % volblocksize_integer_value));
     } else {
       delete data.volblocksize;
     }

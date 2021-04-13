@@ -16,10 +16,7 @@ import { StorageService } from "../../services/storage.service";
 
 import { SnapshotAddComponent } from "./snapshots/snapshot-add/";
 import { SnapshotCloneComponent } from "./snapshots/snapshot-clone/";
-import {
-  SnapshotDetailsComponent,
-  SnapshotListComponent,
-} from "./snapshots/snapshot-list/";
+import { SnapshotDetailsComponent, SnapshotListComponent } from "./snapshots/snapshot-list/";
 import { DatasetFormComponent } from "./volumes/datasets/dataset-form/";
 import { DatasetPermissionsComponent } from "./volumes/datasets/dataset-permissions/";
 import { DatasetAclComponent } from "./volumes/datasets/dataset-acl/";
@@ -27,11 +24,7 @@ import { DatasetUnlockComponent } from "./volumes/datasets/dataset-unlock/";
 import { UnlockDialogComponent } from "./volumes/datasets/dataset-unlock/unlock-dialog/unlock-dialog.component";
 import { ImportDiskComponent } from "./import-disk/import-disk.component";
 
-import {
-  DiskComponent,
-  ManagerComponent,
-  VdevComponent,
-} from "./volumes/manager/";
+import { DiskComponent, ManagerComponent, VdevComponent } from "./volumes/manager/";
 // import { VolumesEditComponent } from './volumes/volumes-edit/';
 import { VolumesListComponent } from "./volumes/volumes-list/";
 import { VolumesListControlsComponent } from "./volumes/volumes-list/volumes-list-controls.component";
@@ -118,12 +111,6 @@ import { ResilverComponent } from "./volumes/resilver/resilver.component";
   ],
   exports: [VolumesListControlsComponent],
   entryComponents: [SnapshotDetailsComponent, UnlockDialogComponent],
-  providers: [
-    UserService,
-    StorageService,
-    MessageService,
-    JobService,
-    TranslateService,
-  ],
+  providers: [UserService, StorageService, MessageService, JobService, TranslateService],
 })
 export class StorageModule {}

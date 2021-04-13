@@ -126,9 +126,7 @@ communicate externally. All other external traffic is restricted."
     },
   },
   outbound_network_value: {
-    tooltip: T(
-      "Select the system services that will be allowed to \
-communicate externally."
-    ),
+    tooltip: T("Select the system services that will be allowed to \
+communicate externally."),
   },
 };

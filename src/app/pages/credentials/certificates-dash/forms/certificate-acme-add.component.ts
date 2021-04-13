@@ -31,8 +31,7 @@ export class CertificateAcmeAddComponent {
   private getRow = new Subscription();
   private rowNum: any;
   private dns_map: any;
-  private title =
-    helptext_system_certificates.list.action_create_acme_certificate;
+  private title = helptext_system_certificates.list.action_create_acme_certificate;
   protected isOneColumnForm = true;
   protected fieldConfig: FieldConfig[];
   public fieldSets: FieldSet[] = [
@@ -50,8 +49,7 @@ export class CertificateAcmeAddComponent {
           required: true,
           validation: helptext_system_certificates.add.name.validation,
           hasErrors: false,
-          errors:
-            "Allowed characters: letters, numbers, underscore (_), and dash (-).",
+          errors: "Allowed characters: letters, numbers, underscore (_), and dash (-).",
         },
         {
           type: "checkbox",
@@ -106,8 +104,7 @@ export class CertificateAcmeAddComponent {
             {
               type: "select",
               name: "authenticators",
-              placeholder:
-                helptext_system_certificates.acme.authenticator.placeholder,
+              placeholder: helptext_system_certificates.acme.authenticator.placeholder,
               tooltip: helptext_system_certificates.acme.authenticator.tooltip,
               required: true,
               options: [],
@@ -158,9 +155,7 @@ export class CertificateAcmeAddComponent {
       for (let key in choices) {
         acme_directory_uri.options.push({ label: choices[key], value: key });
       }
-      entityForm.formGroup.controls["acme_directory_uri"].setValue(
-        Object.keys(choices)[0]
-      );
+      entityForm.formGroup.controls["acme_directory_uri"].setValue(Object.keys(choices)[0]);
     });
   }
 
@@ -176,34 +171,26 @@ export class CertificateAcmeAddComponent {
       this.commonName = res[0].common;
       this.csrOrg = res[0];
 
-      this.ws
-        .call("certificate.get_domain_names", [this.rowNum])
-        .subscribe((domains) => {
-          if (domains && domains.length > 0) {
-            for (let i = 0; i < domains.length; i++) {
-              if (this.domainList.controls[i] === undefined) {
-                const templateListField = _.cloneDeep(
-                  this.domainList_fc.templateListField
-                );
-                const newfg = entityEdit.entityFormService.createFormGroup(
-                  templateListField
-                );
-                newfg.setParent(this.domainList);
-                this.domainList.controls.push(newfg);
-                this.domainList_fc.listFields.push(templateListField);
-              }
-
-              const controls = listFields[i];
-              const name_text_fc = _.find(controls, { name: "name_text" });
-              const auth_fc = _.find(controls, { name: "authenticators" });
-              this.domainList.controls[i].controls["name_text"].setValue(
-                domains[i]
-              );
-              name_text_fc.paraText = "<b>" + domains[i] + "</b>";
-              auth_fc.options = this.dns_map.options;
+      this.ws.call("certificate.get_domain_names", [this.rowNum]).subscribe((domains) => {
+        if (domains && domains.length > 0) {
+          for (let i = 0; i < domains.length; i++) {
+            if (this.domainList.controls[i] === undefined) {
+              const templateListField = _.cloneDeep(this.domainList_fc.templateListField);
+              const newfg = entityEdit.entityFormService.createFormGroup(templateListField);
+              newfg.setParent(this.domainList);
+              this.domainList.controls.push(newfg);
+              this.domainList_fc.listFields.push(templateListField);
             }
+
+            const controls = listFields[i];
+            const name_text_fc = _.find(controls, { name: "name_text" });
+            const auth_fc = _.find(controls, { name: "authenticators" });
+            this.domainList.controls[i].controls["name_text"].setValue(domains[i]);
+            name_text_fc.paraText = "<b>" + domains[i] + "</b>";
+            auth_fc.options = this.dns_map.options;
           }
-        });
+        }
+      });
     });
   }
 

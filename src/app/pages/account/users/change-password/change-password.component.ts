@@ -64,39 +64,37 @@ export class ChangePasswordComponent {
   public customSubmit(body) {
     delete body.password_conf;
     this.loader.open();
-    return this.ws
-      .call("auth.check_user", ["root", body.curr_password])
-      .subscribe(
-        (check) => {
-          if (check) {
-            delete body.curr_password;
-            this.ws.call("user.update", [1, body]).subscribe(
-              (res) => {
-                this.loader.close();
-                this.entityForm.success = true;
-                this.entityForm.successMessage = helptext.pw_updated;
-                this.entityForm.formGroup.markAsPristine();
-              },
-              (res) => {
-                this.loader.close();
-                new EntityUtils().handleWSError(this.entityForm, res);
-              }
-            );
-          } else {
-            this.loader.close();
-            this.dialog.Info(
-              helptext.pw_invalid_title,
-              helptext.pw_invalid_msg,
-              "300px",
-              "warning",
-              true
-            );
-          }
-        },
-        (res) => {
+    return this.ws.call("auth.check_user", ["root", body.curr_password]).subscribe(
+      (check) => {
+        if (check) {
+          delete body.curr_password;
+          this.ws.call("user.update", [1, body]).subscribe(
+            (res) => {
+              this.loader.close();
+              this.entityForm.success = true;
+              this.entityForm.successMessage = helptext.pw_updated;
+              this.entityForm.formGroup.markAsPristine();
+            },
+            (res) => {
+              this.loader.close();
+              new EntityUtils().handleWSError(this.entityForm, res);
+            }
+          );
+        } else {
           this.loader.close();
-          new EntityUtils().handleWSError(this.entityForm, res);
+          this.dialog.Info(
+            helptext.pw_invalid_title,
+            helptext.pw_invalid_msg,
+            "300px",
+            "warning",
+            true
+          );
         }
-      );
+      },
+      (res) => {
+        this.loader.close();
+        new EntityUtils().handleWSError(this.entityForm, res);
+      }
+    );
   }
 }

@@ -10,10 +10,7 @@
           ix-auto-type="select"
           ix-auto-identifier="Browse a Collection"
         >
-          <mat-option
-            *ngFor="let repo of availableRepo"
-            [value]="repo.git_repository"
-          >
+          <mat-option *ngFor="let repo of availableRepo" [value]="repo.git_repository">
             {{ repo.name }}
           </mat-option>
         </mat-select>
@@ -44,11 +41,7 @@
       <mat-icon *ngIf="!expand">expand_more</mat-icon>
     </button>
   </section>
-  <div
-    fxLayout="row wrap"
-    fxLayoutAlign="space-around center"
-    *ngIf="expand && selectedPlugin"
-  >
+  <div fxLayout="row wrap" fxLayoutAlign="space-around center" *ngIf="expand && selectedPlugin">
     <div fxFlex fxFlex.xs="100">
       <div>
         <img
@@ -89,11 +82,7 @@
     </div>
   </div>
 </mat-card-content>
-<mat-button-toggle-group
-  class="plugin-buttons"
-  [(ngModel)]="selectedPlugin"
-  *ngIf="expand"
->
+<mat-button-toggle-group class="plugin-buttons" [(ngModel)]="selectedPlugin" *ngIf="expand">
   <ng-container *ngFor="let plugin of plugins; let index">
     <mat-button-toggle
       [value]="plugin"
@@ -102,12 +91,7 @@
       ix-auto-identifier="{{ plugin.name }}"
     >
       <figure>
-        <img
-          class="plugin-img"
-          height="40"
-          [src]="plugin.icon"
-          alt="{{ plugin.plugin }} icon"
-        />
+        <img class="plugin-img" height="40" [src]="plugin.icon" alt="{{ plugin.plugin }} icon" />
         <figcaption>{{ plugin.name }}</figcaption>
       </figure>
     </mat-button-toggle>

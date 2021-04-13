@@ -1,12 +1,7 @@
 import { Component, ViewContainerRef, OnInit } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { EntityFormService } from "../../services/entity-form.service";
-import {
-  TREE_ACTIONS,
-  KEYS,
-  IActionMapping,
-  TreeModel,
-} from "angular-tree-component";
+import { TREE_ACTIONS, KEYS, IActionMapping, TreeModel } from "angular-tree-component";
 import { TranslateService } from "@ngx-translate/core";
 
 import { FieldConfig } from "../../models/field-config.interface";
@@ -16,10 +11,7 @@ import { T } from "../../../../../../translate-marker";
 @Component({
   selector: "form-explorer",
   templateUrl: "./form-explorer.component.html",
-  styleUrls: [
-    "../dynamic-field/dynamic-field.css",
-    "./form-explorer.component.scss",
-  ],
+  styleUrls: ["../dynamic-field/dynamic-field.css", "./form-explorer.component.scss"],
 })
 export class FormExplorerComponent implements Field, OnInit {
   config: FieldConfig;
@@ -74,16 +66,11 @@ export class FormExplorerComponent implements Field, OnInit {
     useTriState: true,
   };
 
-  constructor(
-    private entityFormService: EntityFormService,
-    public translate: TranslateService
-  ) {}
+  constructor(private entityFormService: EntityFormService, public translate: TranslateService) {}
 
   ngOnInit() {
     this.rootSelectable =
-      this.config.rootSelectable === undefined
-        ? true
-        : this.config.rootSelectable;
+      this.config.rootSelectable === undefined ? true : this.config.rootSelectable;
 
     if (this.config.multiple) {
       this.customTemplateStringOptions.useCheckbox = this.config.multiple;
@@ -163,9 +150,7 @@ export class FormExplorerComponent implements Field, OnInit {
   }
 
   onClick(event) {
-    const selectedTreeNodes = Object.entries(
-      event.treeModel.selectedLeafNodeIds
-    )
+    const selectedTreeNodes = Object.entries(event.treeModel.selectedLeafNodeIds)
       .filter(([key, value]) => {
         return value === true;
       })
@@ -174,9 +159,7 @@ export class FormExplorerComponent implements Field, OnInit {
     if (
       event.eventName === "select" &&
       this.group.controls[this.config.name].value &&
-      this.group.controls[this.config.name].value.indexOf(
-        event.node.data.name
-      ) > -1
+      this.group.controls[this.config.name].value.indexOf(event.node.data.name) > -1
     ) {
       return;
     }
@@ -218,9 +201,7 @@ export class FormExplorerComponent implements Field, OnInit {
       this.group.controls[this.config.name].value
     ) {
       for (const item of event.node.data.children || []) {
-        if (
-          this.group.controls[this.config.name].value.indexOf(item.name) > -1
-        ) {
+        if (this.group.controls[this.config.name].value.indexOf(item.name) > -1) {
           const target = event.treeModel.getNodeById(item.uuid);
           target.setIsSelected(true);
         }
@@ -235,9 +216,7 @@ export class FormExplorerComponent implements Field, OnInit {
       this.group.controls[this.config.name].value
     ) {
       for (const item of event.node.data.children || []) {
-        if (
-          this.group.controls[this.config.name].value.indexOf(item.name) > -1
-        ) {
+        if (this.group.controls[this.config.name].value.indexOf(item.name) > -1) {
           const target = event.treeModel.getNodeById(item.uuid);
           target.setIsSelected(true);
         }

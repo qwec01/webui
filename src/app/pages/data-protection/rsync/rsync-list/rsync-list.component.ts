@@ -89,35 +89,29 @@ export class RsyncListComponent {
       label: T("Run Now"),
       name: "run",
       onClick: (members) => {
-        this.dialog
-          .confirm(T("Run Now"), T("Run this rsync now?"), true)
-          .subscribe((run) => {
-            if (run) {
-              row.state = "RUNNING";
-              this.ws.call("rsynctask.run", [row.id]).subscribe(
-                (res) => {
-                  this.dialog.Info(
-                    T("Task Started"),
-                    "Rsync task <i>" +
-                      row.remotehost +
-                      " - " +
-                      row.remotemodule +
-                      "</i> started.",
-                    "500px",
-                    "info",
-                    true
-                  );
-                  this.job.getJobStatus(res).subscribe((task) => {
-                    row.state = task.state;
-                    row.job = task;
-                  });
-                },
-                (err) => {
-                  new EntityUtils().handleWSError(this, err);
-                }
-              );
-            }
-          });
+        this.dialog.confirm(T("Run Now"), T("Run this rsync now?"), true).subscribe((run) => {
+          if (run) {
+            row.state = "RUNNING";
+            this.ws.call("rsynctask.run", [row.id]).subscribe(
+              (res) => {
+                this.dialog.Info(
+                  T("Task Started"),
+                  "Rsync task <i>" + row.remotehost + " - " + row.remotemodule + "</i> started.",
+                  "500px",
+                  "info",
+                  true
+                );
+                this.job.getJobStatus(res).subscribe((task) => {
+                  row.state = task.state;
+                  row.job = task;
+                });
+              },
+              (err) => {
+                new EntityUtils().handleWSError(this, err);
+              }
+            );
+          }
+        });
       },
     });
     actions.push({
@@ -176,10 +170,7 @@ export class RsyncListComponent {
         this.job.showLogs(row.job);
       }
     } else {
-      this.dialog.Info(
-        globalHelptext.noLogDilaog.title,
-        globalHelptext.noLogDilaog.message
-      );
+      this.dialog.Info(globalHelptext.noLogDilaog.title, globalHelptext.noLogDilaog.message);
     }
   }
 

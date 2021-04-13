@@ -3,12 +3,8 @@
     <strong class="catalog-name" textLimiter threshold="40"
       >{{ catalogApp.name }} {{ "Application Summary" | translate }}</strong
     >
-    <span class="status active" *ngIf="catalogApp.healthy">{{
-      "Healthy" | translate
-    }}</span>
-    <span class="status other" *ngIf="!catalogApp.healthy">{{
-      "Unhealthy" | translate
-    }}</span>
+    <span class="status active" *ngIf="catalogApp.healthy">{{ "Healthy" | translate }}</span>
+    <span class="status other" *ngIf="!catalogApp.healthy">{{ "Unhealthy" | translate }}</span>
   </div>
   <div class="description" [innerHTML]="catalogApp.info"></div>
   <div class="categories" fxLayout="row" fxLayoutAlign="space-between center">
@@ -27,9 +23,7 @@
   </div>
   <div class="categories">
     <span>{{ "Categories" | translate }}:</span
-    ><span class="value" textLimiter threshold="35">{{
-      catalogApp.categories.join(", ")
-    }}</span>
+    ><span class="value" textLimiter threshold="35">{{ catalogApp.categories.join(", ") }}</span>
   </div>
   <div class="resource" fxLayout="row" fxLayoutAlign="space-between center">
     <div>
@@ -46,10 +40,7 @@
           ix-auto-type="select"
           ix-auto-identifier="status-select"
         >
-          <mat-option
-            *ngFor="let option of statusOptions"
-            value="{{ option | translate }}"
-          >
+          <mat-option *ngFor="let option of statusOptions" value="{{ option | translate }}">
             {{ option }}
           </mat-option>
         </mat-select>
@@ -57,15 +48,9 @@
     </div>
   </div>
   <div class="version-list">
-    <div
-      fxLayout="row"
-      fxLayoutAlign="center start"
-      class="detail-row row-light"
-    >
+    <div fxLayout="row" fxLayoutAlign="center start" class="detail-row row-light">
       <span fxFlex="70%" class="">{{ "Version" | translate }}</span>
-      <span fxFlex="30%" class="text-center">{{
-        "Version Info" | translate
-      }}</span>
+      <span fxFlex="30%" class="text-center">{{ "Version Info" | translate }}</span>
     </div>
     <div *ngIf="hasFilterResult(); else noVersions">
       <div
@@ -82,9 +67,7 @@
             <mat-icon
               class="version-tooltip"
               htmlTooltip="{{
-                version.value.healthy
-                  ? version.value.app_readme
-                  : version.value.healthy_error
+                version.value.healthy ? version.value.app_readme : version.value.healthy_error
               }}"
               >info</mat-icon
             >
@@ -93,11 +76,7 @@
       </div>
     </div>
     <ng-template #noVersions>
-      <div
-        fxLayout="row"
-        fxLayoutAlign="start start"
-        class="detail-row row-dark version-number"
-      >
+      <div fxLayout="row" fxLayoutAlign="start start" class="detail-row row-dark version-number">
         {{ "No Version" | translate }}
       </div>
     </ng-template>

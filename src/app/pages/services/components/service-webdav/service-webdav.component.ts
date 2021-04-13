@@ -125,16 +125,12 @@ export class ServiceWebdavComponent implements OnDestroy {
     this.webdav_protocol = entityForm.formGroup.controls["protocol"];
     this.handleProtocol(this.webdav_protocol.value);
     this.handleAuth(this.webdav_htauth.value);
-    this.webdav_protocol_subscription = this.webdav_protocol.valueChanges.subscribe(
-      (value) => {
-        this.handleProtocol(value);
-      }
-    );
-    this.webdav_htauth_subscription = this.webdav_htauth.valueChanges.subscribe(
-      (value) => {
-        this.handleAuth(value);
-      }
-    );
+    this.webdav_protocol_subscription = this.webdav_protocol.valueChanges.subscribe((value) => {
+      this.handleProtocol(value);
+    });
+    this.webdav_htauth_subscription = this.webdav_htauth.valueChanges.subscribe((value) => {
+      this.handleAuth(value);
+    });
 
     this.webdav_certssl = _.find(this.fieldConfig, { name: "certssl" });
     this.systemGeneralService.getCertificates().subscribe((res) => {

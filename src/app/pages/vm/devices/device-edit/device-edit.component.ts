@@ -414,81 +414,63 @@ export class DeviceEditComponent implements OnInit {
     ];
 
     this.formGroup = this.entityFormService.createFormGroup(this.fieldConfig);
-    this.cdromFormGroup = this.entityFormService.createFormGroup(
-      this.cdromFieldConfig
-    );
-    this.diskFormGroup = this.entityFormService.createFormGroup(
-      this.diskFieldConfig
-    );
-    this.nicFormGroup = this.entityFormService.createFormGroup(
-      this.nicFieldConfig
-    );
-    this.rawfileFormGroup = this.entityFormService.createFormGroup(
-      this.rawfileFieldConfig
-    );
-    this.pciFormGroup = this.entityFormService.createFormGroup(
-      this.pciFieldConfig
-    );
-    this.displayFormGroup = this.entityFormService.createFormGroup(
-      this.displayFieldConfig
-    );
+    this.cdromFormGroup = this.entityFormService.createFormGroup(this.cdromFieldConfig);
+    this.diskFormGroup = this.entityFormService.createFormGroup(this.diskFieldConfig);
+    this.nicFormGroup = this.entityFormService.createFormGroup(this.nicFieldConfig);
+    this.rawfileFormGroup = this.entityFormService.createFormGroup(this.rawfileFieldConfig);
+    this.pciFormGroup = this.entityFormService.createFormGroup(this.pciFieldConfig);
+    this.displayFormGroup = this.entityFormService.createFormGroup(this.displayFieldConfig);
 
     this.activeFormGroup = this.cdromFormGroup;
-    await this.ws
-      .call("vm.device.query", [[["id", "=", this.deviceid]]])
-      .subscribe((res) => {
-        if (
-          res[0].attributes.physical_sectorsize !== undefined &&
-          res[0].attributes.logical_sectorsize !== undefined
-        ) {
-          res[0].attributes["sectorsize"] =
-            res[0].attributes.logical_sectorsize === null
-              ? 0
-              : res[0].attributes.logical_sectorsize;
+    await this.ws.call("vm.device.query", [[["id", "=", this.deviceid]]]).subscribe((res) => {
+      if (
+        res[0].attributes.physical_sectorsize !== undefined &&
+        res[0].attributes.logical_sectorsize !== undefined
+      ) {
+        res[0].attributes["sectorsize"] =
+          res[0].attributes.logical_sectorsize === null ? 0 : res[0].attributes.logical_sectorsize;
+      }
+      const deviceInformation = {
+        ...res[0].attributes,
+        ...{ order: res[0].order },
+      };
+      this.vminfo = res[0];
+      res = res[0].dtype;
+      this.selectedType = res;
+      if (res === "CDROM") {
+        this.activeFormGroup = this.cdromFormGroup;
+        this.isCustActionVisible = false;
+      } else if (res === "NIC") {
+        this.activeFormGroup = this.nicFormGroup;
+        this.isCustActionVisible = true;
+      } else if (res === "DISK") {
+        this.activeFormGroup = this.diskFormGroup;
+        this.isCustActionVisible = false;
+      } else if (res === "RAW") {
+        this.activeFormGroup = this.rawfileFormGroup;
+        this.isCustActionVisible = false;
+        // special case where RAW file device is used as a BOOT device.
+        if (this.vminfo.attributes.boot && this.vminfo.attributes.rootpwd) {
+          this.rootpwd = _.find(this.rawfileFieldConfig, { name: "rootpwd" });
+          this.rootpwd["isHidden"] = false;
+          this.boot = _.find(this.rawfileFieldConfig, { name: "boot" });
+          this.boot["isHidden"] = false;
         }
-        const deviceInformation = {
-          ...res[0].attributes,
-          ...{ order: res[0].order },
-        };
-        this.vminfo = res[0];
-        res = res[0].dtype;
-        this.selectedType = res;
-        if (res === "CDROM") {
-          this.activeFormGroup = this.cdromFormGroup;
-          this.isCustActionVisible = false;
-        } else if (res === "NIC") {
-          this.activeFormGroup = this.nicFormGroup;
-          this.isCustActionVisible = true;
-        } else if (res === "DISK") {
-          this.activeFormGroup = this.diskFormGroup;
-          this.isCustActionVisible = false;
-        } else if (res === "RAW") {
-          this.activeFormGroup = this.rawfileFormGroup;
-          this.isCustActionVisible = false;
-          // special case where RAW file device is used as a BOOT device.
-          if (this.vminfo.attributes.boot && this.vminfo.attributes.rootpwd) {
-            this.rootpwd = _.find(this.rawfileFieldConfig, { name: "rootpwd" });
-            this.rootpwd["isHidden"] = false;
-            this.boot = _.find(this.rawfileFieldConfig, { name: "boot" });
-            this.boot["isHidden"] = false;
-          }
-        } else if (res === "PCI") {
-          this.activeFormGroup = this.pciFormGroup;
-          this.isCustActionVisible = false;
-        } else if (res === "DISPLAY") {
-          this.activeFormGroup = this.displayFormGroup;
-          this.isCustActionVisible = false;
-        }
-        this.setgetValues(this.activeFormGroup, deviceInformation);
-      });
+      } else if (res === "PCI") {
+        this.activeFormGroup = this.pciFormGroup;
+        this.isCustActionVisible = false;
+      } else if (res === "DISPLAY") {
+        this.activeFormGroup = this.displayFormGroup;
+        this.isCustActionVisible = false;
+      }
+      this.setgetValues(this.activeFormGroup, deviceInformation);
+    });
     this.aroute.params.subscribe((params) => {
-      this.ws
-        .call("vm.query", [[["id", "=", parseInt(params["vmid"], 10)]]])
-        .subscribe((res) => {
-          if (res[0].status.state === "RUNNING") {
-            this.activeFormGroup.setErrors({ invalid: true });
-          }
-        });
+      this.ws.call("vm.query", [[["id", "=", parseInt(params["vmid"], 10)]]]).subscribe((res) => {
+        if (res[0].status.state === "RUNNING") {
+          this.activeFormGroup.setErrors({ invalid: true });
+        }
+      });
     });
 
     if (!this.productType.includes("SCALE")) {
@@ -501,10 +483,7 @@ export class DeviceEditComponent implements OnInit {
 
   afterInit() {
     this.ws
-      .call("pool.dataset.query", [
-        [["type", "=", "VOLUME"]],
-        { extra: { properties: ["id"] } },
-      ])
+      .call("pool.dataset.query", [[["type", "=", "VOLUME"]], { extra: { properties: ["id"] } }])
       .subscribe((zvols) => {
         zvols.forEach((zvol) => {
           _.find(this.diskFieldConfig, { name: "path" }).options.push({

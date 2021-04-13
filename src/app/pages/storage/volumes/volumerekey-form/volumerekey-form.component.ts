@@ -3,11 +3,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { MatDialog } from "@angular/material/dialog";
 
 import * as _ from "lodash";
-import {
-  WebSocketService,
-  AppLoaderService,
-  DialogService,
-} from "../../../../services/";
+import { WebSocketService, AppLoaderService, DialogService } from "../../../../services/";
 import { FieldConfig } from "../../../common/entity/entity-form/models/field-config.interface";
 import { Formconfiguration } from "app/pages/common/entity/entity-form/entity-form.component";
 import { EncryptionService } from "../../../../../app/services/encryption.service";
@@ -111,9 +107,7 @@ export class VolumeRekeyFormComponent implements Formconfiguration {
   }
 
   afterInit(entityForm: any) {
-    entityForm.formGroup.controls[
-      "encryptionkey_passphrase"
-    ].valueChanges.subscribe((res) => {
+    entityForm.formGroup.controls["encryptionkey_passphrase"].valueChanges.subscribe((res) => {
       let instructions = _.find(this.fieldConfig, {
         name: "set_recoverykey-instructions",
       });
@@ -125,77 +119,68 @@ export class VolumeRekeyFormComponent implements Formconfiguration {
   }
 
   customSubmit(value) {
-    this.ws
-      .call("auth.check_user", ["root", value.passphrase])
-      .subscribe((res) => {
-        if (!res) {
-          this.dialogService.Info(
-            "Error",
-            "The administrator password is incorrect.",
-            "340px"
-          );
-        } else {
-          this.ws
-            .call("pool.rekey", [
-              parseInt(this.pk),
-              { admin_password: value.passphrase },
-            ])
-            .subscribe(
-              () => {
-                switch (true) {
-                  case value.encryptionkey_passphrase && !value.set_recoverykey:
-                    this.encryptionService.setPassphrase(
-                      this.pk,
-                      value.encryptionkey_passphrase,
-                      value.passphrase,
-                      value.name,
-                      this.route_success,
-                      false
-                    );
-                    break;
+    this.ws.call("auth.check_user", ["root", value.passphrase]).subscribe((res) => {
+      if (!res) {
+        this.dialogService.Info("Error", "The administrator password is incorrect.", "340px");
+      } else {
+        this.ws
+          .call("pool.rekey", [parseInt(this.pk), { admin_password: value.passphrase }])
+          .subscribe(
+            () => {
+              switch (true) {
+                case value.encryptionkey_passphrase && !value.set_recoverykey:
+                  this.encryptionService.setPassphrase(
+                    this.pk,
+                    value.encryptionkey_passphrase,
+                    value.passphrase,
+                    value.name,
+                    this.route_success,
+                    false
+                  );
+                  break;
 
-                  case !value.encryptionkey_passphrase && value.set_recoverykey:
-                    this.encryptionService.openEncryptDialog(
-                      this.pk,
-                      this.route_success,
-                      value.name,
-                      true
-                    );
-                    break;
+                case !value.encryptionkey_passphrase && value.set_recoverykey:
+                  this.encryptionService.openEncryptDialog(
+                    this.pk,
+                    this.route_success,
+                    value.name,
+                    true
+                  );
+                  break;
 
-                  case value.encryptionkey_passphrase && value.set_recoverykey:
-                    this.encryptionService.setPassphrase(
-                      this.pk,
-                      value.encryptionkey_passphrase,
-                      value.passphrase,
-                      value.name,
-                      this.route_success,
-                      true,
-                      true
-                    );
-                    break;
+                case value.encryptionkey_passphrase && value.set_recoverykey:
+                  this.encryptionService.setPassphrase(
+                    this.pk,
+                    value.encryptionkey_passphrase,
+                    value.passphrase,
+                    value.name,
+                    this.route_success,
+                    true,
+                    true
+                  );
+                  break;
 
-                  default:
-                    this.dialogService.Info(
-                      T("Success"),
-                      T("Successfully reset encryption for pool: ") + value.name
-                    );
-                    this.encryptionService.openEncryptDialog(
-                      this.pk,
-                      this.route_success,
-                      this.poolName
-                    );
-                }
-              },
-              (err) => {
-                this.dialogService.errorReport(
-                  T("Error resetting encryption for pool: " + value.name),
-                  err.reason,
-                  err.trace.formatted
-                );
+                default:
+                  this.dialogService.Info(
+                    T("Success"),
+                    T("Successfully reset encryption for pool: ") + value.name
+                  );
+                  this.encryptionService.openEncryptDialog(
+                    this.pk,
+                    this.route_success,
+                    this.poolName
+                  );
               }
-            );
-        }
-      });
+            },
+            (err) => {
+              this.dialogService.errorReport(
+                T("Error resetting encryption for pool: " + value.name),
+                err.reason,
+                err.trace.formatted
+              );
+            }
+          );
+      }
+    });
   }
 }

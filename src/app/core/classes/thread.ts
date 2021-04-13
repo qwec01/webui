@@ -49,11 +49,7 @@ export class Thread extends iXAbstractObject {
     if (this.debug) {
       console.log("Thread Constructor");
       console.log(
-        "Client machine has " +
-          this.maxThreads / 2 +
-          " cores (" +
-          this.maxThreads +
-          " threads)"
+        "Client machine has " + this.maxThreads / 2 + " cores (" + this.maxThreads + " threads)"
       );
     }
   }

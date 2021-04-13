@@ -83,9 +83,7 @@ export class DashboardNoteEditComponent implements OnInit {
       for (let i in this.cardNote) {
         let fg = this.formGroup.controls[i];
         if (fg) {
-          let current_field = this.fieldConfig.find(
-            (control) => control.name === i
-          );
+          let current_field = this.fieldConfig.find((control) => control.name === i);
           fg.setValue(this.cardNote[i]);
         }
       }
@@ -141,18 +139,16 @@ export class DashboardNoteEditComponent implements OnInit {
       attribute_key = this.cardNote["id"];
     }
     this.loader.open();
-    this.busy = this.ws
-      .call("user.set_attribute", [1, attribute_key, value["content"]])
-      .subscribe(
-        (res) => {
-          this.loader.close();
-          this.success = true;
-          this.onSuccess(attribute_key);
-        },
-        (res) => {
-          this.loader.close();
-          new EntityUtils().handleError(this, res);
-        }
-      );
+    this.busy = this.ws.call("user.set_attribute", [1, attribute_key, value["content"]]).subscribe(
+      (res) => {
+        this.loader.close();
+        this.success = true;
+        this.onSuccess(attribute_key);
+      },
+      (res) => {
+        this.loader.close();
+        new EntityUtils().handleError(this, res);
+      }
+    );
   }
 }

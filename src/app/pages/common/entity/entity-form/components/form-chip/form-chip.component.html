@@ -9,8 +9,7 @@
 >
   <div class="label-container">
     <label class="label"
-      >{{ config.placeholder | translate }}
-      <span *ngIf="config.required">*</span></label
+      >{{ config.placeholder | translate }} <span *ngIf="config.required">*</span></label
     >
     <tooltip
       *ngIf="config.tooltip"
@@ -58,10 +57,7 @@
           (keyup)="updateSearchOptions($event.target.value)"
           [matAutocomplete]="autoComplete"
         />
-        <mat-autocomplete
-          #autoComplete="matAutocomplete"
-          (optionSelected)="selected($event)"
-        >
+        <mat-autocomplete #autoComplete="matAutocomplete" (optionSelected)="selected($event)">
           <mat-option
             *ngFor="let option of config.searchOptions"
             [value]="option.value"
@@ -77,10 +73,7 @@
   </mat-form-field>
 
   <div class="margin-for-error">
-    <form-errors
-      [control]="group.controls[config.name]"
-      [config]="config"
-    ></form-errors>
+    <form-errors [control]="group.controls[config.name]" [config]="config"></form-errors>
     <mat-error *ngIf="config['hasErrors']">
       <div [innerHTML]="config['errors']"></div>
     </mat-error>

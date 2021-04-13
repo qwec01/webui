@@ -11,13 +11,8 @@
           <div fxLayout="row wrap" fxLayoutAlign="baseline" class="TEST">
             <div fxFlex="40%" class="inline form-element">
               <div class="label-container">
-                <label class="label input-text">
-                  {{ "Name" | translate }}*
-                </label>
-                <tooltip
-                  class="volumeTooltip"
-                  [message]="name_tooltip"
-                ></tooltip>
+                <label class="label input-text"> {{ "Name" | translate }}* </label>
+                <tooltip class="volumeTooltip" [message]="name_tooltip"></tooltip>
               </div>
 
               <div class="full-width">
@@ -43,10 +38,7 @@
               >
                 {{ "Encryption" | translate }}
               </mat-checkbox>
-              <tooltip
-                class="volumeTooltip"
-                [message]="encryption_tooltip"
-              ></tooltip>
+              <tooltip class="volumeTooltip" [message]="encryption_tooltip"></tooltip>
             </div>
 
             <div
@@ -56,9 +48,7 @@
               style="padding-top: 4px"
             >
               <div class="label-container">
-                <label class="label input-text">
-                  {{ "Encryption Standard" | translate }}*
-                </label>
+                <label class="label input-text"> {{ "Encryption Standard" | translate }}* </label>
               </div>
 
               <mat-form-field class="full-width">
@@ -80,12 +70,7 @@
             </div>
           </div>
 
-          <div
-            fxFlex="100%"
-            *ngIf="poolError"
-            [style.color]="'red'"
-            [innerHTML]="poolError"
-          ></div>
+          <div fxFlex="100%" *ngIf="poolError" [style.color]="'red'" [innerHTML]="poolError"></div>
 
           <div fxFlex="100%" class="button-bar">
             <div>
@@ -112,10 +97,7 @@
               </button>
             </div>
             <div>
-              <tooltip
-                class="volumeTooltip"
-                [message]="suggested_layout_tooltip"
-              ></tooltip>
+              <tooltip class="volumeTooltip" [message]="suggested_layout_tooltip"></tooltip>
             </div>
             <div class="button-spacer"></div>
             <div>
@@ -145,18 +127,12 @@
               >
                 <div class="tr">
                   <div class="td icon">
-                    <mat-icon
-                      role="img"
-                      fontSet="mdi-set"
-                      fontIcon="mdi-database"
-                    ></mat-icon>
+                    <mat-icon role="img" fontSet="mdi-set" fontIcon="mdi-database"></mat-icon>
                   </div>
                   <div class="td">
                     <h3>{{ help.data_vdev_title | translate }}</h3>
                     <p>
-                      <span
-                        [innerHtml]="help.data_vdev_description | translate"
-                      ></span>
+                      <span [innerHtml]="help.data_vdev_description | translate"></span>
                     </p>
                   </div>
                 </div>
@@ -171,18 +147,12 @@
               >
                 <div class="tr">
                   <div class="td icon">
-                    <mat-icon
-                      role="img"
-                      fontSet="mdi-set"
-                      fontIcon="mdi-clock-fast"
-                    ></mat-icon>
+                    <mat-icon role="img" fontSet="mdi-set" fontIcon="mdi-clock-fast"></mat-icon>
                   </div>
                   <div class="td">
                     <h3>{{ help.cache_vdev_title | translate }}</h3>
                     <p>
-                      <span
-                        [innerHtml]="help.cache_vdev_description | translate"
-                      ></span>
+                      <span [innerHtml]="help.cache_vdev_description | translate"></span>
                     </p>
                   </div>
                 </div>
@@ -206,9 +176,7 @@
                   <div class="td">
                     <h3>{{ help.log_vdev_title | translate }}</h3>
                     <p>
-                      <span
-                        [innerHtml]="help.log_vdev_description | translate"
-                      ></span>
+                      <span [innerHtml]="help.log_vdev_description | translate"></span>
                     </p>
                   </div>
                 </div>
@@ -228,9 +196,7 @@
                   <div class="td">
                     <h3>{{ help.spare_vdev_title | translate }}</h3>
                     <p>
-                      <span
-                        [innerHtml]="help.spare_vdev_description | translate"
-                      ></span>
+                      <span [innerHtml]="help.spare_vdev_description | translate"></span>
                     </p>
                   </div>
                 </div>
@@ -250,9 +216,7 @@
                   <div class="td">
                     <h3>{{ help.special_vdev_title | translate }}</h3>
                     <p>
-                      <span
-                        [innerHtml]="help.special_vdev_description | translate"
-                      ></span>
+                      <span [innerHtml]="help.special_vdev_description | translate"></span>
                     </p>
                   </div>
                 </div>
@@ -272,9 +236,7 @@
                   <div class="td">
                     <h3>{{ help.dedup_vdev_title | translate }}</h3>
                     <p>
-                      <span
-                        [innerHtml]="help.dedup_vdev_description | translate"
-                      ></span>
+                      <span [innerHtml]="help.dedup_vdev_description | translate"></span>
                     </p>
                   </div>
                 </div>
@@ -325,19 +287,12 @@
                   >
                     <span
                       >{{ "Add Vdev" | translate }}
-                      <mat-icon class="menu-caret"
-                        >arrow_drop_down</mat-icon
-                      ></span
+                      <mat-icon class="menu-caret">arrow_drop_down</mat-icon></span
                     >
                   </button>
                 </div>
               </div>
-              <mat-menu
-                class=""
-                #menu="matMenu"
-                multiple
-                overlapTrigger="false"
-              >
+              <mat-menu class="" #menu="matMenu" multiple overlapTrigger="false">
                 <button
                   class="tbl vdev-option"
                   id="pool-manager__add-data-button"
@@ -347,18 +302,12 @@
                 >
                   <div class="tr">
                     <div class="td icon">
-                      <mat-icon
-                        role="img"
-                        fontSet="mdi-set"
-                        fontIcon="mdi-database"
-                      ></mat-icon>
+                      <mat-icon role="img" fontSet="mdi-set" fontIcon="mdi-database"></mat-icon>
                     </div>
                     <div class="td">
                       <h3>{{ help.data_vdev_title | translate }}</h3>
                       <p>
-                        <span
-                          [innerHtml]="help.data_vdev_description | translate"
-                        ></span>
+                        <span [innerHtml]="help.data_vdev_description | translate"></span>
                       </p>
                     </div>
                   </div>
@@ -373,18 +322,12 @@
                 >
                   <div class="tr">
                     <div class="td icon">
-                      <mat-icon
-                        role="img"
-                        fontSet="mdi-set"
-                        fontIcon="mdi-clock-fast"
-                      ></mat-icon>
+                      <mat-icon role="img" fontSet="mdi-set" fontIcon="mdi-clock-fast"></mat-icon>
                     </div>
                     <div class="td">
                       <h3>{{ help.cache_vdev_title | translate }}</h3>
                       <p>
-                        <span
-                          [innerHtml]="help.cache_vdev_description | translate"
-                        ></span>
+                        <span [innerHtml]="help.cache_vdev_description | translate"></span>
                       </p>
                     </div>
                   </div>
@@ -408,9 +351,7 @@
                     <div class="td">
                       <h3>{{ help.log_vdev_title | translate }}</h3>
                       <p>
-                        <span
-                          [innerHtml]="help.log_vdev_description | translate"
-                        ></span>
+                        <span [innerHtml]="help.log_vdev_description | translate"></span>
                       </p>
                     </div>
                   </div>
@@ -430,9 +371,7 @@
                     <div class="td">
                       <h3>{{ help.spare_vdev_title | translate }}</h3>
                       <p>
-                        <span
-                          [innerHtml]="help.spare_vdev_description | translate"
-                        ></span>
+                        <span [innerHtml]="help.spare_vdev_description | translate"></span>
                       </p>
                     </div>
                   </div>
@@ -452,11 +391,7 @@
                     <div class="td">
                       <h3>{{ help.special_vdev_title | translate }}</h3>
                       <p>
-                        <span
-                          [innerHtml]="
-                            help.special_vdev_description | translate
-                          "
-                        ></span>
+                        <span [innerHtml]="help.special_vdev_description | translate"></span>
                       </p>
                     </div>
                   </div>
@@ -476,9 +411,7 @@
                     <div class="td">
                       <h3>{{ help.dedup_vdev_title | translate }}</h3>
                       <p>
-                        <span
-                          [innerHtml]="help.dedup_vdev_description | translate"
-                        ></span>
+                        <span [innerHtml]="help.dedup_vdev_description | translate"></span>
                       </p>
                     </div>
                   </div>
@@ -508,15 +441,8 @@
             (select)="onSelect($event)"
           >
             <ngx-datatable-row-detail [rowHeight]="100" #myDetailRow>
-              <ng-template
-                let-row="row"
-                let-expanded="expanded"
-                ngx-datatable-row-detail-template
-              >
-                <div
-                  *ngFor="let detail of row.details"
-                  style="padding-left: 35px"
-                >
+              <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+                <div *ngFor="let detail of row.details" style="padding-left: 35px">
                   <strong>{{ detail.label | translate }}:</strong>
                   {{ detail.value }}
                 </div>
@@ -591,11 +517,7 @@
               [draggable]="false"
               [canAutoResize]="false"
             >
-              <ng-template
-                let-row="row"
-                let-expanded="expanded"
-                ngx-datatable-cell-template
-              >
+              <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
                 <a
                   href="javascript:void(0)"
                   [class.datatable-icon-right]="!expanded"
@@ -629,9 +551,7 @@
                 (keyup)="updateFilter($event)"
               />
             </mat-form-field>
-            <mat-error *ngIf="re_has_errors">{{
-              "Invalid regex filter" | translate
-            }}</mat-error>
+            <mat-error *ngIf="re_has_errors">{{ "Invalid regex filter" | translate }}</mat-error>
           </div>
         </div>
         <div class="pool">
@@ -726,12 +646,7 @@
         [style.color]="'red'"
         [innerHTML]="stripeVdevTypeError"
       ></div>
-      <div
-        *ngIf="error"
-        class="sizeMessage"
-        [style.color]="'red'"
-        [innerHTML]="error"
-      ></div>
+      <div *ngIf="error" class="sizeMessage" [style.color]="'red'" [innerHTML]="error"></div>
       <div class="forceCreateCheckbox" *ngIf="has_savable_errors">
         <mat-checkbox
           id="pool-manager__force-submit-checkbox"

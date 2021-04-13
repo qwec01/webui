@@ -109,10 +109,8 @@ export default {
     },
     ignore_builtin: {
       placeholder: T("Ignore Builtin"),
-      tooltip: T(
-        "Set to ignore mapping requests for the <i>BUILTIN</i> \
- domain."
-      ),
+      tooltip: T("Set to ignore mapping requests for the <i>BUILTIN</i> \
+ domain."),
     },
     ldap_basedn: {
       placeholder: T("Base DN"),
@@ -179,21 +177,15 @@ export default {
     },
     bind_path_user: {
       placeholder: T("User Bind Path"),
-      tooltip: T(
-        "The search base where user objects can be found in the LDAP server."
-      ),
+      tooltip: T("The search base where user objects can be found in the LDAP server."),
     },
     bind_path_group: {
       placeholder: T("Group Bind Path"),
-      tooltip: T(
-        "The search base where group objects can be found in the LDAP server."
-      ),
+      tooltip: T("The search base where group objects can be found in the LDAP server."),
     },
     user_cn: {
       placeholder: T("User CN"),
-      tooltip: T(
-        "Set to query the cn instead of uid attribute for the user name in LDAP."
-      ),
+      tooltip: T("Set to query the cn instead of uid attribute for the user name in LDAP."),
     },
     cn_realm: {
       placeholder: T("CN Realm"),
@@ -211,9 +203,7 @@ export default {
     },
     sssd_compat: {
       placeholder: T("SSSD Compat"),
-      tooltip: T(
-        "Generate idmap low range based on same algorithm that SSSD uses by default."
-      ),
+      tooltip: T("Generate idmap low range based on same algorithm that SSSD uses by default."),
     },
     enable_ad_dialog: {
       title: T("Enable Active Directory"),

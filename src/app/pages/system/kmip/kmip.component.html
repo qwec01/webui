@@ -9,12 +9,7 @@
     <h4>{{ "KMIP Key Status" | translate }}</h4>
     <div class="key-status" *ngIf="!showSpinner">
       <div *ngIf="sync_pending">
-        <mat-icon
-          class="key-pending"
-          role="img"
-          fontSet="mdi-set"
-          fontIcon="mdi-progress-clock"
-        >
+        <mat-icon class="key-pending" role="img" fontSet="mdi-set" fontIcon="mdi-progress-clock">
         </mat-icon>
         <span>{{ "Pending Sync" | translate }}</span>
       </div>

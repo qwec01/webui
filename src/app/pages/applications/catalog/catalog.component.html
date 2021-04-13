@@ -3,15 +3,10 @@
     <div
       class="content-wrapper"
       fxLayout="row"
-      (click)="
-        showSummaryDialog(item.name, item.catalog.id, item.catalog.train)
-      "
+      (click)="showSummaryDialog(item.name, item.catalog.id, item.catalog.train)"
     >
       <div class="logo-container">
-        <div
-          class="logo"
-          style="background-image: url('{{ item.icon_url }}');"
-        ></div>
+        <div class="logo" style="background-image: url('{{ item.icon_url }}');"></div>
         <div class="badge-area">
           <div class="partner-badge capitalized-text">
             {{ item.catalog.label }}

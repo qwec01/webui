@@ -19,11 +19,7 @@ export class IdmapListComponent {
   protected route_edit: string[] = ["directoryservice", "idmap", "edit"];
   protected route_delete: string[] = ["idmap", "delete"];
   protected entityList: any;
-  protected requiredDomains = [
-    "DS_TYPE_ACTIVEDIRECTORY",
-    "DS_TYPE_DEFAULT_DOMAIN",
-    "DS_TYPE_LDAP",
-  ];
+  protected requiredDomains = ["DS_TYPE_ACTIVEDIRECTORY", "DS_TYPE_DEFAULT_DOMAIN", "DS_TYPE_LDAP"];
 
   public columns: Array<any> = [
     { name: T("Name"), prop: "name", always_display: true, minWidth: 250 },
@@ -55,16 +51,11 @@ export class IdmapListComponent {
       if (item.certificate) {
         item.cert_name = item.certificate.cert_name;
       }
-      if (
-        item.name === "DS_TYPE_ACTIVEDIRECTORY" &&
-        item.idmap_backend === "AUTORID"
-      ) {
+      if (item.name === "DS_TYPE_ACTIVEDIRECTORY" && item.idmap_backend === "AUTORID") {
         let obj = data.find((o) => o.name === "DS_TYPE_DEFAULT_DOMAIN");
         obj.disableEdit = true;
       }
-      const index = helptext.idmap.name.options.findIndex(
-        (o) => o.value === item.name
-      );
+      const index = helptext.idmap.name.options.findIndex((o) => o.value === item.name);
       if (index >= 0) item.name = helptext.idmap.name.options[index].label;
     });
     return data;
@@ -92,10 +83,7 @@ export class IdmapListComponent {
                 )
                 .subscribe((res) => {
                   if (res) {
-                    this.router.navigate([
-                      "directoryservice",
-                      "activedirectory",
-                    ]);
+                    this.router.navigate(["directoryservice", "activedirectory"]);
                   }
                 });
             }
@@ -112,9 +100,7 @@ export class IdmapListComponent {
       label: T("Edit"),
       disabled: row.disableEdit,
       onClick: (row) => {
-        this.router.navigate(
-          new Array("").concat(["directoryservice", "idmap", "edit", row.id])
-        );
+        this.router.navigate(new Array("").concat(["directoryservice", "idmap", "edit", row.id]));
       },
     });
     if (!this.requiredDomains.includes(row.name)) {

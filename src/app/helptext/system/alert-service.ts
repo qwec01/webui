@@ -11,10 +11,8 @@ export default {
   enabled_tooltip: T("Unset to disable this service without deleting it."),
 
   type_placeholder: T("Type"),
-  type_tooltip: T(
-    "Choose an alert service to display options for that\
- service."
-  ),
+  type_tooltip: T("Choose an alert service to display options for that\
+ service."),
 
   level_placeholder: T("Level"),
   level_tooltip: T("Select the level of severity."),
@@ -35,19 +33,13 @@ export default {
   ),
 
   AWSSNS_aws_access_key_id_placeholder: T("Key ID"),
-  AWSSNS_aws_access_key_id_tooltip: T(
-    "Access Key ID for the linked AWS account."
-  ),
+  AWSSNS_aws_access_key_id_tooltip: T("Access Key ID for the linked AWS account."),
 
   AWSSNS_aws_secret_access_key_placeholder: T("Secret Key"),
-  AWSSNS_aws_secret_access_key_tooltip: T(
-    "Secret Access Key for the linked AWS account."
-  ),
+  AWSSNS_aws_secret_access_key_tooltip: T("Secret Access Key for the linked AWS account."),
 
   Mail_email_placeholder: T("Email Address"),
-  Mail_email_tooltip: T(
-    "Enter a valid email address to receive alerts from this system."
-  ),
+  Mail_email_tooltip: T("Enter a valid email address to receive alerts from this system."),
 
   HipChat_hfrom_placeholder: T("From"),
   HipChat_hfrom_tooltip: T("Enter a name to send alerts"),
@@ -81,9 +73,7 @@ export default {
   InfluxDB_database_tooltip: T("Name of the InfluxDB database."),
 
   InfluxDB_series_name_placeholder: T("Series"),
-  InfluxDB_series_name_tooltip: T(
-    "InfluxDB time series name for collected points."
-  ),
+  InfluxDB_series_name_tooltip: T("InfluxDB time series name for collected points."),
 
   Mattermost_url_placeholder: T("Webhook URL"),
   Mattermost_url_tooltip: T(

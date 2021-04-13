@@ -212,13 +212,11 @@ export class DiskFormComponent {
   }
 
   afterInit(entityEdit: any) {
-    entityEdit.formGroup.controls["hddstandby"].valueChanges.subscribe(
-      (value) => {
-        if (value === "ALWAYS ON") {
-          entityEdit.formGroup.controls["hddstandby_force"].setValue(false);
-        }
+    entityEdit.formGroup.controls["hddstandby"].valueChanges.subscribe((value) => {
+      if (value === "ALWAYS ON") {
+        entityEdit.formGroup.controls["hddstandby_force"].setValue(false);
       }
-    );
+    });
   }
 
   beforeSubmit(value) {
@@ -239,8 +237,7 @@ export class DiskFormComponent {
 
     value.critical = value.critical === "" ? null : value.critical;
     value.difference = value.difference === "" ? null : value.difference;
-    value.informational =
-      value.informational === "" ? null : value.informational;
+    value.informational = value.informational === "" ? null : value.informational;
   }
 
   inIt(pk) {

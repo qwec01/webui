@@ -366,9 +366,7 @@ export class DeviceAddComponent implements OnInit, OnDestroy {
       for (let key in res) {
         resolution.options.push({ label: key, value: res[key] });
       }
-      this.displayFormGroup.controls["resolution"].setValue(
-        res[Object.keys(res)[0]]
-      );
+      this.displayFormGroup.controls["resolution"].setValue(res[Object.keys(res)[0]]);
     });
 
     this.core
@@ -436,24 +434,12 @@ export class DeviceAddComponent implements OnInit, OnDestroy {
     ];
 
     this.formGroup = this.entityFormService.createFormGroup(this.fieldConfig);
-    this.cdromFormGroup = this.entityFormService.createFormGroup(
-      this.cdromFieldConfig
-    );
-    this.diskFormGroup = this.entityFormService.createFormGroup(
-      this.diskFieldConfig
-    );
-    this.nicFormGroup = this.entityFormService.createFormGroup(
-      this.nicFieldConfig
-    );
-    this.rawfileFormGroup = this.entityFormService.createFormGroup(
-      this.rawfileFieldConfig
-    );
-    this.pciFormGroup = this.entityFormService.createFormGroup(
-      this.pciFieldConfig
-    );
-    this.displayFormGroup = this.entityFormService.createFormGroup(
-      this.displayFieldConfig
-    );
+    this.cdromFormGroup = this.entityFormService.createFormGroup(this.cdromFieldConfig);
+    this.diskFormGroup = this.entityFormService.createFormGroup(this.diskFieldConfig);
+    this.nicFormGroup = this.entityFormService.createFormGroup(this.nicFieldConfig);
+    this.rawfileFormGroup = this.entityFormService.createFormGroup(this.rawfileFieldConfig);
+    this.pciFormGroup = this.entityFormService.createFormGroup(this.pciFieldConfig);
+    this.displayFormGroup = this.entityFormService.createFormGroup(this.displayFieldConfig);
 
     this.activeFormGroup = this.cdromFormGroup;
     this.diskFormGroup.controls["path"].valueChanges.subscribe((res) => {
@@ -512,72 +498,59 @@ export class DeviceAddComponent implements OnInit, OnDestroy {
   }
 
   async afterInit() {
-    this.ws
-      .call("pool.dataset.query", [[["type", "=", "VOLUME"]]])
-      .subscribe((zvols) => {
-        zvols.forEach((zvol) => {
-          _.find(this.diskFieldConfig, { name: "path" }).options.push({
-            label: zvol.id,
-            value: "/dev/zvol/" + zvol.id,
-          });
-        });
+    this.ws.call("pool.dataset.query", [[["type", "=", "VOLUME"]]]).subscribe((zvols) => {
+      zvols.forEach((zvol) => {
         _.find(this.diskFieldConfig, { name: "path" }).options.push({
-          label: "Add New",
-          value: "new",
-          sticky: "bottom",
+          label: zvol.id,
+          value: "/dev/zvol/" + zvol.id,
         });
       });
+      _.find(this.diskFieldConfig, { name: "path" }).options.push({
+        label: "Add New",
+        value: "new",
+        sticky: "bottom",
+      });
+    });
     // if bootloader == 'GRUB' or bootloader == "UEFI_CSM" or if VM has existing Display device, hide Display option.
-    await this.ws
-      .call("vm.query", [[["id", "=", parseInt(this.vmid, 10)]]])
-      .subscribe((vm) => {
-        const dtypeField = _.find(this.fieldConfig, { name: "dtype" });
-        const vmDisplayDevices = _.filter(vm[0].devices, { dtype: "DISPLAY" });
-        if (
-          vm[0].bootloader === "GRUB" ||
-          vm[0].bootloader === "UEFI_CSM" ||
-          vmDisplayDevices
-        ) {
-          if (vmDisplayDevices.length) {
-            if (vmDisplayDevices.length > 1) {
-              for (const i in dtypeField.options) {
-                if (dtypeField.options[i].label === "DISPLAY") {
-                  _.pull(dtypeField.options, dtypeField.options[i]);
-                }
+    await this.ws.call("vm.query", [[["id", "=", parseInt(this.vmid, 10)]]]).subscribe((vm) => {
+      const dtypeField = _.find(this.fieldConfig, { name: "dtype" });
+      const vmDisplayDevices = _.filter(vm[0].devices, { dtype: "DISPLAY" });
+      if (vm[0].bootloader === "GRUB" || vm[0].bootloader === "UEFI_CSM" || vmDisplayDevices) {
+        if (vmDisplayDevices.length) {
+          if (vmDisplayDevices.length > 1) {
+            for (const i in dtypeField.options) {
+              if (dtypeField.options[i].label === "DISPLAY") {
+                _.pull(dtypeField.options, dtypeField.options[i]);
               }
-            } else {
-              const typee = _.find(this.displayFieldConfig, { name: "type" });
-              _.pull(
-                typee.options,
-                _.find(typee.options, {
-                  value: vmDisplayDevices[0].attributes.type,
-                })
-              );
-              this.displayFormGroup.controls["type"].setValue(
-                typee.options[0].value
-              );
             }
+          } else {
+            const typee = _.find(this.displayFieldConfig, { name: "type" });
+            _.pull(
+              typee.options,
+              _.find(typee.options, {
+                value: vmDisplayDevices[0].attributes.type,
+              })
+            );
+            this.displayFormGroup.controls["type"].setValue(typee.options[0].value);
           }
         }
-        // if type == 'Container Provider' and rawfile boot device exists, hide rootpwd and boot fields.
-        if (
-          _.find(vm[0].devices, { dtype: "RAW" }) &&
-          vm[0].type === "Container Provider"
-        ) {
-          vm[0].devices.forEach((element) => {
-            if (element.dtype === "RAW") {
-              if (element.attributes.boot) {
-                this.rootpwd = _.find(this.rawfileFieldConfig, {
-                  name: "rootpwd",
-                });
-                this.rootpwd["isHidden"] = false;
-                this.boot = _.find(this.rawfileFieldConfig, { name: "boot" });
-                this.boot["isHidden"] = false;
-              }
+      }
+      // if type == 'Container Provider' and rawfile boot device exists, hide rootpwd and boot fields.
+      if (_.find(vm[0].devices, { dtype: "RAW" }) && vm[0].type === "Container Provider") {
+        vm[0].devices.forEach((element) => {
+          if (element.dtype === "RAW") {
+            if (element.attributes.boot) {
+              this.rootpwd = _.find(this.rawfileFieldConfig, {
+                name: "rootpwd",
+              });
+              this.rootpwd["isHidden"] = false;
+              this.boot = _.find(this.rawfileFieldConfig, { name: "boot" });
+              this.boot["isHidden"] = false;
             }
-          });
-        }
-      });
+          }
+        });
+      }
+    });
 
     this.custActions = [
       {

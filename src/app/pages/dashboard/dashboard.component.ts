@@ -1,10 +1,4 @@
-import {
-  Component,
-  OnInit,
-  AfterViewInit,
-  OnDestroy,
-  ElementRef,
-} from "@angular/core";
+import { Component, OnInit, AfterViewInit, OnDestroy, ElementRef } from "@angular/core";
 import { CoreService, CoreEvent } from "app/core/services/core.service";
 import { SystemProfiler } from "app/core/classes/system-profiler";
 
@@ -212,8 +206,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     let carousel = styler(c);
 
     const startX = viewport.get("x");
-    const endX =
-      this.activeMobileWidget.length > 0 ? evt.target.innerWidth * -1 : 0;
+    const endX = this.activeMobileWidget.length > 0 ? evt.target.innerWidth * -1 : 0;
 
     if (startX !== endX) {
       carousel.set("x", endX);
@@ -386,8 +379,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
       let avail = null;
       const used_pct =
-        evt.data[i].used.parsed /
-        (evt.data[i].used.parsed + evt.data[i].available.parsed);
+        evt.data[i].used.parsed / (evt.data[i].used.parsed + evt.data[i].available.parsed);
       avail = evt.data[i].available.parsed;
 
       let zvol = {
@@ -413,10 +405,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
         if (this.pools.length > 0) {
           this.ws
-            .call("pool.dataset.query", [
-              [],
-              { extra: { retrieve_children: false } },
-            ])
+            .call("pool.dataset.query", [[], { extra: { retrieve_children: false } }])
             .subscribe((res) => {
               this.setVolumeData({
                 name: "RootDatasets",
@@ -448,10 +437,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
   isDataReady() {
     const isReady =
-      this.statsDataEvents &&
-      typeof this.pools !== undefined &&
-      this.volumeData &&
-      this.nics
+      this.statsDataEvents && typeof this.pools !== undefined && this.volumeData && this.nics
         ? true
         : false;
 
@@ -502,9 +488,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   generateDefaultConfig() {
-    let conf: DashConfigItem[] = [
-      { name: "System Information", rendered: true, id: "0" },
-    ];
+    let conf: DashConfigItem[] = [{ name: "System Information", rendered: true, id: "0" }];
 
     if (this.isHA) {
       conf.push({
@@ -545,9 +529,7 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     const value = spl[1];
 
     const pool = this.pools.filter((pool) => pool[key] == value);
-    return this.volumeData && this.volumeData[pool[0].name]
-      ? this.volumeData[pool[0].name]
-      : "";
+    return this.volumeData && this.volumeData[pool[0].name] ? this.volumeData[pool[0].name] : "";
   }
 
   dataFromConfig(item: DashConfigItem) {
@@ -698,22 +680,18 @@ export class DashboardComponent implements OnInit, AfterViewInit, OnDestroy {
     });*/
 
     // Save
-    this.ws
-      .call("user.set_attribute", [1, "dashState", clone])
-      .subscribe((res) => {
-        if (!res) {
-          throw "Unable to save Dashboard State";
-        }
-      });
+    this.ws.call("user.set_attribute", [1, "dashState", clone]).subscribe((res) => {
+      if (!res) {
+        throw "Unable to save Dashboard State";
+      }
+    });
   }
 
   applyState(state) {
     // This reconciles current state with saved dashState
 
     if (!this.dashState) {
-      console.warn(
-        "Cannot apply saved state to dashboard. Property dashState does not exist!"
-      );
+      console.warn("Cannot apply saved state to dashboard. Property dashState does not exist!");
       return;
     }
 

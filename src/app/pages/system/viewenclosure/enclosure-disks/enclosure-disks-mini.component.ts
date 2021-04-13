@@ -39,10 +39,7 @@ import { tween, easing, styler, value, keyframes } from "popmotion";
 import { Subject } from "rxjs";
 import { ExampleData } from "./example-data";
 import { DomSanitizer } from "@angular/platform-browser";
-import {
-  EnclosureDisksComponent,
-  DiskFailure,
-} from "./enclosure-disks.component";
+import { EnclosureDisksComponent, DiskFailure } from "./enclosure-disks.component";
 import { Temperature } from "app/core/services/disk-temperature.service";
 import { DialogService } from "app/services/dialog.service";
 
@@ -97,8 +94,7 @@ export class EnclosureDisksMiniComponent extends EnclosureDisksComponent {
           name: "Error",
           data: {
             name: "Unsupported Hardware",
-            message:
-              "This chassis has an unknown or missing model value. METHOD: createEnclosure",
+            message: "This chassis has an unknown or missing model value. METHOD: createEnclosure",
           },
         });
         this.aborted = true;

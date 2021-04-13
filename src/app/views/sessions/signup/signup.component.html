@@ -1,9 +1,6 @@
 <div class="page-wrap height-100 mat-bg-primary">
   <div class="session-form-hold">
-    <mat-progress-bar
-      mode="determinate"
-      class="session-progress"
-    ></mat-progress-bar>
+    <mat-progress-bar mode="determinate" class="session-progress"></mat-progress-bar>
     <mat-card>
       <mat-card-content>
         <div class="text-center pb-1">
@@ -26,22 +23,14 @@
               />
             </mat-form-field>
             <small
-              *ngIf="
-                email['errors'] &&
-                (email.dirty || email.touched) &&
-                email['errors'].required
-              "
+              *ngIf="email['errors'] && (email.dirty || email.touched) && email['errors'].required"
               class="form-error-msg"
             >
               Email is required
             </small>
 
             <small
-              *ngIf="
-                email['errors'] &&
-                (email.dirty || email.touched) &&
-                email['errors'].pattern
-              "
+              *ngIf="email['errors'] && (email.dirty || email.touched) && email['errors'].pattern"
               class="form-error-msg"
             >
               Invaild email address
@@ -91,8 +80,7 @@
             </mat-form-field>
             <small
               *ngIf="
-                confirmPassword['errors'] &&
-                (confirmPassword.dirty || confirmPassword.touched)
+                confirmPassword['errors'] && (confirmPassword.dirty || confirmPassword.touched)
               "
               class="form-error-msg"
             >
@@ -126,9 +114,7 @@
             Sign up
           </button>
           <div class="text-center">
-            <a
-              [routerLink]="['/sessions/signin']"
-              class="mat-primary text-center full-width"
+            <a [routerLink]="['/sessions/signin']" class="mat-primary text-center full-width"
               >Sign in to existing account</a
             >
           </div>

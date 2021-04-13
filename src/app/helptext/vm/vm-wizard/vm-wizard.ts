@@ -6,9 +6,7 @@ import globalHelptext from "./../../../helptext/global-helptext";
 export default {
   no_pools_dialog: {
     title: T("No Pools"),
-    msg: T(
-      "Virtual Machines cannot be created or started without a pool to store them."
-    ),
+    msg: T("Virtual Machines cannot be created or started without a pool to store them."),
     action: T("Create Pool"),
   },
 
@@ -72,11 +70,7 @@ export default {
   vcpus_warning: T("The product of vCPUs, cores and threads must not exceed"),
   vcpus_warning_b: T("on this system."),
   vcpus_placeholder: T("Virtual CPUs"),
-  vcpus_validation: [
-    Validators.required,
-    Validators.min(1),
-    Validators.max(16),
-  ],
+  vcpus_validation: [Validators.required, Validators.min(1), Validators.max(16)],
   vcpus_tooltip: T(
     "Number of virtual CPUs to allocate to the virtual\
  machine. The VM operating system\
@@ -183,15 +177,11 @@ export default {
  override the randomized MAC address."
   ),
   NIC_mac_value: "00:a0:98:FF:FF:FF",
-  NIC_mac_validation: [
-    regexValidator(/\b([0-9A-F]{2}[:-]){5}([0-9A-F]){2}\b/i),
-  ],
+  NIC_mac_validation: [regexValidator(/\b([0-9A-F]{2}[:-]){5}([0-9A-F]){2}\b/i)],
 
   nic_attach_placeholder: T("Attach NIC"),
-  nic_attach_tooltip: T(
-    "Select the physical interface to associate with\
- the VM."
-  ),
+  nic_attach_tooltip: T("Select the physical interface to associate with\
+ the VM."),
   nic_attach_validation: [Validators.required],
 
   media_label: T("Installation Media"),
@@ -203,15 +193,11 @@ export default {
   upload_iso_checkbox_tooltip: T("Set to display image upload options."),
 
   upload_iso_path_placeholder: T("ISO save location"),
-  upload_iso_path_tooltip: T(
-    "Choose a location to store the installer image file."
-  ),
+  upload_iso_path_tooltip: T("Choose a location to store the installer image file."),
   upload_iso_path_validation: [],
 
   upload_iso_placeholder: T("ISO upload location"),
-  upload_iso_tooltip: T(
-    "Browse to the installer image file and click <b>Upload</b>."
-  ),
+  upload_iso_tooltip: T("Browse to the installer image file and click <b>Upload</b>."),
   upload_iso_validation: [],
 
   vm_settings_title: T("General VM Settings"),

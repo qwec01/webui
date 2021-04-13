@@ -376,12 +376,7 @@
         text-decoration: underline;
       }
     </style>
-    <link
-      href="css/materialdesignicons.min.css"
-      media="all"
-      rel="stylesheet"
-      type="text/css"
-    />
+    <link href="css/materialdesignicons.min.css" media="all" rel="stylesheet" type="text/css" />
   </head>
 
   <body>
@@ -407,13 +402,10 @@
     <pre><code>&lt;span class=&quot;mdi mdi-<span id="name">name</span>&quot;&gt;&lt;/span&gt;</code></pre>
 
     <blockquote class="note">
-      Click the icon, hex codepoint, or name below to copy the value to your
-      clipboard.
+      Click the icon, hex codepoint, or name below to copy the value to your clipboard.
     </blockquote>
 
-    <h2 class="newicons">
-      <span>New</span> Icons <small id="newIconsCount">-</small>
-    </h2>
+    <h2 class="newicons"><span>New</span> Icons <small id="newIconsCount">-</small></h2>
     <div class="icons" id="newIcons"></div>
 
     <h2 class="icons">All Icons <small id="iconsCount">-</small></h2>
@@ -563,8 +555,8 @@
     </div>
 
     <p class="note">
-      <strong>Note:</strong> We do not include the ability to use
-      <code>mdi-flip-*</code> and <code>mdi-rotate-*</code> at the same time.
+      <strong>Note:</strong> We do not include the ability to use <code>mdi-flip-*</code> and
+      <code>mdi-rotate-*</code> at the same time.
     </p>
 
     <h3>Spin</h3>
@@ -601,9 +593,7 @@
       </div>
       <div>
         <div class="dark">
-          <i
-            class="mdi mdi-36px mdi-light mdi-inactive mdi-account dark-demo"
-          ></i>
+          <i class="mdi mdi-36px mdi-light mdi-inactive mdi-account dark-demo"></i>
         </div>
         <div>
           <code>mdi-light mdi-inactive</code>
@@ -635,9 +625,7 @@
         <a href="http://MaterialDesignIcons.com/">MaterialDesignIcons.com</a>.
       </div>
       <div>
-        <a href="https://www.npmjs.com/org/mdi" target="_blank"
-          >NPM @mdi Organization</a
-        >
+        <a href="https://www.npmjs.com/org/mdi" target="_blank">NPM @mdi Organization</a>
       </div>
     </footer>
 
@@ -650,10 +638,7 @@
       }
       function copyText(text) {
         var copyFrom = document.createElement("textarea");
-        copyFrom.setAttribute(
-          "style",
-          "position:fixed;opacity:0;top:100px;left:100px;"
-        );
+        copyFrom.setAttribute("style", "position:fixed;opacity:0;top:100px;left:100px;");
         copyFrom.value = text;
         document.body.appendChild(copyFrom);
         copyFrom.select();
@@ -8289,9 +8274,7 @@
           }
           if (isDeprecated(icon)) {
             var deprecatedItem = getIconItem(icon, false, false);
-            document
-              .getElementById("deprecatedIcons")
-              .appendChild(deprecatedItem);
+            document.getElementById("deprecatedIcons").appendChild(deprecatedItem);
             deprecatedIconsCount++;
           }
           iconsCount++;
@@ -8304,9 +8287,7 @@
         }
         document.getElementById("iconsCount").innerText = iconsCount;
         document.getElementById("newIconsCount").innerText = newIconsCount;
-        document.getElementById(
-          "deprecatedIconsCount"
-        ).innerText = deprecatedIconsCount;
+        document.getElementById("deprecatedIconsCount").innerText = deprecatedIconsCount;
         document.getElementById("npm").addEventListener("click", function () {
           copyText("npm install @mdi/font");
         });

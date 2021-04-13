@@ -1,8 +1,4 @@
-<h1
-  mat-dialog-title
-  class="entity-dialog-form-title"
-  [innerHTML]="title | translate"
-></h1>
+<h1 mat-dialog-title class="entity-dialog-form-title" [innerHTML]="title | translate"></h1>
 
 <div
   mat-dialog-content
@@ -15,14 +11,8 @@
     <span [innerHTML]="conf.message | translate"></span>
   </div>
   <div *ngIf="conf['confirmInstructions']">
-    <div
-      [innerHTML]="instructions"
-      [ngStyle]="{ marginTop: '10px', marginBottom: '-1rem' }"
-    ></div>
-    <div
-      id="double-confirm-mask"
-      [ngStyle]="{ opacity: '.38', position: 'relative', top: '35px' }"
-    >
+    <div [innerHTML]="instructions" [ngStyle]="{ marginTop: '10px', marginBottom: '-1rem' }"></div>
+    <div id="double-confirm-mask" [ngStyle]="{ opacity: '.38', position: 'relative', top: '35px' }">
       <pre>{{ conf["name"] }}</pre>
     </div>
   </div>
@@ -43,9 +33,7 @@
       ix-auto-identifier="{{ config.placeholder }}_toggle-pw"
     >
       <mat-icon matTooltip="Hide" *ngIf="showPassword">visibility</mat-icon>
-      <mat-icon matTooltip="Show" *ngIf="!showPassword"
-        >visibility_off</mat-icon
-      >
+      <mat-icon matTooltip="Show" *ngIf="!showPassword">visibility_off</mat-icon>
     </button>
   </ng-container>
   <span [innerHTML]="conf.warning | translate"></span>

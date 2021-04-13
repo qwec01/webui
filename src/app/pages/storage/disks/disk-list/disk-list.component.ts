@@ -4,11 +4,7 @@ import { MatDialog } from "@angular/material/dialog";
 
 import { T } from "../../../../translate-marker";
 import * as _ from "lodash";
-import {
-  StorageService,
-  DialogService,
-  WebSocketService,
-} from "../../../../services";
+import { StorageService, DialogService, WebSocketService } from "../../../../services";
 import { LocaleService } from "app/services/locale.service";
 import { EntityJobComponent } from "../../../common/entity/entity-job/entity-job.component";
 import { DialogFormConfiguration } from "../../../common/entity/entity-dialog/dialog-form-configuration.interface";
@@ -100,17 +96,10 @@ export class DiskListComponent {
             ? (this.diskbucket.SMARToptions = this.SMARToptions[0])
             : (this.diskbucket.SMARToptions = undefined);
 
-          this.router.navigate(
-            new Array("/").concat(["storage", "disks", "bulk-edit"])
-          );
+          this.router.navigate(new Array("/").concat(["storage", "disks", "bulk-edit"]));
         } else {
           this.router.navigate(
-            new Array("/").concat([
-              "storage",
-              "disks",
-              "edit",
-              selected[0].identifier,
-            ])
+            new Array("/").concat(["storage", "disks", "edit", selected[0].identifier])
           );
         }
       },
@@ -156,9 +145,7 @@ export class DiskListComponent {
         name: "edit",
         label: T("Edit"),
         onClick: (row) => {
-          this.router.navigate(
-            new Array("/").concat(["storage", "disks", "edit", row.identifier])
-          );
+          this.router.navigate(new Array("/").concat(["storage", "disks", "edit", row.identifier]));
         },
       },
       {
@@ -181,12 +168,7 @@ export class DiskListComponent {
           label: T("S.M.A.R.T Test Results"),
           onClick: (row) => {
             this.router.navigate(
-              new Array("/").concat([
-                "storage",
-                "disks",
-                "smartresults",
-                row.name,
-              ])
+              new Array("/").concat(["storage", "disks", "smartresults", row.name])
             );
           },
         });
@@ -237,9 +219,7 @@ export class DiskListComponent {
             ],
             saveButtonText: helptext.diskWipeDialogForm.saveButtonText,
             afterInit: function (entityDialogForm) {
-              entityDialogForm.formGroup.controls["disk_name"].setValue(
-                row.name
-              );
+              entityDialogForm.formGroup.controls["disk_name"].setValue(row.name);
             },
             customSubmit: function (entityDialogForm) {
               self.dialogService
@@ -316,9 +296,7 @@ export class DiskListComponent {
 
   manualTest(selected) {
     const parent = this;
-    const disks = Array.isArray(selected)
-      ? selected.map((item) => item.name)
-      : [selected.name];
+    const disks = Array.isArray(selected) ? selected.map((item) => item.name) : [selected.name];
     const disksIdentifier = Array.isArray(selected)
       ? selected.map((item) => {
           return { identifier: item.identifier };
@@ -371,12 +349,7 @@ export class DiskListComponent {
             parent.generateManualTestSummary(res);
           },
           (err) => {
-            new EntityUtils().handleWSError(
-              parent,
-              err,
-              parent.dialogService,
-              conf.fieldConfig
-            );
+            new EntityUtils().handleWSError(parent, err, parent.dialogService, conf.fieldConfig);
           }
         );
       },
@@ -393,9 +366,7 @@ export class DiskListComponent {
     for (let i = 0; i < res.length; i++) {
       if (res[i].expected_result_time) {
         hasSuccessNote = true;
-        success_note += `<b>${
-          res[i].disk
-        }</b>: ${this.localeService.formatDateTime(
+        success_note += `<b>${res[i].disk}</b>: ${this.localeService.formatDateTime(
           res[i].expected_result_time.$date
         )}<br>`;
       } else if (res[i].error) {
@@ -405,8 +376,7 @@ export class DiskListComponent {
     }
     this.dialogService.Info(
       T("Manual Test Summary"),
-      (hasSuccessNote ? success_note + "<br>" : "") +
-        (hasFailNote ? fail_note : ""),
+      (hasSuccessNote ? success_note + "<br>" : "") + (hasFailNote ? fail_note : ""),
       "600px",
       "info",
       true

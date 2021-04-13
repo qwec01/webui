@@ -172,9 +172,7 @@ const generateMetaData = (res) => {
     }, // Keep last to avoid false positives like 'download'
   ];
 
-  const result = dictionary.find(
-    (item) => prefix.includes(item.source) || item.source == dataName
-  );
+  const result = dictionary.find((item) => prefix.includes(item.source) || item.source == dataName);
   return result;
 };
 
@@ -520,11 +518,7 @@ const getKnownChartConfigData = () => {
 
 /* ******************** TAKEN FROM LINECHART COMPONENT *********************** */
 
-function convertTo(
-  value,
-  conversion,
-  dataList /* <---- pass this in somehow!! */
-) {
+function convertTo(value, conversion, dataList /* <---- pass this in somehow!! */) {
   let result;
   switch (conversion) {
     case "bytesToGigabytes":
@@ -538,9 +532,7 @@ function convertTo(
       break;
     case "decikelvinsToCelsius":
       if (value !== null) {
-        result = dataList[0].source.startsWith("cputemp-")
-          ? value / 10 - 273.15
-          : value;
+        result = dataList[0].source.startsWith("cputemp-") ? value / 10 - 273.15 : value;
       } else {
         result = null;
       }
@@ -584,10 +576,7 @@ function analyze(columns, analytics) {
 
     let total =
       col.length > 0
-        ? col.reduce(
-            (accumulator, currentValue) =>
-              Number(accumulator) + Number(currentValue)
-          )
+        ? col.reduce((accumulator, currentValue) => Number(accumulator) + Number(currentValue))
         : "N/A";
     let avg = total !== "N/A" ? Number((total / col.length).toFixed(2)) : total;
     let myResult = {
@@ -624,21 +613,14 @@ function handleDataFunc(linechartData, dataList, legends) {
     if (!linechartData.meta) console.log(linechartData);
     if (linechartData.meta.conversion == "decikelvinsToCelsius") {
       dataSeriesArray.forEach((numberVal) => {
-        newArray.push(
-          convertTo(numberVal, linechartData.meta.conversion, dataList)
-        );
+        newArray.push(convertTo(numberVal, linechartData.meta.conversion, dataList));
       });
 
       dataSeriesArray = newArray;
-    } else if (
-      typeof divideBy !== "undefined" ||
-      linechartData.meta.conversion
-    ) {
+    } else if (typeof divideBy !== "undefined" || linechartData.meta.conversion) {
       dataSeriesArray.forEach((numberVal) => {
         if (linechartData.meta.conversion) {
-          newArray.push(
-            convertTo(numberVal, linechartData.meta.conversion, dataList)
-          );
+          newArray.push(convertTo(numberVal, linechartData.meta.conversion, dataList));
         } else if (numberVal > 0) {
           newArray.push((numberVal / divideBy).toFixed(2));
         } else {
@@ -733,9 +715,7 @@ const statsHandler = (data) => {
     linechartData.series.push([]);
   });
   res.data.forEach((item, i) => {
-    linechartData.labels.push(
-      new Date(res.meta.start * 1000 + i * res.meta.step * 1000)
-    );
+    linechartData.labels.push(new Date(res.meta.start * 1000 + i * res.meta.step * 1000));
     for (const x in dataList) {
       linechartData.series[x].push(item[x]);
     }

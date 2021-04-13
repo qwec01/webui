@@ -2,12 +2,7 @@ import { ApplicationRef, Component, Injector } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import * as _ from "lodash";
 
-import {
-  IdmapService,
-  IscsiService,
-  RestService,
-  WebSocketService,
-} from "../../../../services/";
+import { IdmapService, IscsiService, RestService, WebSocketService } from "../../../../services/";
 import { FieldConfig } from "../../../common/entity/entity-form/models/field-config.interface";
 import { FieldSet } from "app/pages/common/entity/entity-form/models/fieldset.interface";
 import helptext from "../../../../helptext/services/components/service-snmp";

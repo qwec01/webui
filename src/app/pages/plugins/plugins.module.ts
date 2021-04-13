@@ -27,11 +27,7 @@ import { AvailablePluginsComponent } from "./available-plugins/available-plugins
     FlexLayoutModule,
     CommonDirectivesModule,
   ],
-  declarations: [
-    PluginAddComponent,
-    PluginsComponent,
-    AvailablePluginsComponent,
-  ],
+  declarations: [PluginAddComponent, PluginsComponent, AvailablePluginsComponent],
   entryComponents: [AvailablePluginsComponent],
 })
 export class PluginsModule {}

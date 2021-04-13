@@ -42,11 +42,7 @@ export class DownloadKeyModalDialog {
       // new is ZoL encryption
       mimetype = "application/json";
       this.ws
-        .call("core.download", [
-          "pool.dataset.export_keys",
-          [this.volumeName],
-          this.fileName,
-        ])
+        .call("core.download", ["pool.dataset.export_keys", [this.volumeName], this.fileName])
         .subscribe(
           (res) => {
             this.loader.close();

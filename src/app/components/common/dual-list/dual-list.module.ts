@@ -8,13 +8,7 @@ import { DragDropModule } from "@angular/cdk/drag-drop";
 
 @NgModule({
   declarations: [DualListboxComponent],
-  imports: [
-    CommonModule,
-    MatButtonModule,
-    MatListModule,
-    MatIconModule,
-    DragDropModule,
-  ],
+  imports: [CommonModule, MatButtonModule, MatListModule, MatIconModule, DragDropModule],
   exports: [DualListboxComponent],
 })
 export class NgxDualListboxModule {}

@@ -4,10 +4,7 @@ import { ModalService } from "../../../services/modal.service";
 
 @Component({
   selector: "jw-modal",
-  template: `<div
-      class="{{ id }}"
-      [ngClass]="id !== 'slide-in-form' ? 'jw-modal' : ''"
-    >
+  template: `<div class="{{ id }}" [ngClass]="id !== 'slide-in-form' ? 'jw-modal' : ''">
       <div class="jw-modal-body">
         <div class="slidein-title-bar" fxLayout="row">
           <div fxFlex="90%" fxLayout="row" fxLayoutAlign="start center">
@@ -19,10 +16,7 @@ import { ModalService } from "../../../services/modal.service";
               fxLayout="row"
               fxLayoutAlign="start center"
             >
-              <div
-                *ngFor="let control of conf.titleBarControls"
-                style="margin: 0 8px;"
-              >
+              <div *ngFor="let control of conf.titleBarControls" style="margin: 0 8px;">
                 <toolbar-button
                   *ngIf="control.type == 'button'"
                   [config]="control"
@@ -52,9 +46,7 @@ import { ModalService } from "../../../services/modal.service";
               </div>
             </div>
           </div>
-          <mat-icon fxFlex="10%" id="close-icon" (click)="close()"
-            >cancel</mat-icon
-          >
+          <mat-icon fxFlex="10%" id="close-icon" (click)="close()">cancel</mat-icon>
         </div>
         <ng-container *ngIf="!wizard; else wizardBlock">
           <ng-container
@@ -71,10 +63,7 @@ import { ModalService } from "../../../services/modal.service";
           </ng-container>
           <ng-container
             *ngIf="
-              formOpen &&
-              conf &&
-              conf.formType &&
-              conf.formType == 'EntityFormEmbeddedComponent'
+              formOpen && conf && conf.formType && conf.formType == 'EntityFormEmbeddedComponent'
             "
           >
             <entity-form-embedded
@@ -87,18 +76,11 @@ import { ModalService } from "../../../services/modal.service";
           </ng-container>
         </ng-container>
         <ng-template #wizardBlock>
-          <entity-wizard
-            [conf]="conf"
-            *ngIf="formOpen"
-            class="slidein-entity-form"
-          ></entity-wizard>
+          <entity-wizard [conf]="conf" *ngIf="formOpen" class="slidein-entity-form"></entity-wizard>
         </ng-template>
       </div>
     </div>
-    <div
-      class="jw-modal-background {{ id }}-background"
-      (click)="close()"
-    ></div>`,
+    <div class="jw-modal-background {{ id }}-background" (click)="close()"></div>`,
   styleUrls: ["./modal.component.css"],
 })
 export class ModalComponent implements OnInit, OnDestroy {
@@ -171,10 +153,7 @@ export class ModalComponent implements OnInit, OnDestroy {
     document.body.classList.add("jw-modal-open");
 
     this.conf.columnsOnForm = 1;
-    if (
-      this.el.nativeElement.offsetWidth >= 960 &&
-      !this.conf.isOneColumnForm
-    ) {
+    if (this.el.nativeElement.offsetWidth >= 960 && !this.conf.isOneColumnForm) {
       this.conf.columnsOnForm = 2;
       this.slideIn.classList.add("wide");
     }

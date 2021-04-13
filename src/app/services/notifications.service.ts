@@ -1,9 +1,5 @@
 import { Injectable, OnInit, OnDestroy } from "@angular/core";
-import {
-  RestService,
-  WebSocketService,
-  SystemGeneralService,
-} from "app/services";
+import { RestService, WebSocketService, SystemGeneralService } from "app/services";
 import { Observable, Observer, Subject, Subscription } from "rxjs";
 import * as _ from "lodash";
 
@@ -41,38 +37,36 @@ export class NotificationsService {
   }
 
   initMe(): void {
-    this.getGenConfig = this.sysGeneralService.getGeneralConfig.subscribe(
-      (res) => {
-        if (res.timezone !== "WET" && res.timezone !== "posixrules") {
-          this.timeZone = res.timezone;
-        }
-
-        this.ws.call("alert.list", []).subscribe((res) => {
-          this.notifications = this.alertsArrivedHandler(res);
-          this.subject.next(this.notifications);
-        });
-
-        this.ws.sub("alert.list").subscribe((res) => {
-          // check for updates to alerts
-          const notification = this.alertsArrivedHandler([res])[0];
-          if (!_.find(this.notifications, { id: notification.id })) {
-            this.notifications.push(notification);
-          }
-          this.subject.next(this.notifications);
-        });
-
-        this.ws.subscribe("alert.list").subscribe((res) => {
-          // check for changed alerts
-          if (res && res.msg === "changed" && res.cleared) {
-            const index = _.findIndex(this.notifications, { id: res.id });
-            if (index !== -1) {
-              this.notifications.splice(index, 1);
-            }
-            this.subject.next(this.notifications);
-          }
-        });
+    this.getGenConfig = this.sysGeneralService.getGeneralConfig.subscribe((res) => {
+      if (res.timezone !== "WET" && res.timezone !== "posixrules") {
+        this.timeZone = res.timezone;
       }
-    );
+
+      this.ws.call("alert.list", []).subscribe((res) => {
+        this.notifications = this.alertsArrivedHandler(res);
+        this.subject.next(this.notifications);
+      });
+
+      this.ws.sub("alert.list").subscribe((res) => {
+        // check for updates to alerts
+        const notification = this.alertsArrivedHandler([res])[0];
+        if (!_.find(this.notifications, { id: notification.id })) {
+          this.notifications.push(notification);
+        }
+        this.subject.next(this.notifications);
+      });
+
+      this.ws.subscribe("alert.list").subscribe((res) => {
+        // check for changed alerts
+        if (res && res.msg === "changed" && res.cleared) {
+          const index = _.findIndex(this.notifications, { id: res.id });
+          if (index !== -1) {
+            this.notifications.splice(index, 1);
+          }
+          this.subject.next(this.notifications);
+        }
+      });
+    });
   }
 
   public getNotifications(): Observable<any> {
@@ -178,10 +172,7 @@ export class NotificationsService {
 
     if (one_shot) {
       icon = "notifications_active";
-      icon_tooltip =
-        "This is a ONE-SHOT " +
-        level +
-        " alert, it won't be dismissed automatically";
+      icon_tooltip = "This is a ONE-SHOT " + level + " alert, it won't be dismissed automatically";
     }
 
     const newNotification: NotificationAlert = {

@@ -1,11 +1,7 @@
 import { Component } from "@angular/core";
 
 import { EntityUtils } from "app/pages/common/entity/utils";
-import {
-  DialogService,
-  StorageService,
-  WebSocketService,
-} from "../../../../services";
+import { DialogService, StorageService, WebSocketService } from "../../../../services";
 import { T } from "../../../../translate-marker";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ModalService } from "app/services/modal.service";
@@ -59,9 +55,7 @@ export class SnapshotListComponent {
 
   dataHandler(table: any) {
     for (let i = 0; i < table.rows.length; i++) {
-      table.rows[
-        i
-      ].keepfor = `${table.rows[i].lifetime_value} ${table.rows[i].lifetime_unit}(S)`;
+      table.rows[i].keepfor = `${table.rows[i].lifetime_value} ${table.rows[i].lifetime_unit}(S)`;
     }
   }
 
@@ -77,19 +71,17 @@ export class SnapshotListComponent {
 
   onCheckboxChange(row) {
     row.enabled = !row.enabled;
-    this.ws
-      .call("pool.snapshottask.update", [row.id, { enabled: row.enabled }])
-      .subscribe(
-        (res) => {
-          if (!res) {
-            row.enabled = !row.enabled;
-          }
-        },
-        (err) => {
+    this.ws.call("pool.snapshottask.update", [row.id, { enabled: row.enabled }]).subscribe(
+      (res) => {
+        if (!res) {
           row.enabled = !row.enabled;
-          new EntityUtils().handleWSError(this, err, this.dialogService);
         }
-      );
+      },
+      (err) => {
+        row.enabled = !row.enabled;
+        new EntityUtils().handleWSError(this, err, this.dialogService);
+      }
+    );
   }
 
   doAdd(id?: number) {

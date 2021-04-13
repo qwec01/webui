@@ -211,9 +211,7 @@ export const helptext_sharing_smb = {
   ),
 
   dialog_edit_acl_title: T("Configure ACL"),
-  dialog_edit_acl_message: T(
-    "Configure permissions for this share's dataset now?"
-  ),
+  dialog_edit_acl_message: T("Configure permissions for this share's dataset now?"),
   dialog_edit_acl_button: T("Configure now"),
 
   restart_smb_dialog: {

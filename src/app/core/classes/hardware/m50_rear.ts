@@ -14,10 +14,8 @@ export class M50Rear extends Chassis {
     this.front.driveTraysOffsetY = -65;
     this.front.container = new PIXI.Container();
     this.front.chassisPath = "assets/images/hardware/m50/m50_rear_960w.png";
-    this.front.driveTrayBackgroundPath =
-      "assets/images/hardware/m50/m50_960w_drivetray_bg.png";
-    this.front.driveTrayHandlePath =
-      "assets/images/hardware/m50/m50_960w_drivetray_handle.png";
+    this.front.driveTrayBackgroundPath = "assets/images/hardware/m50/m50_960w_drivetray_bg.png";
+    this.front.driveTrayHandlePath = "assets/images/hardware/m50/m50_960w_drivetray_handle.png";
     this.front.totalDriveTrays = 4;
     this.front.columns = 1;
     this.front.rows = 4;

@@ -31,9 +31,7 @@ import * as ipRegex from "ip-regex";
   templateUrl: "./network.component.html",
   styleUrls: ["./network.component.css"],
 })
-export class NetworkComponent
-  extends ViewControllerComponent
-  implements OnInit, OnDestroy {
+export class NetworkComponent extends ViewControllerComponent implements OnInit, OnDestroy {
   protected summayCall = "network.general.summary";
   protected configCall = "network.configuration.config";
 
@@ -67,26 +65,15 @@ export class NetworkComponent
     parent: this,
     tableComponent: undefined,
     add: function () {
-      this.parent.modalService.open(
-        "slide-in-form",
-        this.parent.interfaceComponent
-      );
+      this.parent.modalService.open("slide-in-form", this.parent.interfaceComponent);
     },
     edit: function (row) {
-      this.parent.modalService.open(
-        "slide-in-form",
-        this.parent.interfaceComponent,
-        row.id
-      );
+      this.parent.modalService.open("slide-in-form", this.parent.interfaceComponent, row.id);
     },
     delete: function (row, table) {
-      const deleteAction =
-        row.type === "PHYSICAL" ? T("Reset configuration for ") : T("Delete ");
+      const deleteAction = row.type === "PHYSICAL" ? T("Reset configuration for ") : T("Delete ");
       if (this.parent.ha_enabled) {
-        this.parent.dialog.Info(
-          helptext.ha_enabled_edit_title,
-          helptext.ha_enabled_edit_msg
-        );
+        this.parent.dialog.Info(helptext.ha_enabled_edit_title, helptext.ha_enabled_edit_msg);
       } else {
         table.tableService.delete(table, row, deleteAction);
       }
@@ -139,17 +126,10 @@ export class NetworkComponent
     parent: this,
     tableComponent: undefined,
     add: function () {
-      this.parent.modalService.open(
-        "slide-in-form",
-        this.parent.staticRouteFormComponent
-      );
+      this.parent.modalService.open("slide-in-form", this.parent.staticRouteFormComponent);
     },
     edit: function (row) {
-      this.parent.modalService.open(
-        "slide-in-form",
-        this.parent.staticRouteFormComponent,
-        row.id
-      );
+      this.parent.modalService.open("slide-in-form", this.parent.staticRouteFormComponent, row.id);
     },
     deleteMsg: {
       title: "static route",
@@ -184,17 +164,9 @@ export class NetworkComponent
     isActionVisible: this.isOpenVpnActionVisible,
     edit: function (row) {
       if (row.service === "openvpn_client") {
-        this.parent.modalService.open(
-          "slide-in-form",
-          this.parent.openvpnClientComponent,
-          row.id
-        );
+        this.parent.modalService.open("slide-in-form", this.parent.openvpnClientComponent, row.id);
       } else if (row.service === "openvpn_server") {
-        this.parent.modalService.open(
-          "slide-in-form",
-          this.parent.openvpnServerComponent,
-          row.id
-        );
+        this.parent.modalService.open("slide-in-form", this.parent.openvpnServerComponent, row.id);
       }
     },
     afterGetData: function (res) {
@@ -203,14 +175,8 @@ export class NetworkComponent
       };
       if (state && state.configureOpenVPN) {
         state.configureOpenVPN === "client"
-          ? this.parent.modalService.open(
-              "slide-in-form",
-              this.parent.openvpnClientComponent
-            )
-          : this.parent.modalService.open(
-              "slide-in-form",
-              this.parent.openvpnServerComponent
-            );
+          ? this.parent.modalService.open("slide-in-form", this.parent.openvpnClientComponent)
+          : this.parent.modalService.open("slide-in-form", this.parent.openvpnServerComponent);
       }
     },
   };
@@ -225,11 +191,7 @@ export class NetworkComponent
     getActions: this.getIpmiActions.bind(this),
     isActionVisible: this.isIpmiActionVisible,
     edit: function (row) {
-      this.parent.modalService.open(
-        "slide-in-form",
-        this.parent.impiFormComponent,
-        row.id
-      );
+      this.parent.modalService.open("slide-in-form", this.parent.impiFormComponent, row.id);
     },
   };
 
@@ -265,25 +227,23 @@ export class NetworkComponent
     this.ws.call(this.configCall).subscribe((config_res) => {
       this.ws.call(this.summayCall).subscribe((res) => {
         this.networkSummary = res;
-        this.globalSettingsWidget.data.nameserver = res.nameservers.map(
-          (item) => {
-            switch (item) {
-              case config_res.nameserver1:
-                return { label: "Nameserver 1", value: item };
-              case config_res.nameserver2:
-                return { label: "Nameserver 2", value: item };
-              case config_res.nameserver3:
-                return { label: "Nameserver 3", value: item };
-              default:
-                return { label: "Nameserver (DHCP)", value: item };
-            }
+        this.globalSettingsWidget.data.nameserver = res.nameservers.map((item) => {
+          switch (item) {
+            case config_res.nameserver1:
+              return { label: "Nameserver 1", value: item };
+            case config_res.nameserver2:
+              return { label: "Nameserver 2", value: item };
+            case config_res.nameserver3:
+              return { label: "Nameserver 3", value: item };
+            default:
+              return { label: "Nameserver (DHCP)", value: item };
           }
+        });
+        this.globalSettingsWidget.data.ipv4 = res.default_routes.filter((item) =>
+          ipRegex.v4().test(item)
         );
-        this.globalSettingsWidget.data.ipv4 = res.default_routes.filter(
-          (item) => ipRegex.v4().test(item)
-        );
-        this.globalSettingsWidget.data.ipv6 = res.default_routes.filter(
-          (item) => ipRegex.v6().test(item)
+        this.globalSettingsWidget.data.ipv6 = res.default_routes.filter((item) =>
+          ipRegex.v6().test(item)
         );
 
         this.globalSettingsWidget.data.hostname = config_res.hostname;
@@ -301,9 +261,7 @@ export class NetworkComponent
         if (config_res.service_announcement.wsd) {
           tempArr.push(T("WS-DISCOVERY"));
         }
-        this.globalSettingsWidget.data.service_announcement = tempArr.join(
-          ", "
-        );
+        this.globalSettingsWidget.data.service_announcement = tempArr.join(", ");
         this.globalSettingsWidget.data.additional_domains =
           config_res.domains.length > 0 ? config_res.domains.join(", ") : "---";
         this.globalSettingsWidget.data.httpproxy =
@@ -354,13 +312,11 @@ export class NetworkComponent
     if (window.localStorage.getItem("product_type") === "ENTERPRISE") {
       this.ws.call("failover.licensed").subscribe((is_ha) => {
         if (is_ha) {
-          this.ws
-            .call("failover.disabled_reasons")
-            .subscribe((failover_disabled) => {
-              if (failover_disabled.length === 0) {
-                this.ha_enabled = true;
-              }
-            });
+          this.ws.call("failover.disabled_reasons").subscribe((failover_disabled) => {
+            if (failover_disabled.length === 0) {
+              this.ha_enabled = true;
+            }
+          });
         }
       });
     }
@@ -440,28 +396,24 @@ export class NetworkComponent
         .subscribe((confirm) => {
           if (confirm) {
             this.loader.open();
-            this.ws
-              .call("interface.commit", [
-                { checkin_timeout: this.checkin_timeout },
-              ])
-              .subscribe(
-                (res) => {
-                  this.core.emit({
-                    name: "NetworkInterfacesChanged",
-                    data: { commit: true, checkin: false },
-                    sender: this,
-                  });
-                  this.interfaceTableConf.tableComponent.getData();
-                  this.loader.close();
-                  // can't decide if this is worth keeping since the checkin happens intantaneously
-                  //this.dialog.Info(helptext.commit_changes_title, helptext.changes_saved_successfully, '300px', "info", true);
-                  this.checkWaitingCheckin();
-                },
-                (err) => {
-                  this.loader.close();
-                  new EntityUtils().handleWSError(this, err, this.dialog);
-                }
-              );
+            this.ws.call("interface.commit", [{ checkin_timeout: this.checkin_timeout }]).subscribe(
+              (res) => {
+                this.core.emit({
+                  name: "NetworkInterfacesChanged",
+                  data: { commit: true, checkin: false },
+                  sender: this,
+                });
+                this.interfaceTableConf.tableComponent.getData();
+                this.loader.close();
+                // can't decide if this is worth keeping since the checkin happens intantaneously
+                //this.dialog.Info(helptext.commit_changes_title, helptext.changes_saved_successfully, '300px', "info", true);
+                this.checkWaitingCheckin();
+              },
+              (err) => {
+                this.loader.close();
+                new EntityUtils().handleWSError(this, err, this.dialog);
+              }
+            );
           }
         });
     });
@@ -469,40 +421,31 @@ export class NetworkComponent
 
   checkInNow() {
     if (this.affectedServices.length > 0) {
-      this.translate
-        .get(helptext.services_restarted.message_a)
-        .subscribe((msgA) => {
-          this.translate
-            .get(helptext.services_restarted.message_b)
-            .subscribe((msgB) => {
-              this.dialog
-                .confirm(
-                  helptext.services_restarted.title,
-                  msgA +
-                    " " +
-                    this.uniqueIPs.join(", ") +
-                    " " +
-                    msgB +
-                    " " +
-                    this.affectedServices.join(", "),
-                  true,
-                  helptext.services_restarted.button
-                )
-                .subscribe((res) => {
-                  if (res) {
-                    this.finishCheckin();
-                  }
-                });
+      this.translate.get(helptext.services_restarted.message_a).subscribe((msgA) => {
+        this.translate.get(helptext.services_restarted.message_b).subscribe((msgB) => {
+          this.dialog
+            .confirm(
+              helptext.services_restarted.title,
+              msgA +
+                " " +
+                this.uniqueIPs.join(", ") +
+                " " +
+                msgB +
+                " " +
+                this.affectedServices.join(", "),
+              true,
+              helptext.services_restarted.button
+            )
+            .subscribe((res) => {
+              if (res) {
+                this.finishCheckin();
+              }
             });
         });
+      });
     } else {
       this.dialog
-        .confirm(
-          helptext.checkin_title,
-          helptext.checkin_message,
-          true,
-          helptext.checkin_button
-        )
+        .confirm(helptext.checkin_title, helptext.checkin_message, true, helptext.checkin_button)
         .subscribe((res) => {
           if (res) {
             this.finishCheckin();
@@ -521,10 +464,7 @@ export class NetworkComponent
           sender: this,
         });
         this.loader.close();
-        this.dialog.Info(
-          helptext.checkin_complete_title,
-          helptext.checkin_complete_message
-        );
+        this.dialog.Info(helptext.checkin_complete_title, helptext.checkin_complete_message);
         this.hasPendingChanges = false;
         this.checkinWaiting = false;
         clearInterval(this.checkin_interval);
@@ -599,9 +539,7 @@ export class NetworkComponent
       this.dialog,
       this.ws
     );
-    this.interfaceComponent.afterModalFormClosed = this.checkInterfacePendingChanges.bind(
-      this
-    );
+    this.interfaceComponent.afterModalFormClosed = this.checkInterfacePendingChanges.bind(this);
     this.staticRouteFormComponent = new StaticRouteFormComponent(
       this.aroute,
       this.ws,
@@ -610,9 +548,7 @@ export class NetworkComponent
     if (this.staticRoutesTableConf.tableComponent) {
       this.staticRouteFormComponent.afterModalFormClosed = this.staticRoutesTableConf.tableComponent.getData();
     }
-    this.openvpnClientComponent = new OpenvpnClientComponent(
-      this.servicesService
-    );
+    this.openvpnClientComponent = new OpenvpnClientComponent(this.servicesService);
     this.openvpnServerComponent = new OpenvpnServerComponent(
       this.servicesService,
       this.dialog,
@@ -620,11 +556,7 @@ export class NetworkComponent
       this.ws,
       this.storageService
     );
-    this.impiFormComponent = new IPMIFromComponent(
-      this.ws,
-      this.dialog,
-      this.loader
-    );
+    this.impiFormComponent = new IPMIFromComponent(this.ws, this.dialog, this.loader);
   }
 
   ngOnDestroy() {
@@ -659,10 +591,7 @@ export class NetworkComponent
   interfaceDataSourceHelper(res) {
     const rows = res;
     for (let i = 0; i < rows.length; i++) {
-      rows[i]["link_state"] = rows[i]["state"]["link_state"].replace(
-        "LINK_STATE_",
-        ""
-      );
+      rows[i]["link_state"] = rows[i]["state"]["link_state"].replace("LINK_STATE_", "");
       const addresses = new Set([]);
       for (let j = 0; j < rows[i]["aliases"].length; j++) {
         const alias = rows[i]["aliases"][j];
@@ -749,8 +678,7 @@ export class NetworkComponent
   openvpnDataSourceHelper(res) {
     return res.filter((item) => {
       if (item.service.includes("openvpn_")) {
-        item.service_label =
-          item.service.charAt(8).toUpperCase() + item.service.slice(9);
+        item.service_label = item.service.charAt(8).toUpperCase() + item.service.slice(9);
         return item;
       }
     });
@@ -770,10 +698,7 @@ export class NetworkComponent
               if (res) {
                 this.dialog.Info(
                   T("Service failed to stop"),
-                  T("OpenVPN ") +
-                    rowinner.service_label +
-                    " " +
-                    T("service failed to stop.")
+                  T("OpenVPN ") + rowinner.service_label + " " + T("service failed to stop.")
                 );
                 rowinner.state = "RUNNING";
                 rowinner["onChanging"] = false;
@@ -808,10 +733,7 @@ export class NetworkComponent
               } else {
                 this.dialog.Info(
                   T("Service failed to start"),
-                  T("OpenVPN ") +
-                    rowinner.service_label +
-                    " " +
-                    T("service failed to start.")
+                  T("OpenVPN ") + rowinner.service_label + " " + T("service failed to start.")
                 );
                 rowinner.state = "STOPPED";
                 rowinner["onChanging"] = false;

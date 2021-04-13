@@ -9,11 +9,7 @@
       <div class="card-title-text">
         <span>Settings</span>
         <span fxFlex></span>
-        <button
-          class="card-control"
-          mat-icon-button
-          (click)="isCustomizerOpen = false"
-        >
+        <button class="card-control" mat-icon-button (click)="isCustomizerOpen = false">
           <mat-icon>close</mat-icon>
         </button>
       </div>
@@ -26,10 +22,7 @@
           [(ngModel)]="selectedMenu"
           (change)="changeSidenav($event)"
         >
-          <mat-radio-button
-            *ngFor="let type of sidenavTypes"
-            [value]="type.value"
-          >
+          <mat-radio-button *ngFor="let type of sidenavTypes" [value]="type.value">
             {{ type.name }}
           </mat-radio-button>
         </mat-radio-group>

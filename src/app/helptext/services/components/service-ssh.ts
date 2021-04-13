@@ -44,9 +44,7 @@ export default {
   ),
 
   ssh_compression_placeholder: T("Compress Connections"),
-  ssh_compression_tooltip: T(
-    "Set to attempt to reduce latency over slow networks."
-  ),
+  ssh_compression_tooltip: T("Set to attempt to reduce latency over slow networks."),
 
   ssh_sftp_log_level_placeholder: T("SFTP Log Level"),
   ssh_sftp_log_level_tooltip: T(

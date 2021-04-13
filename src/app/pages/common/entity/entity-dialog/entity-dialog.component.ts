@@ -82,20 +82,14 @@ export class EntityDialogComponent implements OnInit {
     for (const i in this.fieldConfig) {
       const config = this.fieldConfig[i];
       if (config.relation.length > 0) {
-        this.fieldRelationService.setRelation(
-          config,
-          this.formGroup,
-          this.fieldConfig
-        );
+        this.fieldRelationService.setRelation(config, this.formGroup, this.fieldConfig);
       }
     }
 
     if (this.conf.afterInit) {
       this.conf.afterInit(this);
     }
-    this.instructions = T(
-      `Enter <strong>${this.conf["name"]}</strong> below to confirm.`
-    );
+    this.instructions = T(`Enter <strong>${this.conf["name"]}</strong> below to confirm.`);
   }
 
   submit() {

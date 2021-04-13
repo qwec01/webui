@@ -103,9 +103,7 @@ export class VDevLabelsSVG {
     let op = this.getParent();
     d3.select("#" + op.id + " svg").remove();
     d3.select("#" + op.id + " canvas.clickpad").remove();
-    this.app.renderer.plugins.interaction.setTargetElement(
-      this.app.renderer.view
-    );
+    this.app.renderer.plugins.interaction.setTargetElement(this.app.renderer.view);
   }
 
   d3Init() {
@@ -126,9 +124,7 @@ export class VDevLabelsSVG {
       .attr("height", op.offsetHeight)
       .attr("style", "position:absolute; top:0; left:0;");
 
-    this.app.renderer.plugins.interaction.setTargetElement(
-      op.querySelector("canvas.clickpad")
-    );
+    this.app.renderer.plugins.interaction.setTargetElement(op.querySelector("canvas.clickpad"));
   }
 
   getParent() {
@@ -136,10 +132,7 @@ export class VDevLabelsSVG {
   }
 
   createVdevLabelTile(x, y, w, h, className, diskName) {
-    let color =
-      diskName == this.selectedDisk.devname
-        ? this.selectedDiskColor
-        : this.color;
+    let color = diskName == this.selectedDisk.devname ? this.selectedDiskColor : this.color;
     let opacity = diskName == this.selectedDisk.devname ? 1 : 0.5;
     opacity = 1;
     this.svg
@@ -156,9 +149,7 @@ export class VDevLabelsSVG {
   }
 
   createVdevLabels(vdev) {
-    let disks = vdev.disks
-      ? Object.keys(vdev.disks)
-      : [this.selectedDisk.devname]; // NOTE: vdev.slots only has values for current enclosure
+    let disks = vdev.disks ? Object.keys(vdev.disks) : [this.selectedDisk.devname]; // NOTE: vdev.slots only has values for current enclosure
     let xOffset = this.chassis.container.x + this.chassis.container.width + 16;
     let freeSpace = this.app._options.width - xOffset;
     let gap = 3;
@@ -166,19 +157,11 @@ export class VDevLabelsSVG {
     disks.forEach((disk, index) => {
       let present = vdev.slots && vdev.slots[disk] ? true : false; // Is the disk in this enclosure?
       let slot =
-        typeof vdev.slots !== "undefined"
-          ? vdev.slots[disk]
-          : this.selectedDisk.enclosure.slot;
+        typeof vdev.slots !== "undefined" ? vdev.slots[disk] : this.selectedDisk.enclosure.slot;
 
-      if (
-        slot &&
-        slot >= this.chassis.slotRange.start &&
-        slot <= this.chassis.slotRange.end
-      ) {
+      if (slot && slot >= this.chassis.slotRange.start && slot <= this.chassis.slotRange.end) {
         // Create tile if the disk is in the current enclosure
-        const dt = this.chassis.driveTrayObjects.filter(
-          (dto) => parseInt(dto.id) == slot
-        )[0];
+        const dt = this.chassis.driveTrayObjects.filter((dto) => parseInt(dto.id) == slot)[0];
         let src = dt.container;
         let tray = src.getGlobalPosition();
 
@@ -212,10 +195,8 @@ export class VDevLabelsSVG {
     // 2 up
     let content = el.nativeElement.childNodes[0];
 
-    const xOffset =
-      el.nativeElement.offsetLeft + legend.offsetLeft + content.offsetLeft;
-    const yOffset =
-      el.nativeElement.offsetTop + legend.offsetTop + content.offsetTop;
+    const xOffset = el.nativeElement.offsetLeft + legend.offsetLeft + content.offsetLeft;
+    const yOffset = el.nativeElement.offsetTop + legend.offsetTop + content.offsetTop;
 
     return { x: xOffset, y: yOffset - 6 };
   }
@@ -247,10 +228,7 @@ export class VDevLabelsSVG {
   }
 
   createTrace(startX, startY, endX, endY, diskName) {
-    let color =
-      diskName == this.selectedDisk.devname
-        ? this.selectedDiskColor
-        : this.color;
+    let color = diskName == this.selectedDisk.devname ? this.selectedDiskColor : this.color;
     let opacity = diskName == this.selectedDisk.devname ? 1 : 0.25;
 
     let svgPath = "M" + startX + " " + startY + " L" + endX + " " + endY + " Z";

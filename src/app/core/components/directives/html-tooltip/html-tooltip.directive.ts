@@ -8,11 +8,7 @@ import {
   HostListener,
   ComponentRef,
 } from "@angular/core";
-import {
-  Overlay,
-  OverlayRef,
-  OverlayPositionBuilder,
-} from "@angular/cdk/overlay";
+import { Overlay, OverlayRef, OverlayPositionBuilder } from "@angular/cdk/overlay";
 import { ComponentPortal } from "@angular/cdk/portal";
 
 @Component({
@@ -42,9 +38,7 @@ export class HtmlTooltipDirective implements AfterViewInit {
     const tooltipPortal = new ComponentPortal(HtmlTooltipComponent);
 
     // Attach tooltip portal to overlay
-    const tooltipRef: ComponentRef<HtmlTooltipComponent> = this.overlayRef.attach(
-      tooltipPortal
-    );
+    const tooltipRef: ComponentRef<HtmlTooltipComponent> = this.overlayRef.attach(tooltipPortal);
 
     // Pass content to tooltip component instance
     tooltipRef.instance.html = this.htmlTooltip;

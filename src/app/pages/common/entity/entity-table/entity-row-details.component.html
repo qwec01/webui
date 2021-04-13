@@ -1,8 +1,4 @@
-<section
-  fxLayoutAlign="start center"
-  fxLayoutGap="48px"
-  [style.padding]="'10px 24px'"
->
+<section fxLayoutAlign="start center" fxLayoutGap="48px" [style.padding]="'10px 24px'">
   <div *ngFor="let detail of conf.details">
     <p>{{ detail.label | uppercase | translate }}</p>
     <h4 class="mb-0">{{ detail.value }}</h4>
@@ -12,11 +8,7 @@
 <ng-container *ngIf="conf.actions && conf.actions.length > 0">
   <mat-divider></mat-divider>
 
-  <section
-    fxLayoutAlign="start center"
-    fxLayoutGap="8px"
-    [style.padding]="'0 24px'"
-  >
+  <section fxLayoutAlign="start center" fxLayoutGap="8px" [style.padding]="'0 24px'">
     <ng-container *ngFor="let action of conf.actions">
       <button
         *ngIf="isActionVisible(action)"

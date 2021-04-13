@@ -190,8 +190,7 @@ export class VDevLabels extends LabelFactory {
         let startX = tray.x + tray.width;
         let startY = tray.y + tray.height / 2;
         let endX = el.offsetLeft + el.offsetParent.offsetLeft;
-        let endY =
-          el.offsetTop + el.offsetParent.offsetTop + el.offsetHeight / 2;
+        let endY = el.offsetTop + el.offsetParent.offsetTop + el.offsetHeight / 2;
         this.createTrace(startX, startY, endX, endY);
       }
     });

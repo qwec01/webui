@@ -1,11 +1,7 @@
 import { Component } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { helptext_system_bootenv } from "app/helptext/system/bootenv";
-import {
-  BootEnvService,
-  RestService,
-  WebSocketService,
-} from "../../../../services/";
+import { BootEnvService, RestService, WebSocketService } from "../../../../services/";
 import { FieldConfig } from "../../../common/entity/entity-form/models/field-config.interface";
 import { regexValidator } from "../../../common/entity/entity-form/validators/regex-validation";
 import { FieldSet } from "app/pages/common/entity/entity-form/models/fieldset.interface";
@@ -47,9 +43,7 @@ export class BootEnvironmentCloneComponent {
               name: "name",
               placeholder: helptext_system_bootenv.clone_name_placeholder,
               tooltip: helptext_system_bootenv.clone_name_tooltip,
-              validation: [
-                regexValidator(this.bootEnvService.bootenv_name_regex),
-              ],
+              validation: [regexValidator(this.bootEnvService.bootenv_name_regex)],
               required: true,
             },
             {

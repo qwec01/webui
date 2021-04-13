@@ -171,12 +171,10 @@ export class AdvancedSettingsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getDatasetData();
     this.getDataCardData();
-    this.refreshCardData = this.sysGeneralService.refreshSysGeneral$.subscribe(
-      () => {
-        this.getDatasetData();
-        this.getDataCardData();
-      }
-    );
+    this.refreshCardData = this.sysGeneralService.refreshSysGeneral$.subscribe(() => {
+      this.getDatasetData();
+      this.getDataCardData();
+    });
 
     this.refreshTable = this.modalService.refreshTable$.subscribe(() => {
       this.refreshTables();
@@ -234,30 +232,25 @@ export class AdvancedSettingsComponent implements OnInit, OnDestroy {
   }
 
   formatSyslogLevel(level: string): string {
-    return helptext_system_advanced.sysloglevel.options.find(
-      (option) => option.value === level
-    ).label;
+    return helptext_system_advanced.sysloglevel.options.find((option) => option.value === level)
+      .label;
   }
 
   getDatasetData() {
-    this.getDatasetConfig = this.ws
-      .call("systemdataset.config")
-      .subscribe((res) => {
-        if (res) {
-          this.syslog = res.syslog;
-          this.modalService.refreshTable();
-          this.updateSyslogOnTable();
-        }
-      });
+    this.getDatasetConfig = this.ws.call("systemdataset.config").subscribe((res) => {
+      if (res) {
+        this.syslog = res.syslog;
+        this.modalService.refreshTable();
+        this.updateSyslogOnTable();
+      }
+    });
   }
 
   updateSyslogOnTable() {
     this.dataCards.forEach((card) => {
       if (card.id === "syslog") {
         card.items.forEach((item) => {
-          if (
-            item.label === helptext_system_advanced.system_dataset_placeholder
-          ) {
+          if (item.label === helptext_system_advanced.system_dataset_placeholder) {
             item.value = this.syslog ? helptext.enabled : helptext.disabled;
           }
         });
@@ -266,94 +259,92 @@ export class AdvancedSettingsComponent implements OnInit, OnDestroy {
   }
 
   getDataCardData() {
-    this.getAdvancedConfig = this.ws
-      .call("system.advanced.config")
-      .subscribe((res) => {
-        this.configData = res;
-        this.dataCards = [
-          {
-            title: helptext_system_advanced.fieldset_console,
-            id: "console",
-            items: [
-              {
-                label: helptext_system_advanced.consolemenu_placeholder,
-                value: res.consolemenu ? helptext.enabled : helptext.disabled,
-              },
-              {
-                label: helptext_system_advanced.serialconsole_placeholder,
-                value: res.serialconsole ? helptext.enabled : helptext.disabled,
-              },
-              {
-                label: helptext_system_advanced.serialport_placeholder,
-                value: res.serialport ? res.serialport : "–",
-              },
-              {
-                label: helptext_system_advanced.serialspeed_placeholder,
-                value: res.serialspeed ? `${res.serialspeed} bps` : "–",
-              },
-              {
-                label: helptext_system_advanced.motd_placeholder,
-                value: res.motd ? res.motd.toString() : "–",
-              },
-            ],
-          },
-          {
-            title: helptext_system_advanced.fieldset_syslog,
-            id: "syslog",
-            items: [
-              {
-                label: helptext_system_advanced.fqdn_placeholder,
-                value: res.fqdn_syslog ? helptext.enabled : helptext.disabled,
-              },
-              {
-                label: helptext_system_advanced.sysloglevel.placeholder,
-                value: this.formatSyslogLevel(res.sysloglevel),
-              },
-              {
-                label: helptext_system_advanced.syslogserver.placeholder,
-                value: res.syslogserver ? res.syslogserver : "–",
-              },
-              {
-                label: helptext_system_advanced.syslog_transport.placeholder,
-                value: res.syslog_transport,
-              },
-              {
-                label: helptext_system_advanced.system_dataset_placeholder,
-                value: this.syslog ? helptext.enabled : helptext.disabled,
-              },
-            ],
-          },
-          {
-            title: helptext_system_advanced.fieldset_kernel,
-            id: "kernel",
-            items: [
-              {
-                label: helptext_system_advanced.autotune_placeholder,
-                value: res.autotune ? helptext.enabled : helptext.disabled,
-              },
-              {
-                label: helptext_system_advanced.debugkernel_placeholder,
-                value: res.debugkernel ? helptext.enabled : helptext.disabled,
-              },
-            ],
-          },
-          {
-            id: "cron",
-            title: helptext_system_advanced.fieldset_cron,
-            tableConf: this.cronTableConf,
-          },
-          {
-            id: "initshutdown",
-            title: helptext_system_advanced.fieldset_initshutdown,
-            tableConf: this.initShutdownTableConf,
-          },
-          {
-            id: "sysctl",
-            title: helptext_system_advanced.fieldset_sysctl,
-            tableConf: this.sysctlTableConf,
-          },
-        ];
-      });
+    this.getAdvancedConfig = this.ws.call("system.advanced.config").subscribe((res) => {
+      this.configData = res;
+      this.dataCards = [
+        {
+          title: helptext_system_advanced.fieldset_console,
+          id: "console",
+          items: [
+            {
+              label: helptext_system_advanced.consolemenu_placeholder,
+              value: res.consolemenu ? helptext.enabled : helptext.disabled,
+            },
+            {
+              label: helptext_system_advanced.serialconsole_placeholder,
+              value: res.serialconsole ? helptext.enabled : helptext.disabled,
+            },
+            {
+              label: helptext_system_advanced.serialport_placeholder,
+              value: res.serialport ? res.serialport : "–",
+            },
+            {
+              label: helptext_system_advanced.serialspeed_placeholder,
+              value: res.serialspeed ? `${res.serialspeed} bps` : "–",
+            },
+            {
+              label: helptext_system_advanced.motd_placeholder,
+              value: res.motd ? res.motd.toString() : "–",
+            },
+          ],
+        },
+        {
+          title: helptext_system_advanced.fieldset_syslog,
+          id: "syslog",
+          items: [
+            {
+              label: helptext_system_advanced.fqdn_placeholder,
+              value: res.fqdn_syslog ? helptext.enabled : helptext.disabled,
+            },
+            {
+              label: helptext_system_advanced.sysloglevel.placeholder,
+              value: this.formatSyslogLevel(res.sysloglevel),
+            },
+            {
+              label: helptext_system_advanced.syslogserver.placeholder,
+              value: res.syslogserver ? res.syslogserver : "–",
+            },
+            {
+              label: helptext_system_advanced.syslog_transport.placeholder,
+              value: res.syslog_transport,
+            },
+            {
+              label: helptext_system_advanced.system_dataset_placeholder,
+              value: this.syslog ? helptext.enabled : helptext.disabled,
+            },
+          ],
+        },
+        {
+          title: helptext_system_advanced.fieldset_kernel,
+          id: "kernel",
+          items: [
+            {
+              label: helptext_system_advanced.autotune_placeholder,
+              value: res.autotune ? helptext.enabled : helptext.disabled,
+            },
+            {
+              label: helptext_system_advanced.debugkernel_placeholder,
+              value: res.debugkernel ? helptext.enabled : helptext.disabled,
+            },
+          ],
+        },
+        {
+          id: "cron",
+          title: helptext_system_advanced.fieldset_cron,
+          tableConf: this.cronTableConf,
+        },
+        {
+          id: "initshutdown",
+          title: helptext_system_advanced.fieldset_initshutdown,
+          tableConf: this.initShutdownTableConf,
+        },
+        {
+          id: "sysctl",
+          title: helptext_system_advanced.fieldset_sysctl,
+          tableConf: this.sysctlTableConf,
+        },
+      ];
+    });
   }
 
   doAdd(name: string, id?: number) {
@@ -426,70 +417,58 @@ export class AdvancedSettingsComponent implements OnInit, OnDestroy {
         )
         .subscribe((ires) => {
           if (ires) {
-            this.ws
-              .call("core.download", ["system.debug", [], fileName])
-              .subscribe(
-                (res) => {
-                  const url = res[1];
-                  let failed = false;
-                  this.storage
-                    .streamDownloadFile(this.http, url, fileName, mimetype)
-                    .subscribe(
-                      (file) => {
-                        this.storage.downloadBlob(file, fileName);
-                      },
-                      (err) => {
-                        failed = true;
-                        if (this.dialogRef) {
-                          this.dialogRef.close();
-                        }
-                        if (err instanceof HttpErrorResponse) {
-                          this.dialog.errorReport(
-                            helptext_system_advanced.debug_download_failed_title,
-                            helptext_system_advanced.debug_download_failed_message,
-                            err.message
-                          );
-                        } else {
-                          this.dialog.errorReport(
-                            helptext_system_advanced.debug_download_failed_title,
-                            helptext_system_advanced.debug_download_failed_message,
-                            err
-                          );
-                        }
-                      }
-                    );
-                  if (!failed) {
-                    let reported = false; // prevent error from popping up multiple times
-                    this.dialogRef = this.mdDialog.open(EntityJobComponent, {
-                      data: { title: T("Saving Debug") },
-                      disableClose: true,
-                    });
-                    this.dialogRef.componentInstance.jobId = res[0];
-                    this.dialogRef.componentInstance.wsshow();
-                    this.dialogRef.componentInstance.success.subscribe(
-                      (save_debug) => {
-                        this.dialogRef.close();
-                      }
-                    );
-                    this.dialogRef.componentInstance.failure.subscribe(
-                      (save_debug_err) => {
-                        this.dialogRef.close();
-                        if (!reported) {
-                          new EntityUtils().handleWSError(
-                            this,
-                            save_debug_err,
-                            this.dialog
-                          );
-                          reported = true;
-                        }
-                      }
-                    );
+            this.ws.call("core.download", ["system.debug", [], fileName]).subscribe(
+              (res) => {
+                const url = res[1];
+                let failed = false;
+                this.storage.streamDownloadFile(this.http, url, fileName, mimetype).subscribe(
+                  (file) => {
+                    this.storage.downloadBlob(file, fileName);
+                  },
+                  (err) => {
+                    failed = true;
+                    if (this.dialogRef) {
+                      this.dialogRef.close();
+                    }
+                    if (err instanceof HttpErrorResponse) {
+                      this.dialog.errorReport(
+                        helptext_system_advanced.debug_download_failed_title,
+                        helptext_system_advanced.debug_download_failed_message,
+                        err.message
+                      );
+                    } else {
+                      this.dialog.errorReport(
+                        helptext_system_advanced.debug_download_failed_title,
+                        helptext_system_advanced.debug_download_failed_message,
+                        err
+                      );
+                    }
                   }
-                },
-                (err) => {
-                  new EntityUtils().handleWSError(this, err, this.dialog);
+                );
+                if (!failed) {
+                  let reported = false; // prevent error from popping up multiple times
+                  this.dialogRef = this.mdDialog.open(EntityJobComponent, {
+                    data: { title: T("Saving Debug") },
+                    disableClose: true,
+                  });
+                  this.dialogRef.componentInstance.jobId = res[0];
+                  this.dialogRef.componentInstance.wsshow();
+                  this.dialogRef.componentInstance.success.subscribe((save_debug) => {
+                    this.dialogRef.close();
+                  });
+                  this.dialogRef.componentInstance.failure.subscribe((save_debug_err) => {
+                    this.dialogRef.close();
+                    if (!reported) {
+                      new EntityUtils().handleWSError(this, save_debug_err, this.dialog);
+                      reported = true;
+                    }
+                  });
                 }
-              );
+              },
+              (err) => {
+                new EntityUtils().handleWSError(this, err, this.dialog);
+              }
+            );
           }
         });
     });
@@ -504,10 +483,7 @@ export class AdvancedSettingsComponent implements OnInit, OnDestroy {
   }
 
   refreshForms() {
-    this.tunableFormComponent = new TunableFormComponent(
-      this.ws,
-      this.sysGeneralService
-    );
+    this.tunableFormComponent = new TunableFormComponent(this.ws, this.sysGeneralService);
     this.consoleFormComponent = new ConsoleFormComponent(
       this.router,
       this.language,
@@ -541,13 +517,8 @@ export class AdvancedSettingsComponent implements OnInit, OnDestroy {
       this.sysGeneralService,
       this.modalService
     );
-    this.cronFormComponent = new CronFormComponent(
-      this.userService,
-      this.modalService
-    );
-    this.initShutdownFormComponent = new InitshutdownFormComponent(
-      this.modalService
-    );
+    this.cronFormComponent = new CronFormComponent(this.userService, this.modalService);
+    this.initShutdownFormComponent = new InitshutdownFormComponent(this.modalService);
   }
 
   cronDataSourceHelper(data) {

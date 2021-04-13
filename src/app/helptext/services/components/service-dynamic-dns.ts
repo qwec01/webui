@@ -14,10 +14,8 @@ export default {
   ),
 
   checkip_ssl_placeholder: T("CheckIP Server SSL"),
-  checkip_ssl_tooltip: T(
-    "Use HTTPS for the connection to the \
- <b>CheckIP Server</b>."
-  ),
+  checkip_ssl_tooltip: T("Use HTTPS for the connection to the \
+ <b>CheckIP Server</b>."),
 
   checkip_server_placeholder: T("CheckIP Server"),
   checkip_server_tooltip: T(
@@ -37,10 +35,8 @@ export default {
   ),
 
   ssl_placeholder: T("SSL"),
-  ssl_tooltip: T(
-    "Use HTTPS for the connection to the server that updates \
- the DNS record."
-  ),
+  ssl_tooltip: T("Use HTTPS for the connection to the server that updates \
+ the DNS record."),
 
   custom_ddns_server_placeholder: T("Custom Server"),
   custom_ddns_server_tooltip: T(
@@ -67,16 +63,12 @@ export default {
   ),
 
   username_placeholder: T("Username"),
-  username_tooltip: T(
-    "Username for logging in to the provider and \
- updating the record."
-  ),
+  username_tooltip: T("Username for logging in to the provider and \
+ updating the record."),
 
   password_placeholder: T("Password"),
-  password_tooltip: T(
-    "Password for logging in to the provider and \
- updating the record. "
-  ),
+  password_tooltip: T("Password for logging in to the provider and \
+ updating the record. "),
 
   password2_placeholder: T("Confirm Password"),
 

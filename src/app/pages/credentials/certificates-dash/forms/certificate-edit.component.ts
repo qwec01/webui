@@ -3,11 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { Subscription } from "rxjs";
 import { helptext_system_certificates } from "app/helptext/system/certificates";
 import * as _ from "lodash";
-import {
-  DialogService,
-  WebSocketService,
-  StorageService,
-} from "../../../../services/";
+import { DialogService, WebSocketService, StorageService } from "../../../../services/";
 import { ModalService } from "app/services/modal.service";
 import { AppLoaderService } from "../../../../services/app-loader/app-loader.service";
 import { MatDialog } from "@angular/material/dialog";
@@ -309,61 +305,49 @@ export class CertificateEditComponent {
       ? this.incomingData.csr_path
       : this.incomingData.certificate_path;
     const fileName = this.incomingData.name + ".crt"; // is this right for a csr?
-    this.ws
-      .call("core.download", ["filesystem.get", [path], fileName])
-      .subscribe(
-        (res) => {
-          const url = res[1];
-          const mimetype = "application/x-x509-user-cert";
-          this.storage
-            .streamDownloadFile(this.http, url, fileName, mimetype)
-            .subscribe(
-              (file) => {
-                this.storage.downloadBlob(file, fileName);
-              },
-              (err) => {
-                this.dialog.errorReport(
-                  helptext_system_certificates.list.download_error_dialog.title,
-                  helptext_system_certificates.list.download_error_dialog
-                    .cert_message,
-                  `${err.status} - ${err.statusText}`
-                );
-              }
+    this.ws.call("core.download", ["filesystem.get", [path], fileName]).subscribe(
+      (res) => {
+        const url = res[1];
+        const mimetype = "application/x-x509-user-cert";
+        this.storage.streamDownloadFile(this.http, url, fileName, mimetype).subscribe(
+          (file) => {
+            this.storage.downloadBlob(file, fileName);
+          },
+          (err) => {
+            this.dialog.errorReport(
+              helptext_system_certificates.list.download_error_dialog.title,
+              helptext_system_certificates.list.download_error_dialog.cert_message,
+              `${err.status} - ${err.statusText}`
             );
-        },
-        (err) => {
-          new EntityUtils().handleWSError(this, err, this.dialog);
-        }
-      );
+          }
+        );
+      },
+      (err) => {
+        new EntityUtils().handleWSError(this, err, this.dialog);
+      }
+    );
   }
 
   exportKey() {
     const fileName = this.incomingData.name + ".key";
     this.ws
-      .call("core.download", [
-        "filesystem.get",
-        [this.incomingData.privatekey_path],
-        fileName,
-      ])
+      .call("core.download", ["filesystem.get", [this.incomingData.privatekey_path], fileName])
       .subscribe(
         (res) => {
           const url = res[1];
           const mimetype = "text/plain";
-          this.storage
-            .streamDownloadFile(this.http, url, fileName, mimetype)
-            .subscribe(
-              (file) => {
-                this.storage.downloadBlob(file, fileName);
-              },
-              (err) => {
-                this.dialog.errorReport(
-                  helptext_system_certificates.list.download_error_dialog.title,
-                  helptext_system_certificates.list.download_error_dialog
-                    .key_message,
-                  `${err.status} - ${err.statusText}`
-                );
-              }
-            );
+          this.storage.streamDownloadFile(this.http, url, fileName, mimetype).subscribe(
+            (file) => {
+              this.storage.downloadBlob(file, fileName);
+            },
+            (err) => {
+              this.dialog.errorReport(
+                helptext_system_certificates.list.download_error_dialog.title,
+                helptext_system_certificates.list.download_error_dialog.key_message,
+                `${err.status} - ${err.statusText}`
+              );
+            }
+          );
         },
         (err) => {
           new EntityUtils().handleWSError(this, err, this.dialog);
@@ -450,10 +434,7 @@ export class CertificateEditComponent {
     this.dialogRef = this.matDialog.open(EntityJobComponent, {
       data: { title: "Updating Identifier" },
     });
-    this.dialogRef.componentInstance.setCall(this.editCall, [
-      this.rowNum,
-      { name: value["name"] },
-    ]);
+    this.dialogRef.componentInstance.setCall(this.editCall, [this.rowNum, { name: value["name"] }]);
     this.dialogRef.componentInstance.submit();
     this.dialogRef.componentInstance.success.subscribe(() => {
       this.matDialog.closeAll();

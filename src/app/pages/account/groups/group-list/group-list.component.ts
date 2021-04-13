@@ -77,11 +77,7 @@ export class GroupListComponent implements OnDestroy {
   }
 
   refreshGroupForm() {
-    this.addComponent = new GroupFormComponent(
-      this._router,
-      this.ws,
-      this.modalService
-    );
+    this.addComponent = new GroupFormComponent(this._router, this.ws, this.modalService);
   }
 
   resourceTransformIncomingRestData(data) {
@@ -106,11 +102,9 @@ export class GroupListComponent implements OnDestroy {
       }
     }, 2000);
 
-    this.refreshTableSubscription = this.modalService.refreshTable$.subscribe(
-      () => {
-        this.entityList.getData();
-      }
-    );
+    this.refreshTableSubscription = this.modalService.refreshTable$.subscribe(() => {
+      this.entityList.getData();
+    });
   }
   isActionVisible(actionId: string, row: any) {
     if (actionId === "delete" && row.builtin === true) {
@@ -128,12 +122,7 @@ export class GroupListComponent implements OnDestroy {
       icon: "people",
       onClick: (members) => {
         this._router.navigate(
-          new Array("/").concat([
-            "credentials",
-            "groups",
-            "members",
-            members.id,
-          ])
+          new Array("/").concat(["credentials", "groups", "members", members.id])
         );
       },
     });
@@ -144,11 +133,7 @@ export class GroupListComponent implements OnDestroy {
         label: helptext.group_list_actions_label_edit,
         name: helptext.group_list_actions_id_edit,
         onClick: (members_edit) => {
-          this.modalService.open(
-            "slide-in-form",
-            this.addComponent,
-            members_edit.id
-          );
+          this.modalService.open("slide-in-form", this.addComponent, members_edit.id);
         },
       });
       actions.push({
@@ -160,8 +145,7 @@ export class GroupListComponent implements OnDestroy {
           const self = this;
           const conf: DialogFormConfiguration = {
             title: helptext.deleteDialog.title,
-            message:
-              helptext.deleteDialog.message + `<i>${members_delete.group}</i>?`,
+            message: helptext.deleteDialog.message + `<i>${members_delete.group}</i>?`,
             fieldConfig: [],
             confirmCheckbox: true,
             saveButtonText: helptext.deleteDialog.saveButtonText,
@@ -180,25 +164,16 @@ export class GroupListComponent implements OnDestroy {
             customSubmit: function (entityDialog) {
               entityDialog.dialogRef.close(true);
               self.loader.open();
-              self.ws
-                .call(self.wsDelete, [
-                  members_delete.id,
-                  entityDialog.formValue,
-                ])
-                .subscribe(
-                  (res) => {
-                    self.entityList.getData();
-                    self.loader.close();
-                  },
-                  (err) => {
-                    new EntityUtils().handleWSError(
-                      self,
-                      err,
-                      self.dialogService
-                    );
-                    self.loader.close();
-                  }
-                );
+              self.ws.call(self.wsDelete, [members_delete.id, entityDialog.formValue]).subscribe(
+                (res) => {
+                  self.entityList.getData();
+                  self.loader.close();
+                },
+                (err) => {
+                  new EntityUtils().handleWSError(self, err, self.dialogService);
+                  self.loader.close();
+                }
+              );
             },
           };
           this.dialogService.dialogForm(conf);
@@ -219,25 +194,21 @@ export class GroupListComponent implements OnDestroy {
       ? (show = helptext.builtins_dialog.show)
       : (show = helptext.builtins_dialog.hide);
     this.translate.get(show).subscribe((action: string) => {
-      this.translate
-        .get(helptext.builtins_dialog.title)
-        .subscribe((title: string) => {
-          this.translate
-            .get(helptext.builtins_dialog.message)
-            .subscribe((message: string) => {
-              this.dialogService
-                .confirm(action + title, action + message, true, action)
-                .subscribe((res) => {
-                  if (res) {
-                    this.prefService.preferences.hide_builtin_groups = !this
-                      .prefService.preferences.hide_builtin_groups;
-                    this.prefService.savePreferences();
-                    this.entityList.needTableResize = false;
-                    this.entityList.getData();
-                  }
-                });
+      this.translate.get(helptext.builtins_dialog.title).subscribe((title: string) => {
+        this.translate.get(helptext.builtins_dialog.message).subscribe((message: string) => {
+          this.dialogService
+            .confirm(action + title, action + message, true, action)
+            .subscribe((res) => {
+              if (res) {
+                this.prefService.preferences.hide_builtin_groups = !this.prefService.preferences
+                  .hide_builtin_groups;
+                this.prefService.savePreferences();
+                this.entityList.needTableResize = false;
+                this.entityList.getData();
+              }
             });
         });
+      });
     });
   }
 

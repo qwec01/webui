@@ -410,12 +410,7 @@ export class CloudsyncFormComponent {
   protected data: any;
 
   protected providers: any;
-  protected taskSchemas = [
-    "encryption",
-    "fast_list",
-    "chunk_size",
-    "storage_class",
-  ];
+  protected taskSchemas = ["encryption", "fast_list", "chunk_size", "storage_class"];
   public custActions: Array<any> = [
     {
       id: "dry_run",
@@ -426,10 +421,7 @@ export class CloudsyncFormComponent {
           data: { title: helptext.job_dialog_title_dry_run },
           disableClose: true,
         });
-        dialogRef.componentInstance.setCall("cloudsync.sync_onetime", [
-          payload,
-          { dry_run: true },
-        ]);
+        dialogRef.componentInstance.setCall("cloudsync.sync_onetime", [payload, { dry_run: true }]);
         dialogRef.componentInstance.showAbortButton = true;
         dialogRef.componentInstance.showRealtimeLogs = true;
         dialogRef.componentInstance.hideProgressValue = true;
@@ -500,20 +492,13 @@ export class CloudsyncFormComponent {
     const children = [];
     let data = {
       credentials: credential,
-      encryption:
-        formValue["encryption"] === undefined ? false : formValue["encryption"],
+      encryption: formValue["encryption"] === undefined ? false : formValue["encryption"],
       filename_encryption:
-        formValue["filename_encryption"] === undefined
-          ? false
-          : formValue["filename_encryption"],
+        formValue["filename_encryption"] === undefined ? false : formValue["filename_encryption"],
       encryption_password:
-        formValue["encryption_password"] === undefined
-          ? ""
-          : formValue["encryption_password"],
+        formValue["encryption_password"] === undefined ? "" : formValue["encryption_password"],
       encryption_salt:
-        formValue["encryption_salt"] === undefined
-          ? ""
-          : formValue["encryption_salt"],
+        formValue["encryption_salt"] === undefined ? "" : formValue["encryption_salt"],
       attributes: {
         bucket: bucket,
         folder: node.data.name,
@@ -548,11 +533,7 @@ export class CloudsyncFormComponent {
           return children;
         },
         (err) => {
-          if (
-            err.extra &&
-            err.extra[0] &&
-            err.extra[0][0].split(".").pop() == "bucket"
-          ) {
+          if (err.extra && err.extra[0] && err.extra[0][0].split(".").pop() == "bucket") {
             this.setBucketError(err.extra[0][1]);
           } else {
             new EntityUtils().handleWSError(this, err, this.dialog);
@@ -562,12 +543,7 @@ export class CloudsyncFormComponent {
       );
   }
 
-  setDisabled(
-    name: string,
-    disable: boolean,
-    hide: boolean = false,
-    status?: string
-  ) {
+  setDisabled(name: string, disable: boolean, hide: boolean = false, status?: string) {
     if (hide) {
       disable = hide;
     }
@@ -592,16 +568,12 @@ export class CloudsyncFormComponent {
     for (const i in data) {
       const fg = entityForm.formGroup.controls[i];
       if (fg) {
-        const current_field = this.fieldConfig.find(
-          (control) => control.name === i
-        );
+        const current_field = this.fieldConfig.find((control) => control.name === i);
         fg.setValue(data[i]);
       }
     }
     if (data.credentials) {
-      entityForm.formGroup.controls["credentials"].setValue(
-        data.credentials.id
-      );
+      entityForm.formGroup.controls["credentials"].setValue(data.credentials.id);
     }
     if (data.attributes) {
       for (let attr in data.attributes) {
@@ -609,20 +581,13 @@ export class CloudsyncFormComponent {
         if (entityForm.formGroup.controls[attr]) {
           if (attr === "task_encryption") {
             entityForm.formGroup.controls[attr].setValue(
-              data.attributes["encryption"] == null
-                ? ""
-                : data.attributes["encryption"]
+              data.attributes["encryption"] == null ? "" : data.attributes["encryption"]
             );
           } else {
             entityForm.formGroup.controls[attr].setValue(data.attributes[attr]);
           }
-          if (
-            attr === "bucket" &&
-            entityForm.formGroup.controls["bucket_input"]
-          ) {
-            entityForm.formGroup.controls["bucket_input"].setValue(
-              data.attributes[attr]
-            );
+          if (attr === "bucket" && entityForm.formGroup.controls["bucket_input"]) {
+            entityForm.formGroup.controls["bucket_input"].setValue(data.attributes[attr]);
           }
         }
       }
@@ -634,9 +599,7 @@ export class CloudsyncFormComponent {
     this.formGroup = entityForm.formGroup;
     this.pk = entityForm.pk;
 
-    this.title = entityForm.isNew
-      ? helptext.cloudsync_task_add
-      : helptext.cloudsync_task_edit;
+    this.title = entityForm.isNew ? helptext.cloudsync_task_add : helptext.cloudsync_task_edit;
     this.credentials = this.fieldSets.config("credentials");
     this.bucket_field = this.fieldSets.config("bucket");
     this.bucket_input_field = this.fieldSets.config("bucket_input");
@@ -679,22 +642,14 @@ export class CloudsyncFormComponent {
               // update bucket fields name and tooltips based on provider
               if (item.provider == "AZUREBLOB" || item.provider == "HUBIC") {
                 this.bucket_field.placeholder = T("Container");
-                this.bucket_field.tooltip = T(
-                  "Select the pre-defined container to use."
-                );
+                this.bucket_field.tooltip = T("Select the pre-defined container to use.");
                 this.bucket_input_field.placeholder = T("Container");
-                this.bucket_input_field.tooltip = T(
-                  "Input the pre-defined container to use."
-                );
+                this.bucket_input_field.tooltip = T("Input the pre-defined container to use.");
               } else {
                 this.bucket_field.placeholder = T("Bucket");
-                this.bucket_field.tooltip = T(
-                  "Select the pre-defined S3 bucket to use."
-                );
+                this.bucket_field.tooltip = T("Select the pre-defined S3 bucket to use.");
                 this.bucket_input_field.placeholder = T("Bucket");
-                this.bucket_input_field.tooltip = T(
-                  "Input the pre-defined S3 bucket to use."
-                );
+                this.bucket_input_field.tooltip = T("Input the pre-defined S3 bucket to use.");
               }
 
               this.getBuckets(item).subscribe(
@@ -706,9 +661,7 @@ export class CloudsyncFormComponent {
                     entityForm.loaderOpen = false;
                     entityForm.keepLoaderOpen = false;
                   }
-                  this.bucket_field.options = [
-                    { label: "----------", value: "" },
-                  ];
+                  this.bucket_field.options = [{ label: "----------", value: "" }];
                   if (res) {
                     res.forEach((subitem) => {
                       this.bucket_field.options.push({
@@ -740,12 +693,7 @@ export class CloudsyncFormComponent {
                     .subscribe((dialog_res) => {
                       if (dialog_res) {
                         this.router.navigate(
-                          new Array("/").concat([
-                            "system",
-                            "cloudcredentials",
-                            "edit",
-                            item.id,
-                          ])
+                          new Array("/").concat(["system", "cloudcredentials", "edit", item.id])
                         );
                       }
                     });
@@ -761,8 +709,7 @@ export class CloudsyncFormComponent {
               : [];
 
             for (const i of this.taskSchemas) {
-              const tobeDisable =
-                _.findIndex(task_schema, { property: i }) > -1 ? false : true;
+              const tobeDisable = _.findIndex(task_schema, { property: i }) > -1 ? false : true;
               this.setDisabled(
                 i === "encryption" ? "task_encryption" : i,
                 tobeDisable,
@@ -773,11 +720,7 @@ export class CloudsyncFormComponent {
         });
       } else {
         for (const i of this.taskSchemas) {
-          this.setDisabled(
-            i === "encryption" ? "task_encryption" : i,
-            true,
-            true
-          );
+          this.setDisabled(i === "encryption" ? "task_encryption" : i, true, true);
         }
       }
     });
@@ -805,9 +748,7 @@ export class CloudsyncFormComponent {
     // When user interacts with direction dropdown, change transfer_mode to COPY
     this.formGroup
       .get("direction")
-      .valueChanges.pipe(
-        filter(() => this.formGroup.get("transfer_mode").value !== "COPY")
-      )
+      .valueChanges.pipe(filter(() => this.formGroup.get("transfer_mode").value !== "COPY"))
       .subscribe(() => {
         this.dialog.Info(
           helptext.resetTransferModeDialog.title,
@@ -882,18 +823,13 @@ export class CloudsyncFormComponent {
       }
       if (sublimitArr[1] && sublimitArr[1] != "off") {
         if (sublimitArr[1].endsWith("/s") || sublimitArr[1].endsWith("/S")) {
-          sublimitArr[1] = sublimitArr[1].substring(
-            0,
-            sublimitArr[1].length - 2
-          );
+          sublimitArr[1] = sublimitArr[1].substring(0, sublimitArr[1].length - 2);
         }
         if (this.cloudcredentialService.getByte(sublimitArr[1]) == -1) {
           _.find(this.fieldConfig, { name: "bwlimit" }).hasErrors = true;
           _.find(this.fieldConfig, { name: "bwlimit" }).errors =
             "Invalid bandwidth " + sublimitArr[1];
-          this.formGroup.controls["bwlimit"].setErrors(
-            "Invalid bandwidth " + sublimitArr[1]
-          );
+          this.formGroup.controls["bwlimit"].setErrors("Invalid bandwidth " + sublimitArr[1]);
         } else {
           sublimitArr[1] = this.cloudcredentialService.getByte(sublimitArr[1]);
         }
@@ -926,8 +862,7 @@ export class CloudsyncFormComponent {
     attributes["folder"] = value.folder;
     delete value.folder;
     if (value.task_encryption != undefined) {
-      attributes["encryption"] =
-        value.task_encryption === "" ? null : value.task_encryption;
+      attributes["encryption"] = value.task_encryption === "" ? null : value.task_encryption;
       delete value.task_encryption;
     }
     if (value["storage_class"] != undefined) {

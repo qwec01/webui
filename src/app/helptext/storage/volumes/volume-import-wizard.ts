@@ -19,9 +19,7 @@ export default {
   encrypted_option1_label: T("No, continue with import"),
   encrypted_option1_tooltip: T("Unencrypted pools can be imported directly."),
   encrypted_option2_label: T("Yes, decrypt the disks"),
-  encrypted_option2_tooltip: T(
-    "Encrypted pool disks must be decrypted prior to import."
-  ),
+  encrypted_option2_tooltip: T("Encrypted pool disks must be decrypted prior to import."),
 
   devices_placeholder: T("Disks"),
   devices_validation: [Validators.required],

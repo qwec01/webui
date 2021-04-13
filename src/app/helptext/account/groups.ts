@@ -38,9 +38,7 @@ export default {
   ),
 
   smb_placeholder: T("Samba Authentication"),
-  smb_tooltip: T(
-    "Set to allow group to be used for Samba permissions and authentication."
-  ),
+  smb_tooltip: T("Set to allow group to be used for Samba permissions and authentication."),
 
   title_add: T("Add Group"),
   title_edit: T("Edit Group"),

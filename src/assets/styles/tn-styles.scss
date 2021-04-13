@@ -69,20 +69,13 @@ $primary-dark: darken(map-get($md-primary, 500), 8%);
     color: #ffffff !important;
   }
   .mat-color-primary,
-  .sidebar-panel.mat-sidenav
-    .sidebar-list-item.open
-    .sub-menu
-    .mat-list-item.selected
-    a {
+  .sidebar-panel.mat-sidenav .sidebar-list-item.open .sub-menu .mat-list-item.selected a {
     color: map-get($md-primary, 500) !important;
   }
   .sidebar-panel .mat-nav-list .mat-list-item {
     color: rgba(0, 0, 0, 0.94);
   }
-  .sidebar-panel.mat-sidenav
-    .sidebar-list-item.open
-    > .mat-list-item-content
-    > .sub-menu {
+  .sidebar-panel.mat-sidenav .sidebar-list-item.open > .mat-list-item-content > .sub-menu {
     @include variable(border-left, --primary, $primary, !important);
   }
   .breadcrumb-bar {
@@ -95,57 +88,41 @@ $primary-dark: darken(map-get($md-primary, 500), 8%);
     @include variable(border-color, --primary, $primary);
   }
   /* up arrow  */
-  div.hopscotch-bubble
-    .hopscotch-bubble-arrow-container.up
-    .hopscotch-bubble-arrow-border {
+  div.hopscotch-bubble .hopscotch-bubble-arrow-container.up .hopscotch-bubble-arrow-border {
     border-bottom: 17px solid $primary-dark;
     @include variable(border-bottom-color, --primary, $primary);
   }
-  div.hopscotch-bubble
-    .hopscotch-bubble-arrow-container.up
-    .hopscotch-bubble-arrow {
+  div.hopscotch-bubble .hopscotch-bubble-arrow-container.up .hopscotch-bubble-arrow {
     border-bottom: 17px solid map-get($md-primary, 500);
     @include variable(border-bottom-color, --primary, $primary);
     top: -16px;
   }
   /* right arrow */
-  div.hopscotch-bubble
-    .hopscotch-bubble-arrow-container.right
-    .hopscotch-bubble-arrow-border {
+  div.hopscotch-bubble .hopscotch-bubble-arrow-container.right .hopscotch-bubble-arrow-border {
     border-left: 17px solid $primary-dark;
     @include variable(border-left-color, --primary, $primary);
   }
-  div.hopscotch-bubble
-    .hopscotch-bubble-arrow-container.right
-    .hopscotch-bubble-arrow {
+  div.hopscotch-bubble .hopscotch-bubble-arrow-container.right .hopscotch-bubble-arrow {
     border-left: 17px solid map-get($md-primary, 500);
     @include variable(border-left-color, --primary, $primary);
     left: -1px;
   }
   /* bottom arrow */
-  div.hopscotch-bubble
-    .hopscotch-bubble-arrow-container.down
-    .hopscotch-bubble-arrow-border {
+  div.hopscotch-bubble .hopscotch-bubble-arrow-container.down .hopscotch-bubble-arrow-border {
     border-top: 17px solid $primary-dark;
     @include variable(border-top-color, --primary, $primary);
   }
-  div.hopscotch-bubble
-    .hopscotch-bubble-arrow-container.down
-    .hopscotch-bubble-arrow {
+  div.hopscotch-bubble .hopscotch-bubble-arrow-container.down .hopscotch-bubble-arrow {
     border-top: 17px solid map-get($md-primary, 500);
     @include variable(border-top-color, --primary, $primary);
     top: -18px;
   }
   /* Left Arrow */
-  div.hopscotch-bubble
-    .hopscotch-bubble-arrow-container.left
-    .hopscotch-bubble-arrow-border {
+  div.hopscotch-bubble .hopscotch-bubble-arrow-container.left .hopscotch-bubble-arrow-border {
     border-right: 17px solid $primary-dark;
     @include variable(border-right-color, --primary, $primary);
   }
-  div.hopscotch-bubble
-    .hopscotch-bubble-arrow-container.left
-    .hopscotch-bubble-arrow {
+  div.hopscotch-bubble .hopscotch-bubble-arrow-container.left .hopscotch-bubble-arrow {
     left: 1px;
     border-right: 17px solid map-get($md-primary, 500);
     @include variable(border-right-color, --primary, $primary);
@@ -283,16 +260,10 @@ $primary-dark: darken(map-get($md-primary, 500), 8%);
   }
 
   .mat-select-panel .mat-option:hover,
-  .ngx-datatable
-    .datatable-body
-    .datatable-row-wrapper:nth-child(odd)
-    datatable-body-row {
+  .ngx-datatable .datatable-body .datatable-row-wrapper:nth-child(odd) datatable-body-row {
   }
 
-  .ngx-datatable
-    .datatable-body
-    .datatable-row-wrapper:nth-child(even)
-    datatable-body-row {
+  .ngx-datatable .datatable-body .datatable-row-wrapper:nth-child(even) datatable-body-row {
   }
 
   .mat-card .mat-divider {
@@ -471,25 +442,17 @@ $primary-dark: darken(map-get($md-primary, 500), 8%);
   }
 
   .mat-menu-content button.mat-menu-item:hover,
-  .mat-menu-content
-    button.mat-menu-item:hover
-    .mat-icon:not(.theme-picker-swatch-icon),
+  .mat-menu-content button.mat-menu-item:hover .mat-icon:not(.theme-picker-swatch-icon),
   .ngx-datatable .datatable-body .datatable-row-wrapper:hover,
   .ngx-datatable .datatable-body .datatable-row-wrapper:hover .plugin-buttons,
   .ngx-datatable .datatable-body .datatable-row-wrapper:hover .plugin-icons,
   .mat-menu-content button.mat-menu-item:focus,
-  .mat-menu-content
-    button.mat-menu-item:focus
-    .mat-icon:not(.theme-picker-swatch-icon),
+  .mat-menu-content button.mat-menu-item:focus .mat-icon:not(.theme-picker-swatch-icon),
   .ngx-datatable .datatable-body .datatable-row-wrapper:focus {
     background-color: var(--hover-bg);
   }
 
-  .ngx-datatable
-    .datatable-body
-    .datatable-row-wrapper:hover
-    .mat-checkbox
-    .mat-checkbox-frame {
+  .ngx-datatable .datatable-body .datatable-row-wrapper:hover .mat-checkbox .mat-checkbox-frame {
     @include variable(border-color, --primary-txt, $primary-txt, !important);
   }
 
@@ -924,12 +887,7 @@ $primary-dark: darken(map-get($md-primary, 500), 8%);
   .mat-button {
     text-transform: capitalize !important;
     font-weight: bold !important;
-    @include variable(
-      font-family,
-      --font-family-body,
-      $font-family-body,
-      !important
-    );
+    @include variable(font-family, --font-family-body, $font-family-body, !important);
     background: var(--btn-default-bg);
   }
 
@@ -1089,11 +1047,7 @@ $primary-dark: darken(map-get($md-primary, 500), 8%);
   }
 
   .toggle_pw {
-    @include variable(
-      display,
-      --toggle_pw_display_prop,
-      $toggle_pw_display_prop
-    );
+    @include variable(display, --toggle_pw_display_prop, $toggle_pw_display_prop);
   }
 
   datatable-selection > .empty-row {

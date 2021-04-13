@@ -32,15 +32,11 @@ export default {
   ini_when_validation: [Validators.required],
 
   ini_enabled_placeholder: T("Enabled"),
-  ini_enabled_tooltip: T(
-    "Enable this task. Unset to disable the task\
-     without deleting it."
-  ),
+  ini_enabled_tooltip: T("Enable this task. Unset to disable the task\
+     without deleting it."),
 
   ini_timeout_placeholder: T("Timeout"),
-  ini_timeout_tooltip: T(
-    "Automatically stop the script or command after the specified seconds."
-  ),
+  ini_timeout_tooltip: T("Automatically stop the script or command after the specified seconds."),
 
   ini_description_placeholder: T("Description"),
   ini_description_tooltip: T("Comments about this script."),

@@ -54,9 +54,7 @@ export const helptext_system_tunable = {
 
   enabled: {
     placeholder: T("Enabled"),
-    tooltip: T(
-      "Enable this tunable. Unset to disable this tunable\
- without deleting it."
-    ),
+    tooltip: T("Enable this tunable. Unset to disable this tunable\
+ without deleting it."),
   },
 };

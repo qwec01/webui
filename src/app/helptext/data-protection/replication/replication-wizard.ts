@@ -13,10 +13,8 @@ export default {
   ),
 
   target_dataset_from_placeholder: T("Destination Location"),
-  target_dataset_from_tooltip: T(
-    "Storage location for the replicated \
- snapshots."
-  ),
+  target_dataset_from_tooltip: T("Storage location for the replicated \
+ snapshots."),
 
   ssh_credentials_source_placeholder: T("SSH Connections"),
   ssh_credentials_source_tooltip: T(
@@ -99,9 +97,7 @@ export default {
     "Set to store the encryption key in the TrueNAS database."
   ),
 
-  encryption_key_location_placeholder: T(
-    "Encryption Key Location in Target System"
-  ),
+  encryption_key_location_placeholder: T("Encryption Key Location in Target System"),
   encryption_key_location_tooltip: T(
     "Choose a temporary location for the encryption key that will decrypt replicated data."
   ),
@@ -138,10 +134,8 @@ export default {
   step2_label: T("When"),
 
   schedule_method_placeholder: T("Replication Schedule"),
-  schedule_method_tooltip: T(
-    "Set this replication on a schedule or \
- just once."
-  ),
+  schedule_method_tooltip: T("Set this replication on a schedule or \
+ just once."),
 
   schedule_placeholder: T("Schedule"),
   schedule_tooltip: T(
@@ -177,9 +171,7 @@ export default {
   cipher_placeholder: T("Cipher"),
   cipher_tooltip: T(""),
 
-  clearSnapshotDialog_title: T(
-    "Destination Snapshots Are Not Related to Replicated Snapshots"
-  ),
+  clearSnapshotDialog_title: T("Destination Snapshots Are Not Related to Replicated Snapshots"),
   clearSnapshotDialog_content: T(
     "Destination dataset does not contain any snapshots that can be used as a basis for the incremental\
  changes in the snapshots being sent. The snapshots in the destination dataset will be deleted and the\

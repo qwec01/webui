@@ -10,11 +10,7 @@ import { ModalService } from "../../../services/modal.service";
 import { EntityJobComponent } from "../../common/entity/entity-job/entity-job.component";
 import { CommonUtils } from "app/core/classes/common-utils";
 import helptext from "../../../helptext/apps/apps";
-import {
-  EntityUtils,
-  FORM_KEY_SEPERATOR,
-  FORM_LABEL_KEY_PREFIX,
-} from "../../common/entity/utils";
+import { EntityUtils, FORM_KEY_SEPERATOR, FORM_LABEL_KEY_PREFIX } from "../../common/entity/utils";
 import { Wizard } from "../../common/entity/entity-form/models/wizard.interface";
 import { EntityWizardComponent } from "../../common/entity/entity-wizard/entity-wizard.component";
 import { Subject } from "rxjs";
@@ -114,20 +110,14 @@ export class ChartWizardComponent implements OnDestroy {
       });
 
       selectedVersion.schema.questions.forEach((question) => {
-        const wizard = this.wizardConfig.find(
-          (wizard) => wizard.label == question.group
-        );
+        const wizard = this.wizardConfig.find((wizard) => wizard.label == question.group);
         if (wizard) {
-          const wizardFieldConfigs = new EntityUtils().parseSchemaFieldConfig(
-            question
-          );
+          const wizardFieldConfigs = new EntityUtils().parseSchemaFieldConfig(question);
           wizard.fieldConfig = wizard.fieldConfig.concat(wizardFieldConfigs);
         }
       });
 
-      this.wizardConfig = this.wizardConfig.filter(
-        (wizard) => wizard.fieldConfig.length > 0
-      );
+      this.wizardConfig = this.wizardConfig.filter((wizard) => wizard.fieldConfig.length > 0);
       if (this.entityWizard) {
         this.entityWizard.resetFields();
         this.entityWizard.formArray

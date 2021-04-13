@@ -11,10 +11,8 @@ export class ES60 extends Chassis {
     this.front = new ChassisView();
     this.front.container = new PIXI.Container();
     this.front.chassisPath = "assets/images/hardware/es60/es60_960w.png";
-    this.front.driveTrayBackgroundPath =
-      "assets/images/hardware/es60/es60_960w_drivetray_bg.png";
-    this.front.driveTrayHandlePath =
-      "assets/images/hardware/es60/es60_960w_drivetray_handle.png";
+    this.front.driveTrayBackgroundPath = "assets/images/hardware/es60/es60_960w_drivetray_bg.png";
+    this.front.driveTrayHandlePath = "assets/images/hardware/es60/es60_960w_drivetray_handle.png";
     this.front.driveTraysOffsetY = -40;
     this.front.totalDriveTrays = 60;
     this.front.rows = 12;

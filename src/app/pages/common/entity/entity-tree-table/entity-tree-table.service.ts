@@ -34,12 +34,7 @@ export class EntityTreeTableService {
     return flatList;
   }
 
-  walk(
-    tree: TreeNode[],
-    rows: TreeNode[],
-    parentIndexPath?: number[],
-    expandAll?: boolean
-  ) {
+  walk(tree: TreeNode[], rows: TreeNode[], parentIndexPath?: number[], expandAll?: boolean) {
     tree.forEach((node, nodeIndex) => {
       if (expandAll && node.children.length > 0) {
         node.expanded = true;
@@ -50,16 +45,10 @@ export class EntityTreeTableService {
       }
 
       node.indexPath =
-        !parentIndexPath && rows.length == 0
-          ? [nodeIndex]
-          : parentIndexPath.concat([nodeIndex]);
+        !parentIndexPath && rows.length == 0 ? [nodeIndex] : parentIndexPath.concat([nodeIndex]);
       rows.push(node);
 
-      if (
-        node.children.length > 0 &&
-        node.expanded &&
-        node.expanded.toString() == "true"
-      ) {
+      if (node.children.length > 0 && node.expanded && node.expanded.toString() == "true") {
         // ...but the Children!
         this.walk(node.children, rows, node.indexPath, expandAll);
       }
@@ -88,12 +77,7 @@ export class EntityTreeTableService {
     return output;
   }
 
-  editNode(
-    prop: string,
-    value: any,
-    indexPath: number[],
-    treeData: TreeNode[]
-  ) {
+  editNode(prop: string, value: any, indexPath: number[], treeData: TreeNode[]) {
     const node = this.findNode(indexPath, treeData);
 
     // Clone the data
@@ -108,9 +92,7 @@ export class EntityTreeTableService {
     // Fully expanded and flattened list
     let args = preserveExpansion ? [data] : [data, true];
     // let flattened = this.buildTable(...args); // ES6 way not working?
-    let flattened = preserveExpansion
-      ? this.buildTable(data)
-      : this.buildTable(data, true);
+    let flattened = preserveExpansion ? this.buildTable(data) : this.buildTable(data, true);
 
     // Parents we need to keep
     let preserve = {};

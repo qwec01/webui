@@ -23,10 +23,7 @@ import { Subscription } from "rxjs/Subscription";
 import { CoreEvent } from "app/core/services/core.service";
 import { Subject } from "rxjs";
 import { Control } from "./models/control.interface";
-import {
-  ToolbarConfig,
-  ControlConfig,
-} from "./models/control-config.interface";
+import { ToolbarConfig, ControlConfig } from "./models/control-config.interface";
 import { GlobalAction } from "app/components/common/pagetitle/pagetitle.component";
 
 @Component({
@@ -34,17 +31,13 @@ import { GlobalAction } from "app/components/common/pagetitle/pagetitle.componen
   templateUrl: "./entity-toolbar.component.html",
   styleUrls: ["./entity-toolbar.component.css"],
 })
-export class EntityToolbarComponent
-  implements OnDestroy, OnChanges, GlobalAction {
+export class EntityToolbarComponent implements OnDestroy, OnChanges, GlobalAction {
   @Input("conf") conf: ToolbarConfig; //ControlConfig[];
   public config;
   public controller: Subject<Control>;
   public values: any;
 
-  constructor(
-    protected loader: AppLoaderService,
-    public translate: TranslateService
-  ) {
+  constructor(protected loader: AppLoaderService, public translate: TranslateService) {
     this.controller = new Subject();
   }
 

@@ -115,13 +115,11 @@ export class ReportsDashboardComponent
     this.scrollContainer = document.querySelector(".rightside-content-hold "); //this.container.nativeElement;
     this.scrollContainer.style.overflow = "hidden";
 
-    this.getAdvancedConfig = this.sysGeneralService.getAdvancedConfig.subscribe(
-      (res) => {
-        if (res) {
-          this.isFooterConsoleOpen = res.consolemsg;
-        }
+    this.getAdvancedConfig = this.sysGeneralService.getAdvancedConfig.subscribe((res) => {
+      if (res) {
+        this.isFooterConsoleOpen = res.consolemsg;
       }
-    );
+    });
 
     this.core
       .register({ observerClass: this, eventName: "UserPreferencesReady" })
@@ -160,13 +158,9 @@ export class ReportsDashboardComponent
             return report;
           });
 
-          this.diskReports = allReports.filter((report) =>
-            report.name.startsWith("disk")
-          );
+          this.diskReports = allReports.filter((report) => report.name.startsWith("disk"));
 
-          this.otherReports = allReports.filter(
-            (report) => !report.name.startsWith("disk")
-          );
+          this.otherReports = allReports.filter((report) => !report.name.startsWith("disk"));
 
           this.generateTabs();
 
@@ -327,9 +321,7 @@ export class ReportsDashboardComponent
             switch (name) {
               case "CPU":
                 condition =
-                  report.name == "cpu" ||
-                  report.name == "load" ||
-                  report.name == "cputemp";
+                  report.name == "cpu" || report.name == "load" || report.name == "cputemp";
                 break;
               case "Memory":
                 condition = report.name == "memory" || report.name == "swap";
@@ -344,8 +336,7 @@ export class ReportsDashboardComponent
                 condition = report.name == "df";
                 break;
               case "System":
-                condition =
-                  report.name == "processes" || report.name == "uptime";
+                condition = report.name == "processes" || report.name == "uptime";
                 break;
               case "Target":
                 condition = report.name == "ctl";
@@ -427,9 +418,7 @@ export class ReportsDashboardComponent
           customTriggerValue: T("Select Reports"),
           disabled: false,
           multiple: true,
-          options: this.diskMetrics
-            ? this.diskMetrics.map((v) => v)
-            : [T("Not Available")], // eg. [{label:'temperature',value:'temperature'},{label:'operations', value:'disk_ops'}],
+          options: this.diskMetrics ? this.diskMetrics.map((v) => v) : [T("Not Available")], // eg. [{label:'temperature',value:'temperature'},{label:'operations', value:'disk_ops'}],
         },
       ],
     };
@@ -583,10 +572,7 @@ export class ReportsDashboardComponent
   }
 
   generateFormComponent() {
-    this.formComponent = new ReportsConfigComponent(
-      this.ws,
-      this.dialogService
-    );
+    this.formComponent = new ReportsConfigComponent(this.ws, this.dialogService);
     this.formComponent.title = T("Reports Configuration");
     this.formComponent.isOneColumnForm = true;
     this.formComponent.afterModalFormSaved = () => {

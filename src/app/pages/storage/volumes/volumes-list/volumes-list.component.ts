@@ -2,13 +2,7 @@ import {
   EmptyConfig,
   EmptyType,
 } from "./../../../common/entity/entity-empty/entity-empty.component";
-import {
-  Component,
-  ElementRef,
-  OnInit,
-  AfterViewChecked,
-  OnDestroy,
-} from "@angular/core";
+import { Component, ElementRef, OnInit, AfterViewChecked, OnDestroy } from "@angular/core";
 import { Validators } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -31,11 +25,7 @@ import { TreeNode } from "primeng/api";
 import { map, switchMap } from "rxjs/operators";
 import helptext from "../../../../helptext/storage/volumes/volume-list";
 import dataset_helptext from "../../../../helptext/storage/volumes/datasets/dataset-form";
-import {
-  JobService,
-  RestService,
-  ValidationService,
-} from "../../../../services/";
+import { JobService, RestService, ValidationService } from "../../../../services/";
 import { StorageService } from "../../../../services/storage.service";
 import { T } from "../../../../translate-marker";
 import { DialogFormConfiguration } from "../../../common/entity/entity-dialog/dialog-form-configuration.interface";
@@ -193,27 +183,20 @@ export class VolumesListTableConfig implements InputTableConf {
               this.ws.call("pool.attachments", [row1.id]).subscribe(
                 (res) => {
                   if (res.length > 0) {
-                    self.translate
-                      .get(helptext.encryptMsgA)
-                      .subscribe((servicesMsgA) => {
-                        self.translate
-                          .get(helptext.encryptMsgB)
-                          .subscribe((servicesMsgB) => {
-                            p1 =
-                              servicesMsgA +
-                              `<i>${row1.name}</i>` +
-                              servicesMsgB;
-                            res.forEach((item) => {
-                              p1 += `<br><br>${item.type}:`;
-                              item.attachments.forEach((i) => {
-                                const tempArr = i.split(",");
-                                tempArr.forEach((i) => {
-                                  p1 += `<br> - ${i}`;
-                                });
-                              });
+                    self.translate.get(helptext.encryptMsgA).subscribe((servicesMsgA) => {
+                      self.translate.get(helptext.encryptMsgB).subscribe((servicesMsgB) => {
+                        p1 = servicesMsgA + `<i>${row1.name}</i>` + servicesMsgB;
+                        res.forEach((item) => {
+                          p1 += `<br><br>${item.type}:`;
+                          item.attachments.forEach((i) => {
+                            const tempArr = i.split(",");
+                            tempArr.forEach((i) => {
+                              p1 += `<br> - ${i}`;
                             });
                           });
+                        });
                       });
+                    });
                   }
                   this.ws.call("pool.processes", [row1.id]).subscribe(
                     (res) => {
@@ -230,40 +213,32 @@ export class VolumesListTableConfig implements InputTableConf {
                           }
                         });
                         if (running_processes.length > 0) {
-                          self.translate
-                            .get(helptext.runningMsg)
-                            .subscribe((servicesMsg) => {
-                              p1 += `<br><br>${servicesMsg} <b>${row1.name}</b>:`;
-                              running_processes.forEach((process) => {
-                                if (process.name) {
-                                  p1 += `<br> - ${process.name}`;
-                                }
-                              });
+                          self.translate.get(helptext.runningMsg).subscribe((servicesMsg) => {
+                            p1 += `<br><br>${servicesMsg} <b>${row1.name}</b>:`;
+                            running_processes.forEach((process) => {
+                              if (process.name) {
+                                p1 += `<br> - ${process.name}`;
+                              }
                             });
+                          });
                         }
                         if (running_unknown_processes.length > 0) {
-                          self.translate
-                            .get(helptext.unknownMsg)
-                            .subscribe((servicesMsg) => {
-                              self.translate
-                                .get(helptext.terminatedMsg)
-                                .subscribe((terminatedMsg) => {
-                                  p1 += `<br><br>${servicesMsg}`;
-                                  running_unknown_processes.forEach(
-                                    (process) => {
-                                      if (process.pid) {
-                                        p1 += `<br> - ${
-                                          process.pid
-                                        } - ${process.cmdline.substring(
-                                          0,
-                                          40
-                                        )}`;
-                                      }
-                                    }
-                                  );
-                                  p1 += `<br><br>${terminatedMsg}`;
+                          self.translate.get(helptext.unknownMsg).subscribe((servicesMsg) => {
+                            self.translate
+                              .get(helptext.terminatedMsg)
+                              .subscribe((terminatedMsg) => {
+                                p1 += `<br><br>${servicesMsg}`;
+                                running_unknown_processes.forEach((process) => {
+                                  if (process.pid) {
+                                    p1 += `<br> - ${process.pid} - ${process.cmdline.substring(
+                                      0,
+                                      40
+                                    )}`;
+                                  }
                                 });
-                            });
+                                p1 += `<br><br>${terminatedMsg}`;
+                              });
+                          });
                         }
                       }
                       this.loader.close();
@@ -271,21 +246,13 @@ export class VolumesListTableConfig implements InputTableConf {
                     },
                     (err) => {
                       this.loader.close();
-                      new EntityUtils().handleWSError(
-                        helptext.dataErrMsg,
-                        err,
-                        this.dialogService
-                      );
+                      new EntityUtils().handleWSError(helptext.dataErrMsg, err, this.dialogService);
                     }
                   );
                 },
                 (err) => {
                   this.loader.close();
-                  new EntityUtils().handleWSError(
-                    helptext.dataErrMsg,
-                    err,
-                    this.dialogService
-                  );
+                  new EntityUtils().handleWSError(helptext.dataErrMsg, err, this.dialogService);
                 }
               );
               function doLock() {
@@ -320,36 +287,26 @@ export class VolumesListTableConfig implements InputTableConf {
                   customSubmit: function (entityDialog) {
                     const value = entityDialog.formValue;
                     self.loader.open();
-                    self.ws
-                      .job("pool.lock", [row1.id, value.passphrase])
-                      .subscribe(
-                        (res) => {
-                          if (res.error) {
-                            self.loader.close();
-                            if (res.exc_info && res.exc_info.extra) {
-                              res.extra = res.exc_info.extra;
-                            }
-                            new EntityUtils().handleWSError(
-                              this,
-                              res,
-                              self.dialogService
-                            );
-                          }
-                          if (res.state === "SUCCESS") {
-                            self.loader.close();
-                            entityDialog.dialogRef.close(true);
-                            self.parentVolumesListComponent.repaintMe();
-                          }
-                        },
-                        (e) => {
+                    self.ws.job("pool.lock", [row1.id, value.passphrase]).subscribe(
+                      (res) => {
+                        if (res.error) {
                           self.loader.close();
-                          new EntityUtils().handleWSError(
-                            this,
-                            e,
-                            self.dialogService
-                          );
+                          if (res.exc_info && res.exc_info.extra) {
+                            res.extra = res.exc_info.extra;
+                          }
+                          new EntityUtils().handleWSError(this, res, self.dialogService);
                         }
-                      );
+                        if (res.state === "SUCCESS") {
+                          self.loader.close();
+                          entityDialog.dialogRef.close(true);
+                          self.parentVolumesListComponent.repaintMe();
+                        }
+                      },
+                      (e) => {
+                        self.loader.close();
+                        new EntityUtils().handleWSError(this, e, self.dialogService);
+                      }
+                    );
                   },
                 };
                 self.dialogService.dialogForm(conf);
@@ -370,9 +327,7 @@ export class VolumesListTableConfig implements InputTableConf {
         actions.push({
           label: T("Encryption Key/Passphrase"),
           onClick: (row1) => {
-            this._router.navigate(
-              new Array("/").concat(["storage", "changekey", row1.id])
-            );
+            this._router.navigate(new Array("/").concat(["storage", "changekey", row1.id]));
           },
         });
       }
@@ -384,9 +339,7 @@ export class VolumesListTableConfig implements InputTableConf {
       actions.push({
         label: T("Encryption Key"),
         onClick: (row1) => {
-          this._router.navigate(
-            new Array("/").concat(["storage", "createkey", row1.id])
-          );
+          this._router.navigate(new Array("/").concat(["storage", "createkey", row1.id]));
         },
       });
     }
@@ -395,18 +348,14 @@ export class VolumesListTableConfig implements InputTableConf {
       actions.push({
         label: T("Manage Recovery Key"),
         onClick: (row1) => {
-          this._router.navigate(
-            new Array("/").concat(["storage", "addkey", row1.id])
-          );
+          this._router.navigate(new Array("/").concat(["storage", "addkey", row1.id]));
         },
       });
 
       actions.push({
         label: T("Reset Keys"),
         onClick: (row1) => {
-          this._router.navigate(
-            new Array("/").concat(["storage", "rekey", row1.id])
-          );
+          this._router.navigate(new Array("/").concat(["storage", "rekey", row1.id]));
         },
       });
     }
@@ -420,41 +369,31 @@ export class VolumesListTableConfig implements InputTableConf {
         onClick: (row1) => {
           const message = helptext.export_keys_message + row1.name;
           const fileName = "dataset_" + row1.name + "_keys.json";
-          this.dialogService
-            .passwordConfirm(message)
-            .subscribe((export_keys) => {
-              if (export_keys) {
-                this.loader.open();
-                const mimetype = "application/json";
-                this.ws
-                  .call("core.download", [
-                    "pool.dataset.export_keys",
-                    [row1.name],
-                    fileName,
-                  ])
-                  .subscribe(
-                    (res) => {
-                      this.loader.close();
-                      const url = res[1];
-                      this.storageService
-                        .streamDownloadFile(this.http, url, fileName, mimetype)
-                        .subscribe((file) => {
-                          if (res !== null && res !== "") {
-                            this.storageService.downloadBlob(file, fileName);
-                          }
-                        });
-                    },
-                    (e) => {
-                      this.loader.close();
-                      new EntityUtils().handleWSError(
-                        this,
-                        e,
-                        this.dialogService
-                      );
-                    }
-                  );
-              }
-            });
+          this.dialogService.passwordConfirm(message).subscribe((export_keys) => {
+            if (export_keys) {
+              this.loader.open();
+              const mimetype = "application/json";
+              this.ws
+                .call("core.download", ["pool.dataset.export_keys", [row1.name], fileName])
+                .subscribe(
+                  (res) => {
+                    this.loader.close();
+                    const url = res[1];
+                    this.storageService
+                      .streamDownloadFile(this.http, url, fileName, mimetype)
+                      .subscribe((file) => {
+                        if (res !== null && res !== "") {
+                          this.storageService.downloadBlob(file, fileName);
+                        }
+                      });
+                  },
+                  (e) => {
+                    this.loader.close();
+                    new EntityUtils().handleWSError(this, e, this.dialogService);
+                  }
+                );
+            }
+          });
         },
       });
     }
@@ -524,9 +463,7 @@ export class VolumesListTableConfig implements InputTableConf {
               // these disabled booleans are here to prevent recursion errors, disabling only needs to happen once
               let keyDisabled = false;
               let passphraseDisabled = false;
-              entityDialog.formGroup.controls[
-                "passphrase"
-              ].valueChanges.subscribe((passphrase) => {
+              entityDialog.formGroup.controls["passphrase"].valueChanges.subscribe((passphrase) => {
                 if (!passphraseDisabled) {
                   if (passphrase && passphrase !== "") {
                     keyDisabled = true;
@@ -537,16 +474,14 @@ export class VolumesListTableConfig implements InputTableConf {
                   }
                 }
               });
-              entityDialog.formGroup.controls["key"].valueChanges.subscribe(
-                (key) => {
-                  if (!keyDisabled) {
-                    if (key && !passphraseDisabled) {
-                      passphraseDisabled = true;
-                      entityDialog.setDisabled("passphrase", true, true);
-                    }
+              entityDialog.formGroup.controls["key"].valueChanges.subscribe((key) => {
+                if (!keyDisabled) {
+                  if (key && !passphraseDisabled) {
+                    passphraseDisabled = true;
+                    entityDialog.setDisabled("passphrase", true, true);
                   }
                 }
-              );
+              });
             },
             saveButtonText: T("Unlock"),
             customSubmit: function (entityDialog) {
@@ -574,10 +509,7 @@ export class VolumesListTableConfig implements InputTableConf {
                   })
                 );
                 formData.append("file", self.subs.file);
-                dialogRef.componentInstance.wspost(
-                  self.subs.apiEndPoint,
-                  formData
-                );
+                dialogRef.componentInstance.wspost(self.subs.apiEndPoint, formData);
               } else {
                 dialogRef.componentInstance.setCall("pool.unlock", params);
                 dialogRef.componentInstance.submit();
@@ -587,18 +519,16 @@ export class VolumesListTableConfig implements InputTableConf {
                   dialogRef.close(false);
                   entityDialog.dialogRef.close(true);
                   self.parentVolumesListComponent.repaintMe();
-                  self.translate
-                    .get(" has been unlocked.")
-                    .subscribe((unlockTr) => {
-                      self.dialogService.Info(
-                        T("Unlock"),
-                        row1.name + unlockTr,
-                        "300px",
-                        "info",
-                        true
-                      );
-                      done = true;
-                    });
+                  self.translate.get(" has been unlocked.").subscribe((unlockTr) => {
+                    self.dialogService.Info(
+                      T("Unlock"),
+                      row1.name + unlockTr,
+                      "300px",
+                      "info",
+                      true
+                    );
+                    done = true;
+                  });
                 }
               });
               dialogRef.componentInstance.failure.subscribe((res) => {
@@ -619,9 +549,7 @@ export class VolumesListTableConfig implements InputTableConf {
 
   getActions(rowData: any) {
     rowData.is_passphrase =
-      rowData.key_format && rowData.key_format.parsed === "passphrase"
-        ? true
-        : false;
+      rowData.key_format && rowData.key_format.parsed === "passphrase" ? true : false;
     let rowDataPathSplit = [];
     const self = this;
     if (rowData.mountpoint) {
@@ -647,8 +575,7 @@ export class VolumesListTableConfig implements InputTableConf {
                 {
                   type: "checkbox",
                   name: "autotrim",
-                  placeholder:
-                    helptext.pool_options_dialog.autotrim_placeholder,
+                  placeholder: helptext.pool_options_dialog.autotrim_placeholder,
                   tooltip: helptext.pool_options_dialog.autotrim_tooltip,
                   value: row.autotrim.value === "on",
                 },
@@ -681,9 +608,7 @@ export class VolumesListTableConfig implements InputTableConf {
                       .get(helptext.pool_options_dialog.dialog_saved_message1)
                       .subscribe((msg1) => {
                         self.translate
-                          .get(
-                            helptext.pool_options_dialog.dialog_saved_message2
-                          )
+                          .get(helptext.pool_options_dialog.dialog_saved_message2)
                           .subscribe((msg2) => {
                             self.dialogService.Info(
                               helptext.pool_options_dialog.dialog_saved_title,
@@ -697,18 +622,12 @@ export class VolumesListTableConfig implements InputTableConf {
                 dialogRef.componentInstance.failure.subscribe((err) => {
                   if (err) {
                     dialogRef.close();
-                    new EntityUtils().handleWSError(
-                      entityDialog,
-                      err,
-                      self.dialogService
-                    );
+                    new EntityUtils().handleWSError(entityDialog, err, self.dialogService);
                   }
                 });
               },
             };
-            this.dialogService
-              .dialogForm(this.dialogConf)
-              .subscribe((res) => {});
+            this.dialogService.dialogForm(this.dialogConf).subscribe((res) => {});
           },
         });
       }
@@ -727,26 +646,22 @@ export class VolumesListTableConfig implements InputTableConf {
               (res) => {
                 if (res.length > 0) {
                   let servicesA, servicesB;
-                  self.translate
-                    .get(helptext.exportMessages.servicesA)
-                    .subscribe((a) => {
-                      self.translate
-                        .get(helptext.exportMessages.servicesB)
-                        .subscribe((b) => {
-                          servicesA = a;
-                          servicesB = b;
-                          p1 = a + `<i>${row1.name}</i>` + b;
-                          res.forEach((item) => {
-                            p1 += `<br><b>${item.type}:</b>`;
-                            item.attachments.forEach((i) => {
-                              let tempArr = i.split(",");
-                              tempArr.forEach((i) => {
-                                p1 += `<br> - ${i}`;
-                              });
-                            });
+                  self.translate.get(helptext.exportMessages.servicesA).subscribe((a) => {
+                    self.translate.get(helptext.exportMessages.servicesB).subscribe((b) => {
+                      servicesA = a;
+                      servicesB = b;
+                      p1 = a + `<i>${row1.name}</i>` + b;
+                      res.forEach((item) => {
+                        p1 += `<br><b>${item.type}:</b>`;
+                        item.attachments.forEach((i) => {
+                          let tempArr = i.split(",");
+                          tempArr.forEach((i) => {
+                            p1 += `<br> - ${i}`;
                           });
                         });
+                      });
                     });
+                  });
                   p1 += `<br /><br />`;
                 }
                 this.ws.call("pool.processes", [row1.id]).subscribe(
@@ -785,9 +700,10 @@ export class VolumesListTableConfig implements InputTableConf {
                                 p1 += `<br><br>` + unknownMsg;
                                 running_unknown_processes.forEach((process) => {
                                   if (process.pid) {
-                                    p1 += `<br> - ${
-                                      process.pid
-                                    } - ${process.cmdline.substring(0, 40)}`;
+                                    p1 += `<br> - ${process.pid} - ${process.cmdline.substring(
+                                      0,
+                                      40
+                                    )}`;
                                   }
                                 });
                                 p1 += `<br><br>` + terminatedMsg;
@@ -800,11 +716,7 @@ export class VolumesListTableConfig implements InputTableConf {
                   },
                   (err) => {
                     this.loader.close();
-                    new EntityUtils().handleWSError(
-                      self,
-                      err,
-                      self.dialogService
-                    );
+                    new EntityUtils().handleWSError(self, err, self.dialogService);
                   }
                 );
               },
@@ -826,320 +738,253 @@ export class VolumesListTableConfig implements InputTableConf {
               .call("systemdataset.config")
               .pipe(map((res) => res["pool"]))
               .toPromise();
-            let title,
-              warningA,
-              warningB,
-              unknownA,
-              unknownB,
-              encrypted,
-              sysPoolWarning;
-            self.translate
-              .get(helptext.exportDialog.warningSysDataset)
-              .subscribe((sysWarn) => {
-                sysPoolWarning = sysWarn;
-                self.translate
-                  .get(helptext.exportDialog.title)
-                  .subscribe((t) => {
-                    title = t;
-                    self.translate
-                      .get(helptext.exportDialog.warningA)
-                      .subscribe((a) => {
+            let title, warningA, warningB, unknownA, unknownB, encrypted, sysPoolWarning;
+            self.translate.get(helptext.exportDialog.warningSysDataset).subscribe((sysWarn) => {
+              sysPoolWarning = sysWarn;
+              self.translate.get(helptext.exportDialog.title).subscribe((t) => {
+                title = t;
+                self.translate.get(helptext.exportDialog.warningA).subscribe((a) => {
+                  self.translate.get(helptext.exportDialog.warningB).subscribe((b) => {
+                    warningA = a;
+                    warningB = b;
+                    self.translate.get(helptext.exportDialog.unknownStateA).subscribe((ua) => {
+                      self.translate.get(helptext.exportDialog.unknownStateB).subscribe((ub) => {
                         self.translate
-                          .get(helptext.exportDialog.warningB)
-                          .subscribe((b) => {
-                            warningA = a;
-                            warningB = b;
-                            self.translate
-                              .get(helptext.exportDialog.unknownStateA)
-                              .subscribe((ua) => {
-                                self.translate
-                                  .get(helptext.exportDialog.unknownStateB)
-                                  .subscribe((ub) => {
-                                    self.translate
-                                      .get(helptext.exportDialog.encryptWarning)
-                                      .subscribe((enc) => {
-                                        unknownA = ua;
-                                        unknownB = ub;
-                                        encrypted = enc;
-                                      });
-                                  });
-                              });
+                          .get(helptext.exportDialog.encryptWarning)
+                          .subscribe((enc) => {
+                            unknownA = ua;
+                            unknownB = ub;
+                            encrypted = enc;
                           });
                       });
-                    const conf: DialogFormConfiguration = {
-                      title: title + row1.name + "'",
-                      fieldConfig: [
+                    });
+                  });
+                });
+                const conf: DialogFormConfiguration = {
+                  title: title + row1.name + "'",
+                  fieldConfig: [
+                    {
+                      type: "paragraph",
+                      name: "sysdataset_warning",
+                      paraText: sysPoolWarning,
+                      isHidden: sysPool === row1.name ? false : true,
+                    },
+                    {
+                      type: "paragraph",
+                      name: "pool_detach_warning",
+                      paraText: warningA + row1.name + warningB,
+                      isHidden: rowData.status === "UNKNOWN" ? true : false,
+                    },
+                    {
+                      type: "paragraph",
+                      name: "unknown_status_detach_warning",
+                      paraText: `${unknownA} ${row1.name} ${unknownB}`,
+                      isHidden: rowData.status === "UNKNOWN" ? false : true,
+                    },
+                    {
+                      type: "paragraph",
+                      name: "pool_processes",
+                      paraText: p1,
+                      isHidden: p1 === "" ? true : false,
+                    },
+                    {
+                      type: "paragraph",
+                      name: "pool_detach_warning",
+                      paraText: "'" + row1.name + encrypted,
+                      isHidden: encryptedStatus > 0 ? false : true,
+                    },
+                    {
+                      type: "checkbox",
+                      name: "destroy",
+                      value: false,
+                      placeholder: helptext.exportDialog.destroy,
+                      isHidden: rowData.status === "UNKNOWN" ? true : false,
+                    },
+                    {
+                      type: "checkbox",
+                      name: "cascade",
+                      value: rowData.status === "UNKNOWN" ? false : true,
+                      placeholder: helptext.exportDialog.cascade,
+                    },
+                    {
+                      type: "input",
+                      name: "nameInput",
+                      required: true,
+                      isDoubleConfirm: true,
+                      maskValue: row1.name,
+                      validation: [Validators.pattern(row1.name)],
+                      relation: [
                         {
-                          type: "paragraph",
-                          name: "sysdataset_warning",
-                          paraText: sysPoolWarning,
-                          isHidden: sysPool === row1.name ? false : true,
-                        },
-                        {
-                          type: "paragraph",
-                          name: "pool_detach_warning",
-                          paraText: warningA + row1.name + warningB,
-                          isHidden: rowData.status === "UNKNOWN" ? true : false,
-                        },
-                        {
-                          type: "paragraph",
-                          name: "unknown_status_detach_warning",
-                          paraText: `${unknownA} ${row1.name} ${unknownB}`,
-                          isHidden: rowData.status === "UNKNOWN" ? false : true,
-                        },
-                        {
-                          type: "paragraph",
-                          name: "pool_processes",
-                          paraText: p1,
-                          isHidden: p1 === "" ? true : false,
-                        },
-                        {
-                          type: "paragraph",
-                          name: "pool_detach_warning",
-                          paraText: "'" + row1.name + encrypted,
-                          isHidden: encryptedStatus > 0 ? false : true,
-                        },
-                        {
-                          type: "checkbox",
-                          name: "destroy",
-                          value: false,
-                          placeholder: helptext.exportDialog.destroy,
-                          isHidden: rowData.status === "UNKNOWN" ? true : false,
-                        },
-                        {
-                          type: "checkbox",
-                          name: "cascade",
-                          value: rowData.status === "UNKNOWN" ? false : true,
-                          placeholder: helptext.exportDialog.cascade,
-                        },
-                        {
-                          type: "input",
-                          name: "nameInput",
-                          required: true,
-                          isDoubleConfirm: true,
-                          maskValue: row1.name,
-                          validation: [Validators.pattern(row1.name)],
-                          relation: [
+                          action: "HIDE",
+                          when: [
                             {
-                              action: "HIDE",
-                              when: [
-                                {
-                                  name: "destroy",
-                                  value: false,
-                                },
-                              ],
+                              name: "destroy",
+                              value: false,
                             },
                           ],
                         },
-                        {
-                          type: "checkbox",
-                          name: "confirm",
-                          placeholder:
-                            rowData.status === "UNKNOWN"
-                              ? `${helptext.exportDialog.confirm} ${helptext.exportDialog.unknown_status_alt_text}`
-                              : `${helptext.exportDialog.confirm}`,
-                          required: true,
-                        },
                       ],
-                      isCustActionVisible(actionId: string) {
-                        if (
-                          actionId == "download_key" &&
-                          encryptedStatus === 0
-                        ) {
-                          return false;
-                        } else {
-                          return true;
-                        }
-                      },
-                      saveButtonText: helptext.exportDialog.saveButton,
-                      custActions: [
-                        {
-                          id: "download_key",
-                          name: helptext.downloadKey,
-                          function: () => {
-                            const dialogRef = self.mdDialog.open(
-                              DownloadKeyModalDialog,
-                              { disableClose: true }
-                            );
-                            dialogRef.componentInstance.volumeId = row1.id;
-                            dialogRef.componentInstance.fileName =
-                              "pool_" + row1.name + "_encryption.key";
-                          },
-                        },
-                      ],
-                      customSubmit: function (entityDialog) {
-                        const value = entityDialog.formValue;
-                        let dialogRef = self.mdDialog.open(EntityJobComponent, {
-                          data: { title: helptext.exporting },
+                    },
+                    {
+                      type: "checkbox",
+                      name: "confirm",
+                      placeholder:
+                        rowData.status === "UNKNOWN"
+                          ? `${helptext.exportDialog.confirm} ${helptext.exportDialog.unknown_status_alt_text}`
+                          : `${helptext.exportDialog.confirm}`,
+                      required: true,
+                    },
+                  ],
+                  isCustActionVisible(actionId: string) {
+                    if (actionId == "download_key" && encryptedStatus === 0) {
+                      return false;
+                    } else {
+                      return true;
+                    }
+                  },
+                  saveButtonText: helptext.exportDialog.saveButton,
+                  custActions: [
+                    {
+                      id: "download_key",
+                      name: helptext.downloadKey,
+                      function: () => {
+                        const dialogRef = self.mdDialog.open(DownloadKeyModalDialog, {
                           disableClose: true,
                         });
-                        dialogRef.updateSize("300px");
-                        dialogRef.componentInstance.setDescription(
-                          helptext.exporting
-                        );
-                        dialogRef.componentInstance.setCall("pool.export", [
-                          row1.id,
-                          {
-                            destroy: value.destroy,
-                            cascade: value.cascade,
-                            restart_services: self.restartServices,
-                          },
-                        ]);
-                        dialogRef.componentInstance.submit();
-                        dialogRef.componentInstance.success.subscribe((res) => {
-                          entityDialog.dialogRef.close(true);
-                          self.translate
-                            .get(helptext.exportSuccess)
-                            .subscribe((msg) => {
-                              self.translate
-                                .get(helptext.destroyed)
-                                .subscribe((destroyed) => {
-                                  if (!value.destroy) {
-                                    self.dialogService.Info(
-                                      helptext.exportDisconnect,
-                                      msg + row1.name + "'"
-                                    );
-                                  } else {
-                                    self.dialogService.Info(
-                                      helptext.exportDisconnect,
-                                      msg + row1.name + destroyed
-                                    );
-                                  }
-                                  dialogRef.close(true);
-                                  self.parentVolumesListComponent.repaintMe();
-                                });
-                            });
-                        }),
-                          dialogRef.componentInstance.failure.subscribe(
-                            (res) => {
-                              let conditionalErrMessage = "";
-                              if (res.error) {
-                                if (
-                                  res.exc_info.extra &&
-                                  res.exc_info.extra["code"] ===
-                                    "control_services"
-                                ) {
-                                  entityDialog.dialogRef.close(true);
-                                  dialogRef.close(true);
-                                  let stopMsg, restartMsg, continueMsg;
-                                  self.translate
-                                    .get(
-                                      helptext.exportMessages.onfail
-                                        .stopServices
-                                    )
-                                    .subscribe((stop) => {
-                                      self.translate
-                                        .get(
-                                          helptext.exportMessages.onfail
-                                            .restartServices
-                                        )
-                                        .subscribe((restart) => {
-                                          self.translate
-                                            .get(
-                                              helptext.exportMessages.onfail
-                                                .continueMessage
-                                            )
-                                            .subscribe((continueRes) => {
-                                              stopMsg = stop;
-                                              restartMsg = restart;
-                                              continueMsg = continueRes;
-                                            });
-                                        });
-                                      if (
-                                        res.exc_info.extra.stop_services
-                                          .length > 0
-                                      ) {
-                                        conditionalErrMessage +=
-                                          `<div class="warning-box">` + stopMsg;
-                                        res.exc_info.extra.stop_services.forEach(
-                                          (item) => {
-                                            conditionalErrMessage += `<br>- ${item}`;
-                                          }
-                                        );
-                                      }
-                                      if (
-                                        res.exc_info.extra.restart_services
-                                          .length > 0
-                                      ) {
-                                        if (
-                                          res.exc_info.extra.stop_services
-                                            .length > 0
-                                        ) {
-                                          conditionalErrMessage += "<br><br>";
-                                        }
-                                        conditionalErrMessage +=
-                                          `<div class="warning-box">` +
-                                          restartMsg;
-                                        res.exc_info.extra.restart_services.forEach(
-                                          (item) => {
-                                            conditionalErrMessage += `<br>- ${item}`;
-                                          }
-                                        );
-                                      }
-                                      conditionalErrMessage +=
-                                        `<br><br>` +
-                                        continueMsg +
-                                        `</div><br />`;
-                                      self.dialogService
-                                        .confirm(
-                                          helptext.exportError,
-                                          conditionalErrMessage,
-                                          true,
-                                          helptext.exportMessages.onfail
-                                            .continueAction
-                                        )
-                                        .subscribe((res) => {
-                                          if (res) {
-                                            self.restartServices = true;
-                                            this.customSubmit(entityDialog);
-                                          }
-                                        });
-                                    });
-                                } else if (
-                                  res.extra &&
-                                  res.extra["code"] === "unstoppable_processes"
-                                ) {
-                                  entityDialog.dialogRef.close(true);
-                                  self.translate
-                                    .get(
-                                      helptext.exportMessages.onfail
-                                        .unableToTerminate
-                                    )
-                                    .subscribe((msg) => {
-                                      conditionalErrMessage =
-                                        msg + res.extra["processes"];
-                                      dialogRef.close(true);
-                                      self.dialogService.errorReport(
-                                        helptext.exportError,
-                                        conditionalErrMessage,
-                                        res.exception
-                                      );
-                                    });
-                                } else {
-                                  entityDialog.dialogRef.close(true);
-                                  dialogRef.close(true);
-                                  self.dialogService.errorReport(
-                                    helptext.exportError,
-                                    res.error,
-                                    res.exception
-                                  );
+                        dialogRef.componentInstance.volumeId = row1.id;
+                        dialogRef.componentInstance.fileName =
+                          "pool_" + row1.name + "_encryption.key";
+                      },
+                    },
+                  ],
+                  customSubmit: function (entityDialog) {
+                    const value = entityDialog.formValue;
+                    let dialogRef = self.mdDialog.open(EntityJobComponent, {
+                      data: { title: helptext.exporting },
+                      disableClose: true,
+                    });
+                    dialogRef.updateSize("300px");
+                    dialogRef.componentInstance.setDescription(helptext.exporting);
+                    dialogRef.componentInstance.setCall("pool.export", [
+                      row1.id,
+                      {
+                        destroy: value.destroy,
+                        cascade: value.cascade,
+                        restart_services: self.restartServices,
+                      },
+                    ]);
+                    dialogRef.componentInstance.submit();
+                    dialogRef.componentInstance.success.subscribe((res) => {
+                      entityDialog.dialogRef.close(true);
+                      self.translate.get(helptext.exportSuccess).subscribe((msg) => {
+                        self.translate.get(helptext.destroyed).subscribe((destroyed) => {
+                          if (!value.destroy) {
+                            self.dialogService.Info(
+                              helptext.exportDisconnect,
+                              msg + row1.name + "'"
+                            );
+                          } else {
+                            self.dialogService.Info(
+                              helptext.exportDisconnect,
+                              msg + row1.name + destroyed
+                            );
+                          }
+                          dialogRef.close(true);
+                          self.parentVolumesListComponent.repaintMe();
+                        });
+                      });
+                    }),
+                      dialogRef.componentInstance.failure.subscribe((res) => {
+                        let conditionalErrMessage = "";
+                        if (res.error) {
+                          if (
+                            res.exc_info.extra &&
+                            res.exc_info.extra["code"] === "control_services"
+                          ) {
+                            entityDialog.dialogRef.close(true);
+                            dialogRef.close(true);
+                            let stopMsg, restartMsg, continueMsg;
+                            self.translate
+                              .get(helptext.exportMessages.onfail.stopServices)
+                              .subscribe((stop) => {
+                                self.translate
+                                  .get(helptext.exportMessages.onfail.restartServices)
+                                  .subscribe((restart) => {
+                                    self.translate
+                                      .get(helptext.exportMessages.onfail.continueMessage)
+                                      .subscribe((continueRes) => {
+                                        stopMsg = stop;
+                                        restartMsg = restart;
+                                        continueMsg = continueRes;
+                                      });
+                                  });
+                                if (res.exc_info.extra.stop_services.length > 0) {
+                                  conditionalErrMessage += `<div class="warning-box">` + stopMsg;
+                                  res.exc_info.extra.stop_services.forEach((item) => {
+                                    conditionalErrMessage += `<br>- ${item}`;
+                                  });
                                 }
-                              } else {
-                                entityDialog.dialogRef.close(true);
+                                if (res.exc_info.extra.restart_services.length > 0) {
+                                  if (res.exc_info.extra.stop_services.length > 0) {
+                                    conditionalErrMessage += "<br><br>";
+                                  }
+                                  conditionalErrMessage += `<div class="warning-box">` + restartMsg;
+                                  res.exc_info.extra.restart_services.forEach((item) => {
+                                    conditionalErrMessage += `<br>- ${item}`;
+                                  });
+                                }
+                                conditionalErrMessage += `<br><br>` + continueMsg + `</div><br />`;
+                                self.dialogService
+                                  .confirm(
+                                    helptext.exportError,
+                                    conditionalErrMessage,
+                                    true,
+                                    helptext.exportMessages.onfail.continueAction
+                                  )
+                                  .subscribe((res) => {
+                                    if (res) {
+                                      self.restartServices = true;
+                                      this.customSubmit(entityDialog);
+                                    }
+                                  });
+                              });
+                          } else if (res.extra && res.extra["code"] === "unstoppable_processes") {
+                            entityDialog.dialogRef.close(true);
+                            self.translate
+                              .get(helptext.exportMessages.onfail.unableToTerminate)
+                              .subscribe((msg) => {
+                                conditionalErrMessage = msg + res.extra["processes"];
                                 dialogRef.close(true);
                                 self.dialogService.errorReport(
                                   helptext.exportError,
-                                  res.error,
+                                  conditionalErrMessage,
                                   res.exception
                                 );
-                              }
-                            }
+                              });
+                          } else {
+                            entityDialog.dialogRef.close(true);
+                            dialogRef.close(true);
+                            self.dialogService.errorReport(
+                              helptext.exportError,
+                              res.error,
+                              res.exception
+                            );
+                          }
+                        } else {
+                          entityDialog.dialogRef.close(true);
+                          dialogRef.close(true);
+                          self.dialogService.errorReport(
+                            helptext.exportError,
+                            res.error,
+                            res.exception
                           );
-                      },
-                    };
-                    self.dialogService.dialogFormWide(conf);
-                  });
+                        }
+                      });
+                  },
+                };
+                self.dialogService.dialogFormWide(conf);
               });
+            });
           }
         },
       });
@@ -1150,9 +995,7 @@ export class VolumesListTableConfig implements InputTableConf {
           name: "Add Vdevs",
           label: T("Add Vdevs"),
           onClick: (row1) => {
-            this._router.navigate(
-              new Array("/").concat(["storage", "manager", row1.id])
-            );
+            this._router.navigate(new Array("/").concat(["storage", "manager", row1.id]));
           },
         });
         actions.push({
@@ -1162,47 +1005,31 @@ export class VolumesListTableConfig implements InputTableConf {
           onClick: (row1) => {
             this.getPoolData(row1.id).subscribe((res) => {
               if (res[0]) {
-                if (
-                  res[0].scan.function === "SCRUB" &&
-                  res[0].scan.state === "SCANNING"
-                ) {
+                if (res[0].scan.function === "SCRUB" && res[0].scan.state === "SCANNING") {
                   self.translate.get("Stop the scrub on ").subscribe((msg) => {
                     this.dialogService
-                      .confirm(
-                        T("Scrub Pool"),
-                        msg + row1.name + "?",
-                        false,
-                        T("Stop Scrub")
-                      )
+                      .confirm(T("Scrub Pool"), msg + row1.name + "?", false, T("Stop Scrub"))
                       .subscribe((res) => {
                         if (res) {
                           this.loader.open();
-                          this.ws
-                            .call("pool.scrub", [row1.id, "STOP"])
-                            .subscribe(
-                              (res) => {
-                                this.loader.close();
-                                self.translate
-                                  .get("Stopping scrub on pool")
-                                  .subscribe((msg) => {
-                                    this.dialogService.Info(
-                                      T("Stop Scrub"),
-                                      `${msg} <i>${row1.name}</i>`,
-                                      "300px",
-                                      "info",
-                                      true
-                                    );
-                                  });
-                              },
-                              (err) => {
-                                this.loader.close();
-                                new EntityUtils().handleWSError(
-                                  this,
-                                  err,
-                                  this.dialogService
+                          this.ws.call("pool.scrub", [row1.id, "STOP"]).subscribe(
+                            (res) => {
+                              this.loader.close();
+                              self.translate.get("Stopping scrub on pool").subscribe((msg) => {
+                                this.dialogService.Info(
+                                  T("Stop Scrub"),
+                                  `${msg} <i>${row1.name}</i>`,
+                                  "300px",
+                                  "info",
+                                  true
                                 );
-                              }
-                            );
+                              });
+                            },
+                            (err) => {
+                              this.loader.close();
+                              new EntityUtils().handleWSError(this, err, this.dialogService);
+                            }
+                          );
                         }
                       });
                   });
@@ -1217,58 +1044,45 @@ export class VolumesListTableConfig implements InputTableConf {
                       )
                       .subscribe((res) => {
                         if (res) {
-                          this.dialogRef = this.mdDialog.open(
-                            EntityJobComponent,
-                            {
-                              data: { title: T("Scrub Pool") },
-                              disableClose: false,
-                            }
-                          );
-                          this.dialogRef.componentInstance.setCall(
-                            "pool.scrub",
-                            [row1.id, "START"]
-                          );
+                          this.dialogRef = this.mdDialog.open(EntityJobComponent, {
+                            data: { title: T("Scrub Pool") },
+                            disableClose: false,
+                          });
+                          this.dialogRef.componentInstance.setCall("pool.scrub", [
+                            row1.id,
+                            "START",
+                          ]);
                           this.dialogRef.componentInstance.submit();
-                          this.dialogRef.componentInstance.success.subscribe(
-                            (jobres) => {
-                              this.dialogRef.close(false);
-                              if (
-                                jobres.progress.percent == 100 &&
-                                jobres.progress.description === "Scrub finished"
-                              ) {
-                                self.translate
-                                  .get("Scrub complete on pool")
-                                  .subscribe((msg) => {
-                                    this.dialogService.Info(
-                                      T("Scrub Complete"),
-                                      `${msg} <i>${row1.name}</i>.`,
-                                      "300px",
-                                      "info",
-                                      true
-                                    );
-                                  });
-                              } else {
-                                self.translate
-                                  .get("Stopped the scrub on pool")
-                                  .subscribe((msg) => {
-                                    this.dialogService.Info(
-                                      T("Stop Scrub"),
-                                      `${msg} <i>${row1.name}</i>.`,
-                                      "300px",
-                                      "info",
-                                      true
-                                    );
-                                  });
-                              }
+                          this.dialogRef.componentInstance.success.subscribe((jobres) => {
+                            this.dialogRef.close(false);
+                            if (
+                              jobres.progress.percent == 100 &&
+                              jobres.progress.description === "Scrub finished"
+                            ) {
+                              self.translate.get("Scrub complete on pool").subscribe((msg) => {
+                                this.dialogService.Info(
+                                  T("Scrub Complete"),
+                                  `${msg} <i>${row1.name}</i>.`,
+                                  "300px",
+                                  "info",
+                                  true
+                                );
+                              });
+                            } else {
+                              self.translate.get("Stopped the scrub on pool").subscribe((msg) => {
+                                this.dialogService.Info(
+                                  T("Stop Scrub"),
+                                  `${msg} <i>${row1.name}</i>.`,
+                                  "300px",
+                                  "info",
+                                  true
+                                );
+                              });
                             }
-                          );
-                          this.dialogRef.componentInstance.failure.subscribe(
-                            (err) => {
-                              this.dialogRef.componentInstance.setDescription(
-                                err.error
-                              );
-                            }
-                          );
+                          });
+                          this.dialogRef.componentInstance.failure.subscribe((err) => {
+                            this.dialogRef.componentInstance.setDescription(err.error);
+                          });
                         }
                       });
                   });
@@ -1282,9 +1096,7 @@ export class VolumesListTableConfig implements InputTableConf {
           name: "Status",
           label: T("Status"),
           onClick: (row1) => {
-            this._router.navigate(
-              new Array("/").concat(["storage", "status", row1.id])
-            );
+            this._router.navigate(new Array("/").concat(["storage", "status", row1.id]));
           },
         });
         actions.push({
@@ -1305,8 +1117,7 @@ export class VolumesListTableConfig implements InputTableConf {
                   type: "input",
                   inputType: "password",
                   name: "passphrase",
-                  placeholder:
-                    helptext.expand_pool_dialog.passphrase_placeholder,
+                  placeholder: helptext.expand_pool_dialog.passphrase_placeholder,
                   togglePw: true,
                   required: true,
                 },
@@ -1358,31 +1169,25 @@ export class VolumesListTableConfig implements InputTableConf {
                 },
                 (err) => {
                   parent.loader.close();
-                  new EntityUtils().handleWSError(
-                    this,
-                    err,
-                    parent.dialogService
-                  );
+                  new EntityUtils().handleWSError(this, err, parent.dialogService);
                 }
               );
             }
 
             if (row1.encrypt === 0) {
-              self.translate
-                .get(helptext.expand_pool_dialog.title)
-                .subscribe((msg) => {
-                  this.dialogService
-                    .generalDialog({
-                      title: msg + row1.name,
-                      message: helptext.expand_pool_dialog.message,
-                      confirmBtnMsg: helptext.expand_pool_dialog.save_button,
-                    })
-                    .subscribe((res) => {
-                      if (res) {
-                        doExpand();
-                      }
-                    });
-                });
+              self.translate.get(helptext.expand_pool_dialog.title).subscribe((msg) => {
+                this.dialogService
+                  .generalDialog({
+                    title: msg + row1.name,
+                    message: helptext.expand_pool_dialog.message,
+                    confirmBtnMsg: helptext.expand_pool_dialog.save_button,
+                  })
+                  .subscribe((res) => {
+                    if (res) {
+                      doExpand();
+                    }
+                  });
+              });
             } else {
               self.dialogService.dialogForm(conf);
             }
@@ -1395,45 +1200,40 @@ export class VolumesListTableConfig implements InputTableConf {
             name: T("Upgrade Pool"),
             label: T("Upgrade Pool"),
             onClick: (row1) => {
-              this.translate
-                .get(helptext.upgradePoolDialog_warning)
-                .subscribe((warning) => {
-                  this.dialogService
-                    .confirm(T("Upgrade Pool"), warning + row1.name)
-                    .subscribe((confirmResult) => {
-                      if (confirmResult === true) {
-                        this.loader.open();
-                        this.ws.call("pool.upgrade", [rowData.id]).subscribe(
-                          (res) => {
-                            this.translate
-                              .get(T("Successfully Upgraded "))
-                              .subscribe((success_upgrade) => {
-                                this.dialogService
-                                  .Info(
-                                    T("Upgraded"),
-                                    success_upgrade + row1.name
-                                  )
-                                  .subscribe((infoResult) => {
-                                    this.parentVolumesListComponent.repaintMe();
-                                  });
-                              });
-                          },
-                          (res) => {
-                            this.translate
-                              .get(T("Error Upgrading Pool "))
-                              .subscribe((error_upgrade) => {
-                                this.dialogService.errorReport(
-                                  error_upgrade + row1.name,
-                                  res.message,
-                                  res.stack
-                                );
-                              });
-                          },
-                          () => this.loader.close()
-                        );
-                      }
-                    });
-                });
+              this.translate.get(helptext.upgradePoolDialog_warning).subscribe((warning) => {
+                this.dialogService
+                  .confirm(T("Upgrade Pool"), warning + row1.name)
+                  .subscribe((confirmResult) => {
+                    if (confirmResult === true) {
+                      this.loader.open();
+                      this.ws.call("pool.upgrade", [rowData.id]).subscribe(
+                        (res) => {
+                          this.translate
+                            .get(T("Successfully Upgraded "))
+                            .subscribe((success_upgrade) => {
+                              this.dialogService
+                                .Info(T("Upgraded"), success_upgrade + row1.name)
+                                .subscribe((infoResult) => {
+                                  this.parentVolumesListComponent.repaintMe();
+                                });
+                            });
+                        },
+                        (res) => {
+                          this.translate
+                            .get(T("Error Upgrading Pool "))
+                            .subscribe((error_upgrade) => {
+                              this.dialogService.errorReport(
+                                error_upgrade + row1.name,
+                                res.message,
+                                res.stack
+                              );
+                            });
+                        },
+                        () => this.loader.close()
+                      );
+                    }
+                  });
+              });
             },
           });
         }
@@ -1447,10 +1247,7 @@ export class VolumesListTableConfig implements InputTableConf {
           name: T("Add Dataset"),
           label: T("Add Dataset"),
           onClick: (row1) => {
-            this.parentVolumesListComponent.addDataset(
-              rowData.pool,
-              rowData.id
-            );
+            this.parentVolumesListComponent.addDataset(rowData.pool, rowData.id);
           },
         });
         actions.push({
@@ -1483,40 +1280,34 @@ export class VolumesListTableConfig implements InputTableConf {
                 .subscribe((acl_is_trivial) => {
                   if (acl_is_trivial) {
                     this._router.navigate(
-                      new Array("/").concat([
-                        "storage",
-                        "permissions",
-                        rowData.id,
-                      ])
+                      new Array("/").concat(["storage", "permissions", rowData.id])
                     );
                   } else {
-                    this.ws
-                      .call("filesystem.getacl", [rowData.mountpoint])
-                      .subscribe((res) => {
-                        if (res.acltype === "POSIX1E") {
-                          this._router.navigate(
-                            new Array("/").concat([
-                              "storage",
-                              "id",
-                              rowData.pool,
-                              "dataset",
-                              "posix-acl",
-                              rowData.id,
-                            ])
-                          );
-                        } else {
-                          this._router.navigate(
-                            new Array("/").concat([
-                              "storage",
-                              "id",
-                              rowData.pool,
-                              "dataset",
-                              "acl",
-                              rowData.id,
-                            ])
-                          );
-                        }
-                      });
+                    this.ws.call("filesystem.getacl", [rowData.mountpoint]).subscribe((res) => {
+                      if (res.acltype === "POSIX1E") {
+                        this._router.navigate(
+                          new Array("/").concat([
+                            "storage",
+                            "id",
+                            rowData.pool,
+                            "dataset",
+                            "posix-acl",
+                            rowData.id,
+                          ])
+                        );
+                      } else {
+                        this._router.navigate(
+                          new Array("/").concat([
+                            "storage",
+                            "id",
+                            rowData.pool,
+                            "dataset",
+                            "acl",
+                            rowData.id,
+                          ])
+                        );
+                      }
+                    });
                   }
                 });
             },
@@ -1526,9 +1317,7 @@ export class VolumesListTableConfig implements InputTableConf {
             name: T("User Quotas"),
             label: T("User Quotas"),
             onClick: (row1) => {
-              this._router.navigate(
-                new Array("/").concat(["storage", "user-quotas", rowData.id])
-              );
+              this._router.navigate(new Array("/").concat(["storage", "user-quotas", rowData.id]));
             },
           },
           {
@@ -1536,9 +1325,7 @@ export class VolumesListTableConfig implements InputTableConf {
             name: T("Group Quotas"),
             label: T("Group Quotas"),
             onClick: (row1) => {
-              this._router.navigate(
-                new Array("/").concat(["storage", "group-quotas", rowData.id])
-              );
+              this._router.navigate(new Array("/").concat(["storage", "group-quotas", rowData.id]));
             },
           }
         );
@@ -1569,10 +1356,7 @@ export class VolumesListTableConfig implements InputTableConf {
                         if (doubleConfirmDialog) {
                           this.loader.open();
                           this.ws
-                            .call("pool.dataset.delete", [
-                              rowData.id,
-                              { recursive: true },
-                            ])
+                            .call("pool.dataset.delete", [rowData.id, { recursive: true }])
                             .subscribe(
                               (wsResp) => {
                                 this.loader.close();
@@ -1610,15 +1394,10 @@ export class VolumesListTableConfig implements InputTableConf {
                                                 (err) => {
                                                   this.loader.close();
                                                   self.translate
-                                                    .get(
-                                                      "Error deleting dataset "
-                                                    )
+                                                    .get("Error deleting dataset ")
                                                     .subscribe((msg) => {
                                                       this.dialogService.errorReport(
-                                                        msg +
-                                                          "<i>" +
-                                                          row1.name +
-                                                          "</i>.",
+                                                        msg + "<i>" + row1.name + "</i>.",
                                                         err.reason,
                                                         err.stack
                                                       );
@@ -1629,15 +1408,13 @@ export class VolumesListTableConfig implements InputTableConf {
                                         });
                                     });
                                 } else {
-                                  self.translate
-                                    .get("Error deleting dataset ")
-                                    .subscribe((msg) => {
-                                      this.dialogService.errorReport(
-                                        msg + "<i>" + row1.name + "</i>.",
-                                        e_res.reason,
-                                        e_res.stack
-                                      );
-                                    });
+                                  self.translate.get("Error deleting dataset ").subscribe((msg) => {
+                                    this.dialogService.errorReport(
+                                      msg + "<i>" + row1.name + "</i>.",
+                                      e_res.reason,
+                                      e_res.stack
+                                    );
+                                  });
                                 }
                               }
                             );
@@ -1657,47 +1434,36 @@ export class VolumesListTableConfig implements InputTableConf {
         label: T("Delete Zvol"),
         onClick: (row1) => {
           self.translate.get("Delete the zvol ").subscribe((msg1) => {
-            self.translate
-              .get(" and all snapshots of it?")
-              .subscribe((msg2) => {
-                this.dialogService
-                  .doubleConfirm(
-                    T("Delete "),
-                    msg1 + "<b><i>" + row1.name + "</i></b>" + msg2,
-                    row1.name,
-                    true,
-                    T("Delete Zvol")
-                  )
-                  .subscribe((confirmed) => {
-                    if (confirmed === true) {
-                      this.loader.open();
+            self.translate.get(" and all snapshots of it?").subscribe((msg2) => {
+              this.dialogService
+                .doubleConfirm(
+                  T("Delete "),
+                  msg1 + "<b><i>" + row1.name + "</i></b>" + msg2,
+                  row1.name,
+                  true,
+                  T("Delete Zvol")
+                )
+                .subscribe((confirmed) => {
+                  if (confirmed === true) {
+                    this.loader.open();
 
-                      this.ws
-                        .call("pool.dataset.delete", [
-                          rowData.id,
-                          { recursive: true },
-                        ])
-                        .subscribe(
-                          (wsResp) => {
-                            this.loader.close();
-                            this.parentVolumesListComponent.repaintMe();
-                          },
-                          (res) => {
-                            this.loader.close();
-                            self.translate
-                              .get("Error Deleting zvol ")
-                              .subscribe((msg) => {
-                                this.dialogService.errorReport(
-                                  msg + row1.id,
-                                  res.reason,
-                                  res.stack
-                                );
-                              });
-                          }
-                        );
-                    }
-                  });
-              });
+                    this.ws
+                      .call("pool.dataset.delete", [rowData.id, { recursive: true }])
+                      .subscribe(
+                        (wsResp) => {
+                          this.loader.close();
+                          this.parentVolumesListComponent.repaintMe();
+                        },
+                        (res) => {
+                          this.loader.close();
+                          self.translate.get("Error Deleting zvol ").subscribe((msg) => {
+                            this.dialogService.errorReport(msg + row1.id, res.reason, res.stack);
+                          });
+                        }
+                      );
+                  }
+                });
+            });
           });
         },
       });
@@ -1716,11 +1482,9 @@ export class VolumesListTableConfig implements InputTableConf {
         name: T("Create Snapshot"),
         label: T("Create Snapshot"),
         onClick: (row) => {
-          this.ws
-            .call("vmware.dataset_has_vms", [row.id, false])
-            .subscribe((vmware_res) => {
-              this.vmware_res_status = vmware_res;
-            });
+          this.ws.call("vmware.dataset_has_vms", [row.id, false]).subscribe((vmware_res) => {
+            this.vmware_res_status = vmware_res;
+          });
           this.dialogConf = {
             title: "One time snapshot of " + rowData.id,
             fieldConfig: [
@@ -1750,10 +1514,7 @@ export class VolumesListTableConfig implements InputTableConf {
                 updater: (parent) => {
                   parent.recursiveIsChecked = !parent.recursiveIsChecked;
                   parent.ws
-                    .call("vmware.dataset_has_vms", [
-                      row.id,
-                      parent.recursiveIsChecked,
-                    ])
+                    .call("vmware.dataset_has_vms", [row.id, parent.recursiveIsChecked])
                     .subscribe((vmware_res) => {
                       parent.vmware_res_status = vmware_res;
                       _.find(parent.dialogConf.fieldConfig, {
@@ -1775,10 +1536,7 @@ export class VolumesListTableConfig implements InputTableConf {
           };
           this.dialogService.dialogForm(this.dialogConf).subscribe((res) => {
             if (res) {
-              this.dialogService.Info(
-                T("Create Snapshot"),
-                T("Snapshot successfully taken.")
-              );
+              this.dialogService.Info(T("Create Snapshot"), T("Snapshot successfully taken."));
             }
           });
         },
@@ -1798,25 +1556,16 @@ export class VolumesListTableConfig implements InputTableConf {
                 this.loader.close();
                 // Showing info here because there is no feedback on list parent for this if promoted.
                 this.dialogService
-                  .Info(
-                    T("Promote Dataset"),
-                    T("Successfully Promoted ") + row1.id
-                  )
+                  .Info(T("Promote Dataset"), T("Successfully Promoted ") + row1.id)
                   .subscribe((infoResult) => {
                     this.parentVolumesListComponent.repaintMe();
                   });
               },
               (res) => {
                 this.loader.close();
-                self.translate
-                  .get("Error Promoting dataset ")
-                  .subscribe((msg) => {
-                    this.dialogService.errorReport(
-                      msg + row1.id,
-                      res.reason,
-                      res.stack
-                    );
-                  });
+                self.translate.get("Error Promoting dataset ").subscribe((msg) => {
+                  this.dialogService.errorReport(msg + row1.id, res.reason, res.stack);
+                });
               }
             );
           },
@@ -1878,20 +1627,10 @@ export class VolumesListTableConfig implements InputTableConf {
             }
             const can_inherit = row.parent && row.parent.encrypted;
             const passphrase_parent =
-              row.parent &&
-              row.parent.key_format &&
-              row.parent.key_format.value === "PASSPHRASE";
-            const is_key = passphrase_parent
-              ? false
-              : key_child
-              ? true
-              : !row.is_passphrase;
+              row.parent && row.parent.key_format && row.parent.key_format.value === "PASSPHRASE";
+            const is_key = passphrase_parent ? false : key_child ? true : !row.is_passphrase;
             let pbkdf2iters = 350000; // will pull from row when it has been added to the payload
-            if (
-              row.pbkdf2iters &&
-              row.pbkdf2iters &&
-              row.pbkdf2iters.rawvalue !== "0"
-            ) {
+            if (row.pbkdf2iters && row.pbkdf2iters && row.pbkdf2iters.rawvalue !== "0") {
               pbkdf2iters = row.pbkdf2iters.rawvalue;
             }
             const self = this;
@@ -1903,8 +1642,7 @@ export class VolumesListTableConfig implements InputTableConf {
                   name: "inherit_encryption",
                   class: "inline",
                   width: "50%",
-                  placeholder:
-                    helptext.encryption_options_dialog.inherit_placeholder,
+                  placeholder: helptext.encryption_options_dialog.inherit_placeholder,
                   tooltip: helptext.encryption_options_dialog.inherit_tooltip,
                   value: !row.is_encrypted_root,
                   isHidden: !can_inherit,
@@ -1913,38 +1651,27 @@ export class VolumesListTableConfig implements InputTableConf {
                 {
                   type: "select",
                   name: "encryption_type",
-                  placeholder:
-                    dataset_helptext.dataset_form_encryption
-                      .encryption_type_placeholder,
-                  tooltip:
-                    dataset_helptext.dataset_form_encryption
-                      .encryption_type_tooltip,
+                  placeholder: dataset_helptext.dataset_form_encryption.encryption_type_placeholder,
+                  tooltip: dataset_helptext.dataset_form_encryption.encryption_type_tooltip,
                   value: is_key ? "key" : "passphrase",
-                  options:
-                    dataset_helptext.dataset_form_encryption
-                      .encryption_type_options,
+                  options: dataset_helptext.dataset_form_encryption.encryption_type_options,
                   isHidden: passphrase_parent || key_child,
                 },
                 {
                   type: "checkbox",
                   name: "generate_key",
                   placeholder:
-                    dataset_helptext.dataset_form_encryption
-                      .generate_key_checkbox_placeholder,
-                  tooltip:
-                    dataset_helptext.dataset_form_encryption
-                      .generate_key_checkbox_tooltip,
+                    dataset_helptext.dataset_form_encryption.generate_key_checkbox_placeholder,
+                  tooltip: dataset_helptext.dataset_form_encryption.generate_key_checkbox_tooltip,
                   disabled: !is_key,
                   isHidden: !is_key,
                 },
                 {
                   type: "textarea",
                   name: "key",
-                  placeholder:
-                    dataset_helptext.dataset_form_encryption.key_placeholder,
+                  placeholder: dataset_helptext.dataset_form_encryption.key_placeholder,
                   tooltip: dataset_helptext.dataset_form_encryption.key_tooltip,
-                  validation:
-                    dataset_helptext.dataset_form_encryption.key_validation,
+                  validation: dataset_helptext.dataset_form_encryption.key_validation,
                   required: true,
                   disabled: !is_key,
                   isHidden: !is_key,
@@ -1953,14 +1680,9 @@ export class VolumesListTableConfig implements InputTableConf {
                   type: "input",
                   name: "passphrase",
                   inputType: "password",
-                  placeholder:
-                    dataset_helptext.dataset_form_encryption
-                      .passphrase_placeholder,
-                  tooltip:
-                    dataset_helptext.dataset_form_encryption.passphrase_tooltip,
-                  validation:
-                    dataset_helptext.dataset_form_encryption
-                      .passphrase_validation,
+                  placeholder: dataset_helptext.dataset_form_encryption.passphrase_placeholder,
+                  tooltip: dataset_helptext.dataset_form_encryption.passphrase_tooltip,
+                  validation: dataset_helptext.dataset_form_encryption.passphrase_validation,
                   togglePw: true,
                   required: true,
                   disabled: is_key,
@@ -1969,41 +1691,30 @@ export class VolumesListTableConfig implements InputTableConf {
                 {
                   type: "input",
                   placeholder:
-                    dataset_helptext.dataset_form_encryption
-                      .confirm_passphrase_placeholder,
+                    dataset_helptext.dataset_form_encryption.confirm_passphrase_placeholder,
                   name: "confirm_passphrase",
                   inputType: "password",
                   required: true,
                   togglePw: true,
-                  validation: this.validationService.matchOtherValidator(
-                    "passphrase"
-                  ),
+                  validation: this.validationService.matchOtherValidator("passphrase"),
                   disabled: is_key,
                   isHidden: is_key,
                 },
                 {
                   type: "input",
                   name: "pbkdf2iters",
-                  placeholder:
-                    dataset_helptext.dataset_form_encryption
-                      .pbkdf2iters_placeholder,
-                  tooltip:
-                    dataset_helptext.dataset_form_encryption
-                      .pbkdf2iters_tooltip,
+                  placeholder: dataset_helptext.dataset_form_encryption.pbkdf2iters_placeholder,
+                  tooltip: dataset_helptext.dataset_form_encryption.pbkdf2iters_tooltip,
                   required: true,
                   value: pbkdf2iters,
-                  validation:
-                    dataset_helptext.dataset_form_encryption
-                      .pbkdf2iters_validation,
+                  validation: dataset_helptext.dataset_form_encryption.pbkdf2iters_validation,
                   disabled: is_key,
                   isHidden: is_key,
                 },
                 {
                   type: "input",
                   name: "algorithm",
-                  placeholder:
-                    dataset_helptext.dataset_form_encryption
-                      .algorithm_placeholder,
+                  placeholder: dataset_helptext.dataset_form_encryption.algorithm_placeholder,
                   disabled: true,
                   value:
                     row.encryption_algorithm && row.encryption_algorithm.value
@@ -2013,22 +1724,18 @@ export class VolumesListTableConfig implements InputTableConf {
                 {
                   type: "checkbox",
                   name: "confirm",
-                  placeholder:
-                    helptext.encryption_options_dialog.confirm_checkbox,
+                  placeholder: helptext.encryption_options_dialog.confirm_checkbox,
                   required: true,
                 },
               ],
               saveButtonText: helptext.encryption_options_dialog.save_button,
               afterInit: function (entityDialog) {
-                const inherit_encryption_fg =
-                  entityDialog.formGroup.controls["inherit_encryption"];
-                const encryption_type_fg =
-                  entityDialog.formGroup.controls["encryption_type"];
+                const inherit_encryption_fg = entityDialog.formGroup.controls["inherit_encryption"];
+                const encryption_type_fg = entityDialog.formGroup.controls["encryption_type"];
                 const encryption_type_fc = _.find(entityDialog.fieldConfig, {
                   name: "encryption_type",
                 });
-                const generate_key_fg =
-                  entityDialog.formGroup.controls["generate_key"];
+                const generate_key_fg = entityDialog.formGroup.controls["generate_key"];
 
                 const all_encryption_fields = [
                   "encryption_type",
@@ -2042,29 +1749,17 @@ export class VolumesListTableConfig implements InputTableConf {
                 if (inherit_encryption_fg.value) {
                   // if already inheriting show as inherit
                   for (let i = 0; i < all_encryption_fields.length; i++) {
-                    entityDialog.setDisabled(
-                      all_encryption_fields[i],
-                      true,
-                      true
-                    );
+                    entityDialog.setDisabled(all_encryption_fields[i], true, true);
                   }
                 }
                 const inherit_encryption_subscription = inherit_encryption_fg.valueChanges.subscribe(
                   (inherit) => {
                     if (inherit) {
                       for (let i = 0; i < all_encryption_fields.length; i++) {
-                        entityDialog.setDisabled(
-                          all_encryption_fields[i],
-                          inherit,
-                          inherit
-                        );
+                        entityDialog.setDisabled(all_encryption_fields[i], inherit, inherit);
                       }
                     } else {
-                      entityDialog.setDisabled(
-                        "encryption_type",
-                        inherit,
-                        inherit
-                      );
+                      entityDialog.setDisabled("encryption_type", inherit, inherit);
                       if (passphrase_parent || key_child) {
                         // keep hidden if passphrase parent;
                         encryption_type_fc.isHidden = true;
@@ -2102,10 +1797,7 @@ export class VolumesListTableConfig implements InputTableConf {
 
                 const generate_key_subscription = generate_key_fg.valueChanges.subscribe(
                   (gen_key) => {
-                    if (
-                      !inherit_encryption_fg.value &&
-                      encryption_type_fg.value === "key"
-                    ) {
+                    if (!inherit_encryption_fg.value && encryption_type_fg.value === "key") {
                       entityDialog.setDisabled("key", gen_key, gen_key);
                     }
                   }
@@ -2119,30 +1811,23 @@ export class VolumesListTableConfig implements InputTableConf {
                 if (formValue.inherit_encryption) {
                   if (row.is_encrypted_root) {
                     // only try to change to inherit if not currently inheriting
-                    method =
-                      "pool.dataset.inherit_parent_encryption_properties";
+                    method = "pool.dataset.inherit_parent_encryption_properties";
                     entityDialog.loader.open();
                     entityDialog.ws.call(method, payload).subscribe(
                       (res) => {
                         entityDialog.loader.close();
                         self.dialogService.Info(
                           helptext.encryption_options_dialog.dialog_saved_title,
-                          helptext.encryption_options_dialog
-                            .dialog_saved_message1 +
+                          helptext.encryption_options_dialog.dialog_saved_message1 +
                             row.id +
-                            helptext.encryption_options_dialog
-                              .dialog_saved_message2
+                            helptext.encryption_options_dialog.dialog_saved_message2
                         );
                         entityDialog.dialogRef.close();
                         self.parentVolumesListComponent.repaintMe();
                       },
                       (err) => {
                         entityDialog.loader.close();
-                        new EntityUtils().handleWSError(
-                          entityDialog,
-                          err,
-                          self.dialogService
-                        );
+                        new EntityUtils().handleWSError(entityDialog, err, self.dialogService);
                       }
                     );
                   } else {
@@ -2162,9 +1847,7 @@ export class VolumesListTableConfig implements InputTableConf {
                   payload.push(body);
                   const dialogRef = self.mdDialog.open(EntityJobComponent, {
                     data: {
-                      title:
-                        helptext.encryption_options_dialog
-                          .save_encryption_options,
+                      title: helptext.encryption_options_dialog.save_encryption_options,
                     },
                     disableClose: true,
                   });
@@ -2178,20 +1861,13 @@ export class VolumesListTableConfig implements InputTableConf {
                       dialogRef.close();
                       entityDialog.dialogRef.close();
                       self.translate
-                        .get(
-                          helptext.encryption_options_dialog
-                            .dialog_saved_message1
-                        )
+                        .get(helptext.encryption_options_dialog.dialog_saved_message1)
                         .subscribe((msg1) => {
                           self.translate
-                            .get(
-                              helptext.encryption_options_dialog
-                                .dialog_saved_message2
-                            )
+                            .get(helptext.encryption_options_dialog.dialog_saved_message2)
                             .subscribe((msg2) => {
                               self.dialogService.Info(
-                                helptext.encryption_options_dialog
-                                  .dialog_saved_title,
+                                helptext.encryption_options_dialog.dialog_saved_title,
                                 msg1 + row.id + msg2
                               );
                               self.parentVolumesListComponent.repaintMe();
@@ -2202,19 +1878,13 @@ export class VolumesListTableConfig implements InputTableConf {
                   dialogRef.componentInstance.failure.subscribe((err) => {
                     if (err) {
                       dialogRef.close();
-                      new EntityUtils().handleWSError(
-                        entityDialog,
-                        err,
-                        self.dialogService
-                      );
+                      new EntityUtils().handleWSError(entityDialog, err, self.dialogService);
                     }
                   });
                 }
               },
             };
-            this.dialogService
-              .dialogForm(this.dialogConf)
-              .subscribe((res) => {});
+            this.dialogService.dialogForm(this.dialogConf).subscribe((res) => {});
           },
         });
         if (rowData.is_encrypted_root && rowData.is_passphrase) {
@@ -2226,82 +1896,62 @@ export class VolumesListTableConfig implements InputTableConf {
               // lock
               const params = [row.id];
               let force_umount = false;
-              this.translate
-                .get(helptext.lock_dataset_dialog.dialog_title)
-                .subscribe((titleTr) => {
-                  this.translate
-                    .get(helptext.lock_dataset_dialog.dialog_message)
-                    .subscribe((messageTr) => {
-                      const ds = this.dialogService.confirm(
-                        titleTr + row.name,
-                        `${messageTr} ${row.name}?`,
-                        false,
-                        helptext.lock_dataset_dialog.button,
-                        true,
-                        helptext.lock_dataset_dialog.checkbox_message,
-                        "pool.dataset.lock",
-                        params
-                      );
+              this.translate.get(helptext.lock_dataset_dialog.dialog_title).subscribe((titleTr) => {
+                this.translate
+                  .get(helptext.lock_dataset_dialog.dialog_message)
+                  .subscribe((messageTr) => {
+                    const ds = this.dialogService.confirm(
+                      titleTr + row.name,
+                      `${messageTr} ${row.name}?`,
+                      false,
+                      helptext.lock_dataset_dialog.button,
+                      true,
+                      helptext.lock_dataset_dialog.checkbox_message,
+                      "pool.dataset.lock",
+                      params
+                    );
 
-                      ds.componentInstance.switchSelectionEmitter.subscribe(
-                        (res) => {
-                          force_umount = res;
-                        }
-                      );
-                      ds.afterClosed().subscribe((status) => {
-                        if (status) {
-                          this.translate
-                            .get(
-                              helptext.lock_dataset_dialog
-                                .locking_dataset_description
-                            )
-                            .subscribe((lock_ds_description) => {
-                              const dialogRef = this.mdDialog.open(
-                                EntityJobComponent,
-                                {
-                                  data: {
-                                    title:
-                                      helptext.lock_dataset_dialog
-                                        .locking_dataset,
-                                  },
-                                  disableClose: true,
-                                }
-                              );
-                              dialogRef.componentInstance.setDescription(
-                                lock_ds_description + rowData.name
-                              );
-                              params.push({ force_umount: force_umount });
-                              dialogRef.componentInstance.setCall(
-                                ds.componentInstance.method,
-                                params
-                              );
-                              dialogRef.componentInstance.submit();
-                              let done = false;
-                              dialogRef.componentInstance.success.subscribe(
-                                (res) => {
-                                  if (!done) {
-                                    dialogRef.close(false);
-                                    done = true;
-                                    this.parentVolumesListComponent.repaintMe();
-                                  }
-                                }
-                              );
-
-                              dialogRef.componentInstance.failure.subscribe(
-                                (res) => {
-                                  dialogRef.close(false);
-                                  new EntityUtils().handleWSError(
-                                    this,
-                                    res,
-                                    this.dialogService
-                                  );
-                                }
-                              );
-                            });
-                        }
-                      });
+                    ds.componentInstance.switchSelectionEmitter.subscribe((res) => {
+                      force_umount = res;
                     });
-                });
+                    ds.afterClosed().subscribe((status) => {
+                      if (status) {
+                        this.translate
+                          .get(helptext.lock_dataset_dialog.locking_dataset_description)
+                          .subscribe((lock_ds_description) => {
+                            const dialogRef = this.mdDialog.open(EntityJobComponent, {
+                              data: {
+                                title: helptext.lock_dataset_dialog.locking_dataset,
+                              },
+                              disableClose: true,
+                            });
+                            dialogRef.componentInstance.setDescription(
+                              lock_ds_description + rowData.name
+                            );
+                            params.push({ force_umount: force_umount });
+                            dialogRef.componentInstance.setCall(
+                              ds.componentInstance.method,
+                              params
+                            );
+                            dialogRef.componentInstance.submit();
+                            let done = false;
+                            dialogRef.componentInstance.success.subscribe((res) => {
+                              if (!done) {
+                                dialogRef.close(false);
+                                done = true;
+                                this.parentVolumesListComponent.repaintMe();
+                              }
+                            });
+
+                            dialogRef.componentInstance.failure.subscribe((res) => {
+                              dialogRef.close(false);
+                              new EntityUtils().handleWSError(this, res, this.dialogService);
+                            });
+                          });
+                      }
+                    });
+                  });
+              });
             },
           });
         }
@@ -2319,78 +1969,61 @@ export class VolumesListTableConfig implements InputTableConf {
             name: T("Export Key"),
             label: T("Export Key"),
             onClick: (row) => {
-              this.dialogService
-                .passwordConfirm(message)
-                .subscribe((export_keys) => {
-                  if (export_keys) {
-                    const dialogRef = this.mdDialog.open(EntityJobComponent, {
-                      data: { title: T("Retrieving Key") },
-                      disableClose: true,
-                    });
-                    dialogRef.componentInstance.setCall(
-                      "pool.dataset.export_key",
-                      [rowData.id]
-                    );
-                    dialogRef.componentInstance.submit();
-                    dialogRef.componentInstance.success.subscribe((res) => {
-                      dialogRef.close();
-                      this.dialogService
-                        .confirm(
-                          `Key for ${rowData.id}`,
-                          res.result,
-                          true,
-                          T("Download Key"),
-                          false,
-                          "",
-                          "",
-                          "",
-                          "",
-                          false,
-                          T("Close")
-                        )
-                        .subscribe((download) => {
-                          if (download) {
-                            this.loader.open();
-                            this.ws
-                              .call("core.download", [
-                                "pool.dataset.export_key",
-                                [rowData.id, true],
-                                fileName,
-                              ])
-                              .subscribe(
-                                (res) => {
-                                  this.loader.close();
-                                  const url = res[1];
-                                  this.storageService
-                                    .streamDownloadFile(
-                                      this.http,
-                                      url,
-                                      fileName,
-                                      mimetype
-                                    )
-                                    .subscribe((file) => {
-                                      if (res !== null && res !== "") {
-                                        this.storageService.downloadBlob(
-                                          file,
-                                          fileName
-                                        );
-                                      }
-                                    });
-                                },
-                                (e) => {
-                                  this.loader.close();
-                                  new EntityUtils().handleWSError(
-                                    this,
-                                    e,
-                                    this.dialogService
-                                  );
-                                }
-                              );
-                          }
-                        });
-                    });
-                  }
-                });
+              this.dialogService.passwordConfirm(message).subscribe((export_keys) => {
+                if (export_keys) {
+                  const dialogRef = this.mdDialog.open(EntityJobComponent, {
+                    data: { title: T("Retrieving Key") },
+                    disableClose: true,
+                  });
+                  dialogRef.componentInstance.setCall("pool.dataset.export_key", [rowData.id]);
+                  dialogRef.componentInstance.submit();
+                  dialogRef.componentInstance.success.subscribe((res) => {
+                    dialogRef.close();
+                    this.dialogService
+                      .confirm(
+                        `Key for ${rowData.id}`,
+                        res.result,
+                        true,
+                        T("Download Key"),
+                        false,
+                        "",
+                        "",
+                        "",
+                        "",
+                        false,
+                        T("Close")
+                      )
+                      .subscribe((download) => {
+                        if (download) {
+                          this.loader.open();
+                          this.ws
+                            .call("core.download", [
+                              "pool.dataset.export_key",
+                              [rowData.id, true],
+                              fileName,
+                            ])
+                            .subscribe(
+                              (res) => {
+                                this.loader.close();
+                                const url = res[1];
+                                this.storageService
+                                  .streamDownloadFile(this.http, url, fileName, mimetype)
+                                  .subscribe((file) => {
+                                    if (res !== null && res !== "") {
+                                      this.storageService.downloadBlob(file, fileName);
+                                    }
+                                  });
+                              },
+                              (e) => {
+                                this.loader.close();
+                                new EntityUtils().handleWSError(this, e, this.dialogService);
+                              }
+                            );
+                        }
+                      });
+                  });
+                }
+              });
             },
           });
         }
@@ -2400,9 +2033,7 @@ export class VolumesListTableConfig implements InputTableConf {
   }
 
   clickAction(rowData) {
-    const editPermissions = rowData.actions[0].actions.find(
-      (o) => o.name === "Edit Permissions"
-    );
+    const editPermissions = rowData.actions[0].actions.find((o) => o.name === "Edit Permissions");
     if (!rowData.locked && editPermissions) {
       if (!rowData.id.includes("/")) {
         editPermissions.disabled = true;
@@ -2464,32 +2095,23 @@ export class VolumesListTableConfig implements InputTableConf {
           if (dataset_data2[k].compression) {
             dataset_data2[k].compression.source !== "INHERITED"
               ? (dataObj.compression = dataset_data2[k].compression.parsed)
-              : (dataObj.compression =
-                  inherits + " (" + dataset_data2[k].compression.parsed + ")");
+              : (dataObj.compression = inherits + " (" + dataset_data2[k].compression.parsed + ")");
           }
           if (dataset_data2[k].compressratio) {
             dataset_data2[k].compressratio.source !== "INHERITED"
               ? (dataObj.compressratio = dataset_data2[k].compressratio.parsed)
               : (dataObj.compressratio =
-                  inherits +
-                  " (" +
-                  dataset_data2[k].compressratio.parsed +
-                  ")");
+                  inherits + " (" + dataset_data2[k].compressratio.parsed + ")");
           }
           if (dataset_data2[k].readonly) {
             dataset_data2[k].readonly.source !== "INHERITED"
               ? (dataObj.readonly = dataset_data2[k].readonly.parsed)
-              : (dataObj.readonly =
-                  inherits + " (" + dataset_data2[k].readonly.parsed + ")");
+              : (dataObj.readonly = inherits + " (" + dataset_data2[k].readonly.parsed + ")");
           }
           if (dataset_data2[k].deduplication) {
             dataset_data2[k].deduplication.source !== "INHERITED"
               ? (dataObj.dedup = dataset_data2[k].deduplication.parsed)
-              : (dataObj.dedup =
-                  inherits +
-                  " (" +
-                  dataset_data2[k].deduplication.parsed +
-                  ")");
+              : (dataObj.dedup = inherits + " (" + dataset_data2[k].deduplication.parsed + ")");
           }
           if (dataset_data2[k].comments) {
             dataset_data2[k].comments.source !== "INHERITED"
@@ -2507,12 +2129,9 @@ export class VolumesListTableConfig implements InputTableConf {
         );
         dataObj.is_encrypted_root = dataObj.id === dataObj.encryption_root;
         if (dataObj.is_encrypted_root) {
-          this.parentVolumesListComponent.has_encrypted_root[
-            parent.pool
-          ] = true;
+          this.parentVolumesListComponent.has_encrypted_root[parent.pool] = true;
         }
-        dataObj.non_encrypted_on_encrypted =
-          !dataObj.encrypted && parent.encrypted;
+        dataObj.non_encrypted_on_encrypted = !dataObj.encrypted && parent.encrypted;
       }
     });
   }
@@ -2722,11 +2341,9 @@ export class VolumesListComponent
     });
 
     if (!this.refreshTableSubscription) {
-      this.refreshTableSubscription = this.modalService.refreshTable$.subscribe(
-        () => {
-          this.repaintMe();
-        }
-      );
+      this.refreshTableSubscription = this.modalService.refreshTable$.subscribe(() => {
+        this.repaintMe();
+      });
     }
 
     combineLatest([
@@ -2736,9 +2353,7 @@ export class VolumesListComponent
       async ([pools, datasets]) => {
         if (pools.length > 0) {
           for (const pool of pools) {
-            pool.is_upgraded = await this.ws
-              .call("pool.is_upgraded", [pool.id])
-              .toPromise();
+            pool.is_upgraded = await this.ws.call("pool.is_upgraded", [pool.id]).toPromise();
             if (!pool.is_decrypted) {
               pool.status = "LOCKED";
             }
@@ -2785,10 +2400,9 @@ export class VolumesListComponent
                 pool.children[0].used_parsed = this.storage.convertBytestoHumanReadable(
                   pool.children[0].used.parsed || 0
                 );
-                pool.availStr = (<any>window).filesize(
-                  pool.children[0].available.parsed,
-                  { standard: "iec" }
-                );
+                pool.availStr = (<any>window).filesize(pool.children[0].available.parsed, {
+                  standard: "iec",
+                });
                 pool.children[0].has_encrypted_children = false;
                 for (let i = 0; i < datasets.length; i++) {
                   const ds = datasets[i];
@@ -2810,8 +2424,7 @@ export class VolumesListComponent
               try {
                 const used_pct =
                   pool.children[0].used.parsed /
-                  (pool.children[0].used.parsed +
-                    pool.children[0].available.parsed);
+                  (pool.children[0].used.parsed + pool.children[0].available.parsed);
                 pool.usedStr =
                   "" +
                   (<any>window).filesize(pool.children[0].used.parsed, {
@@ -2829,11 +2442,7 @@ export class VolumesListComponent
           }
         }
 
-        this.zfsPoolRows = this.sorter.tableSorter(
-          this.zfsPoolRows,
-          "name",
-          "asc"
-        );
+        this.zfsPoolRows = this.sorter.tableSorter(this.zfsPoolRows, "name", "asc");
 
         if (this.zfsPoolRows.length === 1) {
           this.expanded = true;
@@ -2848,11 +2457,7 @@ export class VolumesListComponent
         this.showDefaults = true;
         this.showSpinner = false;
 
-        this.dialogService.errorReport(
-          T("Error getting pool data."),
-          res.message,
-          res.stack
-        );
+        this.dialogService.errorReport(T("Error getting pool data."), res.message, res.stack);
       }
     );
 

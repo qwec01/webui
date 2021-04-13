@@ -31,14 +31,12 @@ export class DriveTray {
     const alt = altAssets ? "_alt" : "";
 
     this.background = PIXI.projection.Sprite2d.from(
-      this.loader.resources[this.model + alt + "_drivetray_bg"].texture
-        .baseTexture
+      this.loader.resources[this.model + alt + "_drivetray_bg"].texture.baseTexture
     );
     this.container.addChild(this.background);
 
     this.handle = PIXI.Sprite.from(
-      this.loader.resources[this.model + alt + "_drivetray_handle"].texture
-        .baseTexture
+      this.loader.resources[this.model + alt + "_drivetray_handle"].texture.baseTexture
     );
 
     if (this.vertical) {

@@ -1,9 +1,7 @@
 import { T } from "../../../../translate-marker";
 
 export default {
-  vdev_diskSizeErrorMsg: T(
-    "Mixing disks of different sizes in a vdev is not allowed."
-  ),
+  vdev_diskSizeErrorMsg: T("Mixing disks of different sizes in a vdev is not allowed."),
   vdev_type_tooltip: T(
     "Arrange the disks according to capacity, redundancy, and \
  performance considerations. More types become available as more disks are added to the vdev.<br> \

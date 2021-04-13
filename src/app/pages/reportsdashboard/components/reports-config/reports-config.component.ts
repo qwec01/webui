@@ -26,9 +26,7 @@ export class ReportsConfigComponent {
       name: helptext.reset_button,
       function: () => {
         this.entityForm.formGroup.controls["cpu_in_percentage"].setValue(false);
-        this.entityForm.formGroup.controls[
-          "graphite_separateinstances"
-        ].setValue(false);
+        this.entityForm.formGroup.controls["graphite_separateinstances"].setValue(false);
         this.entityForm.formGroup.controls["graphite"].setValue(
           this.entityForm.wsResponse["graphite"]
         );
@@ -107,12 +105,7 @@ export class ReportsConfigComponent {
       body.cpu_in_percentage !== this.isCpuCheckboxChecked
     ) {
       this.dialog
-        .confirm(
-          helptext.dialog.title,
-          helptext.dialog.message,
-          false,
-          helptext.dialog.action
-        )
+        .confirm(helptext.dialog.title, helptext.dialog.message, false, helptext.dialog.action)
         .subscribe((res) => {
           if (res) {
             body.confirm_rrd_destroy = true;

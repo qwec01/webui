@@ -21,9 +21,7 @@ export function ipv4or6Validator(control: string) {
       return null;
     }
 
-    if (
-      !ipRegex({ exact: true, includeBoundaries: true }).test(thisControl.value)
-    ) {
+    if (!ipRegex({ exact: true, includeBoundaries: true }).test(thisControl.value)) {
       return { ip2: true };
     }
 
@@ -160,15 +158,8 @@ export function ipValidator(type: string = "ipv4" || "ipv6" || "all") {
       const wildcard = ipType === "ipv4" ? "0.0.0.0" : "::";
       if (_.indexOf(thisControl.value, wildcard) !== -1) {
         for (let i = 0; i < thisControl.value.length; i++) {
-          if (
-            thisControl.value[i] !== wildcard &&
-            regex.test(thisControl.value[i])
-          ) {
-            error = [
-              ipType === "ipv4" ? "IPv4" : "IPv6",
-              wildcard,
-              thisControl.value[i],
-            ];
+          if (thisControl.value[i] !== wildcard && regex.test(thisControl.value[i])) {
+            error = [ipType === "ipv4" ? "IPv4" : "IPv6", wildcard, thisControl.value[i]];
             return false;
           }
         }

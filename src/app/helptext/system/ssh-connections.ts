@@ -6,10 +6,8 @@ export default {
   fieldset_advanced: T("More Options"),
 
   name_placeholder: T("Name"),
-  name_tooltip: T(
-    "Name of this SSH connection. SSH connection names \
- must be unique."
-  ),
+  name_tooltip: T("Name of this SSH connection. SSH connection names \
+ must be unique."),
 
   setup_method_placeholder: T("Setup Method"),
   setup_method_tooltip: T(
@@ -26,10 +24,8 @@ export default {
   host_tooltip: T("Hostname or IP address of the remote system."),
 
   port_placeholder: T("Port"),
-  port_tooltip: T(
-    "Port number on the remote system to use for the SSH \
- connection."
-  ),
+  port_tooltip: T("Port number on the remote system to use for the SSH \
+ connection."),
 
   username_placeholder: T("Username"),
   username_tooltip: T("Username for logging in to the remote system."),
@@ -75,10 +71,8 @@ export default {
   ),
 
   password_placeholder: T("Password"),
-  password_tooltip: T(
-    "User account password for logging into the \
- remote system."
-  ),
+  password_tooltip: T("User account password for logging into the \
+ remote system."),
 
   discover_remote_host_key_button: T("Discover Remote Host Key"),
   formTitle: T("SSH Connections"),

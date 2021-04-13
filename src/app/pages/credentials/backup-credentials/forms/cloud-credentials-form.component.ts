@@ -316,16 +316,11 @@ export class CloudCredentialsFormComponent {
         {
           type: "readfile",
           name: "service_account_credentials-GOOGLE_CLOUD_STORAGE",
-          placeholder:
-            helptext.service_account_credentials_google_cloud_storage
-              .placeholder,
-          tooltip:
-            helptext.service_account_credentials_google_cloud_storage.tooltip,
+          placeholder: helptext.service_account_credentials_google_cloud_storage.placeholder,
+          tooltip: helptext.service_account_credentials_google_cloud_storage.tooltip,
           required: true,
           isHidden: true,
-          validation:
-            helptext.service_account_credentials_google_cloud_storage
-              .validation,
+          validation: helptext.service_account_credentials_google_cloud_storage.validation,
           relation: [
             {
               action: "SHOW",
@@ -1339,10 +1334,7 @@ export class CloudCredentialsFormComponent {
         }
         value["attributes"] = attributes;
 
-        if (
-          value.attributes.private_key &&
-          value.attributes.private_key === "NEW"
-        ) {
+        if (value.attributes.private_key && value.attributes.private_key === "NEW") {
           this.makeNewKeyPair(value);
         } else {
           this.verifyCredentials(value);
@@ -1387,16 +1379,14 @@ export class CloudCredentialsFormComponent {
     const privateKeySFTPField = _.find(authenticationFieldset.config, {
       name: "private_key-SFTP",
     });
-    this.ws
-      .call("keychaincredential.query", [[["type", "=", "SSH_KEY_PAIR"]]])
-      .subscribe((res) => {
-        for (let i = 0; i < res.length; i++) {
-          privateKeySFTPField.options.push({
-            label: res[i].name,
-            value: res[i].id,
-          });
-        }
-      });
+    this.ws.call("keychaincredential.query", [[["type", "=", "SSH_KEY_PAIR"]]]).subscribe((res) => {
+      for (let i = 0; i < res.length; i++) {
+        privateKeySFTPField.options.push({
+          label: res[i].name,
+          value: res[i].id,
+        });
+      }
+    });
   }
 
   isCustActionVisible(actionname: string) {
@@ -1448,29 +1438,15 @@ export class CloudCredentialsFormComponent {
 
       this.oauthURL = _.find(this.providers, { name: res }).credentials_oauth;
       this.credentialsOauth = this.oauthURL == null ? false : true;
-      entityForm.setDisabled(
-        "client_id",
-        !this.credentialsOauth,
-        !this.credentialsOauth
-      );
-      entityForm.setDisabled(
-        "client_secret",
-        !this.credentialsOauth,
-        !this.credentialsOauth
-      );
-      entityForm.setDisabled(
-        "oauth_signin_button",
-        !this.credentialsOauth,
-        !this.credentialsOauth
-      );
+      entityForm.setDisabled("client_id", !this.credentialsOauth, !this.credentialsOauth);
+      entityForm.setDisabled("client_secret", !this.credentialsOauth, !this.credentialsOauth);
+      entityForm.setDisabled("oauth_signin_button", !this.credentialsOauth, !this.credentialsOauth);
     });
     // preview service_account_credentials
     entityForm.formGroup.controls[
       "service_account_credentials-GOOGLE_CLOUD_STORAGE"
     ].valueChanges.subscribe((value) => {
-      entityForm.formGroup.controls["preview-GOOGLE_CLOUD_STORAGE"].setValue(
-        value
-      );
+      entityForm.formGroup.controls["preview-GOOGLE_CLOUD_STORAGE"].setValue(value);
     });
     // Allow blank values for pass and key_file fields (but at least one should be non-blank)
     entityForm.formGroup.controls["pass-SFTP"].valueChanges.subscribe((res) => {
@@ -1479,37 +1455,29 @@ export class CloudCredentialsFormComponent {
         this.setFieldRequired("private_key-SFTP", required, entityForm);
       }
     });
-    entityForm.formGroup.controls["private_key-SFTP"].valueChanges.subscribe(
-      (res) => {
-        if (res !== undefined) {
-          const required = res === "" ? true : false;
-          this.setFieldRequired("pass-SFTP", required, entityForm);
-        }
+    entityForm.formGroup.controls["private_key-SFTP"].valueChanges.subscribe((res) => {
+      if (res !== undefined) {
+        const required = res === "" ? true : false;
+        this.setFieldRequired("pass-SFTP", required, entityForm);
       }
-    );
+    });
 
     const driveTypeCtrl = entityForm.formGroup.controls["drive_type-ONEDRIVE"];
     const driveIdCtrl = entityForm.formGroup.controls["drive_id-ONEDRIVE"];
-    entityForm.formGroup.controls["drives-ONEDRIVE"].valueChanges.subscribe(
-      (res) => {
-        if (res) {
-          driveTypeCtrl.setValue(res.drive_type);
-          driveIdCtrl.setValue(res.drive_id);
-        } else {
-          driveTypeCtrl.setValue("PERSONAL");
-          driveIdCtrl.setValue(null);
-        }
+    entityForm.formGroup.controls["drives-ONEDRIVE"].valueChanges.subscribe((res) => {
+      if (res) {
+        driveTypeCtrl.setValue(res.drive_type);
+        driveIdCtrl.setValue(res.drive_id);
+      } else {
+        driveTypeCtrl.setValue("PERSONAL");
+        driveIdCtrl.setValue(null);
       }
-    );
+    });
 
-    const authCtrl =
-      entityForm.formGroup.controls["auth_version-OPENSTACK_SWIFT"];
+    const authCtrl = entityForm.formGroup.controls["auth_version-OPENSTACK_SWIFT"];
     const tenantCtrl = entityForm.formGroup.controls["tenant-OPENSTACK_SWIFT"];
-    const tenantIdCtrl =
-      entityForm.formGroup.controls["tenant_id-OPENSTACK_SWIFT"];
-    entityForm.formGroup.controls[
-      "auth_version-OPENSTACK_SWIFT"
-    ].valueChanges.subscribe((res) => {
+    const tenantIdCtrl = entityForm.formGroup.controls["tenant_id-OPENSTACK_SWIFT"];
+    entityForm.formGroup.controls["auth_version-OPENSTACK_SWIFT"].valueChanges.subscribe((res) => {
       if (res === "1") {
         this.setFieldRequired("tenant-OPENSTACK_SWIFT", false, entityForm);
         this.setFieldRequired("tenant_id-OPENSTACK_SWIFT", false, entityForm);
@@ -1524,9 +1492,7 @@ export class CloudCredentialsFormComponent {
       }
     });
 
-    entityForm.formGroup.controls[
-      "tenant-OPENSTACK_SWIFT"
-    ].valueChanges.subscribe((res) => {
+    entityForm.formGroup.controls["tenant-OPENSTACK_SWIFT"].valueChanges.subscribe((res) => {
       if (authCtrl.value !== "1") {
         this.setFieldRequired(
           "tenant_id-OPENSTACK_SWIFT",
@@ -1535,9 +1501,7 @@ export class CloudCredentialsFormComponent {
         );
       }
     });
-    entityForm.formGroup.controls[
-      "tenant_id-OPENSTACK_SWIFT"
-    ].valueChanges.subscribe((res) => {
+    entityForm.formGroup.controls["tenant_id-OPENSTACK_SWIFT"].valueChanges.subscribe((res) => {
       if (authCtrl.value !== "1") {
         this.setFieldRequired(
           "tenant-OPENSTACK_SWIFT",
@@ -1554,12 +1518,7 @@ export class CloudCredentialsFormComponent {
       (res) => {
         this.entityForm.loader.close();
         if (res.valid) {
-          this.dialog.Info(
-            T("Valid"),
-            T("The Credential is valid."),
-            "500px",
-            "info"
-          );
+          this.dialog.Info(T("Valid"), T("The Credential is valid."), "500px", "info");
         } else {
           this.dialog.errorReport("Error", res.excerpt, res.error);
         }
@@ -1573,9 +1532,7 @@ export class CloudCredentialsFormComponent {
 
   logInToProvider() {
     window.open(
-      this.oauthURL +
-        "?origin=" +
-        encodeURIComponent(window.location.toString()),
+      this.oauthURL + "?origin=" + encodeURIComponent(window.location.toString()),
       "_blank",
       "width=640,height=480"
     );
@@ -1630,9 +1587,7 @@ export class CloudCredentialsFormComponent {
                 label: payload.name,
                 value: this.keyID,
               });
-              this.entityForm.formGroup.controls["private_key-SFTP"].setValue(
-                this.keyID
-              );
+              this.entityForm.formGroup.controls["private_key-SFTP"].setValue(this.keyID);
               if (submitting) {
                 value["private_key-SFTP"] = sshKey.id;
                 this.finishSubmit(value);
@@ -1668,9 +1623,7 @@ export class CloudCredentialsFormComponent {
         ) {
           attr_name = item.split("-")[0];
           attributes[attr_name] =
-            attr_name === "auth_version"
-              ? parseInt(value[item], 10)
-              : value[item];
+            attr_name === "auth_version" ? parseInt(value[item], 10) : value[item];
         }
         delete value[item];
       }

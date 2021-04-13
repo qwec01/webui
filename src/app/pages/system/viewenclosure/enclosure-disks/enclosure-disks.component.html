@@ -29,9 +29,7 @@
 
     <!-- ENCLOSURE RENAME -->
     <div class="enclosure-label-actions">
-      <button (click)="labelForm()" mat-button color="default">
-        EDIT LABEL
-      </button>
+      <button (click)="labelForm()" mat-button color="default">EDIT LABEL</button>
     </div>
   </mat-toolbar>
 
@@ -39,11 +37,7 @@
   <tab-content
     class="other-tab"
     *ngIf="currentTab.alias !== 'Disks'"
-    [data]="
-      system.enclosures[selectedEnclosure.enclosureKey].elements[
-        currentTab.elementIndex
-      ]
-    "
+    [data]="system.enclosures[selectedEnclosure.enclosureKey].elements[currentTab.elementIndex]"
   ></tab-content>
 
   <mat-card-content id="Disks-content" [class]="currentTab.alias">
@@ -71,21 +65,12 @@
                   [style.background]="
                     subenclosure
                       ? theme[theme.accentColors[subenclosure.poolKeys[pool]]]
-                      : theme[
-                          theme.accentColors[selectedEnclosure.poolKeys[pool]]
-                        ]
+                      : theme[theme.accentColors[selectedEnclosure.poolKeys[pool]]]
                   "
                 ></div>
                 {{ pool }}
-                <span
-                  *ngIf="
-                    !system.pools[selectedEnclosure.poolKeys[pool]].healthy
-                  "
-                  ><mat-icon
-                    fontSet="mdi-set"
-                    role="img"
-                    fontIcon="mdi-alert"
-                  ></mat-icon
+                <span *ngIf="!system.pools[selectedEnclosure.poolKeys[pool]].healthy"
+                  ><mat-icon fontSet="mdi-set" role="img" fontIcon="mdi-alert"></mat-icon
                 ></span>
               </div>
             </div>
@@ -153,9 +138,7 @@
               <span class="semibold">Function:</span>
               <span>
                 {{
-                  selectedVdev.topology == "None"
-                    ? "UNKNOWN"
-                    : selectedVdev.topology.toUpperCase()
+                  selectedVdev.topology == "None" ? "UNKNOWN" : selectedVdev.topology.toUpperCase()
                 }}</span
               >
             </div>
@@ -181,9 +164,7 @@
               >
                 <div
                   class="swatch"
-                  [style.background]="
-                    selectedDisk.devname == disk ? theme.yellow : theme.cyan
-                  "
+                  [style.background]="selectedDisk.devname == disk ? theme.yellow : theme.cyan"
                 ></div>
                 {{ disk }} <span> {{ selectedEnclosure.disks[disk] }}</span>
                 <span *ngIf="!selectedVdev.slots[disk]"
@@ -205,36 +186,19 @@
         </div>
 
         <!-- CAPTION OVERLAY -->
-        <div
-          *ngIf="chassis && !chassis.rear && !chassis.internal"
-          class="caption dom-overlay"
-        >
+        <div *ngIf="chassis && !chassis.rear && !chassis.internal" class="caption dom-overlay">
           Choose a Disk
         </div>
 
         <!-- FRONT/REAR TOGGLE -->
         <!--<div *ngIf="subenclosure && currentView != 'expanders'" class="caption dom-overlay front-rear-toggle">-->
         <div
-          *ngIf="
-            chassis &&
-            (chassis.rear || chassis.internal) &&
-            currentView != 'expanders'
-          "
+          *ngIf="chassis && (chassis.rear || chassis.internal) && currentView != 'expanders'"
           class="caption dom-overlay front-rear-toggle"
         >
           <button mat-button (click)="enclosureOverride('front')">FRONT</button>
-          <button
-            *ngIf="chassis.rear"
-            mat-button
-            (click)="enclosureOverride('rear')"
-          >
-            REAR
-          </button>
-          <button
-            *ngIf="chassis.internal"
-            mat-button
-            (click)="enclosureOverride('rear')"
-          >
+          <button *ngIf="chassis.rear" mat-button (click)="enclosureOverride('rear')">REAR</button>
+          <button *ngIf="chassis.internal" mat-button (click)="enclosureOverride('rear')">
             Internal
           </button>
         </div>
@@ -270,11 +234,7 @@
         *ngIf="currentView == 'details'"
         ><mat-icon role="img">chevron_left</mat-icon></a
       >
-      {{
-        selectedDisk
-          ? "Disk Details for " + selectedDisk.name
-          : "Disks Overview"
-      }}
+      {{ selectedDisk ? "Disk Details for " + selectedDisk.name : "Disks Overview" }}
     </div>
 
     <!-- DETAILS/OVERVIEW -->
@@ -312,32 +272,17 @@
             <div class="primary-number">{{ enclosurePools.length }}</div>
             <div class="title">Pools in Enclosure</div>
             <!--<div class="subtitle">{{system.profile.length > 1 ? system.profile.length - 1 : 'No' }} other enclosures detected</div>-->
-            <div
-              *ngIf="unhealthyPools && unhealthyPools.length == 1"
-              class="subtitle"
-            >
-              Pool "{{ unhealthyPools[0].name }}" is
-              {{ unhealthyPools[0].status }}.
+            <div *ngIf="unhealthyPools && unhealthyPools.length == 1" class="subtitle">
+              Pool "{{ unhealthyPools[0].name }}" is {{ unhealthyPools[0].status }}.
             </div>
-            <div
-              *ngIf="unhealthyPools && unhealthyPools.length > 1"
-              class="subtitle"
-            >
-              {{ unhealthyPools[0] }} and {{ unhealthyPools.length - 1 }} other
-              pools are not healthy.
+            <div *ngIf="unhealthyPools && unhealthyPools.length > 1" class="subtitle">
+              {{ unhealthyPools[0] }} and {{ unhealthyPools.length - 1 }} other pools are not
+              healthy.
             </div>
-            <div
-              *ngIf="unhealthyPools && unhealthyPools.length < 1"
-              class="subtitle"
-            >
+            <div *ngIf="unhealthyPools && unhealthyPools.length < 1" class="subtitle">
               All pools are online.
             </div>
-            <button
-              mat-button
-              class=""
-              color="default"
-              (click)="setCurrentView('pools')"
-            >
+            <button mat-button class="" color="default" (click)="setCurrentView('pools')">
               SHOW POOLS
             </button>
           </div>
@@ -351,34 +296,24 @@
             fxLayoutAlign="center center"
           >
             <div class="primary-number">{{ failedDisks.length }}</div>
-            <div class="title">
-              Failed Disk<span *ngIf="failedDisks.length != 1">s</span>
-            </div>
+            <div class="title">Failed Disk<span *ngIf="failedDisks.length != 1">s</span></div>
             <div class="subtitle">
               <span *ngIf="failedDisks.length < 1">All disks healthy</span>
               <span *ngIf="failedDisks.length > 1"
-                >Check {{ failedDisks[0].disk }} and
-                {{ failedDisks.length - 1 }} other disk<span
+                >Check {{ failedDisks[0].disk }} and {{ failedDisks.length - 1 }} other disk<span
                   *ngIf="failedDisks.length > 2"
                   >s</span
                 ></span
               >
               <span *ngIf="failedDisks.length == 1"
                 >Check {{ failedDisks[0].disk }}
-                <span *ngIf="!subenclosure">
-                  in enclosure {{ failedDisks[0].enclosure }}</span
-                >
+                <span *ngIf="!subenclosure"> in enclosure {{ failedDisks[0].enclosure }}</span>
                 <span *ngIf="subenclosure">
-                  {{ failedDisks[0].location }} slot
-                  {{ failedDisks[0].slot }}</span
+                  {{ failedDisks[0].location }} slot {{ failedDisks[0].slot }}</span
                 >
               </span>
             </div>
-            <button
-              mat-button
-              color="default"
-              (click)="setCurrentView('status')"
-            >
+            <button mat-button color="default" (click)="setCurrentView('status')">
               SHOW STATUS
             </button>
           </div>
@@ -394,11 +329,7 @@
             <div class="primary-number">{{ expanders.length }}</div>
             <div class="title">SAS Expanders</div>
             <div class="subtitle">on this enclosure</div>
-            <button
-              mat-button
-              color="default"
-              (click)="setCurrentView('expanders')"
-            >
+            <button mat-button color="default" (click)="setCurrentView('expanders')">
               SHOW EXPANDER STATUS
             </button>
           </div>
@@ -409,12 +340,7 @@
     <!-- DETAILS/DISK -->
     <ng-template #details>
       <div #diskdetails id="disks-details">
-        <div
-          class="details-wrapper"
-          fxFill
-          fxLayout="row"
-          fxLayoutAlign="space-around stretch"
-        >
+        <div class="details-wrapper" fxFill fxLayout="row" fxLayoutAlign="space-around stretch">
           <div
             fxFlex="25"
             class="disk-basic-details"
@@ -425,12 +351,7 @@
             ><!-- disk icon + labels -->
             <div class="capacity">{{ converter(selectedDisk.size) }}</div>
             <div class="disk-actions">
-              <button
-                id="identify-btn"
-                mat-button
-                color="primary"
-                (click)="toggleSlotStatus()"
-              >
+              <button id="identify-btn" mat-button color="primary" (click)="toggleSlotStatus()">
                 Identify Drive
               </button>
             </div>
@@ -448,9 +369,7 @@
                   <div class="label">Pool</div>
                   <div class="value">
                     {{
-                      selectedDisk.vdev
-                        ? selectedDisk.vdev.pool
-                        : "Disk not attached to any pools."
+                      selectedDisk.vdev ? selectedDisk.vdev.pool : "Disk not attached to any pools."
                     }}
                   </div>
                 </div>
@@ -527,11 +446,7 @@
                 <div>
                   <div class="label">S.M.A.R.T. Options</div>
                   <div class="value">
-                    {{
-                      selectedDisk.smartoptions
-                        ? selectedDisk.smartoptions
-                        : "None"
-                    }}
+                    {{ selectedDisk.smartoptions ? selectedDisk.smartoptions : "None" }}
                   </div>
                 </div>
               </div>
@@ -569,11 +484,7 @@
                 <div>
                   <div class="label">Description</div>
                   <div class="value">
-                    {{
-                      selectedDisk.description
-                        ? selectedDisk.description
-                        : "None"
-                    }}
+                    {{ selectedDisk.description ? selectedDisk.description : "None" }}
                   </div>
                 </div>
               </div>

@@ -69,10 +69,7 @@ export class ChartEventsDialog implements OnInit {
   //return the chart app status
   appStatus() {
     let label: string;
-    if (
-      !this.catalogApp.update_available &&
-      !this.catalogApp.container_images_update_available
-    ) {
+    if (!this.catalogApp.update_available && !this.catalogApp.container_images_update_available) {
       label = helptext.chartEventDialog.statusUpToDate;
     } else if (
       this.catalogApp.update_available ||
@@ -88,8 +85,7 @@ export class ChartEventsDialog implements OnInit {
     let label: string;
     if (this.catalogApp.update_available) {
       label =
-        helptext.chartEventDialog.statusUpdateAvailableTo +
-        this.catalogApp.human_latest_version;
+        helptext.chartEventDialog.statusUpdateAvailableTo + this.catalogApp.human_latest_version;
     } else if (this.catalogApp.container_images_update_available) {
       label = helptext.chartEventDialog.containerImageStatusUpdateAvailableTo;
       const updateAvailableImages = Object.keys(this.containerImages).filter(

@@ -1,11 +1,6 @@
 <div *ngIf="rendered" class="widget stats-widget" ngClass.xs="double-height xs">
   <div class="card-container front">
-    <mat-card
-      class="front"
-      fxLayout="row"
-      fxLayoutWrap
-      fxLayoutAlign="space-between stretch"
-    >
+    <mat-card class="front" fxLayout="row" fxLayoutWrap fxLayoutAlign="space-between stretch">
       <mat-card-content>
         <mat-toolbar-row>
           <!-- Mobile Only: Exit widget -->
@@ -18,9 +13,7 @@
             ix-auto-type="button"
             ix-auto-identifier="goBack"
           >
-            <mat-icon (click)="goBack()" class="back-arrow"
-              >chevron_left</mat-icon
-            ></button
+            <mat-icon (click)="goBack()" class="back-arrow">chevron_left</mat-icon></button
           >&nbsp;&nbsp;
           <h3 class="mat-card-title-text">
             <div class="card-title-text">{{ title | translate }}</div>
@@ -90,11 +83,7 @@
                   *ngIf="usageMax >= 70"
                   [ngClass]="{ warn: usageMax < 90, danger: usageMax > 89 }"
                 >
-                  <mat-icon
-                    fontSet="mdi-set"
-                    fontIcon="mdi-alert"
-                    role="img"
-                  ></mat-icon>
+                  <mat-icon fontSet="mdi-set" fontIcon="mdi-alert" role="img"></mat-icon>
                 </div>
                 <span class="label"
                   ><strong>{{ "Highest Usage" | translate }}:</strong></span
@@ -104,10 +93,7 @@
                   >({{
                     usageMaxThreads.length < 2
                       ? "Thread #" + usageMaxThreads.toString()
-                      : usageMaxThreads.length +
-                        " threads at " +
-                        usageMax +
-                        "%"
+                      : usageMaxThreads.length + " threads at " + usageMax + "%"
                   }})</span
                 >
               </mat-list-item>
@@ -117,11 +103,7 @@
                   *ngIf="tempMax >= 70"
                   [ngClass]="{ warn: tempMax < 80, danger: tempMax > 79 }"
                 >
-                  <mat-icon
-                    fontSet="mdi-set"
-                    fontIcon="mdi-alert"
-                    role="img"
-                  ></mat-icon>
+                  <mat-icon fontSet="mdi-set" fontIcon="mdi-alert" role="img"></mat-icon>
                 </div>
                 <span class="label"
                   ><strong>{{ "Hottest" | translate }}:</strong></span
@@ -133,10 +115,7 @@
                     >({{
                       tempMaxThreads.length < 2
                         ? "Thread #" + tempMaxThreads.toString()
-                        : tempMaxThreads.length +
-                          " threads at " +
-                          tempMax +
-                          "°C"
+                        : tempMaxThreads.length + " threads at " + tempMax + "°C"
                     }})</span
                   >
                 </ng-container>
@@ -148,40 +127,30 @@
           </div>
         </div>
 
-        <div
-          *ngIf="screenType == 'Mobile'"
-          fxLayout="column"
-          class="mobile no-flicker"
-        >
+        <div *ngIf="screenType == 'Mobile'" fxLayout="column" class="mobile no-flicker">
           <div fxFlex="65" class="bottom">
             <div class="list-subheader">
               <span class="capitalize">{{ "CPU Details" | translate }}</span>
             </div>
             <mat-list>
               <mat-list-item
-                ><span class="label">{{ "Model:" | translate }}</span>
-                &nbsp;&nbsp;{{
+                ><span class="label">{{ "Model:" | translate }}</span> &nbsp;&nbsp;{{
                   cpuModel ? cpuModel : "Unknown CPU"
                 }}</mat-list-item
               >
               <mat-list-item
-                ><span class="label">{{ "Threads:" | translate }}</span>
-                &nbsp;&nbsp;{{ coreCount }}</mat-list-item
+                ><span class="label">{{ "Threads:" | translate }}</span> &nbsp;&nbsp;{{
+                  coreCount
+                }}</mat-list-item
               >
             </mat-list>
           </div>
         </div>
 
-        <div
-          *ngIf="screenType == 'Mobile'"
-          fxLayout="column"
-          class="mobile no-flicker"
-        >
+        <div *ngIf="screenType == 'Mobile'" fxLayout="column" class="mobile no-flicker">
           <div fxFlex="65" class="bottom">
             <div class="list-subheader">
-              <span class="capitalize">{{
-                "Stats Per Thread" | translate
-              }}</span>
+              <span class="capitalize">{{ "Stats Per Thread" | translate }}</span>
             </div>
             <mat-list>
               <ng-container *ngIf="tempAvailable == 'true'">
@@ -192,10 +161,7 @@
                     >({{
                       tempMaxThreads.length < 2
                         ? "Thread #" + tempMaxThreads.toString()
-                        : tempMaxThreads.length +
-                          " threads at " +
-                          tempMax +
-                          "°C"
+                        : tempMaxThreads.length + " threads at " + tempMax + "°C"
                     }})</span
                   >
                 </mat-list-item>
@@ -206,10 +172,7 @@
                     >({{
                       tempMinThreads.length < 2
                         ? "Thread #" + tempMinThreads.toString()
-                        : tempMinThreads.length +
-                          " threads at " +
-                          tempMin +
-                          "°C"
+                        : tempMinThreads.length + " threads at " + tempMin + "°C"
                     }})</span
                   >
                 </mat-list-item>
@@ -221,10 +184,7 @@
                   >({{
                     usageMaxThreads.length < 2
                       ? "Thread #" + usageMaxThreads.toString()
-                      : usageMaxThreads.length +
-                        " threads at " +
-                        usageMax +
-                        "%"
+                      : usageMaxThreads.length + " threads at " + usageMax + "%"
                   }})</span
                 >
               </mat-list-item>
@@ -235,10 +195,7 @@
                   >({{
                     usageMinThreads.length < 2
                       ? "Thread #" + usageMinThreads.toString()
-                      : usageMinThreads.length +
-                        " threads at " +
-                        usageMin +
-                        "%"
+                      : usageMinThreads.length + " threads at " + usageMin + "%"
                   }})</span
                 >
               </mat-list-item>
@@ -271,15 +228,8 @@
                 {{ legendIndex }}
               </div>
 
-              <div
-                fxFlex="22"
-                fxFlex.xs="calc(50% - 16px)"
-                class="legend-item usage"
-              >
-                <div
-                  class="legend-swatch"
-                  style="background-color: var(--primary)"
-                ></div>
+              <div fxFlex="22" fxFlex.xs="calc(50% - 16px)" class="legend-item usage">
+                <div class="legend-swatch" style="background-color: var(--primary)"></div>
                 <span class="label">{{ legendData[0].label }}:</span>
                 {{ legendData[0].data[legendIndex] }}%
               </div>
@@ -315,32 +265,17 @@
               fxLayout="row wrap"
               fxLayoutAlign="space-around center"
             >
-              <div
-                fxFlex="26"
-                fxFlex.xs="calc(100% - 16px)"
-                class="legend-item core-number"
-              >
+              <div fxFlex="26" fxFlex.xs="calc(100% - 16px)" class="legend-item core-number">
                 <span class="label">{{ "Stats Per Thread" | translate }}</span>
               </div>
 
-              <div
-                fxFlex="22"
-                fxFlex.xs="calc(50% - 16px)"
-                class="legend-item usage"
-              >
-                <div
-                  class="legend-swatch"
-                  style="background-color: var(--primary)"
-                ></div>
+              <div fxFlex="22" fxFlex.xs="calc(50% - 16px)" class="legend-item usage">
+                <div class="legend-swatch" style="background-color: var(--primary)"></div>
                 <span class="label">{{ "Usage" | translate }}</span>
               </div>
 
               <ng-container *ngIf="tempAvailable == 'true'">
-                <div
-                  fxFlex="28"
-                  fxFlex.xs="calc(50% - 16px)"
-                  class="legend-item temperature"
-                >
+                <div fxFlex="28" fxFlex.xs="calc(50% - 16px)" class="legend-item temperature">
                   <div
                     class="legend-swatch"
                     *ngIf="themeService.isDefaultTheme"

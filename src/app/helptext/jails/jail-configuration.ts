@@ -14,10 +14,8 @@ export default {
   ),
 
   host_hostuuid_placeholder: T("UUID"),
-  host_hostuuid_tooltip: T(
-    "The numeric <i>UUID</i> or <i>custom name</i>\
- of the jail."
-  ),
+  host_hostuuid_tooltip: T("The numeric <i>UUID</i> or <i>custom name</i>\
+ of the jail."),
 
   jailtype_placeholder: T("Jail Type"),
   jailtype_tooltip: T(
@@ -37,9 +35,7 @@ export default {
   ),
 
   https_placeholder: T("Fetch Method"),
-  https_tooltip: T(
-    "Use encrypted connection for increased security (preferred)."
-  ),
+  https_tooltip: T("Use encrypted connection for increased security (preferred)."),
   http_tooltip: T("Use unencrypted connection."),
 
   wizard_step2_label: T("Configure Networking"),
@@ -160,10 +156,8 @@ export default {
   ),
 
   exec_prestart_placeholder: T("exec_prestart"),
-  exec_prestart_tooltip: T(
-    "Commands to run in the system environment\
- before a jail is started."
-  ),
+  exec_prestart_tooltip: T("Commands to run in the system environment\
+ before a jail is started."),
 
   exec_poststart_placeholder: T("exec_poststart"),
   exec_poststart_tooltip: T(
@@ -173,16 +167,12 @@ export default {
   ),
 
   exec_prestop_placeholder: T("exec_prestop"),
-  exec_prestop_tooltip: T(
-    "Commands to run in the system environment\
- before a jail is stopped."
-  ),
+  exec_prestop_tooltip: T("Commands to run in the system environment\
+ before a jail is stopped."),
 
   exec_poststop_placeholder: T("exec_poststop"),
-  exec_poststop_tooltip: T(
-    "Commands to run in the system environment\
- after a jail is stopped."
-  ),
+  exec_poststop_tooltip: T("Commands to run in the system environment\
+ after a jail is stopped."),
 
   exec_clean_placeholder: T("exec_clean"),
   exec_clean_tooltip: T(
@@ -474,10 +464,8 @@ export default {
   ),
 
   host_hostname_placeholder: T("host_hostname"),
-  host_hostname_tooltip: T(
-    "Set the jail hostname. Defaults to the jail\
- UUID."
-  ),
+  host_hostname_tooltip: T("Set the jail hostname. Defaults to the jail\
+ UUID."),
 
   exec_fib_placeholder: T("exec_fib"),
   exec_fib_tooltip: T(
@@ -526,10 +514,8 @@ export default {
   ),
 
   mac_prefix_placeholder: T("mac_prefix"),
-  mac_prefix_tooltip: T(
-    "Enter a valid MAC address vendor prefix.\
- <b>Example:</b> <i>E4F4C6</i>"
-  ),
+  mac_prefix_tooltip: T("Enter a valid MAC address vendor prefix.\
+ <b>Example:</b> <i>E4F4C6</i>"),
 
   nat_interface_placeholder: T("NAT Interface"),
   nat_interface_tooltip: T(
@@ -664,10 +650,8 @@ export default {
   template_tooltip: T("Set to set this jail as a template."),
 
   host_time_placeholder: T("host_time"),
-  host_time_tooltip: T(
-    "System host time to synchronize the time between\
- jail and host."
-  ),
+  host_time_tooltip: T("System host time to synchronize the time between\
+ jail and host."),
 
   jail_zfs_placeholder: T("jail_zfs"),
   jail_zfs_tooltip: T(
@@ -775,31 +759,23 @@ export default {
  size."),
 
   pseudoterminals_placeholder: T("pseudoterminals"),
-  pseudoterminals_tooltip: T(
-    "Numeric value for the number of PTYs\
- available to the jail."
-  ),
+  pseudoterminals_tooltip: T("Numeric value for the number of PTYs\
+ available to the jail."),
 
   swapuse_placeholder: T("swapuse"),
   swapuse_tooltip: T("Maximum swap space to use for the jail."),
 
   nthr_placeholder: T("nthr"),
-  nthr_tooltip: T(
-    "Enter a numeric value for the number of threads the\
- jail can use."
-  ),
+  nthr_tooltip: T("Enter a numeric value for the number of threads the\
+ jail can use."),
 
   msgqqueued_placeholder: T("msgqqueued"),
-  msgqqueued_tooltip: T(
-    "Number of queued SysV messages allowed for the\
- jail."
-  ),
+  msgqqueued_tooltip: T("Number of queued SysV messages allowed for the\
+ jail."),
 
   msgqsize_placeholder: T("msgqsize"),
-  msgqsize_tooltip: T(
-    "Maximum SysV message queue size in bytes for the\
- jail."
-  ),
+  msgqsize_tooltip: T("Maximum SysV message queue size in bytes for the\
+ jail."),
 
   nmsgq_placeholder: T("nmsgq"),
   nmsgq_tooltip: T("Maximum number of SysV message queues."),

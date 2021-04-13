@@ -1,10 +1,4 @@
-import {
-  Component,
-  AfterViewInit,
-  Input,
-  OnChanges,
-  SimpleChanges,
-} from "@angular/core";
+import { Component, AfterViewInit, Input, OnChanges, SimpleChanges } from "@angular/core";
 import {
   ViewChartComponent,
   ViewChartMetadata,
@@ -50,9 +44,8 @@ export interface GaugeConfig {
 @Component({
   selector: "viewchartgauge",
   templateUrl: "./viewchartgauge.component.html",
-})
-export class ViewChartGaugeComponent /*extends DisplayObject*/
-  implements AfterViewInit, OnChanges {
+}) /*extends DisplayObject*/
+export class ViewChartGaugeComponent implements AfterViewInit, OnChanges {
   public subtitle: string = "";
   public chartType: string = "gauge";
   public chartClass: string = "view-chart-gauge";
@@ -113,9 +106,7 @@ export class ViewChartGaugeComponent /*extends DisplayObject*/
       .attr("height", height);
 
     // Arc Group
-    let g = svg
-      .append("g")
-      .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+    let g = svg.append("g").attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
     // Text Group
     let gt = svg.append("g").attr("class", "text-group");
@@ -154,9 +145,7 @@ export class ViewChartGaugeComponent /*extends DisplayObject*/
     }
 
     // Adjust group to compensate
-    const isFirefox: boolean = navigator.userAgent
-      .toLowerCase()
-      .includes("firefox");
+    const isFirefox: boolean = navigator.userAgent.toLowerCase().includes("firefox");
     const offsetY = isFirefox ? 10 : 0;
     let bbox = gt.node().getBBox();
     let top = height / 2 - bbox.height / 2;
@@ -213,8 +202,6 @@ export class ViewChartGaugeComponent /*extends DisplayObject*/
 
   updateSubtitle() {
     let txt = d3.select("#gauge-" + this.chartId + " #text-value");
-    let subtxt = d3
-      .select("#gauge-" + this.chartId + " #text-subtitle")
-      .text(this.subtitle);
+    let subtxt = d3.select("#gauge-" + this.chartId + " #text-subtitle").text(this.subtitle);
   }
 }

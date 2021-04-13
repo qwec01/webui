@@ -12,12 +12,7 @@
   ix-auto-type="array"
   ix-auto-identifier="{{ config.placeholder }}"
 >
-  <div
-    class="label-container"
-    fxFlex="100"
-    fxLayoutAlign="start center"
-    style="max-height: 27px"
-  >
+  <div class="label-container" fxFlex="100" fxLayoutAlign="start center" style="max-height: 27px">
     <label class="label input-text">{{ config.placeholder | translate }}</label>
     <span *ngIf="config.required">*</span>
     <tooltip
@@ -97,8 +92,6 @@
 
   <div class="margin-for-error">
     <mat-error *ngIf="config['hasErrors']">{{ config["errors"] }}</mat-error>
-    <mat-error *ngIf="config.warnings">{{
-      config.warnings | translate
-    }}</mat-error>
+    <mat-error *ngIf="config.warnings">{{ config.warnings | translate }}</mat-error>
   </div>
 </div>

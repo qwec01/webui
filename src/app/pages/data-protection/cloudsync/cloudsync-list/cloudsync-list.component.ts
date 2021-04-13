@@ -143,9 +143,7 @@ export class CloudsyncListComponent implements InputTableConf {
                   (res) => {
                     this.dialog.Info(
                       T("Task Started"),
-                      T("Cloud sync <i>") +
-                        row.description +
-                        T("</i> has started."),
+                      T("Cloud sync <i>") + row.description + T("</i> has started."),
                       "500px",
                       "info",
                       true
@@ -169,28 +167,24 @@ export class CloudsyncListComponent implements InputTableConf {
         label: T("Stop"),
         icon: "stop",
         onClick: (row) => {
-          this.dialog
-            .confirm(T("Stop"), T("Stop this cloud sync?"), true)
-            .subscribe((res) => {
-              if (res) {
-                this.ws.call("cloudsync.abort", [row.id]).subscribe(
-                  (wsRes) => {
-                    this.dialog.Info(
-                      T("Task Stopped"),
-                      T("Cloud sync <i>") +
-                        row.description +
-                        T("</i> stopped."),
-                      "500px",
-                      "info",
-                      true
-                    );
-                  },
-                  (wsErr) => {
-                    new EntityUtils().handleWSError(this.entityList, wsErr);
-                  }
-                );
-              }
-            });
+          this.dialog.confirm(T("Stop"), T("Stop this cloud sync?"), true).subscribe((res) => {
+            if (res) {
+              this.ws.call("cloudsync.abort", [row.id]).subscribe(
+                (wsRes) => {
+                  this.dialog.Info(
+                    T("Task Stopped"),
+                    T("Cloud sync <i>") + row.description + T("</i> stopped."),
+                    "500px",
+                    "info",
+                    true
+                  );
+                },
+                (wsErr) => {
+                  new EntityUtils().handleWSError(this.entityList, wsErr);
+                }
+              );
+            }
+          });
         },
       },
       {
@@ -203,28 +197,24 @@ export class CloudsyncListComponent implements InputTableConf {
             .confirm(helptext.dry_run_title, helptext.dry_run_dialog, true)
             .subscribe((dialog_res) => {
               if (dialog_res) {
-                this.ws
-                  .call("cloudsync.sync", [row.id, { dry_run: true }])
-                  .subscribe(
-                    (res) => {
-                      this.dialog.Info(
-                        T("Task Started"),
-                        T("Cloud sync <i>") +
-                          row.description +
-                          T("</i> has started."),
-                        "500px",
-                        "info",
-                        true
-                      );
-                      this.job.getJobStatus(res).subscribe((task) => {
-                        row.state = task.state;
-                        row.job = task;
-                      });
-                    },
-                    (err) => {
-                      new EntityUtils().handleWSError(this.entityList, err);
-                    }
-                  );
+                this.ws.call("cloudsync.sync", [row.id, { dry_run: true }]).subscribe(
+                  (res) => {
+                    this.dialog.Info(
+                      T("Task Started"),
+                      T("Cloud sync <i>") + row.description + T("</i> has started."),
+                      "500px",
+                      "info",
+                      true
+                    );
+                    this.job.getJobStatus(res).subscribe((task) => {
+                      row.state = task.state;
+                      row.job = task;
+                    });
+                  },
+                  (err) => {
+                    new EntityUtils().handleWSError(this.entityList, err);
+                  }
+                );
               }
             });
         },
@@ -279,43 +269,35 @@ export class CloudsyncListComponent implements InputTableConf {
             ],
             saveButtonText: "Restore",
             afterInit: function (entityDialog) {
-              entityDialog.formGroup
-                .get("transfer_mode")
-                .valueChanges.subscribe((mode) => {
-                  const paragraph = conf.fieldConfig.find(
-                    (config) => config.name === "transfer_mode_warning"
-                  );
-                  switch (mode) {
-                    case "SYNC":
-                      paragraph.paraText = helptext.transfer_mode_warning_sync;
-                      paragraph.paragraphIcon = "sync";
-                      break;
-                    default:
-                      paragraph.paraText = helptext.transfer_mode_warning_copy;
-                      paragraph.paragraphIcon = "add_to_photos";
-                  }
-                });
+              entityDialog.formGroup.get("transfer_mode").valueChanges.subscribe((mode) => {
+                const paragraph = conf.fieldConfig.find(
+                  (config) => config.name === "transfer_mode_warning"
+                );
+                switch (mode) {
+                  case "SYNC":
+                    paragraph.paraText = helptext.transfer_mode_warning_sync;
+                    paragraph.paragraphIcon = "sync";
+                    break;
+                  default:
+                    paragraph.paraText = helptext.transfer_mode_warning_copy;
+                    paragraph.paragraphIcon = "add_to_photos";
+                }
+              });
             },
             customSubmit: function (entityDialog) {
               parent.entityList.loader.open();
-              parent.ws
-                .call("cloudsync.restore", [row.id, entityDialog.formValue])
-                .subscribe(
-                  (res) => {
-                    entityDialog.dialogRef.close(true);
-                    parent.entityList.loaderOpen = true;
-                    parent.entityList.needRefreshTable = true;
-                    parent.entityList.getData();
-                  },
-                  (err) => {
-                    parent.entityList.loader.close(true);
-                    new EntityUtils().handleWSError(
-                      entityDialog,
-                      err,
-                      parent.dialog
-                    );
-                  }
-                );
+              parent.ws.call("cloudsync.restore", [row.id, entityDialog.formValue]).subscribe(
+                (res) => {
+                  entityDialog.dialogRef.close(true);
+                  parent.entityList.loaderOpen = true;
+                  parent.entityList.needRefreshTable = true;
+                  parent.entityList.getData();
+                },
+                (err) => {
+                  parent.entityList.loader.close(true);
+                  new EntityUtils().handleWSError(entityDialog, err, parent.dialog);
+                }
+              );
             },
           };
           this.dialog.dialogFormWide(conf);
@@ -345,10 +327,7 @@ export class CloudsyncListComponent implements InputTableConf {
   isActionVisible(actionId: string, row: any) {
     if (actionId === "run_now" && row.job && row.job.state === "RUNNING") {
       return false;
-    } else if (
-      actionId === "stop" &&
-      (row.job ? row.job && row.job.state !== "RUNNING" : true)
-    ) {
+    } else if (actionId === "stop" && (row.job ? row.job && row.job.state !== "RUNNING" : true)) {
       return false;
     }
     return true;
@@ -366,10 +345,7 @@ export class CloudsyncListComponent implements InputTableConf {
         this.job.showLogs(row.job);
       }
     } else {
-      this.dialog.Info(
-        globalHelptext.noLogDilaog.title,
-        globalHelptext.noLogDilaog.message
-      );
+      this.dialog.Info(globalHelptext.noLogDilaog.title, globalHelptext.noLogDilaog.message);
     }
   }
 

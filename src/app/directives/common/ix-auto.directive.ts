@@ -19,9 +19,7 @@ export class IXAutoDirective implements OnChanges {
     try {
       (this.el.nativeElement as HTMLElement).setAttribute(
         IXAutoDirective.ATTRIBUTE,
-        this.identifier
-          ? `${elType}__${this.identifier}${elTag}`
-          : `${elType}__${elTag}`
+        this.identifier ? `${elType}__${this.identifier}${elTag}` : `${elType}__${elTag}`
       );
     } catch (error) {
       console.error(`Error in ${IXAutoDirective.name}:`, error);

@@ -13,11 +13,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { ActivatedRoute, Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
 import * as _ from "lodash";
-import {
-  DialogService,
-  ShellService,
-  WebSocketService,
-} from "../../../services";
+import { DialogService, ShellService, WebSocketService } from "../../../services";
 import helptext from "./../../../helptext/apps/apps";
 import { CoreEvent, CoreService } from "app/core/services/core.service";
 import { Subject } from "rxjs";
@@ -88,27 +84,25 @@ export class PodLogsComponent implements OnInit {
       });
 
       //Get pod list for the selected app
-      this.ws
-        .call("chart.release.pod_logs_choices", [this.chart_release_name])
-        .subscribe((res) => {
-          this.podDetails = res;
+      this.ws.call("chart.release.pod_logs_choices", [this.chart_release_name]).subscribe((res) => {
+        this.podDetails = res;
 
-          const podDetail = res[this.pod_name];
-          if (!podDetail) {
-            this.dialogService.confirm(
-              helptext.podLogs.nopod.title,
-              helptext.podLogs.nopod.message,
-              true,
-              "Close",
-              false,
-              null,
-              null,
-              null,
-              null,
-              true
-            );
-          }
-        });
+        const podDetail = res[this.pod_name];
+        if (!podDetail) {
+          this.dialogService.confirm(
+            helptext.podLogs.nopod.title,
+            helptext.podLogs.nopod.message,
+            true,
+            "Close",
+            false,
+            null,
+            null,
+            null,
+            null,
+            true
+          );
+        }
+      });
 
       this.setupToolbarButtons();
       this.reconnect();
@@ -130,14 +124,12 @@ export class PodLogsComponent implements OnInit {
 
     let subName = `kubernetes.pod_log_follow:{"release_name":"${this.chart_release_name}", "pod_name":"${this.pod_name}", "container_name":"${this.container_name}", "tail_lines": ${this.tail_lines}}`;
 
-    this.podLogsChangedListener = this.ws
-      .sub(subName)
-      .subscribe((res: PodLogEvent) => {
-        if (res) {
-          this.podLogs.push(res);
-          this.scrollToBottom();
-        }
-      });
+    this.podLogsChangedListener = this.ws.sub(subName).subscribe((res: PodLogEvent) => {
+      if (res) {
+        this.podLogs.push(res);
+        this.scrollToBottom();
+      }
+    });
   }
 
   //scroll to bottom, show last log.
@@ -256,9 +248,7 @@ export class PodLogsComponent implements OnInit {
           required: true,
         },
       ],
-      saveButtonText: isDownload
-        ? helptext.podLogs.downloadBtn
-        : helptext.podLogs.chooseBtn,
+      saveButtonText: isDownload ? helptext.podLogs.downloadBtn : helptext.podLogs.chooseBtn,
       customSubmit: isDownload ? this.download : this.onChooseLogs,
       afterInit: this.afterLogsDialogInit,
       parent: this,
@@ -342,26 +332,24 @@ export class PodLogsComponent implements OnInit {
       containerFC.options = [];
 
       self.loader.open();
-      self.ws
-        .call("chart.release.pod_logs_choices", [value])
-        .subscribe((res) => {
-          self.loader.close();
-          self.tempPodDetails = res;
-          let pod_name;
-          if (Object.keys(self.tempPodDetails).length > 0) {
-            pod_name = Object.keys(self.tempPodDetails)[0];
-          } else {
-            pod_name = null;
-          }
+      self.ws.call("chart.release.pod_logs_choices", [value]).subscribe((res) => {
+        self.loader.close();
+        self.tempPodDetails = res;
+        let pod_name;
+        if (Object.keys(self.tempPodDetails).length > 0) {
+          pod_name = Object.keys(self.tempPodDetails)[0];
+        } else {
+          pod_name = null;
+        }
 
-          podFC.options = Object.keys(self.tempPodDetails).map((item) => {
-            return {
-              label: item,
-              value: item,
-            };
-          });
-          entityDialog.formGroup.controls["pods"].setValue(pod_name);
+        podFC.options = Object.keys(self.tempPodDetails).map((item) => {
+          return {
+            label: item,
+            value: item,
+          };
         });
+        entityDialog.formGroup.controls["pods"].setValue(pod_name);
+      });
     });
 
     //when pod selection changed

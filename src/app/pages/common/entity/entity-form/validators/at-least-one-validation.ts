@@ -1,9 +1,6 @@
 import { FormControl } from "@angular/forms";
 
-export function atLeastOne(
-  otherControlName: string,
-  fieldPlacehoders: [string, string]
-) {
+export function atLeastOne(otherControlName: string, fieldPlacehoders: [string, string]) {
   let thisControl: FormControl;
   let otherControl: FormControl;
 
@@ -17,9 +14,7 @@ export function atLeastOne(
       thisControl = control;
       otherControl = control.parent.get(otherControlName) as FormControl;
       if (!otherControl) {
-        throw new Error(
-          "matchOtherValidator(): other control is not found in parent group"
-        );
+        throw new Error("matchOtherValidator(): other control is not found in parent group");
       }
       otherControl.valueChanges.subscribe(() => {
         thisControl.updateValueAndValidity();

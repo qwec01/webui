@@ -33,8 +33,7 @@ interface ViewConfig {
   templateUrl: "./view-enclosure.component.html",
   styleUrls: ["./view-enclosure.component.css"],
 })
-export class ViewEnclosureComponent
-  implements AfterContentInit, OnChanges, OnDestroy {
+export class ViewEnclosureComponent implements AfterContentInit, OnChanges, OnDestroy {
   public errors: ErrorMessage[] = [];
   public events: Subject<CoreEvent>;
   @ViewChild("navigation", { static: false }) nav: ElementRef;
@@ -86,9 +85,7 @@ export class ViewEnclosureComponent
           const selector = ".enclosure-" + evt.data.profile.enclosureKey;
           let el = this.nav.nativeElement.querySelector(selector);
 
-          let oldCanvas = this.nav.nativeElement.querySelector(
-            selector + " canvas"
-          );
+          let oldCanvas = this.nav.nativeElement.querySelector(selector + " canvas");
           if (oldCanvas) {
             el.removeChild(oldCanvas);
           }
@@ -129,41 +126,33 @@ export class ViewEnclosureComponent
         this.events.next(evt);
       });
 
-    core
-      .register({ observerClass: this, eventName: "PoolData" })
-      .subscribe((evt: CoreEvent) => {
-        this.system.pools = evt.data;
-        this.addViews();
-      });
+    core.register({ observerClass: this, eventName: "PoolData" }).subscribe((evt: CoreEvent) => {
+      this.system.pools = evt.data;
+      this.addViews();
+    });
 
-    core
-      .register({ observerClass: this, eventName: "SensorData" })
-      .subscribe((evt: CoreEvent) => {
-        this.system.sensorData = evt.data;
-        core.emit({ name: "PoolDataRequest", sender: this });
-      });
+    core.register({ observerClass: this, eventName: "SensorData" }).subscribe((evt: CoreEvent) => {
+      this.system.sensorData = evt.data;
+      core.emit({ name: "PoolDataRequest", sender: this });
+    });
 
-    core
-      .register({ observerClass: this, eventName: "DisksData" })
-      .subscribe((evt: CoreEvent) => {
-        this.system.diskData = evt.data;
-        core.emit({ name: "SensorDataRequest", sender: this });
-        setTimeout(() => {
-          this.spinner = false;
-        }, 1500);
-      });
+    core.register({ observerClass: this, eventName: "DisksData" }).subscribe((evt: CoreEvent) => {
+      this.system.diskData = evt.data;
+      core.emit({ name: "SensorDataRequest", sender: this });
+      setTimeout(() => {
+        this.spinner = false;
+      }, 1500);
+    });
 
-    core
-      .register({ observerClass: this, eventName: "SysInfo" })
-      .subscribe((evt: CoreEvent) => {
-        if (!this.system_product) {
-          this.system_product = evt.data.system_product;
-          this.system_manufacturer = evt.data.system_manufacturer.toLowerCase();
-          this.supportedHardware = evt.data.features.enclosure;
-        } else {
-          return;
-        }
-      });
+    core.register({ observerClass: this, eventName: "SysInfo" }).subscribe((evt: CoreEvent) => {
+      if (!this.system_product) {
+        this.system_product = evt.data.system_product;
+        this.system_manufacturer = evt.data.system_manufacturer.toLowerCase();
+        this.supportedHardware = evt.data.features.enclosure;
+      } else {
+        return;
+      }
+    });
 
     core.emit({ name: "SysInfoRequest", sender: this });
   }
@@ -213,55 +202,55 @@ export class ViewEnclosureComponent
     views.unshift(disks);
     let matchIndex;
 
-    this.system.enclosures[
-      this.selectedEnclosure.enclosureKey
-    ].elements.forEach((element, index) => {
-      let view = {
-        name: element.name,
-        alias: "",
-        icon: "",
-        id: views.length,
-        elementIndex: index,
-        showInNavbar: true,
-      };
+    this.system.enclosures[this.selectedEnclosure.enclosureKey].elements.forEach(
+      (element, index) => {
+        let view = {
+          name: element.name,
+          alias: "",
+          icon: "",
+          id: views.length,
+          elementIndex: index,
+          showInNavbar: true,
+        };
 
-      switch (element.name) {
-        case "Cooling":
-          view.alias = element.name;
-          view.icon = "fan";
-          views.push(view);
-          break;
-        case "Temperature Sensor":
-          view.alias = "Temperature";
-          view.icon = "fan";
-          views.push(view);
-          break;
-        case "Voltage Sensor":
-          view.alias = "Voltage";
-          view.icon = "flash";
-          views.push(view);
-          break;
-        case "Power Supply":
-          view.alias = element.name;
-          view.icon = "flash";
-          views.push(view);
-          break;
-        case "SAS Connector":
-          view.alias = "SAS";
-          view.icon = "flash";
-          views.push(view);
-          break;
-        case "Enclosure Services Controller Electronics":
-          view.alias = "Services";
-          view.icon = "flash";
-          views.push(view);
-          break;
-      }
+        switch (element.name) {
+          case "Cooling":
+            view.alias = element.name;
+            view.icon = "fan";
+            views.push(view);
+            break;
+          case "Temperature Sensor":
+            view.alias = "Temperature";
+            view.icon = "fan";
+            views.push(view);
+            break;
+          case "Voltage Sensor":
+            view.alias = "Voltage";
+            view.icon = "flash";
+            views.push(view);
+            break;
+          case "Power Supply":
+            view.alias = element.name;
+            view.icon = "flash";
+            views.push(view);
+            break;
+          case "SAS Connector":
+            view.alias = "SAS";
+            view.icon = "flash";
+            views.push(view);
+            break;
+          case "Enclosure Services Controller Electronics":
+            view.alias = "Services";
+            view.icon = "flash";
+            views.push(view);
+            break;
+        }
 
-      if (view.alias == this.currentView.alias) {
-        matchIndex = view.id;
+        if (view.alias == this.currentView.alias) {
+          matchIndex = view.id;
+        }
       }
-    });
+    );
 
     this.views = views;
 

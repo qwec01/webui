@@ -90,8 +90,7 @@ export class ManualUpdateComponent extends ViewControllerComponent {
         eventName: "SysInfo",
       })
       .subscribe((evt: CoreEvent) => {
-        _.find(this.fieldConfig, { name: "version" }).paraText +=
-          evt.data.version;
+        _.find(this.fieldConfig, { name: "version" }).paraText += evt.data.version;
       });
 
     this.core.emit({ name: "SysInfoRequest", sender: this });
@@ -104,9 +103,7 @@ export class ManualUpdateComponent extends ViewControllerComponent {
           this.isHA = true;
           this.updateMethod = "failover.upgrade";
         } else {
-          _.find(this.fieldConfig, { name: "rebootAfterManualUpdate" })[
-            "isHidden"
-          ] = false;
+          _.find(this.fieldConfig, { name: "rebootAfterManualUpdate" })["isHidden"] = false;
         }
         this.checkForUpdateRunning();
       });
@@ -127,39 +124,31 @@ export class ManualUpdateComponent extends ViewControllerComponent {
   }
   afterInit(entityForm: any) {
     this.ws.call("user.query", [[["id", "=", 1]]]).subscribe((ures) => {
-      if (
-        ures[0].attributes.preferences["rebootAfterManualUpdate"] === undefined
-      ) {
+      if (ures[0].attributes.preferences["rebootAfterManualUpdate"] === undefined) {
         ures[0].attributes.preferences["rebootAfterManualUpdate"] = false;
       }
       entityForm.formGroup.controls["rebootAfterManualUpdate"].setValue(
         ures[0].attributes.preferences["rebootAfterManualUpdate"]
       );
-      entityForm.formGroup.controls[
-        "rebootAfterManualUpdate"
-      ].valueChanges.subscribe((form_res) => {
-        ures[0].attributes.preferences["rebootAfterManualUpdate"] = form_res;
-        this.ws
-          .call("user.set_attribute", [
-            1,
-            "preferences",
-            ures[0].attributes.preferences,
-          ])
-          .subscribe((res) => {});
-      });
+      entityForm.formGroup.controls["rebootAfterManualUpdate"].valueChanges.subscribe(
+        (form_res) => {
+          ures[0].attributes.preferences["rebootAfterManualUpdate"] = form_res;
+          this.ws
+            .call("user.set_attribute", [1, "preferences", ures[0].attributes.preferences])
+            .subscribe((res) => {});
+        }
+      );
     });
 
-    entityForm.formGroup.controls["filelocation"].valueChanges.subscribe(
-      (filelocation) => {
-        if (filelocation === ":temp:") {
-          _.find(this.fieldConfig, { name: "filename" }).fileLocation = null;
-        } else {
-          _.find(this.fieldConfig, {
-            name: "filename",
-          }).fileLocation = filelocation;
-        }
+    entityForm.formGroup.controls["filelocation"].valueChanges.subscribe((filelocation) => {
+      if (filelocation === ":temp:") {
+        _.find(this.fieldConfig, { name: "filename" }).fileLocation = null;
+      } else {
+        _.find(this.fieldConfig, {
+          name: "filename",
+        }).fileLocation = filelocation;
       }
-    );
+    });
     this.messageService.messageSourceHasNewMessage$.subscribe((message) => {
       entityForm.formGroup.controls["filename"].setValue(message);
     });
@@ -177,13 +166,8 @@ export class ManualUpdateComponent extends ViewControllerComponent {
       if (this.isHA) {
         this.dialogRef.componentInstance.disableProgressValue(true);
       }
-      this.dialogRef.componentInstance.changeAltMessage(
-        helptext.manual_update_description
-      );
-      this.dialogRef.componentInstance.wspost(
-        this.subs.apiEndPoint,
-        this.subs.formData
-      );
+      this.dialogRef.componentInstance.changeAltMessage(helptext.manual_update_description);
+      this.dialogRef.componentInstance.wspost(this.subs.apiEndPoint, this.subs.formData);
       this.dialogRef.componentInstance.success.subscribe((succ) => {
         this.dialogRef.close(false);
         if (!this.isHA) {
@@ -194,13 +178,11 @@ export class ManualUpdateComponent extends ViewControllerComponent {
               this.translate
                 .get(helptext.rebootAfterManualUpdate.manual_reboot_msg)
                 .subscribe((reboot_prompt: string) => {
-                  this.dialogService
-                    .confirm(reboot, reboot_prompt)
-                    .subscribe((reboot_res) => {
-                      if (reboot_res) {
-                        this.router.navigate(["/others/reboot"]);
-                      }
-                    });
+                  this.dialogService.confirm(reboot, reboot_prompt).subscribe((reboot_res) => {
+                    if (reboot_res) {
+                      this.router.navigate(["/others/reboot"]);
+                    }
+                  });
                 });
             });
           }
@@ -234,17 +216,11 @@ export class ManualUpdateComponent extends ViewControllerComponent {
         );
         this.save_button_enabled = true;
       });
-      this.dialogRef.componentInstance.failure
-        .pipe(take(1))
-        .subscribe((failure) => {
-          this.dialogRef.close(false);
-          this.dialogService.errorReport(
-            failure.error,
-            failure.state,
-            failure.exception
-          );
-          this.save_button_enabled = true;
-        });
+      this.dialogRef.componentInstance.failure.pipe(take(1)).subscribe((failure) => {
+        this.dialogRef.close(false);
+        this.dialogService.errorReport(failure.error, failure.state, failure.exception);
+        this.save_button_enabled = true;
+      });
     });
   }
 

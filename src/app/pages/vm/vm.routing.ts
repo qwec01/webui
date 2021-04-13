@@ -57,6 +57,4 @@ export const routes: Routes = [
     data: { title: "Edit Device", breadcrumb: "Edit Device" },
   },
 ];
-export const routing: ModuleWithProviders<RouterModule> = RouterModule.forChild(
-  routes
-);
+export const routing: ModuleWithProviders<RouterModule> = RouterModule.forChild(routes);

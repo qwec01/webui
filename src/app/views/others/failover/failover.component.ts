@@ -30,12 +30,10 @@ export class FailoverComponent implements OnInit {
     private localeService: LocaleService
   ) {
     this.ws = ws;
-    this.getProdType = this.sysGeneralService.getProductType.subscribe(
-      (res) => {
-        this.product_type = res;
-        this.getProdType.unsubscribe();
-      }
-    );
+    this.getProdType = this.sysGeneralService.getProductType.subscribe((res) => {
+      this.product_type = res;
+      this.getProdType.unsubscribe();
+    });
   }
 
   isWSConnected() {

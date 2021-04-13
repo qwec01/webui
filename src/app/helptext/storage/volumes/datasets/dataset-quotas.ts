@@ -22,8 +22,7 @@ export default {
       ),
     },
     data_quota: {
-      placeholder:
-        T("User Data Quota ") + globalHelptext.human_readable.suggestion_label,
+      placeholder: T("User Data Quota ") + globalHelptext.human_readable.suggestion_label,
       tooltip:
         T(
           "Amount of disk space that can be used by the selected users. \
@@ -39,15 +38,11 @@ export default {
     },
     filter_dialog: {
       title_show: T("Show All Users"),
-      message_show: T(
-        "Show all available users, including those that have not used any data."
-      ),
+      message_show: T("Show all available users, including those that have not used any data."),
       button_show: T("Show"),
 
       title_filter: T("Filter Users"),
-      message_filter: T(
-        "Show only those users who are using data. This is the default view."
-      ),
+      message_filter: T("Show only those users who are using data. This is the default view."),
       button_filter: T("Filter"),
     },
     dialog: {
@@ -78,8 +73,7 @@ export default {
       ),
     },
     data_quota: {
-      placeholder:
-        T("Group Data Quota ") + globalHelptext.human_readable.suggestion_label,
+      placeholder: T("Group Data Quota ") + globalHelptext.human_readable.suggestion_label,
       tooltip:
         T(
           "Amount of disk space that can be used by the selected groups. \
@@ -95,15 +89,11 @@ export default {
     },
     filter_dialog: {
       title_show: T("Show All Groups"),
-      message_show: T(
-        "Show all available groups, even those that have not used any data."
-      ),
+      message_show: T("Show all available groups, even those that have not used any data."),
       button_show: T("Show"),
 
       title_filter: T("Filter Groups"),
-      message_filter: T(
-        "Shows only the groups that are using data. This is the default view."
-      ),
+      message_filter: T("Shows only the groups that are using data. This is the default view."),
       button_filter: T("Filter"),
     },
     dialog: {

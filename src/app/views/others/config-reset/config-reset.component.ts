@@ -34,12 +34,10 @@ export class ConfigResetComponent implements OnInit {
     private localeService: LocaleService
   ) {
     this.ws = ws;
-    this.getProdType = this.sysGeneralService.getProductType.subscribe(
-      (res) => {
-        this.product_type = res;
-        this.getProdType.unsubscribe();
-      }
-    );
+    this.getProdType = this.sysGeneralService.getProductType.subscribe((res) => {
+      this.product_type = res;
+      this.getProdType.unsubscribe();
+    });
   }
 
   isWSConnected() {
@@ -66,13 +64,9 @@ export class ConfigResetComponent implements OnInit {
       data: { title: "Resetting. Please wait..." },
       disableClose: true,
     });
-    this.dialogRef.componentInstance.setCall("config.reset", [
-      { reboot: true },
-    ]);
+    this.dialogRef.componentInstance.setCall("config.reset", [{ reboot: true }]);
     this.dialogRef.componentInstance.setDescription(
-      T(
-        "Resetting system configuration to default settings. The system will restart."
-      )
+      T("Resetting system configuration to default settings. The system will restart.")
     );
     this.dialogRef.componentInstance.submit();
     this.dialogRef.componentInstance.success.subscribe(() => {

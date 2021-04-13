@@ -46,9 +46,7 @@
           <div fxLayout="row" fxLayoutAlign="start center">
             <ng-container *ngIf="i == 0">
               <div
-                [style.margin-left]="
-                  ((element.indexPath.length - 1) * 16).toString() + 'px'
-                "
+                [style.margin-left]="((element.indexPath.length - 1) * 16).toString() + 'px'"
                 [ngClass]="{ invisible: element.children.length == 0 }"
               >
                 <button mat-icon-button (click)="expandNode(element)">
@@ -103,8 +101,7 @@
                   svgIcon="anti-lock"
                   *ngIf="
                     element.data.non_encrypted_on_encrypted ||
-                    (!element.data.encrypted &&
-                      element.data.has_encrypted_children)
+                    (!element.data.encrypted && element.data.has_encrypted_children)
                   "
                 >
                 </mat-icon>
@@ -116,11 +113,7 @@
     </ng-container>
 
     <!-- Actions Column -->
-    <ng-container
-      *ngIf="column.prop == 'actions'"
-      matColumnDef="{{ column.prop }}"
-      stickyEnd
-    >
+    <ng-container *ngIf="column.prop == 'actions'" matColumnDef="{{ column.prop }}" stickyEnd>
       <th
         class="action-cell"
         [ngClass]="{ 'sticky-border-left': isTableOverflow() }"

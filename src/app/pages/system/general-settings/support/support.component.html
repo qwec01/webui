@@ -13,11 +13,7 @@
         [fxFlex.gt-md]="isProductImageRack ? 'calc(200px - 32px)' : '40%'"
         [fxFlex.gt-xs]="isProductImageRack ? 'calc(40% - 32px)' : '40%'"
         [fxFlex.xs]="isProductImageRack ? 'calc(200px - 32px)' : '40%'"
-        style="
-          background-size: contain;
-          background-repeat: no-repeat;
-          background-position: 50%;
-        "
+        style="background-size: contain; background-repeat: no-repeat; background-position: 50%"
         [style.background-image]="'url(assets/images/' + product_image + ')'"
       >
         <!--<app-sys-image [product_image]="product_image"></app-sys-image>-->
@@ -26,13 +22,9 @@
 
       <div
         *ngIf="systemInfo"
-        [fxFlex.gt-md]="
-          isProductImageRack ? 'calc(50% - 32px)' : 'calc(60% - 32px)'
-        "
+        [fxFlex.gt-md]="isProductImageRack ? 'calc(50% - 32px)' : 'calc(60% - 32px)'"
         fxFlex.gt-xs="calc(60% - 32px)"
-        [fxFlex.xs]="
-          isProductImageRack ? 'calc(50% - 32px)' : 'calc(60% - 32px)'
-        "
+        [fxFlex.xs]="isProductImageRack ? 'calc(50% - 32px)' : 'calc(60% - 32px)'"
         fxLayout="column"
         fxLayoutAlign="start stretch"
         fxLayoutGap="16px"
@@ -68,10 +60,7 @@
           </div>
         </div>
         <div *ngIf="hasLicense">
-          <mat-checkbox
-            (change)="updateProductionStatus($event)"
-            [(ngModel)]="isProduction"
-          >
+          <mat-checkbox (change)="updateProductionStatus($event)" [(ngModel)]="isProduction">
             {{ "This is a production system" | translate }}</mat-checkbox
           >
         </div>
@@ -83,17 +72,10 @@
           class="actions button-group"
           [class]="isProductImageTall ? 'btn-fixed' : ''"
         >
-          <button
-            id="update-license-btn"
-            (click)="updateLicense()"
-            mat-button
-            color="default"
-          >
+          <button id="update-license-btn" (click)="updateLicense()" mat-button color="default">
             {{ licenseButtonText | translate }}
           </button>
-          <ng-container
-            *ngIf="hasLicense && !isProductImageRack; else elseBlock"
-          >
+          <ng-container *ngIf="hasLicense && !isProductImageRack; else elseBlock">
             <button
               mat-button
               color="default"

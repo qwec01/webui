@@ -187,9 +187,7 @@ export class SystemProfileService extends BaseService {
   updateHA(res) {
     const ha_enabled = res.length == 0 ? true : false;
     const ha_status_text =
-      res.length == 0
-        ? helptext.ha_status_text_enabled
-        : helptext.ha_status_text_disabled;
+      res.length == 0 ? helptext.ha_status_text_enabled : helptext.ha_status_text_disabled;
 
     let enabled_txt = res.length == 0 ? "HA Enabled" : "HA Disabled";
 

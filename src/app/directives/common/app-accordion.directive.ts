@@ -8,12 +8,7 @@ import {
   EventEmitter,
   OnInit,
 } from "@angular/core";
-import {
-  Router,
-  NavigationEnd,
-  ActivatedRoute,
-  ActivatedRouteSnapshot,
-} from "@angular/router";
+import { Router, NavigationEnd, ActivatedRoute, ActivatedRouteSnapshot } from "@angular/router";
 import * as domHelper from "../../helpers/dom.helper";
 
 @Directive({ selector: "[appAccordion]" })
@@ -27,10 +22,7 @@ export class AppAccordionDirective implements OnInit {
       if (domHelper.hasClass(this.el.nativeElement, "app-accordion")) {
         this.parentLi = this.el.nativeElement;
       } else {
-        this.parentLi = domHelper.findClosest(
-          this.el.nativeElement,
-          "app-accordion"
-        );
+        this.parentLi = domHelper.findClosest(this.el.nativeElement, "app-accordion");
       }
     });
   }

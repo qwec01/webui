@@ -7,11 +7,7 @@ import {
   EntityRowDetails,
 } from "app/pages/common/entity/entity-table/entity-row-details.interface";
 import { EntityTableComponent } from "app/pages/common/entity/entity-table";
-import {
-  WebSocketService,
-  StorageService,
-  SystemGeneralService,
-} from "app/services";
+import { WebSocketService, StorageService, SystemGeneralService } from "app/services";
 import { map } from "rxjs/operators";
 import { SnapshotListComponent } from "../snapshot-list.component";
 import { LocaleService } from "app/services/locale.service";
@@ -20,8 +16,7 @@ import { LocaleService } from "app/services/locale.service";
   selector: "app-snapshot-details",
   template: ` <app-entity-row-details [conf]="this"></app-entity-row-details> `,
 })
-export class SnapshotDetailsComponent
-  implements EntityRowDetails<{ name: string }> {
+export class SnapshotDetailsComponent implements EntityRowDetails<{ name: string }> {
   public readonly entityName: "snapshot";
   // public locale: string;
   public timezone: string;
@@ -44,43 +39,37 @@ export class SnapshotDetailsComponent
   ) {}
 
   public ngOnInit(): void {
-    this.getGenConfig = this.sysGeneralService.getGeneralConfig.subscribe(
-      (res) => {
-        this.timezone = res.timezone;
-        this._ws
-          .call("zfs.snapshot.query", [[["id", "=", this.config.name]]])
-          .pipe(
-            map((response) => ({
-              ...response[0].properties,
-              name: this.config.name,
-              creation: this.localeService.formatDateTime(
-                response[0].properties.creation.parsed.$date,
-                this.timezone
-              ),
-            }))
-          )
-          .subscribe((snapshot) => {
-            this.details = [
-              {
-                label: "Date created",
-                value: snapshot.creation,
-              },
-              {
-                label: "Used",
-                value: this.storageService.convertBytestoHumanReadable(
-                  snapshot.used.rawvalue
-                ),
-              },
-              {
-                label: "Referenced",
-                value: this.storageService.convertBytestoHumanReadable(
-                  snapshot.referenced.rawvalue
-                ),
-              },
-            ];
-          });
-      }
-    );
+    this.getGenConfig = this.sysGeneralService.getGeneralConfig.subscribe((res) => {
+      this.timezone = res.timezone;
+      this._ws
+        .call("zfs.snapshot.query", [[["id", "=", this.config.name]]])
+        .pipe(
+          map((response) => ({
+            ...response[0].properties,
+            name: this.config.name,
+            creation: this.localeService.formatDateTime(
+              response[0].properties.creation.parsed.$date,
+              this.timezone
+            ),
+          }))
+        )
+        .subscribe((snapshot) => {
+          this.details = [
+            {
+              label: "Date created",
+              value: snapshot.creation,
+            },
+            {
+              label: "Used",
+              value: this.storageService.convertBytestoHumanReadable(snapshot.used.rawvalue),
+            },
+            {
+              label: "Referenced",
+              value: this.storageService.convertBytestoHumanReadable(snapshot.referenced.rawvalue),
+            },
+          ];
+        });
+    });
 
     this.actions = this.parent.conf.getActions();
   }

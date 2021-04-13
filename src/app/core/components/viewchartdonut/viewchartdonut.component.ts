@@ -13,15 +13,10 @@ import {
       fxLayout="row wrap"
       fxLayoutAlign="space-around center"
     >
-      <div
-        *ngIf="chartLoaded && legendPosition == 'top'"
-        class="legend-wrapper"
-      >
+      <div *ngIf="chartLoaded && legendPosition == 'top'" class="legend-wrapper">
         <div class="legend-x legend-item" *ngIf="chartConfig.data.x">
           Time:
-          <span *ngIf="showLegendValues" class="legend-item-time">{{
-            legend[0].x
-          }}</span>
+          <span *ngIf="showLegendValues" class="legend-item-time">{{ legend[0].x }}</span>
         </div>
         <div
           class="legend-html"
@@ -37,10 +32,7 @@ import {
               (click)="focus(legend[i])"
               [ngClass]="{ 'legend-item-disabled': !legend[i].visible }"
             >
-              <span
-                class="legend-swatch"
-                [style.background-color]="legend[i].swatch"
-              ></span>
+              <span class="legend-swatch" [style.background-color]="legend[i].swatch"></span>
               <span class="legend-name">{{ legend[i].name }}: </span>
               <div class="legend-value" [style.color]="legend[i].swatch">
                 <span *ngIf="showLegendValues"
@@ -54,16 +46,10 @@ import {
 
       <div id="{{ chartId }}" [ngClass]="chartClass" fxFlex="50"></div>
 
-      <div
-        *ngIf="chartLoaded && legendPosition == 'right'"
-        class="legend-wrapper"
-        fxFlex="50"
-      >
+      <div *ngIf="chartLoaded && legendPosition == 'right'" class="legend-wrapper" fxFlex="50">
         <div class="legend-x legend-item" *ngIf="chartConfig.data.x">
           Time:
-          <span *ngIf="showLegendValues" class="legend-item-time">{{
-            legend[0].x
-          }}</span>
+          <span *ngIf="showLegendValues" class="legend-item-time">{{ legend[0].x }}</span>
         </div>
         <div
           class="legend-html"
@@ -78,10 +64,7 @@ import {
               (click)="focus(legend[i])"
               [ngClass]="{ 'legend-item-disabled': !legend[i].visible }"
             >
-              <span
-                class="legend-swatch"
-                [style.background-color]="legend[i].swatch"
-              ></span>
+              <span class="legend-swatch" [style.background-color]="legend[i].swatch"></span>
               <span class="legend-name">{{ legend[i].name }}: </span>
               <div class="legend-value" [style.color]="legend[i].swatch">
                 <span *ngIf="showLegendValues"
@@ -98,9 +81,7 @@ import {
   //templateUrl: './viewchartpie.component.html',
   //styleUrls: ['./viewchartdonut.component.css']
 })
-export class ViewChartDonutComponent
-  extends ViewChartComponent
-  implements OnInit {
+export class ViewChartDonutComponent extends ViewChartComponent implements OnInit {
   public title: string = "";
   public chartType: string = "donut";
   public legendPosition: string = "right"; // Valid positions are top or right

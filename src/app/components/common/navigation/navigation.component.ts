@@ -12,9 +12,7 @@ import { filter } from "rxjs/operators";
   selector: "navigation",
   templateUrl: "./navigation.template.html",
 })
-export class NavigationComponent
-  extends ViewControllerComponent
-  implements OnInit {
+export class NavigationComponent extends ViewControllerComponent implements OnInit {
   productType = window.localStorage.getItem("product_type");
   hasIconTypeMenuItem;
   iconTypeMenuTitle: string;
@@ -55,10 +53,9 @@ export class NavigationComponent
 
         for (let i = 0; i < this.navService.enterpriseFeatures.length; i++) {
           const targetMenu = this.navService.enterpriseFeatures[i];
-          const enterpriseItem = _.find(
-            _.find(menuItem, { state: targetMenu.menu }).sub,
-            { state: targetMenu.sub }
-          );
+          const enterpriseItem = _.find(_.find(menuItem, { state: targetMenu.menu }).sub, {
+            state: targetMenu.sub,
+          });
           if (enterpriseItem) {
             enterpriseItem.disabled = false;
           }
@@ -74,8 +71,7 @@ export class NavigationComponent
           if (window.localStorage.getItem("product_type") !== "CORE") {
             // hide jail and plugins section if product type is SCALE or ENTERPRISE with jail unregistered
             if (
-              (evt.data.license &&
-                evt.data.license.features.indexOf("JAILS") === -1) ||
+              (evt.data.license && evt.data.license.features.indexOf("JAILS") === -1) ||
               window.localStorage.getItem("product_type").includes("SCALE")
             ) {
               _.find(menuItem, { state: "plugins" }).disabled = true;
@@ -95,10 +91,9 @@ export class NavigationComponent
           if (evt.data.features.enclosure) {
             for (let i = 0; i < this.navService.hardwareFeatures.length; i++) {
               const targetMenu = this.navService.hardwareFeatures[i];
-              let found = _.find(
-                _.find(menuItem, { state: targetMenu.menu }).sub,
-                { state: targetMenu.sub }
-              );
+              let found = _.find(_.find(menuItem, { state: targetMenu.menu }).sub, {
+                state: targetMenu.sub,
+              });
               if (found) found.disabled = false;
             }
           }
@@ -108,9 +103,7 @@ export class NavigationComponent
 
       this.menuItems = menuItem;
       //Checks item list has any icon type.
-      this.hasIconTypeMenuItem = !!this.menuItems.filter(
-        (item) => item.type === "icon"
-      ).length;
+      this.hasIconTypeMenuItem = !!this.menuItems.filter((item) => item.type === "icon").length;
     });
   }
 

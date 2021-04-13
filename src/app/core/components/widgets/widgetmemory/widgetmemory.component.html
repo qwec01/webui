@@ -1,11 +1,6 @@
 <div *ngIf="rendered" class="widget stats-widget" ngClass.xs="double-height xs">
   <div class="card-container front">
-    <mat-card
-      class="front"
-      fxLayout="row"
-      fxLayoutWrap
-      fxLayoutAlign="space-between stretch"
-    >
+    <mat-card class="front" fxLayout="row" fxLayoutWrap fxLayoutAlign="space-between stretch">
       <mat-card-content>
         <mat-toolbar-row>
           <!-- Mobile Only: Exit widget -->
@@ -18,9 +13,7 @@
             ix-auto-type="button"
             ix-auto-identifier="goBack"
           >
-            <mat-icon (click)="goBack()" class="back-arrow"
-              >chevron_left</mat-icon
-            ></button
+            <mat-icon (click)="goBack()" class="back-arrow">chevron_left</mat-icon></button
           ><span fxHide.gt-xs>&nbsp;&nbsp;</span>
 
           <h3 class="mat-card-title-text">
@@ -55,11 +48,7 @@
           fxLayoutAlign="space-around center"
         >
           <div class="spinner-wrapper">
-            <mat-spinner
-              [diameter]="40"
-              *ngIf="!memData"
-              style="margin: 0 auto"
-            ></mat-spinner>
+            <mat-spinner [diameter]="40" *ngIf="!memData" style="margin: 0 auto"></mat-spinner>
           </div>
 
           <div class="primary-stat-wrapper" fxFlex.gt-xs="45" fxFlex.xs="100">
@@ -78,10 +67,7 @@
             </div>
             <!-- Legend -->
             <div *ngIf="screenType == 'Desktop'" id="cpu-load-cores-legend">
-              <div
-                *ngIf="memData; else noLegend"
-                id="cpu-load-cores-legend-values"
-              >
+              <div *ngIf="memData; else noLegend" id="cpu-load-cores-legend-values">
                 <!-- Desktop -->
                 <div
                   fxHide.xs
@@ -100,12 +86,7 @@
           </div>
 
           <!-- Chart -->
-          <div
-            fxFlex.xs="100"
-            fxFlex.gt-xs="55"
-            id="memory-usage-chart"
-            class="bar-chart"
-          >
+          <div fxFlex.xs="100" fxFlex.gt-xs="55" id="memory-usage-chart" class="bar-chart">
             <canvas></canvas>
           </div>
 

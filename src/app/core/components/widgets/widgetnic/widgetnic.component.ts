@@ -93,11 +93,7 @@ export class WidgetNicComponent
 
   public title: string = "Interface";
 
-  path: Slide[] = [
-    { name: T("overview") },
-    { name: T("empty") },
-    { name: T("empty") },
-  ];
+  path: Slide[] = [{ name: T("overview") }, { name: T("empty") }, { name: T("empty") }];
 
   get ipAddresses() {
     if (!this.nicState && !this.nicState.aliases) {
@@ -177,12 +173,7 @@ export class WidgetNicComponent
     });
   }
 
-  updateSlide(
-    name: string,
-    verified: boolean,
-    slideIndex: number,
-    dataIndex?: number
-  ) {
+  updateSlide(name: string, verified: boolean, slideIndex: number, dataIndex?: number) {
     if (name !== "overview" && !verified) {
       return;
     }
@@ -199,9 +190,7 @@ export class WidgetNicComponent
     if (value.toString() == this.currentSlide) {
       return;
     }
-    const carousel = this.carouselParent.nativeElement.querySelector(
-      ".carousel"
-    );
+    const carousel = this.carouselParent.nativeElement.querySelector(".carousel");
     const slide = this.carouselParent.nativeElement.querySelector(".slide");
 
     let el = styler(carousel);
@@ -277,9 +266,7 @@ export class WidgetNicComponent
         result = 0.0;
     }
 
-    return result
-      ? { value: result.toFixed(2), units: units }
-      : { value: "0.00", units: units };
+    return result ? { value: result.toFixed(2), units: units } : { value: "0.00", units: units };
   }
 
   optimizeUnits(value) {
@@ -288,15 +275,9 @@ export class WidgetNicComponent
       units = "KB";
     } else if (value >= 1024 * 1024 && value < 1024 * 1024 * 1024) {
       units = "MB";
-    } else if (
-      value >= 1024 * 1024 * 1024 &&
-      value < 1024 * 1024 * 1024 * 1024
-    ) {
+    } else if (value >= 1024 * 1024 * 1024 && value < 1024 * 1024 * 1024 * 1024) {
       units = "GB";
-    } else if (
-      value >= 1024 * 1024 * 1024 * 1024 &&
-      value < 1024 * 1024 * 1024 * 1024 * 1024
-    ) {
+    } else if (value >= 1024 * 1024 * 1024 * 1024 && value < 1024 * 1024 * 1024 * 1024 * 1024) {
       units = "TB";
     }
 

@@ -52,10 +52,7 @@ export class FormToggleButtonComponent implements Field, OnInit {
   check(item) {
     this.init = false;
     item.checked = !item.checked;
-    let target = _.findIndex(
-      this.groupValue,
-      _.unary(_.partialRight(_.includes, item.value))
-    );
+    let target = _.findIndex(this.groupValue, _.unary(_.partialRight(_.includes, item.value)));
     if (target > -1) {
       this.groupValue.splice(target, 1);
     } else {

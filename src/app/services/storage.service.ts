@@ -188,10 +188,7 @@ export class StorageService {
       sorter = B.concat(K, M, G, T);
 
       // Select strings that Date.parse can turn into a number (ie, that are a legit date)
-    } else if (
-      typeof tempArr[n] === "string" &&
-      !isNaN(Date.parse(tempArr[n]))
-    ) {
+    } else if (typeof tempArr[n] === "string" && !isNaN(Date.parse(tempArr[n]))) {
       let timeArr = [];
       for (let i of tempArr) {
         timeArr.push(Date.parse(i));
@@ -267,9 +264,7 @@ export class StorageService {
   getDatasetNameOptions(): Observable<{ label: string; value: string }[]> {
     return this.ws
       .call("pool.filesystem_choices")
-      .pipe(
-        map((response) => response.map((value) => ({ label: value, value })))
-      );
+      .pipe(map((response) => response.map((value) => ({ label: value, value }))));
   }
 
   /**
@@ -277,9 +272,7 @@ export class StorageService {
    */
   isDatasetTopLevel(path: string): boolean {
     if (typeof path !== "string") {
-      throw new Error(
-        'isDatasetTopLevel received "path" parameter that is not of type "string."'
-      );
+      throw new Error('isDatasetTopLevel received "path" parameter that is not of type "string."');
     }
 
     /**
@@ -303,17 +296,9 @@ export class StorageService {
     }
 
     const IECUnitsStr = this.IECUnits.join("|");
-    const shortUnitsStr = this.IECUnits.map(
-      (unit) => unit.charAt(0) + unit.charAt(2)
-    ).join("|");
+    const shortUnitsStr = this.IECUnits.map((unit) => unit.charAt(0) + unit.charAt(2)).join("|");
     const humanUnitsStr = this.IECUnits.map((unit) => unit.charAt(0)).join("|");
-    const allUnitsStr = (
-      IECUnitsStr +
-      "|" +
-      shortUnitsStr +
-      "|" +
-      humanUnitsStr
-    ).toUpperCase();
+    const allUnitsStr = (IECUnitsStr + "|" + shortUnitsStr + "|" + humanUnitsStr).toUpperCase();
     const unitsRE = new RegExp("^\\s*(" + allUnitsStr + "){1}\\s*$");
 
     unitStr = unitStr.toUpperCase();
@@ -367,9 +352,7 @@ export class StorageService {
   // is used as the default, so for 'gtp', an entered value of 256 becomes 256 GiB. If you don't pass in allowedUnits,
   // all of the above are accepted AND no unit is attached to an unlabeled number, so 256 is considered 256 bytes.
   convertHumanStringToNum(hstr, dec = false, allowedUnits?: string) {
-    const IECUnitLetters = this.IECUnits.map((unit) =>
-      unit.charAt(0).toUpperCase()
-    ).join("");
+    const IECUnitLetters = this.IECUnits.map((unit) => unit.charAt(0).toUpperCase()).join("");
 
     let num = 0;
     let unit = "";
@@ -407,8 +390,7 @@ export class StorageService {
     if (
       unit &&
       // ...allowedUnits are passed in but unit is not in allowed Units
-      ((allowedUnits &&
-        !allowedUnits.toLowerCase().includes(unit[0].toLowerCase())) ||
+      ((allowedUnits && !allowedUnits.toLowerCase().includes(unit[0].toLowerCase())) ||
         // ...when allowedUnits are not passed in and unit is not recognized
         !(unit = this.normalizeUnit(unit)))
     ) {
@@ -423,12 +405,7 @@ export class StorageService {
   }
 
   // Converts a number from bytes to the most natural human readable format
-  convertBytestoHumanReadable(
-    bytes,
-    decimalPlaces?,
-    min_units?,
-    hideBytes?: boolean
-  ) {
+  convertBytestoHumanReadable(bytes, decimalPlaces?, min_units?, hideBytes?: boolean) {
     let i = -1;
     let dec, units;
     decimalPlaces !== undefined ? (dec = decimalPlaces) : (dec = 2);

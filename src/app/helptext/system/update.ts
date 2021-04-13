@@ -9,9 +9,7 @@ export const helptext_system_update = {
 
   filelocation: {
     placeholder: T("Update File Temporary Storage Location"),
-    tooltip: T(
-      "The update file is temporarily stored here before being applied."
-    ),
+    tooltip: T("The update file is temporarily stored here before being applied."),
     validation: [Validators.required],
   },
 
@@ -78,9 +76,7 @@ export const helptext_system_update = {
  Continue with download?"
   ),
   non_ha_confirm_msg: T("Apply updates and reboot system after downloading."),
-  ha_confirm_msg: T(
-    "Check the box for full upgrade. Leave unchecked to download only."
-  ),
+  ha_confirm_msg: T("Check the box for full upgrade. Leave unchecked to download only."),
 
   pending_title: T("Apply Pending Updates"),
   non_ha_pending_msg: T(

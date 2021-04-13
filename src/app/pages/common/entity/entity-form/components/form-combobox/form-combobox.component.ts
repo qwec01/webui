@@ -8,20 +8,14 @@ import { Field } from "../../models/field.interface";
 import { TooltipComponent } from "../tooltip/tooltip.component";
 
 import * as _ from "lodash";
-import {
-  MatAutocomplete,
-  MatAutocompleteTrigger,
-} from "@angular/material/autocomplete";
+import { MatAutocomplete, MatAutocompleteTrigger } from "@angular/material/autocomplete";
 import { fromEvent } from "rxjs";
 import { map, takeUntil } from "rxjs/operators";
 import { MatMenu, MatMenuTrigger } from "@angular/material/menu";
 
 @Component({
   selector: "form-combobox",
-  styleUrls: [
-    "form-combobox.component.scss",
-    "../dynamic-field/dynamic-field.css",
-  ],
+  styleUrls: ["form-combobox.component.scss", "../dynamic-field/dynamic-field.css"],
   templateUrl: "./form-combobox.component.html",
 })
 export class FormComboboxComponent implements Field {
@@ -63,23 +57,16 @@ export class FormComboboxComponent implements Field {
 
   onOpenDropdown() {
     setTimeout(() => {
-      if (
-        this.autoCompleteRef &&
-        this.autocompleteTrigger &&
-        this.autoCompleteRef.panel
-      ) {
+      if (this.autoCompleteRef && this.autocompleteTrigger && this.autoCompleteRef.panel) {
         fromEvent(this.autoCompleteRef.panel.nativeElement, "scroll")
           .pipe(
             map((x) => this.autoCompleteRef.panel.nativeElement.scrollTop),
             takeUntil(this.autocompleteTrigger.panelClosingActions)
           )
           .subscribe((x) => {
-            const scrollTop = this.autoCompleteRef.panel.nativeElement
-              .scrollTop;
-            const scrollHeight = this.autoCompleteRef.panel.nativeElement
-              .scrollHeight;
-            const elementHeight = this.autoCompleteRef.panel.nativeElement
-              .clientHeight;
+            const scrollTop = this.autoCompleteRef.panel.nativeElement.scrollTop;
+            const scrollHeight = this.autoCompleteRef.panel.nativeElement.scrollHeight;
+            const elementHeight = this.autoCompleteRef.panel.nativeElement.clientHeight;
             const atBottom = scrollHeight === scrollTop + elementHeight;
             if (atBottom) {
               this.loadMoreSearchOptions();
@@ -91,9 +78,7 @@ export class FormComboboxComponent implements Field {
 
   onOpenMenu() {
     setTimeout(() => {
-      let menuPanel = this.menuRef
-        ? document.getElementById(this.menuRef.panelId)
-        : undefined;
+      let menuPanel = this.menuRef ? document.getElementById(this.menuRef.panelId) : undefined;
       if (menuPanel) {
         fromEvent(menuPanel, "scroll").subscribe((x) => {
           const scrollTop = menuPanel.scrollTop;
@@ -137,11 +122,7 @@ export class FormComboboxComponent implements Field {
           this.config
         );
       } else {
-        this.config.loadMoreOptions(
-          this.config.options.length,
-          this.config.parent,
-          ""
-        );
+        this.config.loadMoreOptions(this.config.options.length, this.config.parent, "");
       }
     }
   }

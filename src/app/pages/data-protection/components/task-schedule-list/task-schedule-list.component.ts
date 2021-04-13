@@ -47,10 +47,7 @@ export class TaskScheduleListComponent implements OnInit, OnChanges {
       this.config.schedule;
 
     this.futureRuns = this._taskService
-      .getTaskNextRuns(
-        scheduleExpression,
-        TaskScheduleListComponent.LIST_LENGTH
-      )
+      .getTaskNextRuns(scheduleExpression, TaskScheduleListComponent.LIST_LENGTH)
       .map((run) => run.toLocaleString());
   }
 }

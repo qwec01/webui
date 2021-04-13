@@ -14,13 +14,7 @@ import {
   OnChanges,
   AfterViewInit,
 } from "@angular/core";
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  FormArray,
-  Validators,
-} from "@angular/forms";
+import { FormBuilder, FormControl, FormGroup, FormArray, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import * as _ from "lodash";
 import { TranslateService } from "@ngx-translate/core";
@@ -96,8 +90,7 @@ export interface FormConfig {
   styleUrls: ["./entity-form-embedded.component.css"],
   providers: [EntityFormService, FieldRelationService],
 })
-export class EntityFormEmbeddedComponent
-  implements OnInit, OnDestroy, AfterViewInit, OnChanges {
+export class EntityFormEmbeddedComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
   @Input("conf") conf: FormConfig;
   @Input() data: any;
   @Input() hiddenFieldSets: string[] = [];
@@ -209,9 +202,7 @@ export class EntityFormEmbeddedComponent
     this.fieldSetDisplay = this.conf.fieldSetDisplay;
     if (this.conf.fieldSets) {
       /* Temp patch to support both FieldSet approaches */
-      this.fieldSets = this.conf.fieldSets.list
-        ? this.conf.fieldSets.list()
-        : this.conf.fieldSets;
+      this.fieldSets = this.conf.fieldSets.list ? this.conf.fieldSets.list() : this.conf.fieldSets;
     }
     this.formGroup = this.entityFormService.createFormGroup(this.fieldConfig);
     this.setControlChangeDetection();
@@ -228,9 +219,7 @@ export class EntityFormEmbeddedComponent
       for (let i in this.data) {
         let fg = this.formGroup.controls[i];
         if (fg) {
-          const current_field = this.fieldConfig.find(
-            (control) => control.name === i
-          );
+          const current_field = this.fieldConfig.find((control) => control.name === i);
           if (current_field.type === "array") {
             this.setArrayValue(this.data[i], fg, i);
           } else {
@@ -283,9 +272,7 @@ export class EntityFormEmbeddedComponent
     configControls
       .filter((control) => !controls.includes(control))
       .forEach((name) => {
-        const config = this.fieldConfig.find(
-          (control) => control.name === name
-        );
+        const config = this.fieldConfig.find((control) => control.name === name);
         this.formGroup.addControl(name, this.createControl(config));
       });
 
@@ -416,9 +403,7 @@ export class EntityFormEmbeddedComponent
   }
 
   setRelation(config: FieldConfig) {
-    const activations = this.fieldRelationService.findActivationRelation(
-      config.relation
-    );
+    const activations = this.fieldRelationService.findActivationRelation(config.relation);
     if (activations) {
       const tobeDisabled = this.fieldRelationService.isFormControlToBeDisabled(
         activations,

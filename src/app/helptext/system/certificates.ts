@@ -19,9 +19,7 @@ export const helptext_system_certificates = {
       placeholder: T("Name"),
       tooltip: T("Descriptive identifier for this certificate."),
       validation: [Validators.required, Validators.pattern("[A-Za-z0-9_-]+$")],
-      errors: T(
-        "Allowed characters: letters, numbers, underscore (_), and dash (-)."
-      ),
+      errors: T("Allowed characters: letters, numbers, underscore (_), and dash (-)."),
     },
 
     cert_create_type: {
@@ -74,9 +72,7 @@ matches your certificate usage scenario."
 
     isCSRonSystem: {
       placeholder: T("CSR exists on this system"),
-      tooltip: T(
-        "Check this box if importing a certificate for which a CSR exists on this system"
-      ),
+      tooltip: T("Check this box if importing a certificate for which a CSR exists on this system"),
     },
 
     signedby: {
@@ -134,10 +130,8 @@ matches your certificate usage scenario."
 
     city: {
       placeholder: T("Locality"),
-      tooltip: T(
-        "Enter the location of the organization. For example,\
- the city."
-      ),
+      tooltip: T("Enter the location of the organization. For example,\
+ the city."),
       validation: [Validators.required],
     },
 
@@ -154,10 +148,8 @@ matches your certificate usage scenario."
 
     email: {
       placeholder: T("Email"),
-      tooltip: T(
-        "Enter the email address of the person responsible for\
- the CA."
-      ),
+      tooltip: T("Enter the email address of the person responsible for\
+ the CA."),
       validation: [Validators.email, Validators.required],
     },
 
@@ -190,9 +182,7 @@ matches your certificate usage scenario."
 
     cert_csr: {
       placeholder: T("Signing Request"),
-      tooltip: T(
-        "Paste the contents of your Certificate Signing Request here."
-      ),
+      tooltip: T("Paste the contents of your Certificate Signing Request here."),
       validation: [Validators.required],
     },
 
@@ -228,9 +218,7 @@ matches your certificate usage scenario."
       },
       ca: {
         placeholder: T("CA"),
-        tooltip: T(
-          "Identify this certificate as a Certificate Authority (CA)."
-        ),
+        tooltip: T("Identify this certificate as a Certificate Authority (CA)."),
       },
       enabled: {
         placeholder: T("Basic Constraints"),
@@ -360,15 +348,11 @@ non-repudiation service."
       },
       data_encipherment: {
         placeholder: T("Data Encipherment"),
-        tooltip: T(
-          "This certificate's public key is used to encipher user data."
-        ),
+        tooltip: T("This certificate's public key is used to encipher user data."),
       },
       key_agreement: {
         placeholder: T("Key Agreement"),
-        tooltip: T(
-          "This certificate's public key is used to manage key agreement."
-        ),
+        tooltip: T("This certificate's public key is used to manage key agreement."),
       },
       key_cert_sign: {
         placeholder: T("Key Cert Sign"),
@@ -479,10 +463,8 @@ certificate still approved."
     },
     tos: {
       placeholder: T("Terms of Service"),
-      tooltip: T(
-        "Please accept the terms of service for the given ACME\
- Server."
-      ),
+      tooltip: T("Please accept the terms of service for the given ACME\
+ Server."),
     },
     renew_day: {
       placeholder: T("Renew Certificate Days"),

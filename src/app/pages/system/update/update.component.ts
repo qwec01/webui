@@ -2,11 +2,7 @@ import { Component, OnInit, OnDestroy } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { HttpClient } from "@angular/common/http";
 import { Subscription } from "rxjs";
-import {
-  WebSocketService,
-  SystemGeneralService,
-  StorageService,
-} from "../../../services/";
+import { WebSocketService, SystemGeneralService, StorageService } from "../../../services/";
 import { EntityJobComponent } from "../../common/entity/entity-job/entity-job.component";
 import { MatDialog } from "@angular/material/dialog";
 import { DialogService } from "../../../services/dialog.service";
@@ -116,9 +112,7 @@ export class UpdateComponent implements OnInit, OnDestroy {
     public core: CoreService
   ) {
     this.sysGenService.updateRunning.subscribe((res) => {
-      res === "true"
-        ? (this.isUpdateRunning = true)
-        : (this.isUpdateRunning = false);
+      res === "true" ? (this.isUpdateRunning = true) : (this.isUpdateRunning = false);
     });
   }
 
@@ -154,10 +148,7 @@ export class UpdateComponent implements OnInit, OnDestroy {
       .register({ observerClass: this, eventName: "SysInfo" })
       .subscribe((evt: CoreEvent) => {
         this.sysInfo = evt.data;
-        this.isHA =
-          evt.data.license && evt.data.license.system_serial_ha.length > 0
-            ? true
-            : false;
+        this.isHA = evt.data.license && evt.data.license.system_serial_ha.length > 0 ? true : false;
       });
     this.core.emit({ name: "SysInfoRequest", sender: this });
 
@@ -184,28 +175,18 @@ export class UpdateComponent implements OnInit, OnDestroy {
         }
 
         if (this.fullTrainList[res.current]) {
-          if (
-            this.fullTrainList[res.current].description
-              .toLowerCase()
-              .includes("[nightly]")
-          ) {
+          if (this.fullTrainList[res.current].description.toLowerCase().includes("[nightly]")) {
             this.currentTrainDescription = "[nightly]";
           } else if (
-            this.fullTrainList[res.current].description
-              .toLowerCase()
-              .includes("[release]")
+            this.fullTrainList[res.current].description.toLowerCase().includes("[release]")
           ) {
             this.currentTrainDescription = "[release]";
           } else if (
-            this.fullTrainList[res.current].description
-              .toLowerCase()
-              .includes("[prerelease]")
+            this.fullTrainList[res.current].description.toLowerCase().includes("[prerelease]")
           ) {
             this.currentTrainDescription = "[prerelease]";
           } else {
-            this.currentTrainDescription = res.trains[
-              this.selectedTrain
-            ].description.toLowerCase();
+            this.currentTrainDescription = res.trains[this.selectedTrain].description.toLowerCase();
           }
         } else {
           this.currentTrainDescription = "";
@@ -275,11 +256,7 @@ export class UpdateComponent implements OnInit, OnDestroy {
             this.dialogRef.close(false);
           });
           this.dialogRef.componentInstance.failure.subscribe((failure) => {
-            this.dialogService.errorReport(
-              failure.error,
-              failure.reason,
-              failure.trace.formatted
-            );
+            this.dialogService.errorReport(failure.error, failure.reason, failure.trace.formatted);
           });
         }
       });
@@ -316,9 +293,7 @@ export class UpdateComponent implements OnInit, OnDestroy {
 
   setTrainDescription() {
     if (this.fullTrainList[this.train]) {
-      this.currentTrainDescription = this.fullTrainList[
-        this.train
-      ].description.toLowerCase();
+      this.currentTrainDescription = this.fullTrainList[this.train].description.toLowerCase();
     } else {
       this.currentTrainDescription = "";
     }
@@ -416,10 +391,7 @@ export class UpdateComponent implements OnInit, OnDestroy {
             this.releaseNotes = res.notes.ReleaseNotes;
           }
         }
-        if (
-          this.currentTrainDescription &&
-          this.currentTrainDescription.includes("[release]")
-        ) {
+        if (this.currentTrainDescription && this.currentTrainDescription.includes("[release]")) {
           this.release_train = true;
           this.pre_release_train = false;
           this.nightly_train = false;
@@ -437,9 +409,7 @@ export class UpdateComponent implements OnInit, OnDestroy {
       (err) => {
         this.general_update_error =
           err.reason.replace(">", "").replace("<", "") +
-          T(
-            ": Automatic update check failed. Please check system network settings."
-          );
+          T(": Automatic update check failed. Please check system network settings.");
         this.showSpinner = false;
       },
       () => {
@@ -566,13 +536,11 @@ export class UpdateComponent implements OnInit, OnDestroy {
           }
           this.updateType = "standard";
           // Calls the 'Save Config' dialog - Returns here if user declines
-          this.dialogService
-            .dialogForm(this.saveConfigFormConf)
-            .subscribe((res) => {
-              if (res === false) {
-                this.confirmAndUpdate();
-              }
-            });
+          this.dialogService.dialogForm(this.saveConfigFormConf).subscribe((res) => {
+            if (res === false) {
+              this.confirmAndUpdate();
+            }
+          });
         } else if (res.status === "UNAVAILABLE") {
           this.dialogService.Info(T("Check Now"), T("No updates available."));
         }
@@ -654,17 +622,11 @@ export class UpdateComponent implements OnInit, OnDestroy {
       disableClose: true,
     });
     if (!this.is_ha) {
-      this.dialogRef.componentInstance.setCall("update.update", [
-        { reboot: true },
-      ]);
+      this.dialogRef.componentInstance.setCall("update.update", [{ reboot: true }]);
       this.dialogRef.componentInstance.submit();
 
       this.dialogRef.componentInstance.failure.subscribe((res) => {
-        this.dialogService.errorReport(
-          res.error,
-          res.reason,
-          res.trace.formatted
-        );
+        this.dialogService.errorReport(res.error, res.reason, res.trace.formatted);
       });
     } else {
       this.ws.call("update.set_train", [this.train]).subscribe(() => {
@@ -705,10 +667,7 @@ export class UpdateComponent implements OnInit, OnDestroy {
     let mimetype;
     if (entityDialog.parent.sysInfo) {
       const hostname = entityDialog.parent.sysInfo.hostname.split(".")[0];
-      const date = entityDialog.datePipe.transform(
-        new Date(),
-        "yyyyMMddHHmmss"
-      );
+      const date = entityDialog.datePipe.transform(new Date(), "yyyyMMddHHmmss");
       fileName = hostname + "-" + date;
       if (entityDialog.formValue["secretseed"]) {
         fileName += ".tar";
@@ -729,12 +688,7 @@ export class UpdateComponent implements OnInit, OnDestroy {
         (succ) => {
           const url = succ[1];
           entityDialog.parent.storage
-            .streamDownloadFile(
-              entityDialog.parent.http,
-              url,
-              fileName,
-              mimetype
-            )
+            .streamDownloadFile(entityDialog.parent.http, url, fileName, mimetype)
             .subscribe(
               (file) => {
                 entityDialog.dialogRef.close();
@@ -786,13 +740,11 @@ export class UpdateComponent implements OnInit, OnDestroy {
         let message = this.isHA
           ? "The standby controller will be automatically restarted to finalize the update. Apply updates and restart the standby controller?"
           : "The system will reboot and be briefly unavailable while applying updates. Apply updates and reboot?";
-        this.dialogService
-          .confirm(T("Apply Pending Updates"), T(message))
-          .subscribe((res) => {
-            if (res) {
-              this.update();
-            }
-          });
+        this.dialogService.confirm(T("Apply Pending Updates"), T(message)).subscribe((res) => {
+          if (res) {
+            this.update();
+          }
+        });
         break;
       case "standard":
         this.confirmAndUpdate();

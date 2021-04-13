@@ -20,12 +20,7 @@ import { take } from "rxjs/operators";
 @Component({
   selector: "app-replication-form",
   template: `<entity-form [conf]="this"></entity-form>`,
-  providers: [
-    TaskService,
-    KeychainCredentialService,
-    ReplicationService,
-    StorageService,
-  ],
+  providers: [TaskService, KeychainCredentialService, ReplicationService, StorageService],
 })
 export class ReplicationFormComponent {
   protected queryCall = "replication.query";
@@ -1102,16 +1097,12 @@ export class ReplicationFormComponent {
         });
       }
     });
-    const periodicSnapshotTasksField = this.fieldSets.config(
-      "periodic_snapshot_tasks"
-    );
+    const periodicSnapshotTasksField = this.fieldSets.config("periodic_snapshot_tasks");
     this.ws.call("pool.snapshottask.query").subscribe((res) => {
       for (const i in res) {
-        const label = `${res[i].dataset} - ${res[i].naming_schema} - ${
-          res[i].lifetime_value
-        } ${res[i].lifetime_unit} (S) - ${
-          res[i].enabled ? "Enabled" : "Disabled"
-        }`;
+        const label = `${res[i].dataset} - ${res[i].naming_schema} - ${res[i].lifetime_value} ${
+          res[i].lifetime_unit
+        } (S) - ${res[i].enabled ? "Enabled" : "Disabled"}`;
         periodicSnapshotTasksField.options.push({
           label: label,
           value: res[i].id,
@@ -1120,13 +1111,9 @@ export class ReplicationFormComponent {
     });
 
     const scheduleBeginField = this.fieldSets.config("schedule_begin");
-    const restrictScheduleBeginField = this.fieldSets.config(
-      "restrict_schedule_begin"
-    );
+    const restrictScheduleBeginField = this.fieldSets.config("restrict_schedule_begin");
     const scheduleEndField = this.fieldSets.config("schedule_end");
-    const restrictScheduleEndField = this.fieldSets.config(
-      "restrict_schedule_end"
-    );
+    const restrictScheduleEndField = this.fieldSets.config("restrict_schedule_end");
     const time_options = this.taskService.getTimeOptions();
 
     for (let i = 0; i < time_options.length; i++) {
@@ -1142,9 +1129,7 @@ export class ReplicationFormComponent {
   }
 
   countEligibleManualSnapshots() {
-    const namingSchema = this.entityForm.formGroup.controls[
-      "also_include_naming_schema"
-    ].value;
+    const namingSchema = this.entityForm.formGroup.controls["also_include_naming_schema"].value;
     if (typeof namingSchema !== "string" && namingSchema.length === 0) {
       return;
     }
@@ -1174,31 +1159,23 @@ export class ReplicationFormComponent {
     this.entityForm = entityForm;
     this.pk = entityForm.pk;
     this.isNew = entityForm.isNew;
-    this.title = entityForm.isNew
-      ? helptext.replication_task_add
-      : helptext.replication_task_edit;
+    this.title = entityForm.isNew ? helptext.replication_task_add : helptext.replication_task_edit;
 
-    const isTruenasCore =
-      window.localStorage.getItem("product_type") === "CORE" ? true : false;
+    const isTruenasCore = window.localStorage.getItem("product_type") === "CORE" ? true : false;
     const readonlyCtrl = this.entityForm.formGroup.controls["readonly"];
     if (this.pk === undefined) {
       readonlyCtrl.setValue(isTruenasCore ? "SET" : "REQUIRE");
     }
 
     if (this.entityForm.formGroup.controls["speed_limit"].value) {
-      const presetSpeed = this.entityForm.formGroup.controls[
-        "speed_limit"
-      ].value.toString();
+      const presetSpeed = this.entityForm.formGroup.controls["speed_limit"].value.toString();
       this.storageService.humanReadable = presetSpeed;
     }
-    this.entityForm.formGroup.controls[
-      "target_dataset_PUSH"
-    ].valueChanges.subscribe((res) => {
+    this.entityForm.formGroup.controls["target_dataset_PUSH"].valueChanges.subscribe((res) => {
       if (
         entityForm.formGroup.controls["direction"].value === "PUSH" &&
         entityForm.formGroup.controls["transport"].value !== "LOCAL" &&
-        entityForm.formGroup.controls["also_include_naming_schema"].value !==
-          undefined
+        entityForm.formGroup.controls["also_include_naming_schema"].value !== undefined
       ) {
         this.countEligibleManualSnapshots();
       } else {
@@ -1209,8 +1186,7 @@ export class ReplicationFormComponent {
       if (
         res === "PUSH" &&
         entityForm.formGroup.controls["transport"].value !== "LOCAL" &&
-        entityForm.formGroup.controls["also_include_naming_schema"].value !==
-          undefined
+        entityForm.formGroup.controls["also_include_naming_schema"].value !== undefined
       ) {
         this.countEligibleManualSnapshots();
       } else {
@@ -1223,8 +1199,7 @@ export class ReplicationFormComponent {
       if (
         res !== "LOCAL" &&
         entityForm.formGroup.controls["direction"].value === "PUSH" &&
-        entityForm.formGroup.controls["also_include_naming_schema"].value !==
-          undefined
+        entityForm.formGroup.controls["also_include_naming_schema"].value !== undefined
       ) {
         this.countEligibleManualSnapshots();
       } else {
@@ -1250,30 +1225,18 @@ export class ReplicationFormComponent {
       entityForm.setDisabled("only_matching_schedule", !res, !res);
     });
 
-    entityForm.formGroup.controls["schedule_picker"].valueChanges.subscribe(
-      (value) => {
-        if (
-          value === "0 0 * * *" ||
-          value === "0 0 * * sun" ||
-          value === "0 0 1 * *"
-        ) {
-          entityForm.setDisabled("schedule_begin", true, true);
-          entityForm.setDisabled("schedule_end", true, true);
-        } else {
-          entityForm.setDisabled("schedule_begin", false, false);
-          entityForm.setDisabled("schedule_end", false, false);
-        }
+    entityForm.formGroup.controls["schedule_picker"].valueChanges.subscribe((value) => {
+      if (value === "0 0 * * *" || value === "0 0 * * sun" || value === "0 0 1 * *") {
+        entityForm.setDisabled("schedule_begin", true, true);
+        entityForm.setDisabled("schedule_end", true, true);
+      } else {
+        entityForm.setDisabled("schedule_begin", false, false);
+        entityForm.setDisabled("schedule_end", false, false);
       }
-    );
+    });
 
-    entityForm.formGroup.controls[
-      "restrict_schedule_picker"
-    ].valueChanges.subscribe((value) => {
-      if (
-        value === "0 0 * * *" ||
-        value === "0 0 * * sun" ||
-        value === "0 0 1 * *"
-      ) {
+    entityForm.formGroup.controls["restrict_schedule_picker"].valueChanges.subscribe((value) => {
+      if (value === "0 0 * * *" || value === "0 0 * * sun" || value === "0 0 1 * *") {
         entityForm.setDisabled("restrict_schedule_begin", true, true);
         entityForm.setDisabled("restrict_schedule_end", true, true);
       } else {
@@ -1282,61 +1245,48 @@ export class ReplicationFormComponent {
       }
     });
 
-    entityForm.formGroup.controls["ssh_credentials"].valueChanges.subscribe(
-      (res) => {
-        for (const item of ["target_dataset_PUSH", "source_datasets_PULL"]) {
-          const explorerComponent = this.fieldSets.config(item)
-            .customTemplateStringOptions.explorerComponent;
-          if (explorerComponent) {
-            explorerComponent.nodes = [
-              {
-                mountpoint: explorerComponent.config.initial,
-                name: explorerComponent.config.initial,
-                hasChildren: true,
-              },
-            ];
+    entityForm.formGroup.controls["ssh_credentials"].valueChanges.subscribe((res) => {
+      for (const item of ["target_dataset_PUSH", "source_datasets_PULL"]) {
+        const explorerComponent = this.fieldSets.config(item).customTemplateStringOptions
+          .explorerComponent;
+        if (explorerComponent) {
+          explorerComponent.nodes = [
+            {
+              mountpoint: explorerComponent.config.initial,
+              name: explorerComponent.config.initial,
+              hasChildren: true,
+            },
+          ];
+        }
+      }
+    });
+
+    entityForm.formGroup.controls["speed_limit"].valueChanges.subscribe((value) => {
+      const speedLimitField = this.fieldSets.config("speed_limit");
+      const filteredValue = value ? this.storageService.convertHumanStringToNum(value) : undefined;
+      speedLimitField["hasErrors"] = false;
+      speedLimitField["errors"] = "";
+      if (filteredValue !== undefined && isNaN(filteredValue)) {
+        speedLimitField["hasErrors"] = true;
+        speedLimitField["errors"] = helptext.speed_limit_errors;
+      }
+    });
+
+    entityForm.formGroup.controls["properties_override"].valueChanges.subscribe((value) => {
+      if (value) {
+        for (const item of value) {
+          if (item && (item.indexOf("=") <= 0 || item.indexOf("=") >= item.length - 1)) {
+            entityForm.formGroup.controls["properties_override"].setErrors({
+              manualValidateError: true,
+              manualValidateErrorMsg: helptext.properties_override_error,
+            });
+            return;
           }
         }
       }
-    );
-
-    entityForm.formGroup.controls["speed_limit"].valueChanges.subscribe(
-      (value) => {
-        const speedLimitField = this.fieldSets.config("speed_limit");
-        const filteredValue = value
-          ? this.storageService.convertHumanStringToNum(value)
-          : undefined;
-        speedLimitField["hasErrors"] = false;
-        speedLimitField["errors"] = "";
-        if (filteredValue !== undefined && isNaN(filteredValue)) {
-          speedLimitField["hasErrors"] = true;
-          speedLimitField["errors"] = helptext.speed_limit_errors;
-        }
-      }
-    );
-
-    entityForm.formGroup.controls["properties_override"].valueChanges.subscribe(
-      (value) => {
-        if (value) {
-          for (const item of value) {
-            if (
-              item &&
-              (item.indexOf("=") <= 0 || item.indexOf("=") >= item.length - 1)
-            ) {
-              entityForm.formGroup.controls["properties_override"].setErrors({
-                manualValidateError: true,
-                manualValidateErrorMsg: helptext.properties_override_error,
-              });
-              return;
-            }
-          }
-        }
-        entityForm.formGroup.controls["properties_override"].setErrors(null);
-      }
-    );
-    entityForm.formGroup.controls["auto"].setValue(
-      entityForm.formGroup.controls["auto"].value
-    );
+      entityForm.formGroup.controls["properties_override"].setErrors(null);
+    });
+    entityForm.formGroup.controls["auto"].setValue(entityForm.formGroup.controls["auto"].value);
   }
 
   resourceTransformIncomingRestData(wsResponse) {
@@ -1351,13 +1301,9 @@ export class ReplicationFormComponent {
     }
 
     wsResponse["compression"] =
-      wsResponse["compression"] === null
-        ? "DISABLED"
-        : wsResponse["compression"];
+      wsResponse["compression"] === null ? "DISABLED" : wsResponse["compression"];
     wsResponse["logging_level"] =
-      wsResponse["logging_level"] === null
-        ? "DEFAULT"
-        : wsResponse["logging_level"];
+      wsResponse["logging_level"] === null ? "DEFAULT" : wsResponse["logging_level"];
     const snapshotTasks = [];
     for (const item of wsResponse["periodic_snapshot_tasks"]) {
       snapshotTasks.push(item.id);
@@ -1391,16 +1337,12 @@ export class ReplicationFormComponent {
         wsResponse.restrict_schedule.month +
         " " +
         wsResponse.restrict_schedule.dow;
-      wsResponse["restrict_schedule_begin"] =
-        wsResponse.restrict_schedule.begin;
+      wsResponse["restrict_schedule_begin"] = wsResponse.restrict_schedule.begin;
       wsResponse["restrict_schedule_end"] = wsResponse.restrict_schedule.end;
       wsResponse["restrict_schedule"] = true;
     }
     wsResponse["speed_limit"] = wsResponse["speed_limit"]
-      ? this.storageService.convertBytestoHumanReadable(
-          wsResponse["speed_limit"],
-          0
-        )
+      ? this.storageService.convertBytestoHumanReadable(wsResponse["speed_limit"], 0)
       : undefined;
     // block large_block changes if it is enabled
     if (this.entityForm.wsResponse.large_block) {
@@ -1409,9 +1351,7 @@ export class ReplicationFormComponent {
 
     if (wsResponse.properties_override) {
       const properties_exclude_list = [];
-      for (const [key, value] of Object.entries(
-        wsResponse["properties_override"]
-      )) {
+      for (const [key, value] of Object.entries(wsResponse["properties_override"])) {
         properties_exclude_list.push(`${key}=${value}`);
       }
       wsResponse["properties_override"] = properties_exclude_list;
@@ -1464,9 +1404,7 @@ export class ReplicationFormComponent {
     }
 
     if (data["speed_limit"] !== undefined && data["speed_limit"] !== null) {
-      data["speed_limit"] = this.storageService.convertHumanStringToNum(
-        data["speed_limit"]
-      );
+      data["speed_limit"] = this.storageService.convertHumanStringToNum(data["speed_limit"]);
     }
     if (data["transport"] === "LOCAL") {
       data["direction"] = "PUSH";
@@ -1476,9 +1414,7 @@ export class ReplicationFormComponent {
     if (data["direction"] === "PUSH") {
       for (let i = 0; i < data["source_datasets_PUSH"].length; i++) {
         if (_.startsWith(data["source_datasets_PUSH"][i], "/mnt/")) {
-          data["source_datasets_PUSH"][i] = data["source_datasets_PUSH"][
-            i
-          ].substring(5);
+          data["source_datasets_PUSH"][i] = data["source_datasets_PUSH"][i].substring(5);
         }
       }
       data["source_datasets"] = _.filter(
@@ -1488,9 +1424,7 @@ export class ReplicationFormComponent {
       );
 
       data["target_dataset"] =
-        typeof targetDatasetPush === "string"
-          ? targetDatasetPush
-          : targetDatasetPush.toString();
+        typeof targetDatasetPush === "string" ? targetDatasetPush : targetDatasetPush.toString();
 
       delete data["source_datasets_PUSH"];
       delete data["target_dataset_PUSH"];
@@ -1584,10 +1518,7 @@ export class ReplicationFormComponent {
           prop !== "large_block" &&
           data[prop] === undefined
         ) {
-          if (
-            prop === "only_matching_schedule" ||
-            prop === "hold_pending_snapshots"
-          ) {
+          if (prop === "only_matching_schedule" || prop === "hold_pending_snapshots") {
             data[prop] = false;
           } else {
             data[prop] = Array.isArray(this.queryRes[prop]) ? [] : null;
@@ -1606,12 +1537,8 @@ export class ReplicationFormComponent {
     }
 
     const transport = this.entityForm.formGroup.controls["transport"].value;
-    const sshCredentials = this.entityForm.formGroup.controls["ssh_credentials"]
-      .value;
-    if (
-      (sshCredentials === undefined || sshCredentials === "") &&
-      transport !== "LOCAL"
-    ) {
+    const sshCredentials = this.entityForm.formGroup.controls["ssh_credentials"].value;
+    if ((sshCredentials === undefined || sshCredentials === "") && transport !== "LOCAL") {
       for (const item of ["target_dataset_PUSH", "source_datasets_PULL"]) {
         const fieldConfig = this.fieldSets.config(item);
         fieldConfig.hasErrors = true;
@@ -1621,13 +1548,7 @@ export class ReplicationFormComponent {
     }
 
     return new Promise((resolve, reject) => {
-      resolve(
-        this.replicationService.getRemoteDataset(
-          transport,
-          sshCredentials,
-          this
-        )
-      );
+      resolve(this.replicationService.getRemoteDataset(transport, sshCredentials, this));
     });
   }
 
@@ -1644,8 +1565,7 @@ export class ReplicationFormComponent {
       parent.entityForm &&
       parent.entityForm.formGroup.controls["direction"].value === "PUSH" &&
       parent.entityForm.formGroup.controls["transport"].value !== "LOCAL" &&
-      parent.entityForm.formGroup.controls["also_include_naming_schema"]
-        .value !== undefined
+      parent.entityForm.formGroup.controls["also_include_naming_schema"].value !== undefined
     ) {
       parent.countEligibleManualSnapshots();
     } else {

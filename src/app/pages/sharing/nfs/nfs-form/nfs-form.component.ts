@@ -247,9 +247,7 @@ export class NFSFormComponent {
       name: globalHelptext.basic_options,
       function: () => {
         this.isBasicMode = !this.isBasicMode;
-        this.fieldSets
-          .toggleSets(this.advanced_sets)
-          .toggleDividers(this.advanced_dividers);
+        this.fieldSets.toggleSets(this.advanced_sets).toggleDividers(this.advanced_dividers);
       },
     },
     {
@@ -257,9 +255,7 @@ export class NFSFormComponent {
       name: globalHelptext.advanced_options,
       function: () => {
         this.isBasicMode = !this.isBasicMode;
-        this.fieldSets
-          .toggleSets(this.advanced_sets)
-          .toggleDividers(this.advanced_dividers);
+        this.fieldSets.toggleSets(this.advanced_sets).toggleDividers(this.advanced_dividers);
       },
     },
   ];
@@ -349,8 +345,7 @@ export class NFSFormComponent {
 
       if (aliases.length > 0 && aliases.length !== res.length) {
         this.fieldSets.config("paths").hasErrors = true;
-        this.fieldSets.config("paths").errors =
-          helptext_sharing_nfs.error_alias;
+        this.fieldSets.config("paths").errors = helptext_sharing_nfs.error_alias;
       } else {
         this.fieldSets.config("paths").hasErrors = false;
         this.fieldSets.config("paths").errors = "";
@@ -409,59 +404,38 @@ export class NFSFormComponent {
         this.router.navigate(new Array("/").concat(this.route_success));
       } else {
         this.dialog
-          .confirm(
-            shared.dialog_title,
-            shared.dialog_message,
-            true,
-            shared.dialog_button
-          )
+          .confirm(shared.dialog_title, shared.dialog_message, true, shared.dialog_button)
           .subscribe((dialogRes) => {
             if (dialogRes) {
               entityForm.loader.open();
-              this.ws
-                .call("service.update", [service["id"], { enable: true }])
-                .subscribe(
-                  (updateRes) => {
-                    this.ws.call("service.start", [service.service]).subscribe(
-                      (startRes) => {
-                        entityForm.loader.close();
-                        this.dialog
-                          .Info(
-                            T("NFS") + shared.dialog_started_title,
-                            T("The NFS") + shared.dialog_started_message,
-                            "250px"
-                          )
-                          .subscribe(() => {
-                            this.router.navigate(
-                              new Array("/").concat(this.route_success)
-                            );
-                          });
-                      },
-                      (err) => {
-                        entityForm.loader.close();
-                        this.dialog.errorReport(
-                          err.error,
-                          err.reason,
-                          err.trace.formatted
-                        );
-                        this.router.navigate(
-                          new Array("/").concat(this.route_success)
-                        );
-                      }
-                    );
-                  },
-                  (err) => {
-                    entityForm.loader.close();
-                    this.dialog.errorReport(
-                      err.error,
-                      err.reason,
-                      err.trace.formatted
-                    );
-                    this.router.navigate(
-                      new Array("/").concat(this.route_success)
-                    );
-                  }
-                );
+              this.ws.call("service.update", [service["id"], { enable: true }]).subscribe(
+                (updateRes) => {
+                  this.ws.call("service.start", [service.service]).subscribe(
+                    (startRes) => {
+                      entityForm.loader.close();
+                      this.dialog
+                        .Info(
+                          T("NFS") + shared.dialog_started_title,
+                          T("The NFS") + shared.dialog_started_message,
+                          "250px"
+                        )
+                        .subscribe(() => {
+                          this.router.navigate(new Array("/").concat(this.route_success));
+                        });
+                    },
+                    (err) => {
+                      entityForm.loader.close();
+                      this.dialog.errorReport(err.error, err.reason, err.trace.formatted);
+                      this.router.navigate(new Array("/").concat(this.route_success));
+                    }
+                  );
+                },
+                (err) => {
+                  entityForm.loader.close();
+                  this.dialog.errorReport(err.error, err.reason, err.trace.formatted);
+                  this.router.navigate(new Array("/").concat(this.route_success));
+                }
+              );
             } else {
               this.router.navigate(new Array("/").concat(this.route_success));
             }

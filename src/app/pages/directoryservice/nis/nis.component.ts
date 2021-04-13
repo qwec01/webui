@@ -5,11 +5,7 @@ import { DialogService } from "../../../services/";
 import { FieldSet } from "app/pages/common/entity/entity-form/models/fieldset.interface";
 import helptext from "../../../helptext/directoryservice/nis";
 
-import {
-  RestService,
-  SystemGeneralService,
-  WebSocketService,
-} from "../../../services/";
+import { RestService, SystemGeneralService, WebSocketService } from "../../../services/";
 import { FieldConfig } from "../../common/entity/entity-form/models/field-config.interface";
 
 @Component({
@@ -24,14 +20,12 @@ export class NISComponent {
       id: helptext.nis_custactions_clearcache_id,
       name: helptext.nis_custactions_clearcache_name,
       function: async () => {
-        this.systemGeneralService
-          .refreshDirServicesCache()
-          .subscribe((cache_status) => {
-            this.dialogservice.Info(
-              helptext.nis_custactions_clearcache_dialog_title,
-              helptext.nis_custactions_clearcache_dialog_message
-            );
-          });
+        this.systemGeneralService.refreshDirServicesCache().subscribe((cache_status) => {
+          this.dialogservice.Info(
+            helptext.nis_custactions_clearcache_dialog_title,
+            helptext.nis_custactions_clearcache_dialog_message
+          );
+        });
       },
     },
   ];

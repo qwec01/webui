@@ -1,12 +1,6 @@
 import { UploadFile } from "ngx-uploader";
 export interface CustomUploadInput {
-  type:
-    | "uploadAll"
-    | "uploadFile"
-    | "cancel"
-    | "cancelAll"
-    | "remove"
-    | "removeAll";
+  type: "uploadAll" | "uploadFile" | "cancel" | "cancelAll" | "remove" | "removeAll";
   url?: string;
   method?: string;
   id?: string;

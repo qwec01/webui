@@ -21,9 +21,7 @@ export default {
   vlan_pint_validation: [Validators.required],
 
   vlan_tag_placeholder: T("Vlan Tag"),
-  vlan_tag_tooltip: T(
-    "Enter the numeric tag configured in the switched network."
-  ),
+  vlan_tag_tooltip: T("Enter the numeric tag configured in the switched network."),
   vlan_tag_validation: [
     Validators.min(1),
     Validators.max(4095),

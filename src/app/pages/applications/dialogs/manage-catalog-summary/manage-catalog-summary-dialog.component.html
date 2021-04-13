@@ -3,12 +3,8 @@
     <strong class="catalog-name" textLimiter threshold="40"
       >{{ catalog.label }} {{ "Catalog Summary" | translate }}</strong
     >
-    <span class="status active" *ngIf="catalog.healthy">{{
-      "Healthy" | translate
-    }}</span>
-    <span class="status other" *ngIf="!catalog.healthy">{{
-      "Unhealthy" | translate
-    }}</span>
+    <span class="status active" *ngIf="catalog.healthy">{{ "Healthy" | translate }}</span>
+    <span class="status other" *ngIf="!catalog.healthy">{{ "Unhealthy" | translate }}</span>
   </div>
   <div class="resource" fxLayout="row" fxLayoutAlign="space-between center">
     <div class="status-filter">
@@ -22,10 +18,7 @@
           ix-auto-type="select"
           ix-auto-identifier="train-select"
         >
-          <mat-option
-            *ngFor="let option of trainOptions"
-            value="{{ option | translate }}"
-          >
+          <mat-option *ngFor="let option of trainOptions" value="{{ option | translate }}">
             {{ option }}
           </mat-option>
         </mat-select>
@@ -42,10 +35,7 @@
           ix-auto-type="select"
           ix-auto-identifier="status-select"
         >
-          <mat-option
-            *ngFor="let option of statusOptions"
-            value="{{ option | translate }}"
-          >
+          <mat-option *ngFor="let option of statusOptions" value="{{ option | translate }}">
             {{ option }}
           </mat-option>
         </mat-select>
@@ -53,11 +43,7 @@
     </div>
   </div>
   <div class="version-list">
-    <div
-      fxLayout="row"
-      fxLayoutAlign="center start"
-      class="detail-row row-light"
-    >
+    <div fxLayout="row" fxLayoutAlign="center start" class="detail-row row-light">
       <span fxFlex="25%" class="">{{ "Train" | translate }}</span>
       <span fxFlex="25%" class="">{{ "App" | translate }}</span>
       <span fxFlex="50%" class="">{{ "Version" | translate }}</span>
@@ -83,11 +69,7 @@
       </div>
     </div>
     <ng-template #empty>
-      <div
-        fxLayout="row"
-        fxLayoutAlign="start start"
-        class="detail-row value-row row-dark"
-      >
+      <div fxLayout="row" fxLayoutAlign="start start" class="detail-row value-row row-dark">
         {{ "No Item" | translate }}
       </div>
     </ng-template>

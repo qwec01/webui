@@ -5,9 +5,7 @@ import { IscsiService } from "../../../../../services/";
 
 @Component({
   selector: "app-iscsi-portal-list",
-  template: `
-    <entity-table [conf]="this" [title]="tableTitle"></entity-table>
-  `,
+  template: ` <entity-table [conf]="this" [title]="tableTitle"></entity-table> `,
 })
 export class PortalListComponent {
   public tableTitle = "Portals";
@@ -72,9 +70,7 @@ export class PortalListComponent {
   dataHandler(data) {
     for (const i in data.rows) {
       for (const ip in data.rows[i].listen) {
-        const listenIP =
-          this.ipChoicies[data.rows[i].listen[ip].ip] ||
-          data.rows[i].listen[ip].ip;
+        const listenIP = this.ipChoicies[data.rows[i].listen[ip].ip] || data.rows[i].listen[ip].ip;
         data.rows[i].listen[ip] = listenIP + ":" + data.rows[i].listen[ip].port;
       }
     }

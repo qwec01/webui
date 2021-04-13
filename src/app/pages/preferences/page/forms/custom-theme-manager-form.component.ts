@@ -27,11 +27,7 @@ import { T } from "../../../../translate-marker";
   selector: "custom-theme-manager-form",
   template: `
     <ng-container
-      *ngIf="
-        themeService &&
-        themeService.customThemes &&
-        themeService.customThemes.length > 0
-      "
+      *ngIf="themeService && themeService.customThemes && themeService.customThemes.length > 0"
     >
       <entity-form-embedded
         fxFlex="100"
@@ -43,8 +39,7 @@ import { T } from "../../../../translate-marker";
     </ng-container>
   `,
 })
-export class CustomThemeManagerFormComponent
-  implements OnInit, OnChanges, OnDestroy {
+export class CustomThemeManagerFormComponent implements OnInit, OnChanges, OnDestroy {
   /*
    //Preferences Object Structure
    platform:string; // FreeNAS || TrueNAS
@@ -94,10 +89,7 @@ export class CustomThemeManagerFormComponent
   ngOnInit() {
     this.initSubjects();
     // Only initialize if customThemes exist
-    if (
-      this.themeService.customThemes &&
-      this.themeService.customThemes.length > 0
-    ) {
+    if (this.themeService.customThemes && this.themeService.customThemes.length > 0) {
       this.themesExist = true;
       this.initForm();
     }

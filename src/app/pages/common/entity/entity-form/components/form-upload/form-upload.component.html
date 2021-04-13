@@ -21,13 +21,7 @@
   </div>
 
   <div>
-    <button
-      type="button"
-      mat-button
-      color="accent"
-      class="btn-default"
-      (click)="fileBtnClick()"
-    >
+    <button type="button" mat-button color="accent" class="btn-default" (click)="fileBtnClick()">
       {{ "Choose File" | translate }}
     </button>
     <div *ngIf="fileList" class="mt-1">

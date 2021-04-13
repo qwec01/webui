@@ -235,11 +235,7 @@ export class RsyncFormComponent implements OnDestroy {
   ]);
 
   protected rsync_module_field: string[] = ["remotemodule"];
-  protected rsync_ssh_field: string[] = [
-    "remoteport",
-    "remotepath",
-    "validate_rpath",
-  ];
+  protected rsync_ssh_field: string[] = ["remoteport", "remotepath", "validate_rpath"];
   protected user_field: any;
   protected mode_subscription: Subscription;
 
@@ -254,9 +250,7 @@ export class RsyncFormComponent implements OnDestroy {
   async afterInit(entityForm: EntityFormComponent) {
     this.entityForm = entityForm;
     this.isNew = entityForm.isNew;
-    this.title = entityForm.isNew
-      ? helptext.rsync_task_add
-      : helptext.rsync_task_edit;
+    this.title = entityForm.isNew ? helptext.rsync_task_add : helptext.rsync_task_edit;
 
     this.user_field = this.fieldSets.config("user");
     this.userService.userQueryDSCache().subscribe((items) => {
@@ -269,9 +263,7 @@ export class RsyncFormComponent implements OnDestroy {
     });
 
     this.hideFields(entityForm.formGroup.controls["mode"].value);
-    this.mode_subscription = entityForm.formGroup.controls[
-      "mode"
-    ].valueChanges.subscribe((res) => {
+    this.mode_subscription = entityForm.formGroup.controls["mode"].valueChanges.subscribe((res) => {
       this.hideFields(res);
     });
   }

@@ -3,11 +3,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { Validators } from "@angular/forms";
 
 import * as _ from "lodash";
-import {
-  IscsiService,
-  WebSocketService,
-  AppLoaderService,
-} from "../../../../../services/";
+import { IscsiService, WebSocketService, AppLoaderService } from "../../../../../services/";
 import { EntityUtils } from "../../../../common/entity/utils";
 import { helptext_sharing_iscsi } from "app/helptext/sharing";
 import { ipValidator } from "app/pages/common/entity/entity-form/validators/ip-validation";
@@ -62,10 +58,8 @@ export class PortalFormComponent {
         {
           type: "select",
           name: "discovery_authmethod",
-          placeholder:
-            helptext_sharing_iscsi.portal_form_placeholder_discovery_authmethod,
-          tooltip:
-            helptext_sharing_iscsi.portal_form_tooltip_discovery_authmethod,
+          placeholder: helptext_sharing_iscsi.portal_form_placeholder_discovery_authmethod,
+          tooltip: helptext_sharing_iscsi.portal_form_tooltip_discovery_authmethod,
           options: [
             {
               label: "NONE",
@@ -85,10 +79,8 @@ export class PortalFormComponent {
         {
           type: "select",
           name: "discovery_authgroup",
-          placeholder:
-            helptext_sharing_iscsi.portal_form_placeholder_discovery_authgroup,
-          tooltip:
-            helptext_sharing_iscsi.portal_form_tooltip_discovery_authgroup,
+          placeholder: helptext_sharing_iscsi.portal_form_placeholder_discovery_authgroup,
+          tooltip: helptext_sharing_iscsi.portal_form_tooltip_discovery_authgroup,
           options: [{ label: "---", value: null }],
           value: null,
         },
@@ -189,10 +181,7 @@ export class PortalFormComponent {
     });
     this.iscsiService.getAuth().subscribe((res) => {
       for (let i = 0; i < res.length; i++) {
-        if (
-          _.find(this.authgroup_field.options, { value: res[i].tag }) ==
-          undefined
-        ) {
+        if (_.find(this.authgroup_field.options, { value: res[i].tag }) == undefined) {
           this.authgroup_field.options.push({
             label: res[i].tag,
             value: res[i].tag,
@@ -230,8 +219,7 @@ export class PortalFormComponent {
     for (let i = 0; i < data.length; i++) {
       if (data[i]["ip"]) {
         const samePortIps = data[i]["ip"].reduce(
-          (fullIps, currip) =>
-            fullIps.concat({ ip: currip, port: data[i]["port"] }),
+          (fullIps, currip) => fullIps.concat({ ip: currip, port: data[i]["port"] }),
           []
         );
         ips = ips.concat(samePortIps);

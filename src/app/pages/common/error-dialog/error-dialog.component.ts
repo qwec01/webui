@@ -30,9 +30,7 @@ export class ErrorDialog {
   public toggleOpen() {
     const dialogs = document.getElementsByClassName("mat-dialog-container");
     const dialog = dialogs[dialogs.length - 1];
-    const messageWrapper = <HTMLElement>(
-      dialog.querySelector("#err-message-wrapper")
-    );
+    const messageWrapper = <HTMLElement>dialog.querySelector("#err-message-wrapper");
     const title = <HTMLElement>dialog.querySelector("#err-title");
     const content = <HTMLElement>dialog.querySelector("#err-md-content");
     const btPanel = <HTMLElement>dialog.querySelector("#err-bt-panel");
@@ -66,11 +64,7 @@ export class ErrorDialog {
 
   downloadLogs() {
     this.ws
-      .call("core.download", [
-        "filesystem.get",
-        [this.logs.logs_path],
-        this.logs.id + ".log",
-      ])
+      .call("core.download", ["filesystem.get", [this.logs.logs_path], this.logs.id + ".log"])
       .subscribe(
         (res) => {
           const url = res[1];

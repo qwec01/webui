@@ -10,22 +10,12 @@ export class KerberosKeytabsListComponent {
   public title = "Kerberos Keytabs";
   protected queryCall = "kerberos.keytab.query";
   protected wsDelete = "kerberos.keytab.delete";
-  protected route_add: string[] = [
-    "directoryservice",
-    "kerberoskeytabs",
-    "add",
-  ];
+  protected route_add: string[] = ["directoryservice", "kerberoskeytabs", "add"];
   protected route_add_tooltip: string = "Add Kerberos Keytab";
-  protected route_edit: string[] = [
-    "directoryservice",
-    "kerberoskeytabs",
-    "edit",
-  ];
+  protected route_edit: string[] = ["directoryservice", "kerberoskeytabs", "edit"];
   protected entityList: any;
 
-  public columns: Array<any> = [
-    { name: "Name", prop: "name", always_display: true },
-  ];
+  public columns: Array<any> = [{ name: "Name", prop: "name", always_display: true }];
   public rowIdentifier = "name";
   public config: any = {
     paging: true,

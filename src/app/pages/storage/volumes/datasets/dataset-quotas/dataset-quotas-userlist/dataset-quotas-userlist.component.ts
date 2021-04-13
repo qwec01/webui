@@ -2,12 +2,7 @@ import { Component, OnDestroy } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { TranslateService } from "@ngx-translate/core";
 import { ValidationErrors, FormControl } from "@angular/forms";
-import {
-  WebSocketService,
-  StorageService,
-  DialogService,
-  AppLoaderService,
-} from "app/services";
+import { WebSocketService, StorageService, DialogService, AppLoaderService } from "app/services";
 import { DialogFormConfiguration } from "app/pages/common/entity/entity-dialog/dialog-form-configuration.interface";
 import { T } from "app/translate-marker";
 import globalHelptext from "app/helptext/global-helptext";
@@ -91,125 +86,100 @@ export class DatasetQuotasUserlistComponent implements OnDestroy {
       name: "edit",
       onClick: () => {
         self.loader.open();
-        self.ws
-          .call("pool.dataset.get_quota", [
-            self.pk,
-            "USER",
-            [["id", "=", row.id]],
-          ])
-          .subscribe(
-            (res) => {
-              self.loader.close();
-              const conf: DialogFormConfiguration = {
-                title: helptext.users.dialog.title,
-                fieldConfig: [
-                  {
-                    type: "input",
-                    name: "name",
-                    placeholder: helptext.users.dialog.user.placeholder,
-                    value: res[0].name,
-                    readonly: true,
-                  },
-                  {
-                    type: "input",
-                    name: "data_quota",
-                    placeholder: helptext.users.data_quota.placeholder,
-                    tooltip: `${helptext.users.data_quota.tooltip} bytes.`,
-                    value: self.storageService.convertBytestoHumanReadable(
-                      res[0].quota,
-                      0,
-                      null,
-                      true
-                    ),
-                    id: "data-quota_input",
-                    blurStatus: true,
-                    blurEvent: self.blurEvent,
-                    parent: self,
-                    validation: [
-                      (control: FormControl): ValidationErrors => {
-                        const config = conf.fieldConfig.find(
-                          (c) => c.name === "data_quota"
-                        );
-                        self.quotaValue = control.value;
-                        const size = self.storageService.convertHumanStringToNum(
-                          control.value
-                        );
-                        const errors =
-                          control.value && isNaN(size)
-                            ? { invalid_byte_string: true }
-                            : null;
-
-                        if (errors) {
-                          config.hasErrors = true;
-                          config.errors =
-                            globalHelptext.human_readable.input_error;
-                        } else {
-                          config.hasErrors = false;
-                          config.errors = "";
-                        }
-                        return errors;
-                      },
-                    ],
-                  },
-                  {
-                    type: "input",
-                    name: "obj_quota",
-                    placeholder: helptext.users.obj_quota.placeholder,
-                    tooltip: helptext.users.obj_quota.tooltip,
-                    value: res[0].obj_quota,
-                  },
-                ],
-                saveButtonText: helptext.shared.set,
-                cancelButtonText: helptext.shared.cancel,
-
-                customSubmit(data) {
-                  const entryData = data.formValue;
-                  const payload = [];
-                  payload.push(
-                    {
-                      quota_type: "USER",
-                      id: res[0].id,
-                      quota_value: self.storageService.convertHumanStringToNum(
-                        entryData.data_quota
-                      ),
-                    },
-                    {
-                      quota_type: "USEROBJ",
-                      id: res[0].id,
-                      quota_value: entryData.obj_quota,
-                    }
-                  );
-                  self.loader.open();
-                  self.ws
-                    .call("pool.dataset.set_quota", [self.pk, payload])
-                    .subscribe(
-                      () => {
-                        self.loader.close();
-                        self.dialogService.closeAllDialogs();
-                        self.entityList.getData();
-                      },
-                      (err) => {
-                        self.loader.close();
-                        self.dialogService.errorReport(
-                          T("Error"),
-                          err.reason,
-                          err.trace.formatted
-                        );
-                      }
-                    );
+        self.ws.call("pool.dataset.get_quota", [self.pk, "USER", [["id", "=", row.id]]]).subscribe(
+          (res) => {
+            self.loader.close();
+            const conf: DialogFormConfiguration = {
+              title: helptext.users.dialog.title,
+              fieldConfig: [
+                {
+                  type: "input",
+                  name: "name",
+                  placeholder: helptext.users.dialog.user.placeholder,
+                  value: res[0].name,
+                  readonly: true,
                 },
-              };
-              this.dialogService.dialogFormWide(conf);
-            },
-            (err) => {
-              self.loader.close();
-              self.dialogService.errorReport(
-                T("Error"),
-                err.reason,
-                err.trace.formatted
-              );
-            }
-          );
+                {
+                  type: "input",
+                  name: "data_quota",
+                  placeholder: helptext.users.data_quota.placeholder,
+                  tooltip: `${helptext.users.data_quota.tooltip} bytes.`,
+                  value: self.storageService.convertBytestoHumanReadable(
+                    res[0].quota,
+                    0,
+                    null,
+                    true
+                  ),
+                  id: "data-quota_input",
+                  blurStatus: true,
+                  blurEvent: self.blurEvent,
+                  parent: self,
+                  validation: [
+                    (control: FormControl): ValidationErrors => {
+                      const config = conf.fieldConfig.find((c) => c.name === "data_quota");
+                      self.quotaValue = control.value;
+                      const size = self.storageService.convertHumanStringToNum(control.value);
+                      const errors =
+                        control.value && isNaN(size) ? { invalid_byte_string: true } : null;
+
+                      if (errors) {
+                        config.hasErrors = true;
+                        config.errors = globalHelptext.human_readable.input_error;
+                      } else {
+                        config.hasErrors = false;
+                        config.errors = "";
+                      }
+                      return errors;
+                    },
+                  ],
+                },
+                {
+                  type: "input",
+                  name: "obj_quota",
+                  placeholder: helptext.users.obj_quota.placeholder,
+                  tooltip: helptext.users.obj_quota.tooltip,
+                  value: res[0].obj_quota,
+                },
+              ],
+              saveButtonText: helptext.shared.set,
+              cancelButtonText: helptext.shared.cancel,
+
+              customSubmit(data) {
+                const entryData = data.formValue;
+                const payload = [];
+                payload.push(
+                  {
+                    quota_type: "USER",
+                    id: res[0].id,
+                    quota_value: self.storageService.convertHumanStringToNum(entryData.data_quota),
+                  },
+                  {
+                    quota_type: "USEROBJ",
+                    id: res[0].id,
+                    quota_value: entryData.obj_quota,
+                  }
+                );
+                self.loader.open();
+                self.ws.call("pool.dataset.set_quota", [self.pk, payload]).subscribe(
+                  () => {
+                    self.loader.close();
+                    self.dialogService.closeAllDialogs();
+                    self.entityList.getData();
+                  },
+                  (err) => {
+                    self.loader.close();
+                    self.dialogService.errorReport(T("Error"), err.reason, err.trace.formatted);
+                  }
+                );
+              },
+            };
+            this.dialogService.dialogFormWide(conf);
+          },
+          (err) => {
+            self.loader.close();
+            self.dialogService.errorReport(T("Error"), err.reason, err.trace.formatted);
+          }
+        );
       },
     });
     return actions;
@@ -219,17 +189,14 @@ export class DatasetQuotasUserlistComponent implements OnDestroy {
     this.entityList = entityList;
     const paramMap: any = (<any>this.aroute.params).getValue();
     this.pk = paramMap.pk;
-    this.useFullFilter =
-      window.localStorage.getItem("useFullFilter") === "false" ? false : true;
+    this.useFullFilter = window.localStorage.getItem("useFullFilter") === "false" ? false : true;
   }
 
   callGetFunction(entityList) {
     const filter = this.useFullFilter ? this.fullFilter : this.emptyFilter;
-    this.ws
-      .call("pool.dataset.get_quota", [this.pk, "USER", filter])
-      .subscribe((res) => {
-        entityList.handleData(res, true);
-      });
+    this.ws.call("pool.dataset.get_quota", [this.pk, "USER", filter]).subscribe((res) => {
+      entityList.handleData(res, true);
+    });
   }
 
   dataHandler(data): void {
@@ -238,20 +205,12 @@ export class DatasetQuotasUserlistComponent implements OnDestroy {
         if (!row.name) {
           row.name = `*ERR* (${msg}), ID: ${row.id}`;
         }
-        row.quota = this.storageService.convertBytestoHumanReadable(
-          row.quota,
-          0
-        );
+        row.quota = this.storageService.convertBytestoHumanReadable(row.quota, 0);
         if (row.used_bytes !== 0) {
-          row.used_bytes = this.storageService.convertBytestoHumanReadable(
-            row.used_bytes,
-            2
-          );
+          row.used_bytes = this.storageService.convertBytestoHumanReadable(row.used_bytes, 2);
         }
         row.used_percent = `${Math.round(row.used_percent * 100) / 100}%`;
-        row.obj_used_percent = `${
-          Math.round(row.obj_used_percent * 100) / 100
-        }%`;
+        row.obj_used_percent = `${Math.round(row.obj_used_percent * 100) / 100}%`;
       });
       return data;
     });
@@ -273,21 +232,16 @@ export class DatasetQuotasUserlistComponent implements OnDestroy {
       message = helptext.users.filter_dialog.message_filter;
       button = helptext.users.filter_dialog.button_filter;
     }
-    this.dialogService
-      .confirm(title, message, true, button)
-      .subscribe((res) => {
-        if (res) {
-          this.entityList.loader.open();
-          this.useFullFilter = !this.useFullFilter;
-          window.localStorage.setItem(
-            "useFullFilter",
-            this.useFullFilter.toString()
-          );
-          this.entityList.needTableResize = false;
-          this.entityList.getData();
-          this.loader.close();
-        }
-      });
+    this.dialogService.confirm(title, message, true, button).subscribe((res) => {
+      if (res) {
+        this.entityList.loader.open();
+        this.useFullFilter = !this.useFullFilter;
+        window.localStorage.setItem("useFullFilter", this.useFullFilter.toString());
+        this.entityList.needTableResize = false;
+        this.entityList.getData();
+        this.loader.close();
+      }
+    });
   }
 
   ngOnDestroy() {

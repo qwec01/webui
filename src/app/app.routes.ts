@@ -64,8 +64,7 @@ export const rootRouterConfig: Routes = [
       },
       {
         path: "directoryservice",
-        loadChildren:
-          "app/pages/directoryservice/directoryservice.module#DirectoryServiceModule",
+        loadChildren: "app/pages/directoryservice/directoryservice.module#DirectoryServiceModule",
         data: { title: "Directory Services", breadcrumb: "Directory Services" },
       },
       {
@@ -88,8 +87,7 @@ export const rootRouterConfig: Routes = [
       },
       {
         path: "apps/:tabIndex",
-        loadChildren:
-          "app/pages/applications/applications.module#ApplicationsModule",
+        loadChildren: "app/pages/applications/applications.module#ApplicationsModule",
         data: {
           title: "Applications",
           breadcrumb: "Applications",
@@ -129,14 +127,12 @@ export const rootRouterConfig: Routes = [
       },
       {
         path: "reportsdashboard",
-        loadChildren:
-          "./pages/reportsdashboard/reportsdashboard.module#ReportsDashboardModule",
+        loadChildren: "./pages/reportsdashboard/reportsdashboard.module#ReportsDashboardModule",
         data: { title: "Reporting", breadcrumb: "Reporting" },
       },
       {
         path: "systemprocesses",
-        loadChildren:
-          "app/pages/systemprocesses/system-processes.module#SystemProcessesModule",
+        loadChildren: "app/pages/systemprocesses/system-processes.module#SystemProcessesModule",
         data: { title: "System Processes", breadcrumb: "System Processes" },
       },
       {
@@ -151,8 +147,7 @@ export const rootRouterConfig: Routes = [
       },
       {
         path: "ui-preferences",
-        loadChildren:
-          "./pages/preferences/preferences.module#PreferencesModule",
+        loadChildren: "./pages/preferences/preferences.module#PreferencesModule",
         data: { title: "Web Interface Preferences", breadcrumb: "Preferences" },
       },
       {
@@ -162,14 +157,12 @@ export const rootRouterConfig: Routes = [
       },
       {
         path: "data-protection",
-        loadChildren:
-          "./pages/data-protection/data-protection.module#DataProtectionModule",
+        loadChildren: "./pages/data-protection/data-protection.module#DataProtectionModule",
         data: { title: "Data Protection", breadcrumb: "Data Protection" },
       },
       {
         path: "credentials",
-        loadChildren:
-          "./pages/credentials/credentials.module#CredentialsModule",
+        loadChildren: "./pages/credentials/credentials.module#CredentialsModule",
         data: { title: "Credentials", breadcrumb: "Credentials" },
       },
     ],

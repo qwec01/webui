@@ -13,8 +13,5 @@ export class InfoDialog {
   public icon: string;
   public is_html: boolean;
 
-  constructor(
-    public dialogRef: MatDialogRef<InfoDialog>,
-    protected translate: TranslateService
-  ) {}
+  constructor(public dialogRef: MatDialogRef<InfoDialog>, protected translate: TranslateService) {}
 }

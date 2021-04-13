@@ -48,11 +48,7 @@ export class InitshutdownListComponent {
   }
 
   doAdd(id?: number) {
-    this.modalService.open(
-      "slide-in-form",
-      new InitshutdownFormComponent(this.modalService),
-      id
-    );
+    this.modalService.open("slide-in-form", new InitshutdownFormComponent(this.modalService), id);
   }
 
   doEdit(id: number) {

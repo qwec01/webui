@@ -70,9 +70,7 @@ export class DualListboxComponent implements OnInit {
         document.querySelector("#counter").remove();
       }
     } else {
-      event.previousContainer.id === "cdk-drop-list-0"
-        ? this.select()
-        : this.return();
+      event.previousContainer.id === "cdk-drop-list-0" ? this.select() : this.return();
     }
     this.dragging = false;
   }
@@ -99,9 +97,7 @@ export class DualListboxComponent implements OnInit {
 
 const transfer = (from: ListSelection, to: ListSelection) => {
   return {
-    from: new ListSelectionImpl(
-      from.totalItems.filter((x) => !from.isSelected(x))
-    ),
+    from: new ListSelectionImpl(from.totalItems.filter((x) => !from.isSelected(x))),
     to: new ListSelectionImpl([...from.selectedItems, ...to.totalItems]),
   };
 };

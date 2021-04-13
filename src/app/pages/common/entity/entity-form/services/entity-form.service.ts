@@ -12,11 +12,7 @@ import * as _ from "lodash";
 import { WebSocketService } from "../../../../../services/ws.service";
 import { RestService } from "../../../../../services/rest.service";
 
-import {
-  FieldConfig,
-  UnitType,
-  InputUnitConfig,
-} from "../models/field-config.interface";
+import { FieldConfig, UnitType, InputUnitConfig } from "../models/field-config.interface";
 
 @Injectable()
 export class EntityFormService {
@@ -52,10 +48,7 @@ export class EntityFormService {
             controls[i].initialCount = 1;
           }
 
-          const formArray = this.createFormArray(
-            controls[i].formarray,
-            controls[i].initialCount
-          );
+          const formArray = this.createFormArray(controls[i].formarray, controls[i].initialCount);
           formGroup[controls[i].name] = formArray;
         } else if (controls[i].listFields) {
           formGroup[controls[i].name] = this.formBuilder.array([]);
@@ -67,9 +60,7 @@ export class EntityFormService {
           );
         }
 
-        controls[i].relation = Array.isArray(controls[i].relation)
-          ? controls[i].relation
-          : [];
+        controls[i].relation = Array.isArray(controls[i].relation) ? controls[i].relation : [];
       }
     }
 
@@ -86,11 +77,7 @@ export class EntityFormService {
     return formArray;
   }
 
-  insertFormArrayGroup(
-    index: number,
-    formArray: FormArray,
-    controls: FieldConfig[]
-  ) {
+  insertFormArrayGroup(index: number, formArray: FormArray, controls: FieldConfig[]) {
     const formGroup = this.createFormGroup(controls);
     formArray.insert(index, formGroup);
   }
@@ -112,11 +99,7 @@ export class EntityFormService {
       : (typeFilter = []);
 
     return this.ws
-      .call("filesystem.listdir", [
-        node.data.name,
-        typeFilter,
-        { order_by: ["name"], limit: 1000 },
-      ])
+      .call("filesystem.listdir", [node.data.name, typeFilter, { order_by: ["name"], limit: 1000 }])
       .toPromise()
       .then((res) => {
         res = _.sortBy(res, function (o) {
@@ -254,10 +237,7 @@ export class EntityFormService {
       config.allowUnits.forEach((item) => item.toUpperCase());
     }
     // do uppercase except when type is duration and unit is only one character (M is for minutes while m is for month)
-    unit =
-      config.type === UnitType.size || unit.length > 1
-        ? unit.toUpperCase()
-        : unit;
+    unit = config.type === UnitType.size || unit.length > 1 ? unit.toUpperCase() : unit;
     const matchUnits = unit.match(
       config.type === UnitType.size ? this.sizeRegex : this.durationRegex
     );

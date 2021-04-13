@@ -1,11 +1,6 @@
 <div *ngIf="rendered" class="widget stats-widget" ngClass.xs="double-height xs">
   <div class="card-container front">
-    <mat-card
-      class="front"
-      fxLayout="row"
-      fxLayoutWrap
-      fxLayoutAlign="space-between stretch"
-    >
+    <mat-card class="front" fxLayout="row" fxLayoutWrap fxLayoutAlign="space-between stretch">
       <mat-card-content>
         <mat-toolbar-row>
           <h3 class="mat-card-title-text">
@@ -16,24 +11,14 @@
           </div>
         </mat-toolbar-row>
 
-        <div
-          *ngIf="screenType == 'Mobile' || 'Desktop'"
-          fxLayout="column"
-          class="mobile"
-        >
-          <div
-            *ngIf="renderedWidgets.length == 0 && emptyConfig"
-            fxFlex="65"
-            class="bottom empty"
-          >
+        <div *ngIf="screenType == 'Mobile' || 'Desktop'" fxLayout="column" class="mobile">
+          <div *ngIf="renderedWidgets.length == 0 && emptyConfig" fxFlex="65" class="bottom empty">
             <entity-empty [conf]="emptyConfig"></entity-empty>
           </div>
 
           <div *ngIf="renderedWidgets.length > 0" fxFlex="65" class="bottom">
             <div class="list-subheader">
-              <span class="capitalize"
-                >Widgets ({{ dashState.length }} items)</span
-              >
+              <span class="capitalize">Widgets ({{ dashState.length }} items)</span>
             </div>
             <mat-list>
               <ng-container *ngFor="let widget of dashState">
@@ -45,19 +30,13 @@
                   <span class="label"
                     >{{ widget.name }}
                     <span
-                      *ngIf="
-                        widget.identifier &&
-                        nameFromIdentifier(widget.identifier).length > 0
-                      "
+                      *ngIf="widget.identifier && nameFromIdentifier(widget.identifier).length > 0"
                       >:
                     </span>
                   </span>
                   &nbsp;&nbsp;
                   <span
-                    *ngIf="
-                      widget.identifier &&
-                      nameFromIdentifier(widget.identifier).length > 0
-                    "
+                    *ngIf="widget.identifier && nameFromIdentifier(widget.identifier).length > 0"
                     >{{ nameFromIdentifier(widget.identifier) }}</span
                   >
                   <mat-icon class="next-slide">chevron_right</mat-icon>

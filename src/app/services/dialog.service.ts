@@ -1,9 +1,5 @@
 import { Injectable } from "@angular/core";
-import {
-  MatDialog,
-  MatDialogRef,
-  MatDialogConfig,
-} from "@angular/material/dialog";
+import { MatDialog, MatDialogRef, MatDialogConfig } from "@angular/material/dialog";
 import { T } from "app/translate-marker";
 import { filter } from "rxjs/operators";
 import { Observable } from "rxjs";
@@ -91,28 +87,23 @@ export class DialogService {
       dialogRef.componentInstance.secondaryCheckBoxMsg = secondaryCheckBoxMsg;
       dialogRef.componentInstance.data = data;
       dialogRef.componentInstance.method = method;
-      dialogRef.componentInstance.switchSelectionEmitter.subscribe(
-        (selection) => {
-          if (selection) {
-            if (data[0] && data[0].hasOwnProperty("reboot")) {
-              data[0].reboot = !data[0].reboot;
-            }
-            if (data[0] && data[0].hasOwnProperty("overcommit")) {
-              data[0].overcommit = !data[0].overcommit;
-            }
-            return dialogRef;
+      dialogRef.componentInstance.switchSelectionEmitter.subscribe((selection) => {
+        if (selection) {
+          if (data[0] && data[0].hasOwnProperty("reboot")) {
+            data[0].reboot = !data[0].reboot;
           }
+          if (data[0] && data[0].hasOwnProperty("overcommit")) {
+            data[0].overcommit = !data[0].overcommit;
+          }
+          return dialogRef;
         }
-      );
+      });
       return dialogRef;
     }
     return dialogRef.afterClosed();
   }
 
-  public passwordConfirm(
-    message: string,
-    disableClose: boolean = true
-  ): Observable<boolean> {
+  public passwordConfirm(message: string, disableClose: boolean = true): Observable<boolean> {
     let dialogRef: MatDialogRef<PasswordDialog>;
 
     dialogRef = this.dialog.open(PasswordDialog, {
@@ -181,28 +172,23 @@ export class DialogService {
     dialogRef.componentInstance.optionPlaceHolder = optionPlaceHolder;
     dialogRef.componentInstance.method = method;
 
-    dialogRef.componentInstance.switchSelectionEmitter.subscribe(
-      (selection) => {
-        if (selection === "force") {
-          data = { [selection]: true };
-        } else {
-          data = { [params]: selection };
-        }
-        dialogRef.afterClosed().subscribe((res) => {
-          if (res) {
-            this.ws.call(method, [data]).subscribe((out) => {
-              //this.snackBar.open(message, 'close', { duration: 5000 });
-            });
-          }
-        });
+    dialogRef.componentInstance.switchSelectionEmitter.subscribe((selection) => {
+      if (selection === "force") {
+        data = { [selection]: true };
+      } else {
+        data = { [params]: selection };
       }
-    );
+      dialogRef.afterClosed().subscribe((res) => {
+        if (res) {
+          this.ws.call(method, [data]).subscribe((out) => {
+            //this.snackBar.open(message, 'close', { duration: 5000 });
+          });
+        }
+      });
+    });
   }
 
-  public dialogForm(
-    conf: any,
-    disableClose: boolean = false
-  ): Observable<boolean> {
+  public dialogForm(conf: any, disableClose: boolean = false): Observable<boolean> {
     let dialogRef: MatDialogRef<EntityDialogComponent>;
 
     dialogRef = this.dialog.open(EntityDialogComponent, {
@@ -255,22 +241,14 @@ export class DialogService {
       ],
       saveButtonText: buttonMsg ? buttonMsg : T("DELETE"),
       afterInit: function (entityDialog) {
-        entityDialog.formGroup.controls["name"].valueChanges.subscribe(
-          (res) => {
-            entityDialog.submitEnabled = res === name
-              && (
-                confirmBox
-                ? entityDialog.formGroup.controls["confirm"].value
-                : true
-              );
-          }
-        );
-        entityDialog.formGroup.controls["confirm"].valueChanges.subscribe(
-          (res) => {
-            entityDialog.submitEnabled =
-              res && entityDialog.formGroup.controls["name"].value === name;
-          }
-        );
+        entityDialog.formGroup.controls["name"].valueChanges.subscribe((res) => {
+          entityDialog.submitEnabled =
+            res === name && (confirmBox ? entityDialog.formGroup.controls["confirm"].value : true);
+        });
+        entityDialog.formGroup.controls["confirm"].valueChanges.subscribe((res) => {
+          entityDialog.submitEnabled =
+            res && entityDialog.formGroup.controls["name"].value === name;
+        });
       },
       customSubmit: function (entityDialog) {
         return entityDialog.dialogRef.close(true);

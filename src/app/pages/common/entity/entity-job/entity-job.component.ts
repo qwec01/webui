@@ -7,11 +7,7 @@ import {
   HostListener,
   Inject,
 } from "@angular/core";
-import {
-  MatDialog,
-  MatDialogRef,
-  MAT_DIALOG_DATA,
-} from "@angular/material/dialog";
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { DecimalPipe } from "@angular/common";
 import { WebSocketService, RestService } from "../../../../services/";
 import { TranslateService } from "@ngx-translate/core";
@@ -119,13 +115,11 @@ export class EntityJobComponent implements OnInit {
   }
 
   public show() {
-    this.ws
-      .call("core.get_jobs", [[["id", "=", this.jobId]]])
-      .subscribe((res) => {
-        if (res.length > 0) {
-          this.jobUpdate(res[0]);
-        }
-      });
+    this.ws.call("core.get_jobs", [[["id", "=", this.jobId]]]).subscribe((res) => {
+      if (res.length > 0) {
+        this.jobUpdate(res[0]);
+      }
+    });
     this.ws.subscribe("core.get_jobs").subscribe((res) => {
       if (res.id === this.jobId) {
         this.jobUpdate(res);
@@ -149,11 +143,7 @@ export class EntityJobComponent implements OnInit {
     this.ws.job(this.method, this.args).subscribe(
       (res) => {
         this.job = res;
-        if (
-          this.showRealtimeLogs &&
-          this.job.logs_path &&
-          !this.realtimeLogsSubscribed
-        ) {
+        if (this.showRealtimeLogs && this.job.logs_path && !this.realtimeLogsSubscribed) {
           this.getRealtimeLogs();
         }
         if (res.progress && !this.showRealtimeLogs) {
@@ -171,9 +161,7 @@ export class EntityJobComponent implements OnInit {
           this.failure.emit(this.job);
         }
         if (this.realtimeLogsSubscribed) {
-          this.ws.unsubscribe(
-            "filesystem.file_tail_follow:" + this.job.logs_path
-          );
+          this.ws.unsubscribe("filesystem.file_tail_follow:" + this.job.logs_path);
         }
       }
     );
@@ -210,13 +198,11 @@ export class EntityJobComponent implements OnInit {
     );
   }
   public wsshow() {
-    this.ws
-      .call("core.get_jobs", [[["id", "=", this.jobId]]])
-      .subscribe((res) => {
-        if (res.length > 0) {
-          this.wsjobUpdate(res[0]);
-        }
-      });
+    this.ws.call("core.get_jobs", [[["id", "=", this.jobId]]]).subscribe((res) => {
+      if (res.length > 0) {
+        this.wsjobUpdate(res[0]);
+      }
+    });
     this.ws.subscribe("core.get_jobs").subscribe((res) => {
       if (res.id === this.jobId) {
         this.wsjobUpdate(res);
@@ -265,9 +251,7 @@ export class EntityJobComponent implements OnInit {
   }
 
   scrollBottom() {
-    const cardContainer = document.getElementsByClassName(
-      "entity-job-dialog"
-    )[0];
+    const cardContainer = document.getElementsByClassName("entity-job-dialog")[0];
     cardContainer.scrollTop = cardContainer.scrollHeight;
   }
 }

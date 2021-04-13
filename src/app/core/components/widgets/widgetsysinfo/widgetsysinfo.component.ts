@@ -82,9 +82,7 @@ export class WidgetSysInfoComponent
     super(translate);
     this.configurable = false;
     this.sysGenService.updateRunning.subscribe((res) => {
-      res === "true"
-        ? (this.isUpdateRunning = true)
-        : (this.isUpdateRunning = false);
+      res === "true" ? (this.isUpdateRunning = true) : (this.isUpdateRunning = false);
     });
 
     mediaObserver.media$.subscribe((evt) => {
@@ -121,12 +119,10 @@ export class WidgetSysInfoComponent
         .register({ observerClass: this, eventName: "HA_Status" })
         .subscribe((evt: CoreEvent) => {
           if (evt.data.status == "HA Enabled" && !this.data) {
-            this.ws
-              .call("failover.call_remote", ["system.info"])
-              .subscribe((res) => {
-                const evt = { name: "SysInfoPassive", data: res };
-                this.processSysInfo(evt);
-              });
+            this.ws.call("failover.call_remote", ["system.info"]).subscribe((res) => {
+              const evt = { name: "SysInfoPassive", data: res };
+              this.processSysInfo(evt);
+            });
           }
           this.ha_status = evt.data.status;
         });
@@ -218,8 +214,7 @@ export class WidgetSysInfoComponent
     let day = build.getUTCDate();
     let hours = build.getUTCHours();
     let minutes = build.getUTCMinutes();
-    this.buildDate =
-      month + " " + day + ", " + year + " " + hours + ":" + minutes;
+    this.buildDate = month + " " + day + ", " + year + " " + hours + ":" + minutes;
 
     this.memory = this.formatMemory(this.data.physmem, "GiB");
 
@@ -267,11 +262,7 @@ export class WidgetSysInfoComponent
         : (this.uptimeString += min + T(" minutes"));
     }
 
-    this.dateTime = this.locale.getTimeOnly(
-      this.data.datetime.$date,
-      false,
-      this.data.timezone
-    );
+    this.dateTime = this.locale.getTimeOnly(this.data.datetime.$date, false, this.data.timezone);
   }
 
   formatMemory(physmem: number, units: string) {

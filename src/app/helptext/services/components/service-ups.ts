@@ -27,10 +27,7 @@ export default {
     "Describe the UPS device. It can contain alphanumeric,\
  period, comma, hyphen, and underscore characters."
   ),
-  ups_identifier_validation: [
-    Validators.required,
-    Validators.pattern(/^[\w|,|\.|\-|_]+$/),
-  ],
+  ups_identifier_validation: [Validators.required, Validators.pattern(/^[\w|,|\.|\-|_]+$/)],
 
   ups_remotehost_placeholder: T("Remote Host"),
   ups_remotehost_tooltip: T(
@@ -163,9 +160,7 @@ export default {
   ups_subject_tooltip: T("Enter the subject for status emails."),
 
   ups_powerdown_placeholder: T("Power Off UPS"),
-  ups_powerdown_tooltip: T(
-    "Set for the UPS to power off after shutting down the system."
-  ),
+  ups_powerdown_tooltip: T("Set for the UPS to power off after shutting down the system."),
 
   ups_hostsync_placeholder: T("Host Sync"),
   ups_hostsync_tooltip: T(

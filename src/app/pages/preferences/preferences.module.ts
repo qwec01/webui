@@ -24,11 +24,7 @@ import { TranslateModule } from "@ngx-translate/core";
     TranslateModule,
     routing,
   ],
-  declarations: [
-    PreferencesPage,
-    CustomThemeManagerFormComponent,
-    GeneralPreferencesFormComponent,
-  ],
+  declarations: [PreferencesPage, CustomThemeManagerFormComponent, GeneralPreferencesFormComponent],
   providers: [EntityFormService],
   entryComponents: [],
 })

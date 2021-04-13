@@ -54,33 +54,31 @@ export class AnimationService {
         this.scrollTo(evt.data);
       });
 
-    core
-      .register({ observerClass: this, eventName: "Animate" })
-      .subscribe((evt: CoreEvent) => {
-        let config: AnimationConfig = evt.data;
-        let missingFinishState: string =
-          "This animation requires you to specify a finishState property which was not given.";
-        switch (config.animation) {
-          case "Flip":
-            this.flip(config.animationTarget, config.finishState);
-            break;
-          case "Fade":
-            this.fade(config.animationTarget, config.finishState);
-            break;
-          case "Scale":
-            this.scale(config.animationTarget, config.finishState);
-            break;
-          case "ElasticScale":
-            this.elasticScale(config.animationTarget, config.finishState);
-            break;
-          case "Bounce":
-            this.bounce(config.animationTarget, config.finishState);
-            break;
-          case "Radiate":
-            this.radiate(config.animationTarget, config.finishState);
-            break;
-        }
-      });
+    core.register({ observerClass: this, eventName: "Animate" }).subscribe((evt: CoreEvent) => {
+      let config: AnimationConfig = evt.data;
+      let missingFinishState: string =
+        "This animation requires you to specify a finishState property which was not given.";
+      switch (config.animation) {
+        case "Flip":
+          this.flip(config.animationTarget, config.finishState);
+          break;
+        case "Fade":
+          this.fade(config.animationTarget, config.finishState);
+          break;
+        case "Scale":
+          this.scale(config.animationTarget, config.finishState);
+          break;
+        case "ElasticScale":
+          this.elasticScale(config.animationTarget, config.finishState);
+          break;
+        case "Bounce":
+          this.bounce(config.animationTarget, config.finishState);
+          break;
+        case "Radiate":
+          this.radiate(config.animationTarget, config.finishState);
+          break;
+      }
+    });
 
     this.core
       .register({ observerClass: this, eventName: "AnimateGroup" })
@@ -109,10 +107,8 @@ export class AnimationService {
     animationTarget.rawTarget.parentNode.style["perspective"] =
       animationTarget.target.get("width") * 10 + "px";
     //animationTarget.rawTarget.parentNode.style["perspective"] = '1520px'; // Hard coded value from FreeNAS
-    animationTarget.rawTarget.parentNode.style["perspective-origin"] =
-      "50% 50%";
-    animationTarget.rawTarget.parentNode.style["transform-style"] =
-      "preserve-3d";
+    animationTarget.rawTarget.parentNode.style["perspective-origin"] = "50% 50%";
+    animationTarget.rawTarget.parentNode.style["transform-style"] = "preserve-3d";
 
     let start: number;
     let finish: number;
@@ -125,9 +121,9 @@ export class AnimationService {
     }
 
     // Using timeline because using start/finish variables in tween() throws type error. Problem with popmotion types?
-    timeline([
-      { track: "rotateX", from: start, to: finish, duration: 300 },
-    ]).start(animationTarget.target.set);
+    timeline([{ track: "rotateX", from: start, to: finish, duration: 300 }]).start(
+      animationTarget.target.set
+    );
   }
 
   private flipHorizontal(animationTarget: DisplayObject, finishState: string) {
@@ -136,8 +132,7 @@ export class AnimationService {
     animationTarget.rawTarget.parentNode.style["perspective"] =
       animationTarget.target.get("height") * 80 + "px";
     animationTarget.rawTarget.parentNode.style["perspective-origin"] = "center";
-    animationTarget.rawTarget.parentNode.style["transform-style"] =
-      "preserve-3d";
+    animationTarget.rawTarget.parentNode.style["transform-style"] = "preserve-3d";
 
     console.log("Initial Rotation = " + animationTarget.target.get("rotateY"));
 
@@ -152,9 +147,9 @@ export class AnimationService {
     }
 
     // Using timeline because using start/finish variables in tween() throws type error. Problem with popmotion types?
-    timeline([
-      { track: "rotateY", from: start, to: finish, duration: 300 },
-    ]).start(animationTarget.target.set);
+    timeline([{ track: "rotateY", from: start, to: finish, duration: 300 }]).start(
+      animationTarget.target.set
+    );
   }
 
   private fade(animationTarget: DisplayObject, finishState: string) {

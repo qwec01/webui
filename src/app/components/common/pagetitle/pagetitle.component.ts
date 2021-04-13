@@ -1,17 +1,5 @@
-import {
-  Component,
-  OnInit,
-  AfterViewInit,
-  OnDestroy,
-  Input,
-  ViewChild,
-} from "@angular/core";
-import {
-  Router,
-  NavigationEnd,
-  ActivatedRoute,
-  ActivatedRouteSnapshot,
-} from "@angular/router";
+import { Component, OnInit, AfterViewInit, OnDestroy, Input, ViewChild } from "@angular/core";
+import { Router, NavigationEnd, ActivatedRoute, ActivatedRouteSnapshot } from "@angular/router";
 import { filter } from "rxjs/operators";
 import { RoutePartsService } from "../../../services/route-parts/route-parts.service";
 import { CoreService, CoreEvent } from "app/core/services/core.service";
@@ -57,13 +45,8 @@ export class PageTitleComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     // must be running once to get breadcrumbs
-    this.routeParts = this.routePartsService.generateRouteParts(
-      this.activeRoute.snapshot
-    );
-    this.titleText =
-      this.routeParts && this.routeParts[0].title
-        ? this.routeParts[0].title
-        : "";
+    this.routeParts = this.routePartsService.generateRouteParts(this.activeRoute.snapshot);
+    this.titleText = this.routeParts && this.routeParts[0].title ? this.routeParts[0].title : "";
 
     // generate url from parts
     this.routeParts.reverse().map((item, i) => {
@@ -86,13 +69,9 @@ export class PageTitleComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe((routeChange) => {
         this.destroyActions();
 
-        this.routeParts = this.routePartsService.generateRouteParts(
-          this.activeRoute.snapshot
-        );
+        this.routeParts = this.routePartsService.generateRouteParts(this.activeRoute.snapshot);
         this.titleText =
-          this.routeParts && this.routeParts[0].title
-            ? this.routeParts[0].title
-            : "";
+          this.routeParts && this.routeParts[0].title ? this.routeParts[0].title : "";
 
         // generate url from parts
         this.routeParts.reverse().map((item, i) => {

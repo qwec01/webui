@@ -135,10 +135,8 @@ export class LineChartComponent
       fg2Type == "hex"
         ? this.utils.hexToRGB(this.themeService.currentTheme().fg2).rgb
         : this.utils.rgbToArray(fg2);
-    let gridLineColor =
-      "rgba(" + fg2RGB[0] + ", " + fg2RGB[1] + ", " + fg2RGB[2] + ", 0.25)";
-    let yLabelSuffix =
-      this.labelY === "Bits/s" ? this.labelY.toLowerCase() : this.labelY;
+    let gridLineColor = "rgba(" + fg2RGB[0] + ", " + fg2RGB[1] + ", " + fg2RGB[2] + ", 0.25)";
+    let yLabelSuffix = this.labelY === "Bits/s" ? this.labelY.toLowerCase() : this.labelY;
 
     let options = {
       drawPoints: false, // Must be disabled for smoothPlotter
@@ -155,12 +153,7 @@ export class LineChartComponent
         y: {
           yRangePad: 24,
           axisLabelFormatter: (numero, granularity, opts, dygraph) => {
-            let converted = this.formatLabelValue(
-              numero,
-              this.inferUnits(this.labelY),
-              1,
-              true
-            );
+            let converted = this.formatLabelValue(numero, this.inferUnits(this.labelY), 1, true);
             let suffix = converted.suffix ? converted.suffix : "";
             return this.limitDecimals(converted.value).toString() + suffix;
           },
@@ -172,20 +165,14 @@ export class LineChartComponent
           if (!item.y) {
             return;
           }
-          let converted = this.formatLabelValue(
-            item.y,
-            this.inferUnits(this.labelY),
-            1,
-            true
-          );
+          let converted = this.formatLabelValue(item.y, this.inferUnits(this.labelY), 1, true);
           let suffix =
             converted.shortName !== undefined
               ? converted.shortName
               : converted.suffix !== undefined
               ? converted.suffix
               : "";
-          clone.series[index].yHTML =
-            this.limitDecimals(converted.value).toString() + suffix;
+          clone.series[index].yHTML = this.limitDecimals(converted.value).toString() + suffix;
         });
 
         this.core.emit({
@@ -206,10 +193,7 @@ export class LineChartComponent
       drawCallback: (dygraph, is_initial) => {
         if (dygraph.axes_) {
           let numero = dygraph.axes_[0].maxyval;
-          let converted = this.formatLabelValue(
-            numero,
-            this.inferUnits(this.labelY)
-          );
+          let converted = this.formatLabelValue(numero, this.inferUnits(this.labelY));
           if (converted.prefix) {
             this.yLabelPrefix = converted.prefix;
           } else {
@@ -352,12 +336,7 @@ export class LineChartComponent
     switch (units.toLowerCase()) {
       case "bits":
       case "bytes":
-        output = this.convertKMGT(
-          value,
-          units.toLowerCase(),
-          fixed,
-          prefixRules
-        );
+        output = this.convertKMGT(value, units.toLowerCase(), fixed, prefixRules);
         break;
       case "%":
       case "°":
@@ -393,12 +372,7 @@ export class LineChartComponent
     return decimalPlaces > 2 ? numero.toFixed(2) : numero;
   }
 
-  convertKMGT(
-    value: number,
-    units: string,
-    fixed?: number,
-    prefixRules?: boolean
-  ): Conversion {
+  convertKMGT(value: number, units: string, fixed?: number, prefixRules?: boolean): Conversion {
     const kilo = 1024;
     const mega = kilo * 1024;
     const giga = mega * 1024;
@@ -412,24 +386,15 @@ export class LineChartComponent
       prefix = "Tera";
       shortName = "TiB";
       output = value / tera;
-    } else if (
-      (value < tera && value > giga) ||
-      (prefixRules && this.yLabelPrefix == "Giga")
-    ) {
+    } else if ((value < tera && value > giga) || (prefixRules && this.yLabelPrefix == "Giga")) {
       prefix = "Giga";
       shortName = "GiB";
       output = value / giga;
-    } else if (
-      (value < giga && value > mega) ||
-      (prefixRules && this.yLabelPrefix == "Mega")
-    ) {
+    } else if ((value < giga && value > mega) || (prefixRules && this.yLabelPrefix == "Mega")) {
       prefix = "Mega";
       shortName = "MiB";
       output = value / mega;
-    } else if (
-      (value < mega && value > kilo) ||
-      (prefixRules && this.yLabelPrefix == "Kilo")
-    ) {
+    } else if ((value < mega && value > kilo) || (prefixRules && this.yLabelPrefix == "Kilo")) {
       prefix = "Kilo";
       shortName = "KB";
       output = value / kilo;
@@ -437,9 +402,7 @@ export class LineChartComponent
 
     if (units == "bits") {
       shortName = shortName.replace(/i/, "").trim();
-      shortName = ` ${shortName.charAt(0).toUpperCase()}${shortName
-        .substr(1)
-        .toLowerCase()}`; // Kb, Mb, Gb, Tb
+      shortName = ` ${shortName.charAt(0).toUpperCase()}${shortName.substr(1).toLowerCase()}`; // Kb, Mb, Gb, Tb
     }
 
     return { value: output, prefix: prefix, shortName: shortName };

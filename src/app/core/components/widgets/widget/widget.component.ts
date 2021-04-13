@@ -1,11 +1,4 @@
-import {
-  Component,
-  AfterViewInit,
-  Input,
-  ViewChild,
-  Output,
-  EventEmitter,
-} from "@angular/core";
+import { Component, AfterViewInit, Input, ViewChild, Output, EventEmitter } from "@angular/core";
 import { NgForm } from "@angular/forms";
 import { CoreServiceInjector } from "app/core/services/coreserviceinjector";
 import { CoreService, CoreEvent } from "app/core/services/core.service";

@@ -14,10 +14,8 @@ export class MINIXL extends Chassis {
     this.front.container = new PIXI.Container();
     this.front.chassisPath = "assets/images/hardware/mini_xl/mini_xl_768w.png";
 
-    this.front.driveTrayBackgroundPath =
-      "assets/images/hardware/mini_xl/mini_hdd_drivetray_bg.png";
-    this.front.driveTrayHandlePath =
-      "assets/images/hardware/mini_xl/mini_hdd_drivetray_handle.png";
+    this.front.driveTrayBackgroundPath = "assets/images/hardware/mini_xl/mini_hdd_drivetray_bg.png";
+    this.front.driveTrayHandlePath = "assets/images/hardware/mini_xl/mini_hdd_drivetray_handle.png";
 
     this.front.vertical = false;
     this.front.disabledOpacity = 0.5;

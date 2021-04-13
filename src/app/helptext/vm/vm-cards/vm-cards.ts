@@ -39,11 +39,7 @@ export default {
  also have operational or licensing restrictions on\
  the number of CPUs."
   ),
-  vcpus_validation: [
-    Validators.required,
-    Validators.min(1),
-    Validators.max(16),
-  ],
+  vcpus_validation: [Validators.required, Validators.min(1), Validators.max(16)],
 
   memory_placeholder: T("Memory Size (MiB)"),
   memory_tooltip: T("Allocate a number of megabytes of RAM to the VM."),

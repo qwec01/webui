@@ -33,8 +33,6 @@ export default {
   secondary_phone_placeholder: T("Phone"),
   secondary_phone_tooltip: T(""),
 
-  enabled_placeholder: T(
-    "Enable automatic support alerts to iXsystems (Silver/Gold support only)"
-  ),
+  enabled_placeholder: T("Enable automatic support alerts to iXsystems (Silver/Gold support only)"),
   enabled_tooltip: T(""),
 };

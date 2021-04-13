@@ -1,10 +1,4 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  ViewEncapsulation,
-  OnDestroy,
-} from "@angular/core";
+import { Component, OnInit, ViewChild, ViewEncapsulation, OnDestroy } from "@angular/core";
 import { ApplicationsService } from "./applications.service";
 import { ModalService } from "../../services/modal.service";
 import { EntityToolbarComponent } from "app/pages/common/entity/entity-toolbar/entity-toolbar.component";
@@ -218,9 +212,7 @@ export class ApplicationsComponent implements OnInit, OnDestroy {
       }
     } else {
       if (setting.options.length == 3) {
-        setting.options = setting.options.filter(
-          (ctl) => ctl.label !== helptext.unset_pool
-        );
+        setting.options = setting.options.filter((ctl) => ctl.label !== helptext.unset_pool);
       }
     }
     this.toolbarConfig.controls.push(setting);

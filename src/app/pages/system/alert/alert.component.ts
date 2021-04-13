@@ -145,9 +145,7 @@ export class AlertConfigComponent implements OnInit {
         this.fieldSets = new FieldSets(sets);
 
         this.fieldConfig = this.fieldSets.configs();
-        this.formGroup = this.entityFormService.createFormGroup(
-          this.fieldConfig
-        );
+        this.formGroup = this.entityFormService.createFormGroup(this.fieldConfig);
 
         this.ws.call(this.queryCall).subscribe(
           (res) => {
@@ -226,9 +224,7 @@ export class AlertConfigComponent implements OnInit {
       const alert_class = key_values[0];
       const class_key = key_values[1];
       const def = _.find(this.defaults, { id: alert_class });
-      if (
-        def[class_key].toUpperCase() !== this.formGroup.value[key].toUpperCase()
-      ) {
+      if (def[class_key].toUpperCase() !== this.formGroup.value[key].toUpperCase()) {
         // do not submit defaults in the payload
         if (!payload.classes[alert_class]) {
           payload.classes[alert_class] = {};

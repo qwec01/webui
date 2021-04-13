@@ -17,8 +17,7 @@ export class UnlockDialogComponent {
   public unlock_message: string = helptext.unlock_dataset_dialog.unlock_message;
   public buttonMsg: string = helptext.unlock_dataset_dialog.ok_button;
   public cancelMsg: string = helptext.unlock_dataset_dialog.cancel_button;
-  public skipped_message: string =
-    helptext.unlock_result_dialog.skipped_message;
+  public skipped_message: string = helptext.unlock_result_dialog.skipped_message;
   public unlock_datasets = [];
   public error_datasets = [];
   public skipped_datasets = [];

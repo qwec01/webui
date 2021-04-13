@@ -61,9 +61,7 @@ export class ApiKeysComponent {
       const disableCheckbox = this.parent.currItem ? false : true;
       entityFrom.setDisabled("reset", disableCheckbox, disableCheckbox);
       if (this.parent.currItem) {
-        entityFrom.formGroup.controls["name"].setValue(
-          this.parent.currItem.name
-        );
+        entityFrom.formGroup.controls["name"].setValue(this.parent.currItem.name);
       }
     },
     parent: this,
@@ -105,9 +103,7 @@ export class ApiKeysComponent {
   }
   resourceTransformIncomingRestData(data) {
     return data.map((item) => {
-      item["created_time"] = this.localeService.formatDateTime(
-        item.created_at.$date
-      );
+      item["created_time"] = this.localeService.formatDateTime(item.created_at.$date);
       return item;
     });
   }
@@ -115,24 +111,18 @@ export class ApiKeysComponent {
   doSubmit(entityDialogForm) {
     const that = entityDialogForm.parent;
     if (that.currItem) {
-      that.ws
-        .call(that.editCall, [that.currItem.id, entityDialogForm.formValue])
-        .subscribe(
-          (res) => {
-            entityDialogForm.dialogRef.close(true);
-            if (res.key) {
-              that.displayKey(res.key);
-            }
-            that.entityList.getData();
-          },
-          (err) => {
-            new EntityUtils().handleWSError(
-              that,
-              err,
-              that.apikeysFormConf.fieldConfig
-            );
+      that.ws.call(that.editCall, [that.currItem.id, entityDialogForm.formValue]).subscribe(
+        (res) => {
+          entityDialogForm.dialogRef.close(true);
+          if (res.key) {
+            that.displayKey(res.key);
           }
-        );
+          that.entityList.getData();
+        },
+        (err) => {
+          new EntityUtils().handleWSError(that, err, that.apikeysFormConf.fieldConfig);
+        }
+      );
     } else {
       that.ws.call(that.addCall, [entityDialogForm.formValue]).subscribe(
         (res) => {
@@ -157,10 +147,8 @@ export class ApiKeysComponent {
     let dialogRef: MatDialogRef<ConfirmDialog>;
     dialogRef = this.dialog.open(ConfirmDialog, { disableClose: true });
     dialogRef.componentInstance.title = helptext.apikeyCopyDialog.title;
-    dialogRef.componentInstance.buttonMsg =
-      helptext.apikeyCopyDialog.save_button;
-    dialogRef.componentInstance.cancelMsg =
-      helptext.apikeyCopyDialog.close_button;
+    dialogRef.componentInstance.buttonMsg = helptext.apikeyCopyDialog.save_button;
+    dialogRef.componentInstance.cancelMsg = helptext.apikeyCopyDialog.close_button;
     dialogRef.componentInstance.hideCheckBox = true;
     dialogRef.componentInstance.isSubmitEnabled = true;
     dialogRef.componentInstance.message = `

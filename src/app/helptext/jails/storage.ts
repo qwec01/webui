@@ -19,13 +19,9 @@ area."
   ),
 
   readonly_placeholder: T("Read-Only"),
-  readonly_tooltip: T(
-    "Set to prevent users from modifying the \
-<b>Destination</b>."
-  ),
+  readonly_tooltip: T("Set to prevent users from modifying the \
+<b>Destination</b>."),
 
-  acl_edit_msg: T(
-    "ACL cannot be changed when the Source is the top-level dataset for a pool."
-  ),
+  acl_edit_msg: T("ACL cannot be changed when the Source is the top-level dataset for a pool."),
   action_edit_acl: T("Edit ACL"),
 };

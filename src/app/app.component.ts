@@ -62,39 +62,28 @@ export class AppComponent {
   ) {
     this.matIconRegistry.addSvgIconSetInNamespace(
       "mdi",
-      this.domSanitizer.bypassSecurityTrustResourceUrl(
-        "assets/iconfont/mdi/mdi.svg"
-      )
+      this.domSanitizer.bypassSecurityTrustResourceUrl("assets/iconfont/mdi/mdi.svg")
     );
 
     for (const [name, path] of Object.entries(customSvgIcons)) {
-      this.matIconRegistry.addSvgIcon(
-        name,
-        this.domSanitizer.bypassSecurityTrustResourceUrl(path)
-      );
+      this.matIconRegistry.addSvgIcon(name, this.domSanitizer.bypassSecurityTrustResourceUrl(path));
     }
 
     const product = productText.product.trim();
     this.title.setTitle(product + " - " + window.location.hostname);
-    const darkScheme = window.matchMedia("(prefers-color-scheme: dark)")
-      .matches;
+    const darkScheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
     let path;
     if (window.localStorage.product_type) {
       let cachedType = window.localStorage["product_type"].toLowerCase();
       path = "assets/images/truenas_" + cachedType + "_favicon.png";
       if (darkScheme) {
-        path =
-          "assets/images/truenas_" + cachedType + "_ondark" + "_favicon.png";
+        path = "assets/images/truenas_" + cachedType + "_ondark" + "_favicon.png";
       }
     } else {
       this.sysGeneralService.getProductType.subscribe((res) => {
         path = "assets/images/truenas_" + res.toLowerCase() + "_favicon.png";
         if (darkScheme) {
-          path =
-            "assets/images/truenas_" +
-            res.toLowerCase() +
-            "_ondark" +
-            "_favicon.png";
+          path = "assets/images/truenas_" + res.toLowerCase() + "_ondark" + "_favicon.png";
         }
       });
     }
@@ -137,9 +126,7 @@ export class AppComponent {
   }
 
   private setFavicon(str) {
-    const link =
-      document.querySelector("link[rel*='icon']") ||
-      document.createElement("link");
+    const link = document.querySelector("link[rel*='icon']") || document.createElement("link");
     link["rel"] = "icon";
     link["type"] = "image/png";
     // link.sizes = "16x16";
@@ -151,9 +138,7 @@ export class AppComponent {
     let N = navigator.appName;
     let UA = navigator.userAgent;
     let temp;
-    let browserVersion = UA.match(
-      /(opera|chrome|safari|firefox|msie)\/?\s*(\.?\d+(\.\d+)*)/i
-    );
+    let browserVersion = UA.match(/(opera|chrome|safari|firefox|msie)\/?\s*(\.?\d+(\.\d+)*)/i);
     if (browserVersion && (temp = UA.match(/version\/([\.\d]+)/i)) != null)
       browserVersion[2] = temp[1];
     let browserName = browserVersion ? browserVersion[1] : N;
@@ -163,10 +148,7 @@ export class AppComponent {
   }
 
   private globalPreviewControl() {
-    let snackBarRef = this.snackBar.open(
-      "Custom theme Global Preview engaged",
-      "Back to form"
-    );
+    let snackBarRef = this.snackBar.open("Custom theme Global Preview engaged", "Back to form");
     snackBarRef.onAction().subscribe(() => {
       this.router.navigate(["ui-preferences", "create-theme"]);
     });

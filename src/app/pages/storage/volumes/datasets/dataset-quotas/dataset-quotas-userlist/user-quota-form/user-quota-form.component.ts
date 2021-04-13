@@ -128,8 +128,7 @@ export class UserQuotaFormComponent {
   allowSubmit() {
     if (
       (this.dq || this.oq) &&
-      ((this.selectedEntriesValue.value &&
-        this.selectedEntriesValue.value.length > 0) ||
+      ((this.selectedEntriesValue.value && this.selectedEntriesValue.value.length > 0) ||
         (this.searchedEntries && this.searchedEntries.length > 0)) &&
       this.entryErrBool === false
     ) {
@@ -154,12 +153,9 @@ export class UserQuotaFormComponent {
     this.selectedEntriesField = _.find(this.fieldConfig, {
       name: "system_entries",
     });
-    this.selectedEntriesValue = this.entityForm.formGroup.controls[
-      "system_entries"
-    ];
+    this.selectedEntriesValue = this.entityForm.formGroup.controls["system_entries"];
     this.entryField = _.find(
-      this.fieldSets.find((set) => set.name === helptext.users.user_title)
-        .config,
+      this.fieldSets.find((set) => set.name === helptext.users.user_title).config,
       { name: "searched_entries" }
     );
 
@@ -172,48 +168,38 @@ export class UserQuotaFormComponent {
       });
     });
 
-    this.entityForm.formGroup.controls["data_quota"].valueChanges.subscribe(
-      (res) => {
-        this.dq = res;
-        this.allowSubmit();
-      }
-    );
+    this.entityForm.formGroup.controls["data_quota"].valueChanges.subscribe((res) => {
+      this.dq = res;
+      this.allowSubmit();
+    });
 
-    this.entityForm.formGroup.controls["obj_quota"].valueChanges.subscribe(
-      (res) => {
-        this.oq = res;
-        this.allowSubmit();
-      }
-    );
+    this.entityForm.formGroup.controls["obj_quota"].valueChanges.subscribe((res) => {
+      this.oq = res;
+      this.allowSubmit();
+    });
 
-    this.entityForm.formGroup.controls["system_entries"].valueChanges.subscribe(
-      () => {
-        this.allowSubmit();
-      }
-    );
+    this.entityForm.formGroup.controls["system_entries"].valueChanges.subscribe(() => {
+      this.allowSubmit();
+    });
 
-    this.entityForm.formGroup.controls[
-      "searched_entries"
-    ].valueChanges.subscribe((value) => {
+    this.entityForm.formGroup.controls["searched_entries"].valueChanges.subscribe((value) => {
       if (value) {
         this.validateEntry(value[value.length - 1]);
       }
     });
 
-    entityEdit.formGroup.controls["data_quota"].valueChanges.subscribe(
-      (value) => {
-        const formField = _.find(this.fieldConfig, { name: "data_quota" });
-        const filteredValue = value
-          ? this.storageService.convertHumanStringToNum(value, false, "kmgtp")
-          : undefined;
-        formField["hasErrors"] = false;
-        formField["errors"] = "";
-        if (filteredValue !== undefined && isNaN(filteredValue)) {
-          formField["hasErrors"] = true;
-          formField["errors"] = helptext.shared.input_error;
-        }
+    entityEdit.formGroup.controls["data_quota"].valueChanges.subscribe((value) => {
+      const formField = _.find(this.fieldConfig, { name: "data_quota" });
+      const filteredValue = value
+        ? this.storageService.convertHumanStringToNum(value, false, "kmgtp")
+        : undefined;
+      formField["hasErrors"] = false;
+      formField["errors"] = "";
+      if (filteredValue !== undefined && isNaN(filteredValue)) {
+        formField["hasErrors"] = true;
+        formField["errors"] = helptext.shared.input_error;
       }
-    );
+    });
   }
 
   blurEvent(parent) {
@@ -255,16 +241,12 @@ export class UserQuotaFormComponent {
     if (data.system_entries) {
       data.system_entries.forEach((entry) => {
         if (data.data_quota) {
-          const dq = this.storageService.convertHumanStringToNum(
-            data.data_quota
-          );
+          const dq = this.storageService.convertHumanStringToNum(data.data_quota);
           if (dq >= 0) {
             payload.push({
               quota_type: "USER",
               id: entry.toString(),
-              quota_value: this.storageService.convertHumanStringToNum(
-                data.data_quota
-              ),
+              quota_value: this.storageService.convertHumanStringToNum(data.data_quota),
             });
           }
         }

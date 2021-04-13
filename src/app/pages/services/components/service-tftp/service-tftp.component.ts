@@ -3,11 +3,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { EntityFormComponent } from "app/pages/common/entity/entity-form";
 import { FieldSet } from "app/pages/common/entity/entity-form/models/fieldset.interface";
 import helptext from "../../../../helptext/services/components/service-tftp";
-import {
-  RestService,
-  UserService,
-  WebSocketService,
-} from "../../../../services/";
+import { RestService, UserService, WebSocketService } from "../../../../services/";
 
 @Component({
   selector: "tftp-edit",

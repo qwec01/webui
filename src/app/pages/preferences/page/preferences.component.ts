@@ -33,15 +33,9 @@ import { Subject } from "rxjs";
       </mat-card-content>
       <mat-divider></mat-divider>
       <mat-card-content
-        *ngIf="
-          themeService &&
-          themeService.customThemes &&
-          themeService.customThemes.length > 0
-        "
+        *ngIf="themeService && themeService.customThemes && themeService.customThemes.length > 0"
       >
-        <custom-theme-manager-form
-          class="prefs-form"
-        ></custom-theme-manager-form>
+        <custom-theme-manager-form class="prefs-form"></custom-theme-manager-form>
       </mat-card-content>
     </mat-card>
   `,

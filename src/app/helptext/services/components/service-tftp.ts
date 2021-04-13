@@ -15,10 +15,8 @@ export default {
   ),
 
   tftp_newfiles_placeholder: T("Allow New Files"),
-  tftp_newfiles_tooltip: T(
-    "Set when network devices need to send files to\
- the system."
-  ),
+  tftp_newfiles_tooltip: T("Set when network devices need to send files to\
+ the system."),
 
   tftp_host_placeholder: T("Host"),
   tftp_host_tooltip: T(
@@ -26,9 +24,7 @@ export default {
   ),
 
   tftp_port_placeholder: T("Port"),
-  tftp_port_tooltip: T(
-    "The UDP port number that listens for TFTP requests. Example: 8050"
-  ),
+  tftp_port_tooltip: T("The UDP port number that listens for TFTP requests. Example: 8050"),
 
   tftp_username_placeholder: T("Username"),
   tftp_username_tooltip: T(

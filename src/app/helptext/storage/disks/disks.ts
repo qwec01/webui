@@ -45,9 +45,7 @@ export default {
   },
 
   disk_form_advpowermgmt_placeholder: T("Advanced Power Management"),
-  disk_form_advpowermgmt_tooltip: T(
-    "Select a power management profile from the menu."
-  ),
+  disk_form_advpowermgmt_tooltip: T("Select a power management profile from the menu."),
   disk_form_advpowermgmt_options: [
     { label: T("Disabled"), value: "DISABLED" },
     {

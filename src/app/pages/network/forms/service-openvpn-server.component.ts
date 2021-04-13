@@ -156,20 +156,14 @@ export class OpenvpnServerComponent {
               msg += `${item}: ${res[item]} \n`;
             }
             this.loader.close();
-            this.entityEdit.formGroup.controls["tls_crypt_auth"].setValue(
-              res.tls_crypt_auth
-            );
+            this.entityEdit.formGroup.controls["tls_crypt_auth"].setValue(res.tls_crypt_auth);
             const filename = "openVPNStatic.key";
             const blob = new Blob([msg], { type: "text/plain" });
             this.storageService.downloadBlob(blob, filename);
           },
           (err) => {
             this.loader.close();
-            this.dialog.errorReport(
-              helptext.error_dialog_title,
-              err.reason,
-              err.trace.formatted
-            );
+            this.dialog.errorReport(helptext.error_dialog_title, err.reason, err.trace.formatted);
           }
         );
       },
@@ -191,34 +185,29 @@ export class OpenvpnServerComponent {
           ],
           saveButtonText: "Submit",
           customSubmit: function (entityDialog) {
-            self.ws
-              .call("interface.websocket_local_ip")
-              .subscribe((localip) => {
-                const value = entityDialog.formValue;
-                entityDialog.dialogRef.close(true);
-                self.loader.open();
-                self.services
-                  .generateOpenServerClientConfig(
-                    value.client_certificate_id,
-                    localip
-                  )
-                  .subscribe(
-                    (key) => {
-                      const filename = "openVPNClientConfig.ovpn";
-                      const blob = new Blob([key], { type: "text/plain" });
-                      self.storageService.downloadBlob(blob, filename);
-                      self.loader.close();
-                    },
-                    (err) => {
-                      self.loader.close();
-                      self.dialog.errorReport(
-                        helptext.error_dialog_title,
-                        err.reason,
-                        err.trace.formatted
-                      );
-                    }
-                  );
-              });
+            self.ws.call("interface.websocket_local_ip").subscribe((localip) => {
+              const value = entityDialog.formValue;
+              entityDialog.dialogRef.close(true);
+              self.loader.open();
+              self.services
+                .generateOpenServerClientConfig(value.client_certificate_id, localip)
+                .subscribe(
+                  (key) => {
+                    const filename = "openVPNClientConfig.ovpn";
+                    const blob = new Blob([key], { type: "text/plain" });
+                    self.storageService.downloadBlob(blob, filename);
+                    self.loader.close();
+                  },
+                  (err) => {
+                    self.loader.close();
+                    self.dialog.errorReport(
+                      helptext.error_dialog_title,
+                      err.reason,
+                      err.trace.formatted
+                    );
+                  }
+                );
+            });
           },
         };
         this.dialog.dialogForm(conf);
@@ -249,9 +238,7 @@ export class OpenvpnServerComponent {
     });
 
     this.services.getOpenVPNServerAuthAlgorithmChoices().subscribe((res) => {
-      const config = this.fieldConfig.find(
-        (c) => c.name === "authentication_algorithm"
-      );
+      const config = this.fieldConfig.find((c) => c.name === "authentication_algorithm");
       for (let item in res) {
         config.options.push({ label: `${item} (${res[item]})`, value: item });
       }
@@ -263,9 +250,7 @@ export class OpenvpnServerComponent {
       }
     });
     this.services.getCerts().subscribe((res) => {
-      const config = this.fieldConfig.find(
-        (c) => c.name === "server_certificate"
-      );
+      const config = this.fieldConfig.find((c) => c.name === "server_certificate");
       res.forEach((item) => {
         config.options.push({ label: item.name, value: item.id });
       });

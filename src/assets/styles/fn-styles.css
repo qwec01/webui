@@ -552,23 +552,16 @@ body .mat-select-trigger {
   border-right: 1px solid rgba(0, 0, 0, 0.12);
 }
 .ngx-datatable.material:not(.cell-selection) .datatable-body-row:hover,
-.ngx-datatable.material:not(.cell-selection)
-  .datatable-body-row:hover
-  .datatable-row-group {
+.ngx-datatable.material:not(.cell-selection) .datatable-body-row:hover .datatable-row-group {
   background: rgba(0, 0, 0, 0.04);
 }
 .ngx-datatable.material:not(.cell-selection) .datatable-body-row:hover,
-.ngx-datatable.material:not(.cell-selection)
-  .datatable-body-row:hover
-  .datatable-row-group {
+.ngx-datatable.material:not(.cell-selection) .datatable-body-row:hover .datatable-row-group {
   transition-property: background;
   transition-duration: 0.3s;
   transition-timing-function: linear;
 }
-.ngx-datatable.material
-  .datatable-body
-  .datatable-body-row
-  .datatable-body-cell {
+.ngx-datatable.material .datatable-body .datatable-body-row .datatable-body-cell {
   /*padding: .9rem .6rem;
     line-height: 0rem;*/
   padding: 0 16px;
@@ -696,8 +689,8 @@ body:not(.safari-platform) div.hopscotch-bubble .hopscotch-nav-button {
 div.hopscotch-bubble .hopscotch-nav-button:hover,
 div.hopscotch-bubble .hopscotch-nav-button:active,
 div.hopscotch-bubble .hopscotch-nav-button:focus {
-  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
-    0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14),
+    0 3px 14px 2px rgba(0, 0, 0, 0.12);
   outline: none;
 }
 div.hopscotch-bubble .hopscotch-nav-button.prev,
@@ -898,10 +891,7 @@ div.hopscotch-bubble .hopscotch-nav-button.prev:hover {
   display: block;
   font-size: 12px;
 }
-.sidebar-panel.mat-sidenav
-  .mat-nav-list
-  .sidebar-list-item
-  .mat-list-item-content {
+.sidebar-panel.mat-sidenav .mat-nav-list .sidebar-list-item .mat-list-item-content {
   font-size: 0.875rem !important;
   display: block;
   overflow: hidden;
@@ -951,10 +941,7 @@ div.hopscotch-bubble .hopscotch-nav-button.prev:hover {
   -webkit-box-orient: horizontal;
   -webkit-box-direction: normal;
 }
-.sidebar-panel.mat-sidenav
-  .sidebar-list-item.open
-  > .mat-list-item-content
-  > .sub-menu {
+.sidebar-panel.mat-sidenav .sidebar-list-item.open > .mat-list-item-content > .sub-menu {
   max-height: 1000px;
 }
 .sidebar-panel.mat-sidenav .sidebar-list-item .sub-menu {
@@ -966,10 +953,7 @@ div.hopscotch-bubble .hopscotch-nav-button.prev:hover {
   -webkit-transition: height 0.3s cubic-bezier(0.35, 0, 0.25, 1);
   transition: height 0.3s cubic-bezier(0.35, 0, 0.25, 1);
 }
-.sidebar-panel.mat-sidenav
-  .sidebar-list-item
-  .sub-menu
-  .mat-list-item.selected {
+.sidebar-panel.mat-sidenav .sidebar-list-item .sub-menu .mat-list-item.selected {
   background: rgba(0, 0, 0, 0.05);
 }
 
@@ -1005,12 +989,7 @@ div.hopscotch-bubble .hopscotch-nav-button.prev:hover {
   position: relative;
   padding: 0;
 }
-.collapsed-menu
-  .sidebar-panel
-  .sidebar-list-item
-  > .mat-list-item-content
-  > a
-  .menu-item-tooltip {
+.collapsed-menu .sidebar-panel .sidebar-list-item > .mat-list-item-content > a .menu-item-tooltip {
   position: absolute;
   display: block;
   top: 0;
@@ -1041,21 +1020,10 @@ div.hopscotch-bubble .hopscotch-nav-button.prev:hover {
   box-shadow: 0 2px 1px -1px rgba(0, 0, 0, 0.2), 0 1px 1px 0 rgba(0, 0, 0, 0.14),
     0 1px 3px 0 rgba(0, 0, 0, 0.12);
 }
-.collapsed-menu
-  .sidebar-panel
-  .sidebar-list-item.open
-  .sub-menu
-  .mat-list-item
-  a {
+.collapsed-menu .sidebar-panel .sidebar-list-item.open .sub-menu .mat-list-item a {
   padding-left: 1rem;
 }
-.collapsed-menu
-  .sidebar-panel
-  .mat-nav-list
-  > div
-  > .sidebar-list-item
-  a
-  .mat-icon {
+.collapsed-menu .sidebar-panel .mat-nav-list > div > .sidebar-list-item a .mat-icon {
   margin: 0;
 }
 .collapsed-menu
@@ -1072,13 +1040,7 @@ div.hopscotch-bubble .hopscotch-nav-button.prev:hover {
   display: none;
 }
 
-.collapsed-menu
-  .sidebar-panel
-  .mat-nav-list
-  > div
-  > .sidebar-list-item
-  a
-  .menu-caret {
+.collapsed-menu .sidebar-panel .mat-nav-list > div > .sidebar-list-item a .menu-caret {
   position: absolute;
   left: 33px;
   top: 16px;
@@ -1429,6 +1391,6 @@ body.safari-platform .mat-raised-button {
 /*---- Ascii art font ----*/
 .ascii-art-font {
   line-height: 1 !important;
-  font-family: Consolas, Monaco, Lucida Console, Liberation Mono,
-    DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace !important;
+  font-family: Consolas, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
+    Bitstream Vera Sans Mono, Courier New, monospace !important;
 }

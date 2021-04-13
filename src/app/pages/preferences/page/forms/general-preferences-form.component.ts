@@ -14,11 +14,7 @@ import { EntityFormEmbeddedComponent } from "app/pages/common/entity/entity-form
 import { FieldConfig } from "app/pages/common/entity/entity-form/models/field-config.interface";
 import { FieldSet } from "app/pages/common/entity/entity-form/models/fieldset.interface";
 import { RestService, WebSocketService } from "app/services/";
-import {
-  ThemeService,
-  Theme,
-  DefaultTheme,
-} from "app/services/theme/theme.service";
+import { ThemeService, Theme, DefaultTheme } from "app/services/theme/theme.service";
 import { CoreService, CoreEvent } from "app/core/services/core.service";
 import { PreferencesService } from "app/core/services/preferences.service";
 import { Subject } from "rxjs";
@@ -161,9 +157,7 @@ export class GeneralPreferencesFormComponent
           this.isWaiting = true;
           break;
         case "CreateTheme":
-          this.router.navigate(
-            new Array("").concat(["ui-preferences", "create-theme"])
-          );
+          this.router.navigate(new Array("").concat(["ui-preferences", "create-theme"]));
           break;
       }
     });
@@ -184,8 +178,7 @@ export class GeneralPreferencesFormComponent
         name: "userTheme",
         placeholder: T("Choose Theme"),
         options: this.themeOptions,
-        value:
-          prefs.userTheme == "default" ? DefaultTheme.name : prefs.userTheme,
+        value: prefs.userTheme == "default" ? DefaultTheme.name : prefs.userTheme,
         tooltip: T("Choose a preferred theme."),
         class: "inline",
       },
@@ -194,9 +187,7 @@ export class GeneralPreferencesFormComponent
         name: "preferIconsOnly",
         placeholder: T("Prefer buttons with icons only"),
         value: prefs.preferIconsOnly,
-        tooltip: T(
-          "Preserve screen space with icons and tooltips instead of text labels."
-        ),
+        tooltip: T("Preserve screen space with icons and tooltips instead of text labels."),
         class: "inline",
       },
       {
