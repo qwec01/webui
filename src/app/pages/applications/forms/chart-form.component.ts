@@ -9,52 +9,51 @@ import { FieldSet } from '../../common/entity/entity-form/models/fieldset.interf
 import { ModalService } from '../../../services/modal.service';
 import { EntityJobComponent } from '../../common/entity/entity-job/entity-job.component';
 import { CommonUtils } from 'app/core/classes/common-utils';
-import  helptext  from '../../../helptext/apps/apps';
+import helptext from '../../../helptext/apps/apps';
 import { EntityUtils, FORM_KEY_SEPERATOR, FORM_LABEL_KEY_PREFIX } from '../../common/entity/utils';
 
 @Component({
   selector: 'chart-form',
-  template: `<entity-form [conf]="this"></entity-form>`,
+  template: '<entity-form [conf]="this"></entity-form>',
 })
 export class ChartFormComponent {
-  protected queryCall: string = 'chart.release.query';
-  protected queryCallOption: Array<any>;
+  protected queryCall = 'chart.release.query';
+  protected queryCallOption: any[];
   protected customFilter: any[];
-  protected addCall: string = 'chart.release.create';
-  protected editCall: string = 'chart.release.update';
-  protected isEntity: boolean = true;
+  protected addCall = 'chart.release.create';
+  protected editCall = 'chart.release.update';
+  protected isEntity = true;
   protected utils: CommonUtils;
 
   private title;
   private name: string;
-  private getRow = new Subscription;
+  private getRow = new Subscription();
   private rowName: string;
   private dialogRef: any;
   protected fieldConfig: FieldConfig[];
-  public fieldSets: FieldSet[] = [];
+  fieldSets: FieldSet[] = [];
   private catalogApp: any;
   private entityUtils = new EntityUtils();
 
   constructor(private mdDialog: MatDialog, private dialogService: DialogService,
     private modalService: ModalService, private appService: ApplicationsService) {
-
-      this.getRow = this.modalService.getRow$.subscribe((rowName: string) => {
-        this.rowName = rowName;
-        this.customFilter = [[["id", "=", rowName]], {extra: {include_chart_schema: true}}];
-        this.getRow.unsubscribe();
-    })
+    this.getRow = this.modalService.getRow$.subscribe((rowName: string) => {
+      this.rowName = rowName;
+      this.customFilter = [[['id', '=', rowName]], { extra: { include_chart_schema: true } }];
+      this.getRow.unsubscribe();
+    });
     this.utils = new CommonUtils();
   }
 
   setTitle(title) {
     this.title = title;
   }
-  
-  parseSchema(catalogApp, isEdit=false) {
+
+  parseSchema(catalogApp, isEdit = false) {
     try {
       this.catalogApp = catalogApp;
-      this.title = this.catalogApp.name; 
-  
+      this.title = this.catalogApp.name;
+
       this.fieldSets = [
         {
           name: helptext.chartForm.release_name.name,
@@ -67,30 +66,29 @@ export class ChartFormComponent {
               tooltip: helptext.chartForm.release_name.tooltip,
               required: true,
               readonly: isEdit,
-            }
+            },
           ],
-          colspan: 2
+          colspan: 2,
         },
       ];
-      this.catalogApp.schema.groups.forEach(group => {
+      this.catalogApp.schema.groups.forEach((group) => {
         this.fieldSets.push({
           name: group.name,
           label: true,
           config: [],
-          colspan: 2
-        })
+          colspan: 2,
+        });
       });
-      this.catalogApp.schema.questions.forEach(question => {
-        const fieldSet = this.fieldSets.find(fieldSet => fieldSet.name == question.group);
+      this.catalogApp.schema.questions.forEach((question) => {
+        const fieldSet = this.fieldSets.find((fieldSet) => fieldSet.name == question.group);
         if (fieldSet) {
           const fieldConfigs = this.entityUtils.parseSchemaFieldConfig(question);
           fieldSet.config = fieldSet.config.concat(fieldConfigs);
         }
       });
-  
-      this.fieldSets = this.fieldSets.filter(fieldSet => fieldSet.config.length > 0);
-      
-    } catch(error) {
+
+      this.fieldSets = this.fieldSets.filter((fieldSet) => fieldSet.config.length > 0);
+    } catch (error) {
       return this.dialogService.errorReport(helptext.chartForm.parseError.title, helptext.chartForm.parseError.message);
     }
   }
@@ -103,7 +101,7 @@ export class ChartFormComponent {
         label: data.catalog,
       },
       schema: data.chart_schema.schema,
-    }
+    };
 
     this.parseSchema(chartSchema, true);
     this.name = data.name;
@@ -111,7 +109,7 @@ export class ChartFormComponent {
     this.entityUtils.parseConfigData(data.config, null, configData);
     configData['release_name'] = data.name;
     configData['changed_schema'] = true;
-    
+
     return configData;
   }
 
@@ -120,7 +118,7 @@ export class ChartFormComponent {
       entityEdit.setDisabled('release_name', true, false);
     }
 
-    let repositoryConfig = _.find(this.fieldConfig, {'name': 'image_repository'});
+    const repositoryConfig = _.find(this.fieldConfig, { name: 'image_repository' });
     if (repositoryConfig) {
       repositoryConfig.readonly = true;
     }
@@ -128,17 +126,17 @@ export class ChartFormComponent {
 
   customSubmit(data) {
     let apiCall = this.addCall;
-    let values = {};
+    const values = {};
     this.entityUtils.parseFormControlValues(data, values);
 
-    let payload = [];
+    const payload = [];
     payload.push({
       catalog: this.catalogApp.catalog.id,
       item: this.catalogApp.name,
       release_name: data.release_name,
       train: 'charts',
       version: 'latest',
-      values: values
+      values,
     });
 
     if (this.rowName) {
@@ -151,8 +149,13 @@ export class ChartFormComponent {
       apiCall = this.editCall;
     }
 
-    this.dialogRef = this.mdDialog.open(EntityJobComponent, { data: { 'title': (
-      helptext.installing) }, disableClose: true});
+    this.dialogRef = this.mdDialog.open(EntityJobComponent, {
+      data: {
+        title: (
+          helptext.installing),
+      },
+      disableClose: true,
+    });
     this.dialogRef.componentInstance.setCall(apiCall, payload);
     this.dialogRef.componentInstance.submit();
     this.dialogRef.componentInstance.success.subscribe(() => {
@@ -161,5 +164,4 @@ export class ChartFormComponent {
       this.modalService.refreshTable();
     });
   }
-
 }

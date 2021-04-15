@@ -10,19 +10,19 @@ import { SnapshotFormComponent } from '../snapshot-form/snapshot-form.component'
 
 @Component({
   selector: 'app-snapshot-task-list',
-  template: `<entity-table [title]="title" [conf]="this"></entity-table>`,
+  template: '<entity-table [title]="title" [conf]="this"></entity-table>',
   providers: [TaskService, StorageService],
 })
 export class SnapshotListComponent {
-  public title = 'Periodic Snapshot Tasks';
+  title = 'Periodic Snapshot Tasks';
   protected queryCall = 'pool.snapshottask.query';
   protected wsDelete = 'pool.snapshottask.delete';
   protected route_add: string[] = ['tasks', 'snapshot', 'add'];
   protected route_add_tooltip = 'Add Periodic Snapshot Task';
   protected route_edit: string[] = ['tasks', 'snapshot', 'edit'];
-  public asyncView = true;
+  asyncView = true;
 
-  public columns: Array<any> = [
+  columns: any[] = [
     { name: T('Pool/Dataset'), prop: 'dataset', always_display: true },
     { name: T('Recursive'), prop: 'recursive' },
     { name: T('Naming Schema'), prop: 'naming_schema' },
@@ -30,10 +30,12 @@ export class SnapshotListComponent {
     { name: T('Legacy'), prop: 'legacy', hidden: true },
     { name: T('VMware Sync'), prop: 'vmware_sync', hidden: true },
     { name: T('Enabled'), prop: 'enabled', selectable: true },
-    { name: T('State'), prop: 'state', state: 'state', button: true },
+    {
+      name: T('State'), prop: 'state', state: 'state', button: true,
+    },
   ];
-  public rowIdentifier = 'id';
-  public config: any = {
+  rowIdentifier = 'id';
+  config: any = {
     paging: true,
     sorting: { columns: this.columns },
     deleteMsg: {

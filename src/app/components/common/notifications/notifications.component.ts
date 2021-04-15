@@ -1,4 +1,6 @@
-import { Component, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
+import {
+  Component, OnInit, Input, OnDestroy, Output, EventEmitter,
+} from '@angular/core';
 import { NotificationsService, NotificationAlert } from 'app/services/notifications.service';
 import { LocaleService } from 'app/services/locale.service';
 import { Subscription } from 'rxjs';
@@ -8,14 +10,13 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-notifications',
   templateUrl: './notifications.component.html',
-  styleUrls: ['./notifications.component.css']
+  styleUrls: ['./notifications.component.css'],
 })
 export class NotificationsComponent implements OnInit, OnDestroy {
-
   @Input() notificPanel;
 
-  notifications: Array<NotificationAlert> = [];
-  dismissedNotifications: Array<NotificationAlert> = []
+  notifications: NotificationAlert[] = [];
+  dismissedNotifications: NotificationAlert[] = [];
   ngDateFormat = 'yyyy-MM-dd HH:mm:ss';
   dateFormatSubscription: Subscription;
 
@@ -24,28 +25,26 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.initData();
-    this.notificationsService.getNotifications().subscribe((notifications)=>{
+    this.notificationsService.getNotifications().subscribe((notifications) => {
       this.notifications = [];
       this.dismissedNotifications = [];
 
-      setTimeout(()=>{
+      setTimeout(() => {
         this.ngDateFormat = `${this.localeService.getAngularFormat()}`;
         notifications.forEach((notification: NotificationAlert) => {
           if (notification.dismissed === false) {
-            if (!_.find(this.notifications, {id:notification.id})) {
+            if (!_.find(this.notifications, { id: notification.id })) {
               this.notifications.push(notification);
             }
-          } else {
-            if (!_.find(this.dismissedNotifications, {id:notification.id})) {
-              this.dismissedNotifications.push(notification);
-            }
+          } else if (!_.find(this.dismissedNotifications, { id: notification.id })) {
+            this.dismissedNotifications.push(notification);
           }
         });
       }, -1);
     });
     this.dateFormatSubscription = this.localeService.dateTimeFormatChange$.subscribe(() => {
       this.ngDateFormat = `${this.localeService.getAngularFormat()}`;
-    })
+    });
   }
 
   initData() {

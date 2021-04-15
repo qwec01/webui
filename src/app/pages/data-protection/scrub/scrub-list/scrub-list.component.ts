@@ -13,19 +13,19 @@ import { ModalService } from '../../../../services/modal.service';
 
 @Component({
   selector: 'app-scrub-list',
-  template: `<entity-table [title]="title" [conf]="this"></entity-table>`,
+  template: '<entity-table [title]="title" [conf]="this"></entity-table>',
   providers: [TaskService, UserService, EntityFormService],
 })
 export class ScrubListComponent {
-  public title = 'Scrub Tasks';
-  public queryCall: string = 'pool.scrub.query';
-  protected wsDelete: string = 'pool.scrub.delete';
+  title = 'Scrub Tasks';
+  queryCall = 'pool.scrub.query';
+  protected wsDelete = 'pool.scrub.delete';
   protected route_add: string[] = ['tasks', 'scrub', 'add'];
   protected route_add_tooltip = 'Add Scrub Task';
   protected route_edit: string[] = ['tasks', 'scrub', 'edit'];
   protected entityList: any;
 
-  public columns: Array<any> = [
+  columns: any[] = [
     { name: 'Pool', prop: 'pool_name', always_display: true },
     { name: 'Threshold days', prop: 'threshold' },
     { name: 'Description', prop: 'description' },
@@ -40,8 +40,8 @@ export class ScrubListComponent {
     { name: 'Next Run', prop: 'scrub_next_run' },
     { name: 'Enabled', prop: 'enabled' },
   ];
-  public rowIdentifier = 'id';
-  public config: any = {
+  rowIdentifier = 'id';
+  config: any = {
     paging: true,
     sorting: { columns: this.columns },
     deleteMsg: {

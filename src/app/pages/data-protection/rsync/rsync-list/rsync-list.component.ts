@@ -3,7 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
 import * as _ from 'lodash';
-import { WebSocketService, DialogService, TaskService, JobService, UserService } from '../../../../services';
+import {
+  WebSocketService, DialogService, TaskService, JobService, UserService,
+} from '../../../../services';
 import { EntityUtils } from '../../../common/entity/utils';
 import { T } from '../../../../translate-marker';
 import globalHelptext from '../../../../helptext/global-helptext';
@@ -13,11 +15,11 @@ import { EntityFormService } from 'app/pages/common/entity/entity-form/services/
 
 @Component({
   selector: 'app-rsync-list',
-  template: `<entity-table [title]="title" [conf]="this"></entity-table>`,
+  template: '<entity-table [title]="title" [conf]="this"></entity-table>',
   providers: [TaskService, JobService, UserService, EntityFormService],
 })
 export class RsyncListComponent {
-  public title = 'Rsync Tasks';
+  title = 'Rsync Tasks';
   protected queryCall = 'rsynctask.query';
   protected wsDelete = 'rsynctask.delete';
   protected route_add: string[] = ['tasks', 'rsync', 'add'];
@@ -26,7 +28,7 @@ export class RsyncListComponent {
   protected entityList: any;
   protected asyncView = true;
 
-  public columns: Array<any> = [
+  columns: any[] = [
     { name: T('Path'), prop: 'path', always_display: true },
     { name: T('Remote Host'), prop: 'remotehost' },
     { name: T('Remote SSH Port'), prop: 'remoteport', hidden: true },
@@ -45,11 +47,13 @@ export class RsyncListComponent {
     { name: T('Short Description'), prop: 'desc', hidden: true },
     { name: T('User'), prop: 'user' },
     { name: T('Delay Updates'), prop: 'delayupdates', hidden: true },
-    { name: T('Status'), prop: 'state', state: 'state', button: true },
+    {
+      name: T('Status'), prop: 'state', state: 'state', button: true,
+    },
     { name: T('Enabled'), prop: 'enabled', hidden: true },
   ];
-  public rowIdentifier = 'path';
-  public config: any = {
+  rowIdentifier = 'path';
+  config: any = {
     paging: true,
     sorting: { columns: this.columns },
     deleteMsg: {

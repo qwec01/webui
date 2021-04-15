@@ -1,4 +1,6 @@
-import { Directive, Component, Input, OnInit, AfterViewInit, ElementRef, HostListener, ComponentRef } from '@angular/core';
+import {
+  Directive, Component, Input, OnInit, AfterViewInit, ElementRef, HostListener, ComponentRef,
+} from '@angular/core';
 import { Overlay, OverlayRef, OverlayPositionBuilder } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 
@@ -7,7 +9,7 @@ import { ComponentPortal } from '@angular/cdk/portal';
   template: `<div class="tooltip-container">
               <div class="html-tooltip" [innerHTML]="html"></div>
             </div>`,
-  styleUrls: ['./html-tooltip.directive.css']
+  styleUrls: ['./html-tooltip.directive.css'],
 })
 
 export class HtmlTooltipComponent implements OnInit {
@@ -20,11 +22,10 @@ export class HtmlTooltipComponent implements OnInit {
 }
 
 @Directive({
-  selector: '[htmlTooltip]'
+  selector: '[htmlTooltip]',
 })
 
 export class HtmlTooltipDirective implements AfterViewInit {
- 
   @Input() htmlTooltip: string;
   private overlayRef: OverlayRef;
 
@@ -45,7 +46,7 @@ export class HtmlTooltipDirective implements AfterViewInit {
 
   constructor(private el: ElementRef, private overlayPositionBuilder: OverlayPositionBuilder, private overlay: Overlay) {
   }
-  
+
   ngAfterViewInit() {
     this.overlayRef = this.overlay.create({});
 
@@ -53,7 +54,7 @@ export class HtmlTooltipDirective implements AfterViewInit {
       // Create position attached to the elementRef
       .flexibleConnectedTo(this.el)
       // Describe how to connect overlay to the elementRef
-      // Means, attach overlay's center bottom point to the         
+      // Means, attach overlay's center bottom point to the
       // top center point of the elementRef.
       .withPositions([{
         originX: 'center',
@@ -62,7 +63,7 @@ export class HtmlTooltipDirective implements AfterViewInit {
         overlayY: 'bottom',
       }]);
 
-      // Connect position strategy
-      this.overlayRef = this.overlay.create({ positionStrategy });
+    // Connect position strategy
+    this.overlayRef = this.overlay.create({ positionStrategy });
   }
 }

@@ -17,13 +17,12 @@ import helptext from '../../../helptext/network/configuration/configuration';
   providers: [TooltipsService],
 })
 export class ConfigurationComponent {
-
-  //protected resource_name: string = 'network/globalconfiguration/';
+  // protected resource_name: string = 'network/globalconfiguration/';
   protected queryCall = 'network.configuration.config';
   protected updateCall = 'network.configuration.update';
-  public isEntity = false;
-  public fieldConfig: FieldConfig[] = [];
-  public fieldSets = new FieldSets([
+  isEntity = false;
+  fieldConfig: FieldConfig[] = [];
+  fieldSets = new FieldSets([
     {
       name: helptext.hostname_and_domain,
       label: true,
@@ -40,7 +39,7 @@ export class ConfigurationComponent {
           placeholder: helptext.hostname_b_placeholder,
           tooltip: helptext.hostname_b_tooltip,
           isHidden: true,
-          disabled: true
+          disabled: true,
         },
         {
           type: 'input',
@@ -48,7 +47,7 @@ export class ConfigurationComponent {
           placeholder: helptext.hostname_virtual_placeholder,
           tooltip: helptext.hostname_virtual_tooltip,
           isHidden: true,
-          disabled: true
+          disabled: true,
         },
         {
           type: 'input',
@@ -62,31 +61,31 @@ export class ConfigurationComponent {
           placeholder: helptext.domains_placeholder,
           tooltip: helptext.domains_tooltip,
         },
-      ]
+      ],
     },
     {
       name: helptext.service_announcement,
-      class: "service_announcement",
+      class: 'service_announcement',
       label: true,
       config: [{
         type: 'checkbox',
         name: 'netbios',
         placeholder: helptext.netbios_placeholder,
-        tooltip: helptext.netbios_tooltip
+        tooltip: helptext.netbios_tooltip,
       },
       {
         type: 'checkbox',
         name: 'mdns',
         placeholder: helptext.mdns_placeholder,
-        tooltip: helptext.mdns_tooltip
+        tooltip: helptext.mdns_tooltip,
       },
       {
         type: 'checkbox',
         name: 'wsd',
         placeholder: helptext.wsd_placeholder,
-        tooltip: helptext.wsd_tooltip
+        tooltip: helptext.wsd_tooltip,
       },
-      ]
+      ],
     },
     {
       name: helptext.nameservers,
@@ -110,7 +109,7 @@ export class ConfigurationComponent {
           placeholder: helptext.nameserver3_placeholder,
           tooltip: helptext.nameserver3_tooltip,
         },
-      ]
+      ],
     },
     {
       name: helptext.gateway,
@@ -121,16 +120,16 @@ export class ConfigurationComponent {
           name: 'ipv4gateway',
           placeholder: helptext.ipv4gateway_placeholder,
           tooltip: helptext.ipv4gateway_tooltip,
-          validation: [ipv4Validator('ipv4gateway')]
+          validation: [ipv4Validator('ipv4gateway')],
         },
         {
           type: 'input',
           name: 'ipv6gateway',
           placeholder: helptext.ipv6gateway_placeholder,
           tooltip: helptext.ipv6gateway_tooltip,
-          validation: [ipv6Validator('ipv6gateway')]
-        }
-      ]
+          validation: [ipv6Validator('ipv6gateway')],
+        },
+      ],
     },
     {
       name: helptext.outbound_network,
@@ -141,9 +140,9 @@ export class ConfigurationComponent {
           name: 'outbound_network_activity',
           placeholder: '',
           options: [
-            { label: helptext.outbound_network_activity.allow.placeholder, value: 'DENY', tooltip: helptext.outbound_network_activity.allow.tooltip, }, // deny type + empty list
-            { label: helptext.outbound_network_activity.deny.placeholder, value: 'ALLOW', tooltip: helptext.outbound_network_activity.deny.tooltip, }, // allow type + empty list
-            { label: helptext.outbound_network_activity.specific.placeholder, value: 'SPECIFIC', tooltip: helptext.outbound_network_activity.specific.tooltip, },
+            { label: helptext.outbound_network_activity.allow.placeholder, value: 'DENY', tooltip: helptext.outbound_network_activity.allow.tooltip }, // deny type + empty list
+            { label: helptext.outbound_network_activity.deny.placeholder, value: 'ALLOW', tooltip: helptext.outbound_network_activity.deny.tooltip }, // allow type + empty list
+            { label: helptext.outbound_network_activity.specific.placeholder, value: 'SPECIFIC', tooltip: helptext.outbound_network_activity.specific.tooltip },
           ],
           value: 'DENY',
         },
@@ -155,18 +154,18 @@ export class ConfigurationComponent {
           tooltip: helptext.outbound_network_value.tooltip,
           options: [],
           relation: [{
-            action: "HIDE",
+            action: 'HIDE',
             connective: 'OR',
             when: [{
-              name: "outbound_network_activity",
-              value: 'ALLOW'
+              name: 'outbound_network_activity',
+              value: 'ALLOW',
             }, {
-              name: "outbound_network_activity",
-              value: 'DENY'
-            }]
-          }]
-        }
-      ]
+              name: 'outbound_network_activity',
+              value: 'DENY',
+            }],
+          }],
+        },
+      ],
     },
     {
       name: helptext.other,
@@ -195,7 +194,7 @@ export class ConfigurationComponent {
               when: [{
                 name: 'netwait_enabled',
                 value: false,
-              }]
+              }],
             },
           ],
         },
@@ -205,35 +204,35 @@ export class ConfigurationComponent {
           placeholder: helptext.hosts_placeholder,
           tooltip: helptext.hosts_tooltip,
         },
-      ]
+      ],
     },
     {
       name: 'divider',
-      divider: true
-    }
+      divider: true,
+    },
   ]);
   private entityEdit: EntityFormComponent;
   private failover_fields = ['hostname_b', 'hostname_virtual'];
-  public title = helptext.title;
-  public afterModalFormClosed;
+  title = helptext.title;
+  afterModalFormClosed;
 
   constructor(protected router: Router,
     protected ws: WebSocketService) { }
 
   preInit() {
-    const outbound_network_value_field = this.fieldSets.config("outbound_network_value");
+    const outbound_network_value_field = this.fieldSets.config('outbound_network_value');
     this.ws.call('network.configuration.activity_choices').subscribe(
       (res) => {
         for (const [value, label] of res) {
-          outbound_network_value_field.options.push({label: label, value: value});
+          outbound_network_value_field.options.push({ label, value });
         }
-      }
-    )
+      },
+    );
   }
   afterInit(entityEdit: any) {
     this.entityEdit = entityEdit;
     if (['ENTERPRISE', 'SCALE_ENTERPRISE'].includes(window.localStorage.getItem('product_type'))) {
-      this.ws.call('failover.licensed').subscribe((is_ha) => { //fixme, stupid race condition makes me need to call this again
+      this.ws.call('failover.licensed').subscribe((is_ha) => { // fixme, stupid race condition makes me need to call this again
         for (let i = 0; i < this.failover_fields.length; i++) {
           entityEdit.setDisabled(this.failover_fields[i], !is_ha, !is_ha);
         }
@@ -254,11 +253,9 @@ export class ConfigurationComponent {
     if (data['activity']) {
       if (data['activity'].activities.length === 0) {
         data['outbound_network_activity'] = data['activity'].type;
-      } else {
-        if (data['activity'].type === 'ALLOW') {
-          data['outbound_network_activity'] = 'SPECIFIC';
-          data['outbound_network_value'] = data['activity'].activities;
-        }
+      } else if (data['activity'].type === 'ALLOW') {
+        data['outbound_network_activity'] = 'SPECIFIC';
+        data['outbound_network_value'] = data['activity'].activities;
       }
     }
     return data;
@@ -267,9 +264,9 @@ export class ConfigurationComponent {
   clean(data) {
     data.hosts = data.hosts.length > 0 ? data.hosts.join('\n') : '';
     data['service_announcement'] = {
-      'netbios': data['netbios'],
-      'mdns': data['mdns'],
-      'wsd': data['wsd']
+      netbios: data['netbios'],
+      mdns: data['mdns'],
+      wsd: data['wsd'],
     };
     delete data['netbios'];
     delete data['mdns'];
@@ -284,9 +281,9 @@ export class ConfigurationComponent {
 
   beforeSubmit(data) {
     if (data['outbound_network_activity'] === 'ALLOW' || data['outbound_network_activity'] === 'DENY') {
-      data['activity'] = {type: data['outbound_network_activity'], 'activities': []};
+      data['activity'] = { type: data['outbound_network_activity'], activities: [] };
     } else {
-      data['activity'] = {type: 'ALLOW', 'activities': data['outbound_network_value']};
+      data['activity'] = { type: 'ALLOW', activities: data['outbound_network_value'] };
     }
     delete data['outbound_network_activity'];
     delete data['outbound_network_value'];

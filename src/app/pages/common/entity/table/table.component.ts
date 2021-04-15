@@ -1,4 +1,6 @@
-import { Component, OnInit, Input, ViewChild, AfterViewInit, AfterViewChecked } from '@angular/core';
+import {
+  Component, OnInit, Input, ViewChild, AfterViewInit, AfterViewChecked,
+} from '@angular/core';
 import { WebSocketService } from 'app/services';
 
 import { TableService } from './table.service';
@@ -51,17 +53,17 @@ export class TableComponent implements OnInit, AfterViewInit, AfterViewChecked {
   @ViewChild('apptable') apptable;
   @ViewChild('table') table;
 
-  public _tableConf: InputTableConf;
-  public title = '';
-  public titleHref: string;
-  public dataSource;
-  public displayedDataSource;
-  public displayedColumns;
-  public hideHeader = false;
-  public actions;
-  public emptyConf: EmptyConfig;
-  public showViewMore = false;
-  public showCollapse = false;
+  _tableConf: InputTableConf;
+  title = '';
+  titleHref: string;
+  dataSource;
+  displayedDataSource;
+  displayedColumns;
+  hideHeader = false;
+  actions;
+  emptyConf: EmptyConfig;
+  showViewMore = false;
+  showCollapse = false;
 
   protected idProp = 'id';
 

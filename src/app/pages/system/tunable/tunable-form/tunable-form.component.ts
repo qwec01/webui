@@ -1,7 +1,7 @@
-import { EntityFormComponent } from './../../../common/entity/entity-form/entity-form.component';
+import { EntityFormComponent } from '../../../common/entity/entity-form/entity-form.component';
 import { Component } from '@angular/core';
 import { helptext_system_tunable as helptext } from 'app/helptext/system/tunable';
-import { SystemGeneralService, WebSocketService } from '../../../../services/';
+import { SystemGeneralService, WebSocketService } from '../../../../services';
 import { FieldConfig } from '../../../common/entity/entity-form/models/field-config.interface';
 import { FieldSet } from 'app/pages/common/entity/entity-form/models/fieldset.interface';
 import * as _ from 'lodash';
@@ -9,7 +9,7 @@ import { T } from 'app/translate-marker';
 
 @Component({
   selector: 'app-system-tunable-edit',
-  template: `<entity-form [conf]="this"></entity-form>`,
+  template: '<entity-form [conf]="this"></entity-form>',
 })
 export class TunableFormComponent {
   protected queryCall = 'tunable.query';
@@ -20,7 +20,7 @@ export class TunableFormComponent {
   protected title: string;
   protected isOneColumnForm = true;
 
-  protected isEntity: boolean = true;
+  protected isEntity = true;
 
   protected product_type: any;
   protected type_fc: any;

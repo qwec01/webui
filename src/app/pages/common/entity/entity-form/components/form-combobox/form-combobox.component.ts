@@ -24,9 +24,9 @@ export class FormComboboxComponent implements Field {
   fieldShow: string;
   searchText: string;
 
-  @ViewChild("autoComplete") autoCompleteRef: MatAutocomplete;
+  @ViewChild('autoComplete') autoCompleteRef: MatAutocomplete;
   @ViewChild(MatAutocompleteTrigger) autocompleteTrigger: MatAutocompleteTrigger;
-  @ViewChild("options") menuRef: MatMenu;
+  @ViewChild('options') menuRef: MatMenu;
   @ViewChild(MatMenuTrigger) menuTrigger: MatMenuTrigger;
 
   constructor(public translate: TranslateService) {}
@@ -36,7 +36,7 @@ export class FormComboboxComponent implements Field {
   }
 
   updateSearchOptions(value) {
-    if(this.config.updater && this.config.parent) {
+    if (this.config.updater && this.config.parent) {
       if (this.config.updateLocal) {
         this.config.updater(value, this.config.parent, this.config);
       } else {
@@ -44,10 +44,9 @@ export class FormComboboxComponent implements Field {
       }
     } else {
       value = value.toLowerCase();
-      let searchOptions = [];
+      const searchOptions = [];
       for (let i = 0; i < this.config.options.length; i++) {
         if (this.config.options[i].label.toLowerCase().includes(value)) {
-
           searchOptions.push(this.config.options[i]);
         }
       }
@@ -58,23 +57,23 @@ export class FormComboboxComponent implements Field {
   onOpenDropdown() {
     setTimeout(() => {
       if (
-        this.autoCompleteRef &&
-        this.autocompleteTrigger &&
-        this.autoCompleteRef.panel
+        this.autoCompleteRef
+        && this.autocompleteTrigger
+        && this.autoCompleteRef.panel
       ) {
         fromEvent(this.autoCompleteRef.panel.nativeElement, 'scroll')
           .pipe(
-            map(x => this.autoCompleteRef.panel.nativeElement.scrollTop),
-            takeUntil(this.autocompleteTrigger.panelClosingActions)
+            map((x) => this.autoCompleteRef.panel.nativeElement.scrollTop),
+            takeUntil(this.autocompleteTrigger.panelClosingActions),
           )
-          .subscribe(x => {
+          .subscribe((x) => {
             const scrollTop = this.autoCompleteRef.panel.nativeElement
               .scrollTop;
             const scrollHeight = this.autoCompleteRef.panel.nativeElement
               .scrollHeight;
             const elementHeight = this.autoCompleteRef.panel.nativeElement
               .clientHeight;
-              const atBottom = scrollHeight === scrollTop + elementHeight;
+            const atBottom = scrollHeight === scrollTop + elementHeight;
             if (atBottom) {
               this.loadMoreSearchOptions();
             }
@@ -85,10 +84,10 @@ export class FormComboboxComponent implements Field {
 
   onOpenMenu() {
     setTimeout(() => {
-      let menuPanel = this.menuRef ? document.getElementById(this.menuRef.panelId) : undefined;
+      const menuPanel = this.menuRef ? document.getElementById(this.menuRef.panelId) : undefined;
       if (menuPanel) {
         fromEvent(menuPanel, 'scroll')
-          .subscribe(x => {
+          .subscribe((x) => {
             const scrollTop = menuPanel.scrollTop;
             const scrollHeight = menuPanel.scrollHeight;
             const elementHeight = menuPanel.clientHeight;
@@ -98,11 +97,11 @@ export class FormComboboxComponent implements Field {
             }
           });
       }
-    })
+    });
   }
 
   loadMoreSearchOptions() {
-    if(this.config.loadMoreOptions && this.config.parent) {
+    if (this.config.loadMoreOptions && this.config.parent) {
       if (this.config.updateLocal) {
         this.config.loadMoreOptions(this.config.searchOptions.length, this.config.parent, this.searchText, this.config);
       } else {
@@ -112,11 +111,11 @@ export class FormComboboxComponent implements Field {
   }
 
   loadMoreOptions() {
-    if(this.config.loadMoreOptions && this.config.parent) {
+    if (this.config.loadMoreOptions && this.config.parent) {
       if (this.config.updateLocal) {
-        this.config.loadMoreOptions(this.config.options.length, this.config.parent, "", this.config);
+        this.config.loadMoreOptions(this.config.options.length, this.config.parent, '', this.config);
       } else {
-        this.config.loadMoreOptions(this.config.options.length, this.config.parent, "");
+        this.config.loadMoreOptions(this.config.options.length, this.config.parent, '');
       }
     }
   }

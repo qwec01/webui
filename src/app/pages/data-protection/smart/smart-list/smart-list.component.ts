@@ -12,19 +12,19 @@ import { WebSocketService } from '../../../../services/ws.service';
 
 @Component({
   selector: 'app-smart-list',
-  template: `<entity-table [title]="title" [conf]="this"></entity-table>`,
+  template: '<entity-table [title]="title" [conf]="this"></entity-table>',
   providers: [TaskService, EntityFormService],
 })
 export class SmartListComponent implements OnDestroy {
-  public title = 'S.M.A.R.T. Tests';
-  public queryCall = 'smart.test.query';
+  title = 'S.M.A.R.T. Tests';
+  queryCall = 'smart.test.query';
   protected route_add: string[] = ['tasks', 'smart', 'add'];
   protected route_add_tooltip = 'Add S.M.A.R.T. Test';
   protected route_edit: string[] = ['tasks', 'smart', 'edit'];
   protected wsDelete = 'smart.test.delete';
   private disksSubscription: Subscription;
 
-  public columns: Array<any> = [
+  columns: any[] = [
     {
       name: helptext.smartlist_column_disks,
       prop: 'disks',
@@ -38,8 +38,8 @@ export class SmartListComponent implements OnDestroy {
     { name: helptext.smartlist_column_description, prop: 'desc' },
     { name: helptext.smartlist_column_schedule, prop: 'schedule' },
   ];
-  public rowIdentifier = 'type';
-  public config: any = {
+  rowIdentifier = 'type';
+  config: any = {
     paging: true,
     sorting: { columns: this.columns },
     deleteMsg: {
@@ -47,7 +47,7 @@ export class SmartListComponent implements OnDestroy {
       key_props: ['type', 'desc'],
     },
   };
-  public listDisks = [];
+  listDisks = [];
 
   constructor(
     protected ws: WebSocketService,
@@ -69,9 +69,7 @@ export class SmartListComponent implements OnDestroy {
       if (test.all_disks) {
         test.disks = [T('All Disks')];
       } else if (test.disks.length) {
-        const readableDisks = test.disks.map((disk) => {
-          return this.listDisks.find((item) => item.identifier === disk).devname;
-        });
+        const readableDisks = test.disks.map((disk) => this.listDisks.find((item) => item.identifier === disk).devname);
         test.disks = readableDisks;
       }
       return test;

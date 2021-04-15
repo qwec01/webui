@@ -14,7 +14,7 @@ import isCidr, * as ipCidr from 'is-cidr';
 
 @Component({
   selector: 'app-interfaces-form',
-  template: `<entity-form [conf]="this"></entity-form>`
+  template: '<entity-form [conf]="this"></entity-form>',
 })
 export class InterfacesFormComponent extends ViewControllerComponent implements OnDestroy {
   protected queryCall = 'interface.query';
@@ -30,8 +30,8 @@ export class InterfacesFormComponent extends ViewControllerComponent implements 
   protected offload_warned = false;
   protected offload_warning_sub: any;
 
-  public fieldConfig: FieldConfig[] = [];
-  public fieldSets: FieldSet[] = [
+  fieldConfig: FieldConfig[] = [];
+  fieldSets: FieldSet[] = [
     {
       name: helptext.interface_settings,
       label: true,
@@ -43,14 +43,14 @@ export class InterfacesFormComponent extends ViewControllerComponent implements 
           placeholder: helptext.int_type_placeholder,
           tooltip: helptext.int_type_tooltip,
           required: true,
-          options: helptext.int_type_options
+          options: helptext.int_type_options,
         },
         {
           type: 'input',
           name: 'name',
           placeholder: helptext.int_name_placeholder,
           tooltip: helptext.int_name_tooltip,
-          validation: helptext.int_name_validation
+          validation: helptext.int_name_validation,
         },
         {
           type: 'input',
@@ -68,8 +68,8 @@ export class InterfacesFormComponent extends ViewControllerComponent implements 
           type: 'checkbox',
           name: 'ipv6_auto',
           placeholder: helptext.int_ipv6auto_placeholder,
-          tooltip: helptext.int_ipv6auto_tooltip
-        }
+          tooltip: helptext.int_ipv6auto_tooltip,
+        },
       ],
       colspan: 2,
     },
@@ -106,7 +106,7 @@ export class InterfacesFormComponent extends ViewControllerComponent implements 
           isHidden: true,
           disabled: true,
           validation: helptext.lagg_protocol_validation,
-          value: "NONE"
+          value: 'NONE',
         },
         {
           type: 'select',
@@ -137,7 +137,7 @@ export class InterfacesFormComponent extends ViewControllerComponent implements 
           required: true,
           isHidden: true,
           disabled: true,
-          validation: helptext.vlan_pint_validation
+          validation: helptext.vlan_pint_validation,
         },
         {
           type: 'input',
@@ -147,7 +147,7 @@ export class InterfacesFormComponent extends ViewControllerComponent implements 
           required: true,
           isHidden: true,
           disabled: true,
-          validation: helptext.vlan_tag_validation
+          validation: helptext.vlan_tag_validation,
         },
         {
           type: 'select',
@@ -181,7 +181,7 @@ export class InterfacesFormComponent extends ViewControllerComponent implements 
           tooltip: helptext.failover_group_tooltip,
           isHidden: true,
           disabled: true,
-          options: [{ label: '---', value: null }]
+          options: [{ label: '---', value: null }],
         },
         {
           type: 'select',
@@ -190,7 +190,7 @@ export class InterfacesFormComponent extends ViewControllerComponent implements 
           tooltip: helptext.failover_vhid_tooltip,
           isHidden: true,
           disabled: true,
-          options: [{ label: '---', value: null }]
+          options: [{ label: '---', value: null }],
         },
       ],
       colspan: 2,
@@ -212,7 +212,7 @@ export class InterfacesFormComponent extends ViewControllerComponent implements 
           placeholder: helptext.mtu_placeholder,
           tooltip: helptext.mtu_tooltip,
           validation: helptext.mtu_validation,
-          value: 1500
+          value: 1500,
         },
         {
           type: 'input',
@@ -260,16 +260,16 @@ export class InterfacesFormComponent extends ViewControllerComponent implements 
               type: 'input',
               validation: [ipv4or6Validator('failover_virtual_address')],
 
-            }
+            },
           ],
-          listFields: []
-        }
+          listFields: [],
+        },
       ],
       colspan: 2,
     },
     {
       name: 'divider',
-      divider: true
+      divider: true,
     },
   ];
 
@@ -295,19 +295,19 @@ export class InterfacesFormComponent extends ViewControllerComponent implements 
   protected failover_group: any;
   protected failover_vhid: any;
 
-  public save_button_enabled: boolean;
+  save_button_enabled: boolean;
 
   protected aliases_subscription: any;
   //
-  public confirmSubmit = false;
-  public confirmSubmitDialog = {
-    title: T("Save Network Interface Changes"),
-    message: T("Network connectivity will be interrupted. Proceed?"),
-    hideCheckbox: false
-  }
+  confirmSubmit = false;
+  confirmSubmitDialog = {
+    title: T('Save Network Interface Changes'),
+    message: T('Network connectivity will be interrupted. Proceed?'),
+    hideCheckbox: false,
+  };
 
-  public title: string;
-  public afterModalFormClosed;
+  title: string;
+  afterModalFormClosed;
 
   constructor(protected router: Router, protected route: ActivatedRoute,
     protected networkService: NetworkService, protected dialog: DialogService,
@@ -316,10 +316,10 @@ export class InterfacesFormComponent extends ViewControllerComponent implements 
   }
 
   setType(type: string) {
-    const is_physical = (type === "PHYSICAL");
-    const is_vlan = (type === "VLAN");
-    const is_bridge = (type === "BRIDGE");
-    const is_lagg = (type === "LINK_AGGREGATION");
+    const is_physical = (type === 'PHYSICAL');
+    const is_vlan = (type === 'VLAN');
+    const is_bridge = (type === 'BRIDGE');
+    const is_lagg = (type === 'LINK_AGGREGATION');
     for (let i = 0; i < this.vlan_fields.length; i++) {
       this.entityForm.setDisabled(this.vlan_fields[i], !is_vlan, !is_vlan);
     }
@@ -332,16 +332,15 @@ export class InterfacesFormComponent extends ViewControllerComponent implements 
     this.vlan_fieldset.label = is_vlan;
     this.lag_fieldset.label = is_lagg;
     this.bridge_fieldset.label = is_bridge;
-
   }
 
   preInit(entityForm: any) {
     this.entityForm = entityForm;
-    this.vlan_fieldset = _.find(this.fieldSets, { 'class': 'vlan_settings' });
-    this.lag_fieldset = _.find(this.fieldSets, { 'class': 'lag_settings' });
-    this.bridge_fieldset = _.find(this.fieldSets, { 'class': 'bridge_settings' });
-    this.failover_fieldset = _.find(this.fieldSets, { 'class': 'failover_settings' });
-    this.vlan_pint = _.find(this.vlan_fieldset.config, { 'name': 'vlan_parent_interface' });
+    this.vlan_fieldset = _.find(this.fieldSets, { class: 'vlan_settings' });
+    this.lag_fieldset = _.find(this.fieldSets, { class: 'lag_settings' });
+    this.bridge_fieldset = _.find(this.fieldSets, { class: 'bridge_settings' });
+    this.failover_fieldset = _.find(this.fieldSets, { class: 'failover_settings' });
+    this.vlan_pint = _.find(this.vlan_fieldset.config, { name: 'vlan_parent_interface' });
   }
 
   afterInit(entityForm: any) {
@@ -351,14 +350,14 @@ export class InterfacesFormComponent extends ViewControllerComponent implements 
     } else {
       this.title = helptext.title_add;
     }
-    this.vlan_pint = _.find(this.fieldConfig, { 'name': 'vlan_parent_interface' });
-    this.bridge_members = _.find(this.fieldConfig, { 'name': 'bridge_members' });
-    this.lag_ports = _.find(this.fieldConfig, { 'name': 'lag_ports' });
-    this.lag_protocol = _.find(this.fieldConfig, { 'name': 'lag_protocol' });
-    this.type = _.find(this.fieldConfig, { 'name': 'type' });
-    this.ipListControl = _.find(this.fieldConfig, { 'name': 'aliases' });
-    this.failover_group = _.find(this.fieldConfig, { 'name': 'failover_group' });
-    this.failover_vhid = _.find(this.fieldConfig, { 'name': 'failover_vhid' });
+    this.vlan_pint = _.find(this.fieldConfig, { name: 'vlan_parent_interface' });
+    this.bridge_members = _.find(this.fieldConfig, { name: 'bridge_members' });
+    this.lag_ports = _.find(this.fieldConfig, { name: 'lag_ports' });
+    this.lag_protocol = _.find(this.fieldConfig, { name: 'lag_protocol' });
+    this.type = _.find(this.fieldConfig, { name: 'type' });
+    this.ipListControl = _.find(this.fieldConfig, { name: 'aliases' });
+    this.failover_group = _.find(this.fieldConfig, { name: 'failover_group' });
+    this.failover_vhid = _.find(this.fieldConfig, { name: 'failover_vhid' });
     for (let i = 1; i <= 32; i++) {
       this.failover_group.options.push({ label: i, value: i });
     }
@@ -378,27 +377,25 @@ export class InterfacesFormComponent extends ViewControllerComponent implements 
         } else {
           return;
         }
-        _.find(this.ipListControl.templateListField, { 'name': 'address' }).placeholder += this.ipPlaceholder;
-        _.find(this.ipListControl.templateListField, { 'name': 'failover_address' }).placeholder += this.failoverPlaceholder;
-      })
+        _.find(this.ipListControl.templateListField, { name: 'address' }).placeholder += this.ipPlaceholder;
+        _.find(this.ipListControl.templateListField, { name: 'failover_address' }).placeholder += this.failoverPlaceholder;
+      });
     }
 
-    if (window.localStorage.getItem('product_type').includes('ENTERPRISE') &&
-      window.localStorage.getItem('alias_ips') === 'show') {
-      const failover_virtual_address = _.find(this.ipListControl.templateListField, { "name": "failover_virtual_address" });
-      const failover_address = _.find(this.ipListControl.templateListField, { 'name': 'failover_address' });
+    if (window.localStorage.getItem('product_type').includes('ENTERPRISE')
+      && window.localStorage.getItem('alias_ips') === 'show') {
+      const failover_virtual_address = _.find(this.ipListControl.templateListField, { name: 'failover_virtual_address' });
+      const failover_address = _.find(this.ipListControl.templateListField, { name: 'failover_address' });
       failover_virtual_address['disabled'] = false;
       failover_virtual_address['isHidden'] = false;
       failover_address['disabled'] = false;
       failover_address['isHidden'] = false;
-
-
     }
-    this.aliases_fc = _.find(this.fieldConfig, { "name": "aliases" });
+    this.aliases_fc = _.find(this.fieldConfig, { name: 'aliases' });
 
-    this.offload_warning_sub = entityForm.formGroup.controls['disable_offload_capabilities'].valueChanges.subscribe(res => {
+    this.offload_warning_sub = entityForm.formGroup.controls['disable_offload_capabilities'].valueChanges.subscribe((res) => {
       if (res && !this.offload_warned) {
-        this.dialog.confirm(helptext.disable_offload_capabilities_warning_title, helptext.disable_offload_capabilities_warning_msg).subscribe(confirm => {
+        this.dialog.confirm(helptext.disable_offload_capabilities_warning_title, helptext.disable_offload_capabilities_warning_msg).subscribe((confirm) => {
           if (confirm) {
             this.offload_warned = true;
           } else {
@@ -412,28 +409,26 @@ export class InterfacesFormComponent extends ViewControllerComponent implements 
       this.ws.call('failover.licensed').subscribe((is_ha) => {
         this.failover_fieldset.label = is_ha;
         if (window.localStorage.getItem('product_type').includes('SCALE')) {
-          _.remove(this.failover_fields, function (el) {
-            return el === 'failover_vhid';
-          });
+          _.remove(this.failover_fields, (el) => el === 'failover_vhid');
         }
         for (let i = 0; i < this.failover_fields.length; i++) {
           entityForm.setDisabled(this.failover_fields[i], !is_ha, !is_ha);
         }
         if (is_ha) {
-          this.aliases_subscription = this.entityForm.formGroup.controls['aliases'].valueChanges.subscribe(res => {
+          this.aliases_subscription = this.entityForm.formGroup.controls['aliases'].valueChanges.subscribe((res) => {
             let v6_found = false;
             let mismatch_found = false;
             for (let i = 0; i < res.length; i++) {
               const alias = res[i];
-              const address = alias['address']
+              const address = alias['address'];
               const failover_address = alias['failover_address'];
               const virtual_address = alias['failover_virtual_address'];
               if (!(address && failover_address && virtual_address) && !(!address && !failover_address && !virtual_address)) {
                 mismatch_found = true;
               }
-              if (isCidr.v6(address) ||
-                  isCidr.v6(failover_address) ||
-                  isCidr.v6(virtual_address)) {
+              if (isCidr.v6(address)
+                  || isCidr.v6(failover_address)
+                  || isCidr.v6(virtual_address)) {
                 v6_found = true;
               }
             }
@@ -493,27 +488,25 @@ export class InterfacesFormComponent extends ViewControllerComponent implements 
     const failover_aliases = [];
     const failover_virtual_aliases = [];
     for (let i = 0; i < data.aliases.length; i++) {
-      if (!data.aliases[i]['delete'] &&
-        !!data.aliases[i]['address']) {
+      if (!data.aliases[i]['delete']
+        && !!data.aliases[i]['address']) {
         const strings = data.aliases[i]['address'].split('/');
         if (strings[0]) {
           aliases.push({
             address: strings[0],
-            netmask: parseInt(strings[1], 10)
+            netmask: parseInt(strings[1], 10),
           });
         }
-        if (!!data.aliases[i]['failover_address']) {
+        if (data.aliases[i]['failover_address']) {
           const f_strings = data.aliases[i]['failover_address'].split('/');
           if (f_strings[0]) {
-            failover_aliases.push({
-              address: f_strings[0]});
+            failover_aliases.push({ address: f_strings[0] });
           }
         }
-        if (!!data.aliases[i]['failover_virtual_address']) {
+        if (data.aliases[i]['failover_virtual_address']) {
           const fv_strings = data.aliases[i]['failover_virtual_address'].split('/');
           if (fv_strings[0]) {
-            failover_virtual_aliases.push({
-              address: fv_strings[0]});
+            failover_virtual_aliases.push({ address: fv_strings[0] });
           }
         }
       }
@@ -552,7 +545,7 @@ export class InterfacesFormComponent extends ViewControllerComponent implements 
     const type = data['type'];
     const id = data['id'];
     this.setType(type);
-    if (type === "LINK_AGGREGATION") {
+    if (type === 'LINK_AGGREGATION') {
       this.networkService.getLaggPortsChoices(id).subscribe((res) => {
         for (const key in res) {
           this.lag_ports.options.push({ label: res[key], value: key });
@@ -560,17 +553,17 @@ export class InterfacesFormComponent extends ViewControllerComponent implements 
       });
 
       this.networkService.getLaggProtocolChoices().subscribe((res) => {
-        for (let i=0;i<res.length;i++) {
-          this.lag_protocol.options.push({label: res[i], value: res[i]});
+        for (let i = 0; i < res.length; i++) {
+          this.lag_protocol.options.push({ label: res[i], value: res[i] });
         }
       });
-    } else if (type === "BRIDGE") {
+    } else if (type === 'BRIDGE') {
       this.networkService.getBridgeMembersChoices(id).subscribe((res) => {
         for (const key in res) {
           this.bridge_members.options.push({ label: res[key], value: key });
         }
       });
-    } else if (type === "VLAN") {
+    } else if (type === 'VLAN') {
       this.entityForm.setDisabled('vlan_parent_interface', true);
     }
 
@@ -578,7 +571,7 @@ export class InterfacesFormComponent extends ViewControllerComponent implements 
   }
 
   afterSave() {
-    this.core.emit({ name: "NetworkInterfacesChanged", data: { commit: false, checkin: false }, sender: this });
+    this.core.emit({ name: 'NetworkInterfacesChanged', data: { commit: false, checkin: false }, sender: this });
   }
 
   ngOnDestroy() {

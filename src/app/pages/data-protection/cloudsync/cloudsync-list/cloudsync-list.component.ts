@@ -24,20 +24,20 @@ import { ModalService } from 'app/services/modal.service';
 
 @Component({
   selector: 'app-cloudsync-list',
-  template: `<entity-table [title]="title" [conf]="this"></entity-table>`,
+  template: '<entity-table [title]="title" [conf]="this"></entity-table>',
   providers: [JobService, TaskService, CloudCredentialService],
 })
 export class CloudsyncListComponent implements InputTableConf {
-  public title = 'Cloud Sync Tasks';
-  public queryCall = 'cloudsync.query';
-  public route_add: string[] = ['tasks', 'cloudsync', 'add'];
-  public route_add_tooltip = 'Add Cloud Sync Task';
-  public route_edit: string[] = ['tasks', 'cloudsync', 'edit'];
-  public wsDelete = 'cloudsync.delete';
+  title = 'Cloud Sync Tasks';
+  queryCall = 'cloudsync.query';
+  route_add: string[] = ['tasks', 'cloudsync', 'add'];
+  route_add_tooltip = 'Add Cloud Sync Task';
+  route_edit: string[] = ['tasks', 'cloudsync', 'edit'];
+  wsDelete = 'cloudsync.delete';
   protected entityList: any;
-  public asyncView = true;
+  asyncView = true;
 
-  public columns: Array<any> = [
+  columns: any[] = [
     { name: T('Description'), prop: 'description', always_display: true },
     { name: T('Credential'), prop: 'credential', hidden: true },
     { name: T('Direction'), prop: 'direction', hidden: true },
@@ -67,8 +67,8 @@ export class CloudsyncListComponent implements InputTableConf {
     },
     { name: T('Enabled'), prop: 'enabled' },
   ];
-  public rowIdentifier = 'description';
-  public config: any = {
+  rowIdentifier = 'description';
+  config: any = {
     paging: true,
     sorting: { columns: this.columns },
     deleteMsg: {
@@ -262,7 +262,7 @@ export class CloudsyncListComponent implements InputTableConf {
               },
             ],
             saveButtonText: 'Restore',
-            afterInit: function (entityDialog) {
+            afterInit(entityDialog) {
               entityDialog.formGroup.get('transfer_mode').valueChanges.subscribe((mode) => {
                 const paragraph = conf.fieldConfig.find((config) => config.name === 'transfer_mode_warning');
                 switch (mode) {
@@ -276,7 +276,7 @@ export class CloudsyncListComponent implements InputTableConf {
                 }
               });
             },
-            customSubmit: function (entityDialog) {
+            customSubmit(entityDialog) {
               parent.entityList.loader.open();
               parent.ws.call('cloudsync.restore', [row.id, entityDialog.formValue]).subscribe(
                 (res) => {
@@ -319,7 +319,7 @@ export class CloudsyncListComponent implements InputTableConf {
   isActionVisible(actionId: string, row: any) {
     if (actionId === 'run_now' && row.job && row.job.state === 'RUNNING') {
       return false;
-    } else if (actionId === 'stop' && (row.job ? row.job && row.job.state !== 'RUNNING' : true)) {
+    } if (actionId === 'stop' && (row.job ? row.job && row.job.state !== 'RUNNING' : true)) {
       return false;
     }
     return true;

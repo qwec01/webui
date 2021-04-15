@@ -19,12 +19,12 @@ import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-replication-form',
-  template: `<entity-form [conf]="this"></entity-form>`,
+  template: '<entity-form [conf]="this"></entity-form>',
   providers: [TaskService, KeychainCredentialService, ReplicationService, StorageService],
 })
 export class ReplicationFormComponent {
   protected queryCall = 'replication.query';
-  protected queryCallOption: Array<any> = [];
+  protected queryCallOption: any[] = [];
   protected addCall = 'replication.create';
   protected editCall = 'replication.update';
   protected isEntity = true;
@@ -32,9 +32,9 @@ export class ReplicationFormComponent {
   protected queryRes: any;
   protected title: string;
   protected pk: number;
-  public isNew: boolean = false;
-  public speedLimitField: any;
-  public form_message = {
+  isNew = false;
+  speedLimitField: any;
+  form_message = {
     type: 'notice',
     content: '',
   };
@@ -54,7 +54,7 @@ export class ReplicationFormComponent {
     },
   ];
 
-  public fieldSets: FieldSets = new FieldSets([
+  fieldSets: FieldSets = new FieldSets([
     {
       name: helptext.fieldset_general,
       label: true,
@@ -1104,7 +1104,7 @@ export class ReplicationFormComponent {
           res[i].lifetime_unit
         } (S) - ${res[i].enabled ? 'Enabled' : 'Disabled'}`;
         periodicSnapshotTasksField.options.push({
-          label: label,
+          label,
           value: res[i].id,
         });
       }
@@ -1161,7 +1161,7 @@ export class ReplicationFormComponent {
     this.isNew = entityForm.isNew;
     this.title = entityForm.isNew ? helptext.replication_task_add : helptext.replication_task_edit;
 
-    const isTruenasCore = window.localStorage.getItem('product_type') === 'CORE' ? true : false;
+    const isTruenasCore = window.localStorage.getItem('product_type') === 'CORE';
     const readonlyCtrl = this.entityForm.formGroup.controls['readonly'];
     if (this.pk === undefined) {
       readonlyCtrl.setValue(isTruenasCore ? 'SET' : 'REQUIRE');
@@ -1173,9 +1173,9 @@ export class ReplicationFormComponent {
     }
     this.entityForm.formGroup.controls['target_dataset_PUSH'].valueChanges.subscribe((res) => {
       if (
-        entityForm.formGroup.controls['direction'].value === 'PUSH' &&
-        entityForm.formGroup.controls['transport'].value !== 'LOCAL' &&
-        entityForm.formGroup.controls['also_include_naming_schema'].value !== undefined
+        entityForm.formGroup.controls['direction'].value === 'PUSH'
+        && entityForm.formGroup.controls['transport'].value !== 'LOCAL'
+        && entityForm.formGroup.controls['also_include_naming_schema'].value !== undefined
       ) {
         this.countEligibleManualSnapshots();
       } else {
@@ -1184,9 +1184,9 @@ export class ReplicationFormComponent {
     });
     entityForm.formGroup.controls['direction'].valueChanges.subscribe((res) => {
       if (
-        res === 'PUSH' &&
-        entityForm.formGroup.controls['transport'].value !== 'LOCAL' &&
-        entityForm.formGroup.controls['also_include_naming_schema'].value !== undefined
+        res === 'PUSH'
+        && entityForm.formGroup.controls['transport'].value !== 'LOCAL'
+        && entityForm.formGroup.controls['also_include_naming_schema'].value !== undefined
       ) {
         this.countEligibleManualSnapshots();
       } else {
@@ -1197,9 +1197,9 @@ export class ReplicationFormComponent {
     const retentionPolicyField = this.fieldSets.config('retention_policy');
     entityForm.formGroup.controls['transport'].valueChanges.subscribe((res) => {
       if (
-        res !== 'LOCAL' &&
-        entityForm.formGroup.controls['direction'].value === 'PUSH' &&
-        entityForm.formGroup.controls['also_include_naming_schema'].value !== undefined
+        res !== 'LOCAL'
+        && entityForm.formGroup.controls['direction'].value === 'PUSH'
+        && entityForm.formGroup.controls['also_include_naming_schema'].value !== undefined
       ) {
         this.countEligibleManualSnapshots();
       } else {
@@ -1308,32 +1308,30 @@ export class ReplicationFormComponent {
     wsResponse['periodic_snapshot_tasks'] = snapshotTasks;
 
     if (wsResponse.schedule) {
-      wsResponse['schedule_picker'] =
-        wsResponse.schedule.minute +
-        ' ' +
-        wsResponse.schedule.hour +
-        ' ' +
-        wsResponse.schedule.dom +
-        ' ' +
-        wsResponse.schedule.month +
-        ' ' +
-        wsResponse.schedule.dow;
+      wsResponse['schedule_picker'] = wsResponse.schedule.minute
+        + ' '
+        + wsResponse.schedule.hour
+        + ' '
+        + wsResponse.schedule.dom
+        + ' '
+        + wsResponse.schedule.month
+        + ' '
+        + wsResponse.schedule.dow;
       wsResponse['schedule_begin'] = wsResponse.schedule.begin;
       wsResponse['schedule_end'] = wsResponse.schedule.end;
       wsResponse['schedule'] = true;
     }
 
     if (wsResponse.restrict_schedule) {
-      wsResponse['restrict_schedule_picker'] =
-        wsResponse.restrict_schedule.minute +
-        ' ' +
-        wsResponse.restrict_schedule.hour +
-        ' ' +
-        wsResponse.restrict_schedule.dom +
-        ' ' +
-        wsResponse.restrict_schedule.month +
-        ' ' +
-        wsResponse.restrict_schedule.dow;
+      wsResponse['restrict_schedule_picker'] = wsResponse.restrict_schedule.minute
+        + ' '
+        + wsResponse.restrict_schedule.hour
+        + ' '
+        + wsResponse.restrict_schedule.dom
+        + ' '
+        + wsResponse.restrict_schedule.month
+        + ' '
+        + wsResponse.restrict_schedule.dow;
       wsResponse['restrict_schedule_begin'] = wsResponse.restrict_schedule.begin;
       wsResponse['restrict_schedule_end'] = wsResponse.restrict_schedule.end;
       wsResponse['restrict_schedule'] = true;
@@ -1354,7 +1352,7 @@ export class ReplicationFormComponent {
       wsResponse['properties_override'] = properties_exclude_list;
     }
 
-    wsResponse.encryption_key_location_truenasdb = wsResponse.encryption_key_location === '$TrueNAS' ? true : false;
+    wsResponse.encryption_key_location_truenasdb = wsResponse.encryption_key_location === '$TrueNAS';
     if (wsResponse.encryption_key_location_truenasdb) {
       delete wsResponse.encryption_key_location;
     }
@@ -1377,8 +1375,8 @@ export class ReplicationFormComponent {
       dom: spl[2],
       month: spl[3],
       dow: spl[4],
-      begin: begin,
-      end: end,
+      begin,
+      end,
     };
   }
 
@@ -1429,10 +1427,9 @@ export class ReplicationFormComponent {
           ? _.cloneDeep(data['source_datasets_PULL'])
           : _.cloneDeep(data['source_datasets_PULL']).split(',').map(_.trim),
       );
-      data['target_dataset'] =
-        typeof data['target_dataset_PULL'] === 'string'
-          ? _.cloneDeep(data['target_dataset_PULL'])
-          : _.cloneDeep(data['target_dataset_PULL']).toString();
+      data['target_dataset'] = typeof data['target_dataset_PULL'] === 'string'
+        ? _.cloneDeep(data['target_dataset_PULL'])
+        : _.cloneDeep(data['target_dataset_PULL']).toString();
       if (_.startsWith(data['target_dataset'], '/mnt/')) {
         data['target_dataset'] = data['target_dataset'].substring(5);
       }
@@ -1483,10 +1480,9 @@ export class ReplicationFormComponent {
     }
     delete data['encryption_key_location_truenasdb'];
 
-    data['encryption_key'] =
-      data['encryption_key_format'] === 'PASSPHRASE'
-        ? data['encryption_key_passphrase']
-        : data['encryption_key_generate']
+    data['encryption_key'] = data['encryption_key_format'] === 'PASSPHRASE'
+      ? data['encryption_key_passphrase']
+      : data['encryption_key_generate']
         ? this.replicationService.generateEncryptionHexKey(64)
         : data['encryption_key_hex'];
     delete data['encryption_key_passphrase'];
@@ -1501,13 +1497,13 @@ export class ReplicationFormComponent {
 
       for (const prop in this.queryRes) {
         if (
-          prop !== 'id' &&
-          prop !== 'state' &&
-          prop !== 'embed' &&
-          prop !== 'job' &&
-          prop !== 'dedup' &&
-          prop !== 'large_block' &&
-          data[prop] === undefined
+          prop !== 'id'
+          && prop !== 'state'
+          && prop !== 'embed'
+          && prop !== 'job'
+          && prop !== 'dedup'
+          && prop !== 'large_block'
+          && data[prop] === undefined
         ) {
           if (prop === 'only_matching_schedule' || prop === 'hold_pending_snapshots') {
             data[prop] = false;
@@ -1551,10 +1547,10 @@ export class ReplicationFormComponent {
 
   blurEventNamingSchema(parent) {
     if (
-      parent.entityForm &&
-      parent.entityForm.formGroup.controls['direction'].value === 'PUSH' &&
-      parent.entityForm.formGroup.controls['transport'].value !== 'LOCAL' &&
-      parent.entityForm.formGroup.controls['also_include_naming_schema'].value !== undefined
+      parent.entityForm
+      && parent.entityForm.formGroup.controls['direction'].value === 'PUSH'
+      && parent.entityForm.formGroup.controls['transport'].value !== 'LOCAL'
+      && parent.entityForm.formGroup.controls['also_include_naming_schema'].value !== undefined
     ) {
       parent.countEligibleManualSnapshots();
     } else {

@@ -5,27 +5,29 @@ import { Validators } from '@angular/forms';
 
 import { EntityUtils } from 'app/pages/common/entity/utils';
 import { T } from 'app/translate-marker';
-import { DialogService, JobService, WebSocketService, StorageService } from '../../../../services';
+import {
+  DialogService, JobService, WebSocketService, StorageService,
+} from '../../../../services';
 import { DialogFormConfiguration } from '../../../common/entity/entity-dialog/dialog-form-configuration.interface';
 import globalHelptext from '../../../../helptext/global-helptext';
 import helptext from '../../../../helptext/data-protection/replication/replication';
 
 @Component({
   selector: 'app-replication-list',
-  template: `<entity-table [title]="title" [conf]="this"></entity-table>`,
+  template: '<entity-table [title]="title" [conf]="this"></entity-table>',
   providers: [JobService, StorageService],
 })
 export class ReplicationListComponent {
-  public title = 'Replication Tasks';
+  title = 'Replication Tasks';
   protected queryCall = 'replication.query';
   protected wsDelete = 'replication.delete';
   protected route_add: string[] = ['tasks', 'replication', 'wizard'];
   protected route_edit: string[] = ['tasks', 'replication', 'edit'];
   protected route_success: string[] = ['tasks', 'replication'];
-  public entityList: any;
+  entityList: any;
   protected asyncView = true;
 
-  public columns: Array<any> = [
+  columns: any[] = [
     { name: 'Name', prop: 'name', always_display: true },
     { name: 'Direction', prop: 'direction' },
     { name: 'Transport', prop: 'transport', hidden: true },
@@ -35,11 +37,13 @@ export class ReplicationListComponent {
     { name: 'Recursive', prop: 'recursive', hidden: true },
     { name: 'Auto', prop: 'auto', hidden: true },
     { name: 'Enabled', prop: 'enabled', checkbox: true },
-    { name: 'State', prop: 'state', button: true, state: 'state' },
+    {
+      name: 'State', prop: 'state', button: true, state: 'state',
+    },
     { name: 'Last Snapshot', prop: 'task_last_snapshot' },
   ];
 
-  public config: any = {
+  config: any = {
     paging: true,
     sorting: { columns: this.columns },
     deleteMsg: {
@@ -128,7 +132,7 @@ export class ReplicationListComponent {
               },
             ],
             saveButtonText: helptext.replication_restore_dialog.saveButton,
-            customSubmit: function (entityDialog) {
+            customSubmit(entityDialog) {
               parent.entityList.loader.open();
               parent.ws.call('replication.restore', [row.id, entityDialog.formValue]).subscribe(
                 (res) => {
@@ -186,9 +190,8 @@ export class ReplicationListComponent {
       }
 
       const dialog_title = T('Task State');
-      const dialog_content =
-        (error ? `<h5>${T('Error')}</h5> <pre>${error}</pre>` : '') +
-        (log ? `<h5>${T('Logs')}</h5> <pre>${log}</pre>` : '');
+      const dialog_content = (error ? `<h5>${T('Error')}</h5> <pre>${error}</pre>` : '')
+        + (log ? `<h5>${T('Logs')}</h5> <pre>${log}</pre>` : '');
 
       if (log) {
         this.dialog

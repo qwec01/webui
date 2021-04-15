@@ -61,18 +61,18 @@ export class AdvancedSettingsComponent implements OnInit, OnDestroy {
   protected cronFormComponent: CronFormComponent;
   protected initShutdownFormComponent: InitshutdownFormComponent;
 
-  public emptyPageConf: EmptyConfig = {
+  emptyPageConf: EmptyConfig = {
     type: EmptyType.no_page_data,
     title: T('No sysctls configured'),
     large: false,
     message: T('To configure sysctls, click the "Add" button.'),
   };
-  public is_ha = false;
-  public formEvents: Subject<CoreEvent>;
-  public actionsConfig;
+  is_ha = false;
+  formEvents: Subject<CoreEvent>;
+  actionsConfig;
   protected dialogRef: any;
 
-  public cronTableConf: InputTableConf = {
+  cronTableConf: InputTableConf = {
     title: helptext_system_advanced.fieldset_cron,
     titleHref: '/system/cron',
     queryCall: 'cronjob.query',
@@ -92,15 +92,15 @@ export class AdvancedSettingsComponent implements OnInit, OnDestroy {
       { name: T('Enabled'), prop: 'enabled' },
       { name: T('Next Run'), prop: 'next_run', hidden: true },
     ],
-    add: function () {
+    add() {
       this.parent.doAdd('cron');
     },
-    edit: function (row) {
+    edit(row) {
       this.parent.doAdd('cron', row.id);
     },
   };
 
-  public initShutdownTableConf: InputTableConf = {
+  initShutdownTableConf: InputTableConf = {
     title: helptext_system_advanced.fieldset_initshutdown,
     titleHref: '/system/initshutdown',
     queryCall: 'initshutdownscript.query',
@@ -120,15 +120,15 @@ export class AdvancedSettingsComponent implements OnInit, OnDestroy {
       { name: T('Enabled'), prop: 'enabled' },
       { name: T('Timeout'), prop: 'timeout', hidden: true },
     ],
-    add: function () {
+    add() {
       this.parent.doAdd('initshutdown');
     },
-    edit: function (row) {
+    edit(row) {
       this.parent.doAdd('initshutdown', row.id);
     },
   };
 
-  public sysctlTableConf: InputTableConf = {
+  sysctlTableConf: InputTableConf = {
     title: helptext_system_advanced.fieldset_sysctl,
     queryCall: 'tunable.query',
     deleteCall: 'tunable.delete',
@@ -144,10 +144,10 @@ export class AdvancedSettingsComponent implements OnInit, OnDestroy {
       { name: T('Enabled'), prop: 'enabled' },
       { name: T('Description'), prop: 'comment' },
     ],
-    add: function () {
+    add() {
       this.parent.doAdd('sysctl');
     },
-    edit: function (row) {
+    edit(row) {
       this.parent.doAdd('sysctl', row.id);
     },
   };

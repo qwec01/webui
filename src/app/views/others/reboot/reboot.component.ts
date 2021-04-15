@@ -12,23 +12,22 @@ import { LocaleService } from 'app/services/locale.service';
 @Component({
   selector: 'system-reboot',
   templateUrl: './reboot.component.html',
-  styleUrls: ['./reboot.component.css']
+  styleUrls: ['./reboot.component.css'],
 })
 export class RebootComponent implements OnInit {
-
-  public product_type: string;
-  public copyrightYear = this.localeService.getCopyrightYearFromBuildTime();
+  product_type: string;
+  copyrightYear = this.localeService.getCopyrightYearFromBuildTime();
   private getProdType: Subscription;
 
-  constructor(protected ws: WebSocketService, protected router: Router, 
+  constructor(protected ws: WebSocketService, protected router: Router,
     protected loader: AppLoaderService, public translate: TranslateService,
     protected dialogService: DialogService, protected dialog: MatDialog,
     private sysGeneralService: SystemGeneralService, private localeService: LocaleService) {
-      this.ws = ws;
-      this.getProdType = this.sysGeneralService.getProductType.subscribe((res)=>{
-        this.product_type = res;
-        this.getProdType.unsubscribe();
-      });
+    this.ws = ws;
+    this.getProdType = this.sysGeneralService.getProductType.subscribe((res) => {
+      this.product_type = res;
+      this.getProdType.unsubscribe();
+    });
   }
 
   isWSConnected() {
@@ -51,7 +50,7 @@ export class RebootComponent implements OnInit {
       (res) => {
       },
       (res) => { // error on reboot
-        this.dialogService.errorReport(res.error, res.reason, res.trace.formatted).subscribe(closed => {
+        this.dialogService.errorReport(res.error, res.reason, res.trace.formatted).subscribe((closed) => {
           this.router.navigate(['/session/signin']);
         });
       },
@@ -61,6 +60,7 @@ export class RebootComponent implements OnInit {
         setTimeout(() => {
           this.isWSConnected();
         }, 1000);
-      });
+      },
+    );
   }
 }
