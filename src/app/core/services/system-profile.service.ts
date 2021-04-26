@@ -3,7 +3,7 @@ import { BaseService } from './base.service';
 import { CoreEvent } from './core.service';
 import helptext from '../../helptext/topbar';
 
-interface InfoObject {
+export interface SysInfo {
   version: string; // "TrueNAS-12.0-MASTER-202003160424"
   buildtime: any; // {$date: 1584373672000}
   hostname: string; // "truenas.local"
@@ -34,8 +34,8 @@ interface HAStatus {
 export class SystemProfileService extends BaseService {
   cache: any;
   private buffer: CoreEvent[] = [];
-  private emulateHardware?: InfoObject;
-  private mini: InfoObject = {
+  private emulateHardware?: SysInfo;
+  private mini: SysInfo = {
     version: 'TrueNAS-12.0-MASTER-202003160424',
     buildtime: { $date: 1584373672000 },
     hostname: 'truenas.local',
@@ -126,9 +126,18 @@ export class SystemProfileService extends BaseService {
   }
 
   clearBuffer() {
-    this.buffer.forEach((evt) => {
-      this.respond(evt);
+    const uniqueRequests = [];
+    this.buffer.forEach((evt: CoreEvent) => {
+      if (uniqueRequests.indexOf(evt.name) == -1) uniqueRequests.push(evt.name);
     });
+
+    uniqueRequests.forEach((name: string) => {
+      this.respond({
+        name,
+      });
+    });
+
+    this.buffer = [];
   }
 
   respond(evt: CoreEvent) {

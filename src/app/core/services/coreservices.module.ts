@@ -2,6 +2,7 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApiService } from 'app/core/services/api.service';
 import { StatsService } from 'app/core/services/stats.service';
+import { EnclosureService } from 'app/core/services/enclosure.service';
 import { DiskStateService } from 'app/core/services/disk-state.service';
 import { DiskTemperatureService } from 'app/core/services/disk-temperature.service';
 import { AnimationService } from 'app/core/services/animation.service';
@@ -31,6 +32,7 @@ import { WebSocketService } from 'app/services/ws.service';
     CoreService,
     ApiService,
     StatsService,
+    EnclosureService,
     DiskStateService,
     DiskTemperatureService,
     AnimationService,
@@ -53,6 +55,7 @@ export class CoreServices {
         ApiService,
         DiskStateService,
         StatsService,
+        EnclosureService,
         DiskTemperatureService,
         AnimationService,
         InteractionManagerService,

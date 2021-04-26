@@ -5,6 +5,7 @@ import { SystemProfileService } from './system-profile.service';
 import { DiskTemperatureService } from './disk-temperature.service';
 import { DiskStateService } from './disk-state.service';
 import { StatsService } from './stats.service';
+import { EnclosureService } from './enclosure.service';
 
 /*
  * This is a collection of services that will
@@ -21,5 +22,6 @@ export class DataService {
     private dts: DiskTemperatureService,
     private dss: DiskStateService,
     private statsService: StatsService,
+    private enclosureService: EnclosureService,
   ) {}
 }
