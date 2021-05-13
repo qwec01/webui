@@ -76,7 +76,7 @@ export class PullImageFormComponent implements FormConfiguration {
     private modalService: ModalService) {
   }
 
-  customSubmit(data: any) {
+  customSubmit(data: any): void {
     const params: any = {
       from_image: data.from_image,
     };
