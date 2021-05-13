@@ -9,7 +9,11 @@ import { EntityDialogComponent } from 'app/pages/common/entity/entity-dialog/ent
 import * as cronParser from 'cron-parser';
 import { Moment } from 'moment';
 
-import { EntityTableComponent, InputTableConf } from 'app/pages/common/entity/entity-table/entity-table.component';
+import {
+  EntityTableAction,
+  EntityTableComponent,
+  InputTableConf,
+} from 'app/pages/common/entity/entity-table/entity-table.component';
 import {
   AppLoaderService,
   CloudCredentialService,
@@ -130,7 +134,7 @@ export class CloudsyncListComponent implements InputTableConf, OnDestroy {
     });
   }
 
-  getActions(parentrow: any) {
+  getActions(parentrow: any): EntityTableAction[] {
     return [
       {
         actionName: parentrow.description,
