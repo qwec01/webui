@@ -51,6 +51,7 @@ import { PeriodicSnapshotTask } from 'app/interfaces/periodic-snapshot-task.inte
 import { ReplicationTask } from 'app/interfaces/replication-task.interface';
 import { CloudSyncTask } from 'app/interfaces/cloud-sync-task.interface';
 import { ActiveDirectoryUpdate } from 'app/interfaces/active-directory.interface';
+import { CertificateAuthorityUpdate } from 'app/interfaces/certificate-authority.interface';
 
 export type ApiDirectory = {
   // Active Directory
@@ -141,7 +142,7 @@ export type ApiDirectory = {
   // Certificate Authority
   'certificateauthority.create': { params: any; response: any };
   'certificateauthority.query': { params: any; response: any };
-  'certificateauthority.update': { params: any; response: any };
+  'certificateauthority.update': { params: [number, CertificateAuthorityUpdate]; response: any };
   'certificateauthority.profiles': { params: any; response: any };
   'certificateauthority.ca_sign_csr': { params: any; response: any };
 
