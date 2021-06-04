@@ -6,7 +6,7 @@ import { SystemUpdate } from 'app/interfaces/system-update.interface';
 import { TwoFactorConfig } from 'app/interfaces/two-factor-config.interface';
 import { Acl } from 'app/interfaces/acl.interface';
 import { AdvancedConfig } from 'app/interfaces/advanced-config.interface';
-import { AlertService } from 'app/interfaces/alert-service.interface';
+import { AlertService, AlertServiceCreate } from 'app/interfaces/alert-service.interface';
 import { Alert } from 'app/interfaces/alert.interface';
 import { ApiTimestamp } from 'app/interfaces/api-date.interface';
 import { ApiKey, CreateApiKeyRequest, UpdateApiKeyRequest } from 'app/interfaces/api-key.interface';
@@ -50,11 +50,12 @@ import { SmartTest } from 'app/interfaces/smart-test.interface';
 import { PeriodicSnapshotTask } from 'app/interfaces/periodic-snapshot-task.interface';
 import { ReplicationTask } from 'app/interfaces/replication-task.interface';
 import { CloudSyncTask } from 'app/interfaces/cloud-sync-task.interface';
+import { ActiveDirectoryUpdate } from 'app/interfaces/active-directory.interface';
 
 export type ApiDirectory = {
   // Active Directory
   'activedirectory.config': { params: any; response: any };
-  'activedirectory.update': { params: any; response: any };
+  'activedirectory.update': { params: [ActiveDirectoryUpdate]; response: any };
   'activedirectory.nss_info_choices': { params: any; response: any };
 
   // Acme
@@ -76,7 +77,7 @@ export type ApiDirectory = {
 
   // Alert Service
   'alertservice.update': { params: any; response: any };
-  'alertservice.create': { params: any; response: any };
+  'alertservice.create': { params: [AlertServiceCreate]; response: any };
   'alertservice.query': { params: QueryParams<AlertService>; response: AlertService[] };
   'alertservice.test': { params: any; response: any };
   'alertservice.delete': { params: any; response: any };

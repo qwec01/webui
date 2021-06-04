@@ -18,6 +18,7 @@ import helptext from 'app/helptext/system/alert-service';
 import { AlertLevel } from 'app/enums/alert-level.enum';
 import { FormConfiguration } from 'app/interfaces/entity-form.interface';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { AlertServiceCreate } from 'app/interfaces/alert-service.interface';
 
 @UntilDestroy()
 @Component({
@@ -735,10 +736,10 @@ export class AlertServiceComponent implements FormConfiguration {
     }
   }
 
-  generateTelegramChatIdsPayload(data: any, i: string): string[] {
+  generateTelegramChatIdsPayload(data: any, i: string): number[] {
     const wrongChatIds: string[] = [];
     // Telegram chat IDs must be an array of integer
-    const arrayChatIds: [] = data[i].map((strChatId: string) => {
+    const arrayChatIds: number[] = data[i].map((strChatId: string) => {
       const chatId = Number(strChatId);
       if (isNaN(chatId)) {
         wrongChatIds.push(strChatId);
@@ -753,20 +754,21 @@ export class AlertServiceComponent implements FormConfiguration {
     return Array.from(new Set(arrayChatIds));
   }
 
-  generatePayload(data: any): any {
-    const payload: any = { attributes: {} };
-
+  generatePayload(data: any): AlertServiceCreate {
+    const payload: AlertServiceCreate = {
+      attributes: { chat_ids: null, v3_authprotocol: null, v3_privprotocol: null },
+      enabled: data.enabled,
+      level: data.level,
+      name: data.name,
+      type: data.type,
+    };
     for (const i in data) {
-      if (i === 'name' || i === 'type' || i === 'enabled' || i === 'level') {
-        payload[i] = data[i];
-      } else {
-        if (data[i] === '' && (i === 'SNMPTrap-v3_authprotocol' || i === 'SNMPTrap-v3_privprotocol')) {
-          data[i] = null;
-        } else if (data[i] && i == 'Telegram-chat_ids') {
-          data[i] = this.generateTelegramChatIdsPayload(data, i);
-        }
-        payload['attributes'][i.split('-')[1]] = data[i];
+      if (data[i] === '' && (i === 'SNMPTrap-v3_authprotocol' || i === 'SNMPTrap-v3_privprotocol')) {
+        data[i] = null;
+      } else if (data[i] && i == 'Telegram-chat_ids') {
+        data[i] = this.generateTelegramChatIdsPayload(data, i);
       }
+      payload['attributes'][i.split('-')[1]] = data[i];
     }
     return payload;
   }
