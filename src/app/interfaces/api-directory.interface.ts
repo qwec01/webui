@@ -52,6 +52,9 @@ import { ReplicationTask } from 'app/interfaces/replication-task.interface';
 import { CloudSyncTask } from 'app/interfaces/cloud-sync-task.interface';
 import { ActiveDirectoryUpdate } from 'app/interfaces/active-directory.interface';
 import { CertificateAuthorityCreate, CertificateAuthorityUpdate } from 'app/interfaces/certificate-authority.interface';
+import { DynamicDnsUpdate } from 'app/interfaces/dynamic-dns.interface';
+import { FailoverUpdate } from 'app/interfaces/failover.interface';
+import { DefaultAclType } from 'app/enums/acl-type.enum';
 
 export type ApiDirectory = {
   // Active Directory
@@ -202,7 +205,7 @@ export type ApiDirectory = {
 
   // DynDNS
   'dyndns.provider_choices': { params: any; response: any };
-  'dyndns.update': { params: any; response: any };
+  'dyndns.update': { params: [DynamicDnsUpdate]; response: any };
   'dyndns.config': { params: any; response: any };
 
   // Datastore
@@ -240,7 +243,7 @@ export type ApiDirectory = {
   'filesystem.listdir': { params: any; response: any };
   'filesystem.stat': { params: [/* path */ string]; response: FileSystemStat };
   'filesystem.default_acl_choices': { params: any; response: any };
-  'filesystem.get_default_acl': { params: any; response: any };
+  'filesystem.get_default_acl': { params: [DefaultAclType]; response: any };
   'filesystem.statfs': { params: any; response: any };
   'filesystem.getacl': { params: [/* path */ string]; response: Acl };
 
@@ -249,7 +252,7 @@ export type ApiDirectory = {
   'failover.upgrade_pending': { params: any; response: any };
   'failover.sync_from_peer': { params: any; response: any };
   'failover.status': { params: any; response: any };
-  'failover.update': { params: any; response: any };
+  'failover.update': { params: [FailoverUpdate]; response: any };
   'failover.force_master': { params: any; response: any };
   'failover.call_remote': { params: any; response: any };
   'failover.get_ips': { params: any; response: string[] };
