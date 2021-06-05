@@ -4,7 +4,7 @@ import { ServiceName } from 'app/enums/service-name.enum';
 import { KeychainCredential, SshKeyPair } from 'app/interfaces/keychain-credential.interface';
 import { SystemUpdate } from 'app/interfaces/system-update.interface';
 import { TwoFactorConfig } from 'app/interfaces/two-factor-config.interface';
-import { Acl } from 'app/interfaces/acl.interface';
+import { Acl, SetAcl } from 'app/interfaces/acl.interface';
 import { AdvancedConfig } from 'app/interfaces/advanced-config.interface';
 import { AlertService, AlertServiceCreate } from 'app/interfaces/alert-service.interface';
 import { Alert } from 'app/interfaces/alert.interface';
@@ -246,7 +246,7 @@ export type ApiDirectory = {
   'filesystem.get_default_acl': { params: [DefaultAclType]; response: any };
   'filesystem.statfs': { params: any; response: any };
   'filesystem.getacl': { params: [/* path */ string]; response: Acl };
-  'filesystem.setacl': { params: any; response: any };
+  'filesystem.setacl': { params: [SetAcl]; response: any };
 
   // Failover
   'failover.licensed': { params: void; response: boolean };
