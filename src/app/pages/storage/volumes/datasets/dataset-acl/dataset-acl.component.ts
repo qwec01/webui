@@ -7,7 +7,7 @@ import {
   FormGroup,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AclItemTag } from 'app/enums/acl-type.enum';
+import { AclItemTag, DefaultAclType } from 'app/enums/acl-type.enum';
 import { Option } from 'app/interfaces/option.interface';
 import { EntityDialogComponent } from 'app/pages/common/entity/entity-dialog/entity-dialog.component';
 import { EntityFormComponent } from 'app/pages/common/entity/entity-form';
@@ -38,7 +38,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 })
 export class DatasetAclComponent implements FormConfiguration {
   queryCall: 'filesystem.getacl' = 'filesystem.getacl';
-  updateCall = 'filesystem.setacl';
+  updateCall: 'filesystem.setacl' = 'filesystem.setacl';
   isEntity = true;
   pk: string;
   protected path: string;
@@ -478,7 +478,7 @@ export class DatasetAclComponent implements FormConfiguration {
     while (this.aces.controls.length > num) {
       this.aces.removeAt(num);
     }
-    this.ws.call('filesystem.get_default_acl', [value]).pipe(untilDestroyed(this)).subscribe((res) => {
+    this.ws.call('filesystem.get_default_acl', [value as DefaultAclType]).pipe(untilDestroyed(this)).subscribe((res) => {
       this.dataHandler(this.entityForm, res);
     });
   }
@@ -500,7 +500,7 @@ export class DatasetAclComponent implements FormConfiguration {
       return { aces: [] as any };
     }
     if (this.homeShare) {
-      this.ws.call('filesystem.get_default_acl', ['HOME']).pipe(untilDestroyed(this)).subscribe((res) => {
+      this.ws.call('filesystem.get_default_acl', [DefaultAclType.Home]).pipe(untilDestroyed(this)).subscribe((res) => {
         data.acl = res;
         return { aces: [] as any };
       });
