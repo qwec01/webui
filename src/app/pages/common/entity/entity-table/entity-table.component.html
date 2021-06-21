@@ -205,6 +205,7 @@
 
   <mat-card-footer style="padding: 0 !important" *ngIf="conf.config.paging">
     <mat-paginator
+      (page)="pageChanged($event)"
       [pageIndex]="paginationPageIndex"
       [pageSize]="paginationPageSize"
       [pageSizeOptions]="paginationPageSizeOptions"

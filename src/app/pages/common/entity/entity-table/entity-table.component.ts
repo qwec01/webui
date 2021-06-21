@@ -171,7 +171,23 @@ export class EntityTableComponent implements OnInit, AfterViewInit, OnDestroy {
     this.conf.rowDetailComponent || (this.allColumns.length > 0 && this.conf.columns.length !== this.allColumns.length);
 
   get isAllSelected(): boolean {
-    return this.selection.selected.length === this.currentRows.length;
+    return this.selection.selected.length === this.rowsCurrentlyOnScreen.length;
+  }
+
+  get rowsCurrentlyOnScreen(): any[] {
+    let currentlyShowingRows = this.dataSource.filteredData;
+    if (this.dataSource.paginator) {
+      const start = this.dataSource.paginator.pageIndex * this.dataSource.paginator.pageSize;
+
+      const rowsCount = currentlyShowingRows.length < start + this.dataSource.paginator.pageSize
+        ? currentlyShowingRows.length - start : this.dataSource.paginator.pageSize;
+      currentlyShowingRows = currentlyShowingRows.splice(start, rowsCount);
+    }
+    return currentlyShowingRows;
+  }
+
+  pageChanged(): void {
+    this.selection.clear();
   }
 
   constructor(
@@ -685,10 +701,6 @@ export class EntityTableComponent implements OnInit, AfterViewInit, OnDestroy {
       if (this.conf.queryRes) {
         this.conf.queryRes = rows;
       }
-
-      if (this.conf.queryRes) {
-        this.conf.queryRes = rows;
-      }
     } else {
       for (let i = 0; i < this.currentRows.length; i++) {
         const index = _.findIndex(rows, { id: this.currentRows[i].id });
@@ -1122,9 +1134,11 @@ export class EntityTableComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   masterToggle(): void {
-    this.isAllSelected
-      ? this.selection.clear()
-      : this.currentRows.forEach((row) => this.selection.select(row));
+    if (this.isAllSelected) {
+      this.selection.clear();
+      return;
+    }
+    this.rowsCurrentlyOnScreen.forEach((row) => this.selection.select(row));
   }
 
   getFirstKey(): string {
