@@ -21,7 +21,7 @@ import { CoreEvent } from 'app/interfaces/events';
  *
  * */
 
-interface Registration {
+export interface Registration {
   observerClass: any; // The component/service listening for the event
   observable$?: Subject<CoreEvent>; // The Subject that provides the Observable to the observerClass
   eventName?: string; // If undefined, your class will react to everything
@@ -31,28 +31,16 @@ interface Registration {
 @Injectable()
 export class CoreService {
   coreEvent$: Subject<CoreEvent>;
-  private debug: boolean;
-  debug_show_subscription_type: boolean;
-  debug_show_dispatch_table: boolean;
-  debug_show_emit_logs: boolean;
-  debug_filter_eventName = '';
-  // private debug_show_data:boolean
+
   constructor() {
-    /// //////////////////////////
-    // Set Debug options here
-    this.debug = false;
-    this.debug_show_emit_logs = false;
-    this.debug_show_subscription_type = false;
-    this.debug_show_dispatch_table = false;
-    this.debug_filter_eventName = '';
-    /// //////////////////////////
-    if (this.debug) {
-      console.info('*** New Instance of Core Service ***');
-    }
     this.coreEvent$ = new Subject();
   }
 
   private dispatchTable: Registration[] = [];
+
+  get registrations(): Registration[] {
+    return this.dispatchTable;
+  }
 
   register(reg: Registration): Observable<CoreEvent> {
     reg.observable$ = new Subject();
@@ -61,64 +49,20 @@ export class CoreService {
   }
 
   unregister(reg: Registration): void {
-    if (this.debug) {
-      console.info('CoreService: Unregistering the following ObserverClass...');
-      console.info(reg.observerClass);
-    }
-    const clone = [];// New Dispatch Table
+    let clone = [];// New Dispatch Table
+
     if (!reg.eventName) {
-      for (let i = 0; i < this.dispatchTable.length; i++) {
-        const registration = this.dispatchTable[i];
-        if (registration.observerClass == reg.observerClass) {
-          continue;
-        } else {
-          clone.push(registration);
-        }
-      }
+      clone = this.dispatchTable.filter((item) => item.observerClass != reg.observerClass);
     } else {
-      for (let i = 0; i < this.dispatchTable.length; i++) {
-        const registration = this.dispatchTable[i];
-        if (registration.observerClass == reg.observerClass && registration.eventName == reg.eventName) {
-          continue;
-        } else {
-          clone.push(registration);
-        }
-      }
+      clone = this.dispatchTable.filter((item) => {
+        return item.observerClass != reg.observerClass || item.eventName != reg.eventName;
+      });
     }
+
     this.dispatchTable = clone;
-    if (this.debug && this.debug_show_dispatch_table) {
-      console.info('UNREGISTER: DISPATCH = ');
-      const tbl = this.debug_filter_eventName
-        ? this.dispatchTable.filter((r) => r.eventName == this.debug_filter_eventName)
-        : this.dispatchTable;
-      console.info(tbl);
-      console.info(this.dispatchTable.length + ' Observers in table.');
-    }
   }
 
   emit(evt: CoreEvent): this {
-    // DEBUG MESSAGES
-    if (this.debug && this.debug_filter_eventName.length > 0 && this.debug_filter_eventName == evt.name) {
-      console.info('*******************************************************');
-      console.info('CORESERVICE: Emitting ' + evt.name);
-      console.info(this.dispatchTable.filter((r) => r.eventName == evt.name));
-    } else if (this.debug && this.debug_filter_eventName.length == 0) {
-      console.info('*******************************************************');
-      console.info('CORESERVICE: Emitting ' + evt.name);
-      console.info(evt);
-    }
-
-    if (this.debug && this.debug_show_emit_logs) {
-      if (this.debug_show_dispatch_table) {
-        console.info('CORESERVICE: dispatchTable...');
-        console.info(this.dispatchTable.length + ' Observers in table.');
-        const tbl = this.debug_filter_eventName
-          ? this.dispatchTable.filter((r) => r.eventName == this.debug_filter_eventName)
-          : this.dispatchTable;
-        console.info(tbl);
-      }
-    }
-
     // avoid matching null values
     if (!evt.name) {
       evt.name = 'null';
@@ -130,7 +74,7 @@ export class CoreService {
     for (let i = 0; i < this.dispatchTable.length; i++) {
       const reg = this.dispatchTable[i]; // subscription
 
-      let subscriptionType = 'any';
+      let subscriptionType = 'Any';
       if (reg.eventName && reg.sender) {
         subscriptionType = 'NameSender';
       } else if (reg.eventName) {
@@ -138,45 +82,18 @@ export class CoreService {
       } else if (reg.sender) {
         subscriptionType = 'Sender';
       }
-
-      if (this.debug && this.debug_show_subscription_type) {
-        console.info(i + ':CoreService: Subscription type = ' + subscriptionType);
-      }
-
-      if (reg.eventName == evt.name && reg.sender == evt.sender && subscriptionType == 'NameSender') {
-        if (this.debug && this.debug_show_emit_logs) {
-          console.info('>>>>>>>>');
-          console.info('Matched name and sender');
-          console.info(reg.observerClass);
-          console.info(evt);
-          console.info('<<<<<<<<');
-        }
+      // console.log(subscriptionType);
+      if (subscriptionType == 'NameSender' && reg.eventName == evt.name && reg.sender == evt.sender) {
         reg.observable$.next(evt);
-      } else if (evt.name && reg.eventName == evt.name && subscriptionType == 'Name') {
-        if (this.debug && this.debug_show_emit_logs) {
-          console.info('>>>>>>>>');
-          console.info('Matched name only');
-          console.info(reg.observerClass);
-          console.info(evt);
-          console.info('<<<<<<<<');
-        }
+      } else if (subscriptionType == 'Name' && evt.name && reg.eventName == evt.name) {
         reg.observable$.next(evt);
-      } else if (evt.sender && reg.sender == evt.sender && subscriptionType == 'Sender') {
-        if (this.debug && this.debug_show_emit_logs) {
-          console.info('>>>>>>>>');
-          console.info('Matched sender only');
-          console.info(reg.observerClass);
-          console.info(evt);
-          console.info('<<<<<<<<');
-        }
+      } else if (subscriptionType == 'Sender' && evt.sender && reg.sender == evt.sender) {
         reg.observable$.next(evt);
-      } else {
-        // DEBUG: console.log("No match found");
+      } else if (subscriptionType == 'Any') {
+        reg.observable$.next(evt);
       }
     }
-    if (this.debug && this.debug_show_emit_logs) {
-      console.info('*******************************************************');
-    }
+
     return this;
   }
 }
