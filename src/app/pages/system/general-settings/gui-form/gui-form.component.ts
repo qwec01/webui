@@ -4,7 +4,7 @@ import { FormControl, ValidatorFn } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import * as _ from 'lodash';
-import { Subscription } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 import { AdminLayoutComponent } from 'app/components/common/layouts/admin-layout/admin-layout.component';
 import { ServiceName } from 'app/enums/service-name.enum';
 import { helptext_system_general as helptext } from 'app/helptext/system/general';
@@ -20,6 +20,13 @@ import {
 } from 'app/services';
 import { AppLoaderService } from 'app/services/app-loader/app-loader.service';
 import { ModalService } from 'app/services/modal.service';
+
+interface PreloadedData {
+  uiCertificateChoices: any;
+  uiHttpsprotocolsChoices: any;
+  ipChoicesv4: any;
+  ipChoicesv6: any;
+}
 
 @UntilDestroy()
 @Component({
@@ -149,11 +156,7 @@ export class GuiFormComponent implements FormConfiguration {
     private sysGeneralService: SystemGeneralService,
     private modalService: ModalService,
     private adminLayout: AdminLayoutComponent,
-  ) {
-    this.sysGeneralService.sendConfigData$.pipe(untilDestroyed(this)).subscribe((res) => {
-      this.configData = res;
-    });
-  }
+  ) { }
 
   IPValidator(name: 'ui_address' | 'ui_v6address', wildcard: string): ValidatorFn {
     const self = this;
@@ -178,18 +181,6 @@ export class GuiFormComponent implements FormConfiguration {
     };
   }
 
-  preInit(): void {
-    this.http_port = this.configData.ui_port;
-    this.https_port = this.configData.ui_httpsport;
-    this.redirect = this.configData.ui_httpsredirect;
-    if (this.configData.ui_certificate && this.configData.ui_certificate.id) {
-      (this.configData['ui_certificate'] as any) = this.configData.ui_certificate.id.toString();
-      this.guicertificate = this.configData.ui_certificate.id.toString();
-    }
-    this.addresses = this.configData['ui_address'];
-    this.v6addresses = this.configData['ui_v6address'];
-  }
-
   reconnect(href: string): void {
     if (this.ws.connected) {
       this.loader.close();
@@ -204,59 +195,62 @@ export class GuiFormComponent implements FormConfiguration {
 
   afterInit(entityEdit: EntityFormComponent): void {
     this.entityForm = entityEdit;
+    this.loader.open();
 
-    this.ui_certificate = this.fieldSets
-      .find((set) => set.name === helptext.stg_fieldset_gui)
-      .config.find((config) => config.name === 'ui_certificate');
+    this.sysGeneralService.getGeneralConfig$.pipe(untilDestroyed(this)).subscribe((configData: any) => {
+      forkJoin(
+        {
+          uiCertificateChoices: this.ws.call('system.general.ui_certificate_choices'),
+          uiHttpsprotocolsChoices: this.ws.call('system.general.ui_httpsprotocols_choices'),
+          ipChoicesv4: this.sysGeneralService.ipChoicesv4(),
+          ipChoicesv6: this.sysGeneralService.ipChoicesv6(),
+        },
+      ).pipe(untilDestroyed(this)).subscribe((responses: PreloadedData) => {
+        this.loader.close();
+        this.configData = configData;
+        this.http_port = this.configData.ui_port;
+        this.https_port = this.configData.ui_httpsport;
+        this.redirect = this.configData.ui_httpsredirect;
+        if (this.configData.ui_certificate && this.configData.ui_certificate.id) {
+          // (this.configData['ui_certificate'] as any) = this.configData.ui_certificate.id.toString();
+          this.guicertificate = this.configData.ui_certificate.id.toString();
+        }
+        this.addresses = this.configData['ui_address'];
+        this.v6addresses = this.configData['ui_v6address'];
+        this.ui_certificate = this.fieldSets.find((set) => set.name === helptext.stg_fieldset_gui).config.find((config) => config.name === 'ui_certificate');
 
-    this.ws.call('system.general.ui_certificate_choices')
-      .pipe(untilDestroyed(this))
-      .subscribe((res) => {
         this.ui_certificate.options = [{ label: '---', value: null }];
-        for (const id in res) {
-          this.ui_certificate.options.push({ label: res[id], value: id });
+        for (const id in responses.uiCertificateChoices) {
+          this.ui_certificate.options.push({ label: responses.uiCertificateChoices[id], value: id });
         }
         entityEdit.formGroup.controls['ui_certificate'].setValue(this.configData.ui_certificate);
-      });
+        const httpsprotocolsField = this.fieldSets.find((set) => set.name === helptext.stg_fieldset_gui)
+          .config.find((config) => config.name === 'ui_httpsprotocols');
 
-    const httpsprotocolsField = this.fieldSets
-      .find((set) => set.name === helptext.stg_fieldset_gui)
-      .config.find((config) => config.name === 'ui_httpsprotocols');
-
-    this.ws.call('system.general.ui_httpsprotocols_choices').pipe(untilDestroyed(this)).subscribe(
-      (res) => {
         httpsprotocolsField.options = [];
-        for (const key in res) {
-          httpsprotocolsField.options.push({ label: res[key], value: key });
+        for (const key in responses.uiHttpsprotocolsChoices) {
+          httpsprotocolsField.options.push({ label: responses.uiHttpsprotocolsChoices[key], value: key });
         }
         entityEdit.formGroup.controls['ui_httpsprotocols'].setValue(this.configData.ui_httpsprotocols);
-      },
-    );
-
-    this.sysGeneralService
-      .ipChoicesv4()
-      .pipe(untilDestroyed(this)).subscribe((ips) => {
         this.fieldSets
           .find((set) => set.name === helptext.stg_fieldset_gui)
-          .config.find((config) => config.name === 'ui_address').options = ips;
+          .config.find((config) => config.name === 'ui_address').options = responses.ipChoicesv4;
         entityEdit.formGroup.controls['ui_address'].setValue(this.configData.ui_address);
-      });
-
-    this.sysGeneralService
-      .ipChoicesv6()
-      .pipe(untilDestroyed(this)).subscribe((v6Ips) => {
         this.fieldSets
           .find((set) => set.name === helptext.stg_fieldset_gui)
-          .config.find((config) => config.name === 'ui_v6address').options = v6Ips;
+          .config.find((config) => config.name === 'ui_v6address').options = responses.ipChoicesv6;
         entityEdit.formGroup.controls['ui_v6address'].setValue(this.configData.ui_v6address);
-      });
 
-    entityEdit.formGroup.controls['ui_port'].setValue(this.configData.ui_port);
-    entityEdit.formGroup.controls['ui_httpsport'].setValue(this.configData.ui_httpsport);
-    entityEdit.formGroup.controls['ui_httpsredirect'].setValue(this.configData.ui_httpsredirect);
-    entityEdit.formGroup.controls['crash_reporting'].setValue(this.configData.crash_reporting);
-    entityEdit.formGroup.controls['usage_collection'].setValue(this.configData.usage_collection);
-    entityEdit.formGroup.controls['ui_consolemsg'].setValue(this.configData.ui_consolemsg);
+        entityEdit.formGroup.controls['ui_port'].setValue(this.configData.ui_port);
+        entityEdit.formGroup.controls['ui_httpsport'].setValue(this.configData.ui_httpsport);
+        entityEdit.formGroup.controls['ui_httpsredirect'].setValue(this.configData.ui_httpsredirect);
+        entityEdit.formGroup.controls['crash_reporting'].setValue(this.configData.crash_reporting);
+        entityEdit.formGroup.controls['usage_collection'].setValue(this.configData.usage_collection);
+        entityEdit.formGroup.controls['ui_consolemsg'].setValue(this.configData.ui_consolemsg);
+      }, () => {
+        this.loader.close();
+      });
+    });
   }
 
   beforeSubmit(value: any): void {
