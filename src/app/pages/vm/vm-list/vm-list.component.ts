@@ -222,8 +222,8 @@ export class VMListComponent implements EntityTableConfig<VirtualMachineRow>, On
             name: 'force_after_timeout',
             placeholder: T('Force Stop After Timeout'),
             tooltip: T('Force the VM to stop if it has not already \
- stopped within the specified shutdown timeout. Without this option selected, the VM will \
- receive the shutdown signal, but may or may not complete the shutdown process.'),
+  stopped within the specified shutdown timeout. Without this option selected, the VM will \
+  receive the shutdown signal, but may or may not complete the shutdown process.'),
           },
         ],
         saveButtonText: T('Stop'),
@@ -353,7 +353,6 @@ export class VMListComponent implements EntityTableConfig<VirtualMachineRow>, On
   }
 
   onCheckboxChange(row: VirtualMachineRow): void {
-    row.autostart = !row.autostart;
     this.doRowAction(row, this.wsMethods.update, [row.id, { autostart: row.autostart }]);
   }
 
