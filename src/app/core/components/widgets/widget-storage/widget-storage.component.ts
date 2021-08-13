@@ -1,10 +1,11 @@
 import {
-  Component, Input, OnChanges, SimpleChanges,
+  Component, Input, OnChanges, OnInit, SimpleChanges,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import filesize from 'filesize';
+import { BehaviorSubject } from 'rxjs';
 import { WidgetComponent } from 'app/core/components/widgets/widget/widget.component';
 import { PoolStatus } from 'app/enums/pool-status.enum';
 import { VDevType } from 'app/enums/v-dev-type.enum';
@@ -35,10 +36,12 @@ interface PoolInfoMap {
   templateUrl: './widget-storage.component.html',
   styleUrls: ['./widget-storage.component.scss'],
 })
-export class WidgetStorageComponent extends WidgetComponent implements OnChanges {
+export class WidgetStorageComponent extends WidgetComponent implements OnInit, OnChanges {
   @Input() pools: Pool[];
-  @Input() volumeData: { [name: string]: VolumeData };
+  @Input() volumeData: BehaviorSubject<{ [name: string]: VolumeData }>;
+  private volumeDataBackup: { [name: string]: VolumeData };
   title: string = T('Storage');
+  isLoading$ = new BehaviorSubject(false);
 
   poolInfoMap: PoolInfoMap = {};
   paddingTop = 7;
@@ -54,12 +57,23 @@ export class WidgetStorageComponent extends WidgetComponent implements OnChanges
   constructor(public router: Router, public translate: TranslateService) {
     super(translate);
     this.configurable = false;
+    this.isLoading$.next(true);
+  }
+
+  ngOnInit(): void {
+    console.info('init');
+    this.volumeData.pipe(untilDestroyed(this)).subscribe((volumeData) => {
+      console.info('volumeData stream', volumeData);
+      this.updateGridInfo();
+      this.isLoading$.next(false);
+      this.updatePoolInfoMap();
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.pools || changes.volumeData) {
+    console.info('ngOnChanges', changes);
+    if (changes.pools) {
       this.updateGridInfo();
-      this.updatePoolInfoMap();
     }
   }
 
@@ -146,7 +160,7 @@ export class WidgetStorageComponent extends WidgetComponent implements OnChanges
   }
 
   getUsedSpaceItemInfo(pool: Pool): ItemInfo {
-    const vol = this.volumeData[pool.name];
+    const vol = this.volumeData.value[pool.name];
     let level = 'safe';
     let icon = 'mdi-check-circle';
     let value;
@@ -243,7 +257,7 @@ export class WidgetStorageComponent extends WidgetComponent implements OnChanges
   getFreeSpace(pool: Pool): string {
     let displayValue = '';
 
-    const vol = this.volumeData[pool.name];
+    const vol = this.volumeData.value[pool.name];
     if (vol && vol.used_pct) {
       let usedValue;
       if (isNaN(vol.used)) {

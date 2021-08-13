@@ -43,6 +43,8 @@
                       </mat-icon>
                     </button>
                   </div>
+                  <mat-spinner [diameter]="40" class="tile-loading" *ngIf="isLoading$ | async; else loaded"></mat-spinner>
+                  <ng-template #loaded>
                   <div class="tile-content" fxFlex fxLayout="row" fxLayoutAlign="space-between center">
                     <ul fxLayout="column" [fxFlex]="cols === 1 ? 31 : 100">
                       <li fxLayout="row">
@@ -99,6 +101,7 @@
                       </ul>
                     </ng-container>
                   </div>
+                </ng-template>
                 </div>
               </mat-grid-tile>
               <mat-grid-tile *ngIf="pools.length % 2 === 1 || pools.length === 0" >
