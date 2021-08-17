@@ -1583,7 +1583,6 @@
   "Error exporting the certificate": "导出证书时出错",
   "Error exporting/disconnecting pool.": "导出/断开池时出错。",
   "Error gathering data on pool.": "在池上收集数据时出错。",
-  "Error getting chart data": "获取图表数据时出错",
   "Error getting disk data": "获取磁盘数据时出错",
   "Error getting locales": "获取locales时出错",
   "Error getting pool data.": "获取池数据时错误。",

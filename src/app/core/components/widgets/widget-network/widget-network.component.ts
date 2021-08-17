@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import { ChartData, ChartOptions } from 'chart.js';
-import { sub } from 'date-fns';
 import { WidgetUtils } from 'app/core/components/widgets/widget-utils';
 import { WidgetComponent } from 'app/core/components/widgets/widget/widget.component';
 import { LinkState, NetworkInterfaceAliasType } from 'app/enums/network-interface.enum';
@@ -25,12 +24,19 @@ interface NicInfo {
   out: string;
   lastSent: number;
   lastReceived: number;
+  sentBuffer: DataPoint[];
+  receivedBuffer: DataPoint[];
   chartData: ChartData;
   emptyConfig?: EmptyConfig;
 }
 
 interface NicInfoMap {
   [name: string]: NicInfo;
+}
+
+interface DataPoint {
+  t: Date;
+  y: number;
 }
 
 @UntilDestroy()
@@ -42,6 +48,8 @@ interface NicInfoMap {
 export class WidgetNetworkComponent extends WidgetComponent implements AfterViewInit, OnDestroy {
   @Input() stats: any;
   @Input() nics: BaseNetworkInterface[];
+
+  private statsBuffer: any[] = [];
 
   readonly emptyTypes = EmptyType;
   private utils: WidgetUtils;
@@ -68,7 +76,7 @@ export class WidgetNetworkComponent extends WidgetComponent implements AfterView
     maintainAspectRatio: true,
     aspectRatio: this.aspectRatio,
     animation: {
-      duration: 0,
+      duration: 200,
     },
     layout: {
       padding: 0,
@@ -85,14 +93,16 @@ export class WidgetNetworkComponent extends WidgetComponent implements AfterView
         {
           type: 'time',
           time: {
-            unit: 'minute',
+            unit: 'second',
+            // minUnit: 'second',
             displayFormats: {
               minute: 'HH:mm',
+              second: 'ss',
             },
           },
           ticks: {
             beginAtZero: true,
-            maxTicksLimit: 3,
+            maxTicksLimit: 10,
             maxRotation: 0,
           },
         },
@@ -140,20 +150,17 @@ export class WidgetNetworkComponent extends WidgetComponent implements AfterView
 
     this.updateGridInfo();
     this.updateMapInfo();
-    this.fetchReportData();
 
     if (this.interval) {
       clearInterval(this.interval);
     }
 
-    this.interval = setInterval(() => {
-      this.fetchReportData();
-    }, 10000);
-
     this.stats.pipe(untilDestroyed(this)).subscribe((evt: CoreEvent) => {
       if (evt.name.startsWith('NetTraffic_')) {
+        const timestamp = Date.now(); // Would be better if it came from backend
         const nicName = evt.name.substr('NetTraffic_'.length);
         if (nicName in this.nicInfoMap) {
+          this.nicInfoMap[nicName].chartData = this.updateData(nicName, evt.data, timestamp);
           const sent = this.utils.convert(evt.data.sent_bytes_rate);
           const received = this.utils.convert(evt.data.received_bytes_rate);
 
@@ -202,6 +209,8 @@ export class WidgetNetworkComponent extends WidgetComponent implements AfterView
         out: '',
         lastSent: 0,
         lastReceived: 0,
+        sentBuffer: [],
+        receivedBuffer: [],
         chartData: null,
         emptyConfig: {
           type: EmptyType.Loading,
@@ -280,60 +289,6 @@ export class WidgetNetworkComponent extends WidgetComponent implements AfterView
     return nic.state.link_state.replace(/_/g, ' ');
   }
 
-  async fetchReportData(): Promise<void> {
-    const endDate = await this.reportsService.getServerTime();
-    const subOptions: Duration = {};
-    subOptions['hours'] = 1;
-    const startDate = sub(endDate, subOptions);
-
-    const timeFrame = {
-      start: Math.floor(startDate.getTime() / 1000),
-      end: Math.floor(endDate.getTime() / 1000),
-    };
-
-    this.availableNics.forEach((nic) => {
-      const params = {
-        identifier: nic.name,
-        name: 'interface',
-      };
-      this.ws.call('reporting.get_data', [[params], timeFrame]).pipe(untilDestroyed(this)).subscribe((res) => {
-        res = res[0];
-
-        const labels: number[] = [];
-        for (let i = 0; i <= res.data.length; i++) {
-          const label = (res.start + i * res.step) * 1000;
-          labels.push(label);
-        }
-
-        const chartData = {
-          datasets: [
-            {
-              label: nic.name + '(in)',
-              data: res.data.map((item: number[], index: number) => ({ t: labels[index], y: item[0] })),
-              borderColor: this.themeService.currentTheme().blue,
-              backgroundColor: this.themeService.currentTheme().blue,
-              pointRadius: 0.2,
-            },
-            {
-              label: nic.name + '(out)',
-              data: res.data.map((item: number[], index: number) => ({ t: labels[index], y: -item[1] })),
-              borderColor: this.themeService.currentTheme().orange,
-              backgroundColor: this.themeService.currentTheme().orange,
-              pointRadius: 0.1,
-            },
-          ],
-        };
-
-        this.nicInfoMap[nic.name].chartData = chartData;
-      },
-      () => {
-        // Handle the error
-        const errorString = this.translate.instant(T('Error getting chart data'));
-        this.nicInfoMap[nic.name].emptyConfig = this.chartDataError(errorString);
-      });
-    });
-  }
-
   chartDataError(err: string): EmptyConfig {
     return {
       type: EmptyType.Errors,
@@ -358,5 +313,38 @@ export class WidgetNetworkComponent extends WidgetComponent implements AfterView
     }
 
     return classes;
+  }
+
+  updateData(nicName: string, stats: any, timestamp: number): ChartData {
+    const maxBuffer = 300;
+
+    // Add to buffer
+    this.nicInfoMap[nicName].sentBuffer.push({ t: new Date(timestamp), y: -stats.sent_bytes });
+    this.nicInfoMap[nicName].receivedBuffer.push({ t: new Date(timestamp), y: stats.received_bytes });
+
+    // Prune old values
+    if (this.nicInfoMap[nicName].sentBuffer.length > maxBuffer) this.nicInfoMap[nicName].sentBuffer.shift();
+    if (this.nicInfoMap[nicName].receivedBuffer.length > maxBuffer) this.nicInfoMap[nicName].receivedBuffer.shift();
+
+    const chartData: ChartData = {
+      datasets: [
+        {
+          label: nicName + ' (in)',
+          data: this.nicInfoMap[nicName].receivedBuffer,
+          borderColor: this.themeService.currentTheme().blue,
+          backgroundColor: this.themeService.currentTheme().blue,
+          pointRadius: 0.2,
+        },
+        {
+          label: nicName + ' (out)',
+          data: this.nicInfoMap[nicName].sentBuffer,
+          borderColor: this.themeService.currentTheme().orange,
+          backgroundColor: this.themeService.currentTheme().orange,
+          pointRadius: 0.1,
+        },
+      ],
+    };
+
+    return chartData;
   }
 }

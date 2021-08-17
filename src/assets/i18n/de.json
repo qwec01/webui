@@ -702,7 +702,6 @@
   "Error creating CA.": "",
   "Error deleting zvol {zvolName}.": "",
   "Error detected reading App": "",
-  "Error getting chart data": "",
   "Error starting service OpenVPN ": "",
   "Error stopping service OpenVPN ": "",
   "Error while creating the ": "",
