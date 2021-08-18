@@ -35,7 +35,7 @@ interface NicInfoMap {
 }
 
 interface DataPoint {
-  t: Date;
+  t: number;
   y: number;
 }
 
@@ -49,7 +49,16 @@ export class WidgetNetworkComponent extends WidgetComponent implements AfterView
   @Input() stats: any;
   @Input() nics: BaseNetworkInterface[];
 
-  private statsBuffer: any[] = [];
+  get chartColors(): string[] {
+    const theme = this.themeService.currentTheme();
+    const colors: string[] = [];
+    theme.accentColors.forEach((colorName: string) => {
+      const color: string = theme[colorName];
+      colors.push(color);
+    });
+
+    return colors;
+  }
 
   readonly emptyTypes = EmptyType;
   private utils: WidgetUtils;
@@ -148,7 +157,7 @@ export class WidgetNetworkComponent extends WidgetComponent implements AfterView
   ngAfterViewInit(): void {
     this.availableNics = this.nics.filter((nic) => nic.state.link_state === LinkState.Up);
 
-    this.updateGridInfo();
+    // this.updateGridInfo();
     this.updateMapInfo();
 
     if (this.interval) {
@@ -316,18 +325,29 @@ export class WidgetNetworkComponent extends WidgetComponent implements AfterView
   }
 
   updateData(nicName: string, stats: any, timestamp: number): ChartData {
-    const maxBuffer = 300;
+    const maxBuffer = 30;
 
     // Add to buffer
-    this.nicInfoMap[nicName].sentBuffer.push({ t: new Date(timestamp), y: -stats.sent_bytes });
-    this.nicInfoMap[nicName].receivedBuffer.push({ t: new Date(timestamp), y: stats.received_bytes });
+    this.nicInfoMap[nicName].sentBuffer.push({ t: timestamp, y: -stats.sent_bytes });
+    this.nicInfoMap[nicName].receivedBuffer.push({ t: timestamp, y: stats.received_bytes });
 
     // Prune old values
     if (this.nicInfoMap[nicName].sentBuffer.length > maxBuffer) this.nicInfoMap[nicName].sentBuffer.shift();
     if (this.nicInfoMap[nicName].receivedBuffer.length > maxBuffer) this.nicInfoMap[nicName].receivedBuffer.shift();
 
-    const chartData: ChartData = {
-      datasets: [
+    const chartData: any = {
+      start: this.nicInfoMap[nicName].sentBuffer[0].t,
+      end: this.nicInfoMap[nicName].sentBuffer[this.nicInfoMap[nicName].sentBuffer.length - 1].t,
+      legend: [nicName + ' (in)', nicName + ' (out)'],
+      name: nicName,
+      step: 10,
+      data: this.nicInfoMap[nicName].sentBuffer.map((sent: DataPoint, index: number) => {
+        // Provide data using a 'columns' datastructure
+        const received = this.nicInfoMap[nicName].receivedBuffer[index];
+        return [-received.y, sent.y];
+      }),
+
+      /* datasets: [
         {
           label: nicName + ' (in)',
           data: this.nicInfoMap[nicName].receivedBuffer,
@@ -342,7 +362,7 @@ export class WidgetNetworkComponent extends WidgetComponent implements AfterView
           backgroundColor: this.themeService.currentTheme().orange,
           pointRadius: 0.1,
         },
-      ],
+      ], */
     };
 
     return chartData;
