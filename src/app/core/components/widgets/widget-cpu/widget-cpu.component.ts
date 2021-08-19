@@ -355,7 +355,7 @@ export class WidgetCpuComponent extends WidgetComponent implements AfterViewInit
         color = accent;
       } else {
         const cssVar = ds.label == 'Temperature' ? accent : 'primary';
-        color = this.stripVar(this.currentTheme[cssVar]);
+        color = this.stripVar(this.currentTheme.colors[cssVar]);
       }
 
       const bgRGB = this.utils.convertToRGB((this.currentTheme as any)[color]).rgb;
@@ -388,7 +388,7 @@ export class WidgetCpuComponent extends WidgetComponent implements AfterViewInit
   getHighlightColor(opacity: number): string {
     // Get highlight color
     const currentTheme = this.themeService.currentTheme();
-    const txtColor = currentTheme.fg2;
+    const txtColor = currentTheme.colors.fg2;
     const valueType = this.utils.getValueType(txtColor);
 
     // convert to rgb

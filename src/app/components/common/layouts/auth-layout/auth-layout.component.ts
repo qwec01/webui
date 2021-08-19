@@ -28,9 +28,9 @@ export class AuthLayoutComponent implements OnInit {
       admin_layout_el.style.setProperty('--' + color, theme[color] as string);
       document.documentElement.style.setProperty('--' + color, theme[color] as string);
     });
-    admin_layout_el.style.setProperty('--primary', theme['primary']);
-    admin_layout_el.style.setProperty('--accent', theme['accent']);
-    document.documentElement.style.setProperty('--primary', theme['primary']);
-    document.documentElement.style.setProperty('--accent', theme['accent']);
+    admin_layout_el.style.setProperty('--primary', theme.colors['primary']);
+    admin_layout_el.style.setProperty('--accent', theme.colors['accent']);
+    document.documentElement.style.setProperty('--primary', theme.colors['primary']);
+    document.documentElement.style.setProperty('--accent', theme.colors['accent']);
   }
 }

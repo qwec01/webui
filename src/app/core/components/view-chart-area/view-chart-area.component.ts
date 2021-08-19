@@ -99,9 +99,9 @@ export class ViewChartAreaComponent extends ViewComponent implements AfterViewIn
     const data = this.makeTimeAxis(this.data);
     const labels = data.shift();
 
-    const fg2 = this.themeService.currentTheme().fg2;
+    const fg2 = this.themeService.currentTheme().colors.fg2;
     const fg2Type = this.utils.getValueType(fg2);
-    const fg2RGB = fg2Type == 'hex' ? this.utils.hexToRGB(this.themeService.currentTheme().fg2).rgb : this.utils.rgbToArray(fg2);
+    const fg2RGB = fg2Type == 'hex' ? this.utils.hexToRGB(this.themeService.currentTheme().colors.fg2).rgb : this.utils.rgbToArray(fg2);
     const gridLineColor = 'rgba(' + fg2RGB[0] + ', ' + fg2RGB[1] + ', ' + fg2RGB[2] + ', 0.25)';
     const yLabelSuffix = this.labelY === 'Bits/s' ? this.labelY.toLowerCase() : this.labelY;
 

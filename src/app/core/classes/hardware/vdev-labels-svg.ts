@@ -35,7 +35,7 @@ export class VDevLabelsSVG {
     this.selectedDisk = disk;
     this.color = 'var(--cyan)';
     this.selectedDiskColor = 'var(--yellow)';
-    this.highlightColor = theme.yellow;
+    this.highlightColor = theme.colors.yellow;
 
     this.onInit(chassis, app);
   }

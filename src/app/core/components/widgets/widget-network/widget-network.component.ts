@@ -15,6 +15,7 @@ import { EmptyConfig, EmptyType } from 'app/pages/common/entity/entity-empty/ent
 import { TableService } from 'app/pages/common/entity/table/table.service';
 import { ReportsService } from 'app/pages/reports-dashboard/reports.service';
 import { WebSocketService } from 'app/services';
+import { ThemeColors } from 'app/services/theme/theme.service';
 import { T } from 'app/translate-marker';
 
 interface NicInfo {
@@ -52,8 +53,8 @@ export class WidgetNetworkComponent extends WidgetComponent implements AfterView
   get chartColors(): string[] {
     const theme = this.themeService.currentTheme();
     const colors: string[] = [];
-    theme.accentColors.forEach((colorName: string) => {
-      const color: string = theme[colorName];
+    theme.accentColors.forEach((colorName: keyof ThemeColors) => {
+      const color: string = theme.colors[colorName];
       colors.push(color);
     });
 

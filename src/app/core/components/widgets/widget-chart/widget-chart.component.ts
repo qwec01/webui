@@ -62,7 +62,7 @@ export class WidgetChartComponent extends WidgetComponent implements OnDestroy {
     }, 5000);
     const theme = this.themeService.currentTheme();
     this.utils = new ThemeUtils();
-    this.widgetColorCssVar = (theme as any)[this.utils.colorFromMeta(theme.primary)];
+    this.widgetColorCssVar = (theme as any)[this.utils.colorFromMeta(theme.colors.primary)];
   }
 
   ngOnDestroy(): void {
