@@ -52,9 +52,13 @@ export class WidgetNetworkComponent extends WidgetComponent implements AfterView
   get chartColors(): string[] {
     const theme = this.themeService.currentTheme();
     const colors: string[] = [];
-    theme.accentColors.forEach((colorName: string) => {
-      const color: string = theme[colorName];
-      colors.push(color);
+
+    const keys = Object.keys(theme);
+    keys.forEach((key) => {
+      const prop = theme[key as keyof typeof theme];
+      if (typeof prop === 'string' && theme.accentColors.indexOf(key) > -1) {
+        colors.push(prop);
+      }
     });
 
     return colors;
