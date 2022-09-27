@@ -9,9 +9,9 @@ import smoothPlotter from 'dygraphs/src/extras/smooth-plotter.js';
 import { ThemeUtils } from 'app/core/classes/theme-utils/theme-utils';
 import { ReportingData } from 'app/interfaces/reporting.interface';
 import { Theme } from 'app/interfaces/theme.interface';
+import { LegendDataWithStackedTotalHtml, Report } from 'app/pages/reports-dashboard/components/report/report.component';
 import { CoreService } from 'app/services/core-service/core.service';
 import { ThemeService } from 'app/services/theme/theme.service';
-import { Report } from '../report/report.component';
 
 interface Conversion {
   value: number;
@@ -21,7 +21,7 @@ interface Conversion {
 }
 
 @Component({
-  selector: 'linechart',
+  selector: 'ix-linechart',
   templateUrl: './line-chart.component.html',
   styleUrls: ['./line-chart.component.scss'],
 })
@@ -53,11 +53,9 @@ export class LineChartComponent implements AfterViewInit, OnDestroy, OnChanges {
   library = 'dygraph'; // dygraph or chart.js
 
   chart: Dygraph;
-  conf: any;
 
   units = '';
   yLabelPrefix: string;
-  showLegendValues = false;
 
   theme: Theme;
   timeFormat = '%H:%M';
@@ -92,10 +90,9 @@ export class LineChartComponent implements AfterViewInit, OnDestroy, OnChanges {
     const fg2 = this.themeService.currentTheme().fg2;
     const fg2Type = this.utils.getValueType(fg2);
     const fg2Rgb = fg2Type === 'hex' ? this.utils.hexToRgb(this.themeService.currentTheme().fg2).rgb : this.utils.rgbToArray(fg2);
-    const gridLineColor = 'rgba(' + fg2Rgb[0] + ', ' + fg2Rgb[1] + ', ' + fg2Rgb[2] + ', 0.25)';
+    const gridLineColor = `rgba(${fg2Rgb[0]}, ${fg2Rgb[1]}, ${fg2Rgb[2]}, 0.25)`;
     const yLabelSuffix = this.labelY === 'Bits/s' ? this.labelY.toLowerCase() : this.labelY;
 
-    // TODO: Try: dygraphs.Options
     const options: dygraphs.Options = {
       drawPoints: false, // Must be disabled for smoothPlotter
       pointSize: 1,
@@ -127,7 +124,7 @@ export class LineChartComponent implements AfterViewInit, OnDestroy, OnChanges {
           return converted.suffix !== undefined ? converted.suffix : '';
         };
 
-        const clone = { ...data } as any;
+        const clone = { ...data } as LegendDataWithStackedTotalHtml;
         clone.series.forEach((item: dygraphs.SeriesLegendData, index: number) => {
           if (!item.y) { return; }
           const converted = this.formatLabelValue(item.y, this.inferUnits(this.labelY), 1, true);
@@ -147,7 +144,7 @@ export class LineChartComponent implements AfterViewInit, OnDestroy, OnChanges {
         return '';
       },
       series: () => {
-        const series: any = {};
+        const series: { [item: string]: { plotter: typeof smoothPlotter } } = {};
         this.data.legend.forEach((item) => {
           series[item] = { plotter: smoothPlotter };
         });

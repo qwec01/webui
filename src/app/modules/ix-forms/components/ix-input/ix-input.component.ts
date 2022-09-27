@@ -1,7 +1,16 @@
 import {
-  ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
 } from '@angular/core';
-import { ControlValueAccessor, FormControl, NgControl } from '@angular/forms';
+import {
+  ControlValueAccessor,
+  UntypedFormControl,
+  NgControl,
+} from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -22,17 +31,20 @@ export class IxInputComponent implements ControlValueAccessor {
   @Input() readonly: boolean;
   @Input() type: string;
   @Input() autocomplete = 'off';
-  @Output() linkClicked: EventEmitter<void> = new EventEmitter();
-  @Input() linkText: string = null;
+
+  /**
+   * @deprecated Avoid using. Use valueChanges.
+   */
+  @Output() inputBlur: EventEmitter<unknown> = new EventEmitter();
 
   /** If formatted value returned by parseAndFormatInput has non-numeric letters
    * and input 'type' is a number, the input will stay empty on the form */
   @Input() format: (value: string | number) => string;
   @Input() parse: (value: string | number) => string | number;
 
-  formControl = new FormControl(this).value as FormControl;
+  formControl = new UntypedFormControl(this).value as UntypedFormControl;
 
-  value: string | number = '';
+  private _value: string | number = '';
   formatted: string | number = '';
 
   isDisabled = false;
@@ -48,6 +60,18 @@ export class IxInputComponent implements ControlValueAccessor {
     private cdr: ChangeDetectorRef,
   ) {
     this.controlDirective.valueAccessor = this;
+  }
+
+  get value(): string | number {
+    return this._value;
+  }
+
+  set value(val: string | number) {
+    if (this.type === 'number') {
+      this._value = val ? Number(val) : null;
+      return;
+    }
+    this._value = val;
   }
 
   writeValue(value: string | number): void {
@@ -73,7 +97,9 @@ export class IxInputComponent implements ControlValueAccessor {
   }
 
   invalidMessage(): string {
-    return this.translate.instant('Value must be a {type}', { type: this.type });
+    return this.translate.instant('Value must be a {type}', {
+      type: this.type,
+    });
   }
 
   registerOnChange(onChange: (value: string | number) => void): void {
@@ -85,7 +111,12 @@ export class IxInputComponent implements ControlValueAccessor {
   }
 
   shouldShowResetInput(): boolean {
-    return !this.isDisabled && this.hasValue() && this.type !== 'password' && !this.readonly;
+    return (
+      !this.isDisabled
+      && this.hasValue()
+      && this.type !== 'password'
+      && !this.readonly
+    );
   }
 
   getType(): string {
@@ -105,7 +136,7 @@ export class IxInputComponent implements ControlValueAccessor {
     this.invalid = false;
     this.value = '';
     this.formatted = '';
-    this.onChange('');
+    this.onChange(this.value);
   }
 
   setDisabledState(isDisabled: boolean): void {
@@ -120,7 +151,7 @@ export class IxInputComponent implements ControlValueAccessor {
     }
   }
 
-  blur(): void {
+  blurred(): void {
     this.onTouch();
     if (this.formatted) {
       if (this.parse) {
@@ -133,6 +164,7 @@ export class IxInputComponent implements ControlValueAccessor {
 
     this.onChange(this.value);
     this.cdr.markForCheck();
+    this.inputBlur.emit();
   }
 
   onPasswordToggled(): void {

@@ -1,10 +1,12 @@
-import { AfterViewInit, Component, Type } from '@angular/core';
-import { Validators } from '@angular/forms';
+import {
+  AfterViewInit, Component, ViewChild,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import _ from 'lodash';
 import { filter, map } from 'rxjs/operators';
+import { ProductType } from 'app/enums/product-type.enum';
 import { ServiceName, serviceNames } from 'app/enums/service-name.enum';
 import { ServiceStatus } from 'app/enums/service-status.enum';
 import { helptextSharingWebdav, helptextSharingSmb, helptextSharingNfs } from 'app/helptext/sharing';
@@ -15,28 +17,26 @@ import { Service } from 'app/interfaces/service.interface';
 import { SmbShare } from 'app/interfaces/smb-share.interface';
 import { WebDavShare } from 'app/interfaces/web-dav-share.interface';
 import { WebsocketError } from 'app/interfaces/websocket-error.interface';
-import { DialogFormConfiguration } from 'app/modules/entity/entity-dialog/dialog-form-configuration.interface';
-import { EntityDialogComponent } from 'app/modules/entity/entity-dialog/entity-dialog.component';
 import {
+  ExpandableTableComponent,
   ExpandableTableState,
   InputExpandableTableConf,
 } from 'app/modules/entity/table/expandable-table/expandable-table.component';
 import {
-  TableComponent,
   AppTableHeaderAction,
 } from 'app/modules/entity/table/table.component';
 import { EntityUtils } from 'app/modules/entity/utils';
 import { TargetFormComponent } from 'app/pages/sharing/iscsi/target/target-form/target-form.component';
 import { NfsFormComponent } from 'app/pages/sharing/nfs/nfs-form/nfs-form.component';
+import { SmbAclComponent } from 'app/pages/sharing/smb/smb-acl/smb-acl.component';
 import { SmbFormComponent } from 'app/pages/sharing/smb/smb-form/smb-form.component';
 import { WebdavFormComponent } from 'app/pages/sharing/webdav/webdav-form/webdav-form.component';
 import {
   DialogService,
-  IscsiService,
-  ModalService,
+  IscsiService, SystemGeneralService,
   WebSocketService,
 } from 'app/services';
-import { IxSlideInService } from 'app/services/ix-slide-in.service';
+import { IxSlideInService, ResponseOnClose } from 'app/services/ix-slide-in.service';
 
 enum ShareType {
   Smb = 'smb',
@@ -49,7 +49,6 @@ type ShareTableRow = Partial<SmbShare> | Partial<WebDavShare> | Partial<NfsShare
 
 @UntilDestroy()
 @Component({
-  selector: 'app-shares-dashboard',
   templateUrl: './shares-dashboard.component.html',
   styleUrls: ['./shares-dashboard.component.scss'],
   providers: [IscsiService],
@@ -59,6 +58,11 @@ export class SharesDashboardComponent implements AfterViewInit {
   nfsTableConf: InputExpandableTableConf = this.getTableConfigForShareType(ShareType.Nfs);
   smbTableConf: InputExpandableTableConf = this.getTableConfigForShareType(ShareType.Smb);
   iscsiTableConf: InputExpandableTableConf = this.getTableConfigForShareType(ShareType.Iscsi);
+
+  @ViewChild('webdavTable', { static: false }) webdavTable: ExpandableTableComponent;
+  @ViewChild('nfsTable', { static: false }) nfsTable: ExpandableTableComponent;
+  @ViewChild('smbTable', { static: false }) smbTable: ExpandableTableComponent;
+  @ViewChild('iscsiTable', { static: false }) iscsiTable: ExpandableTableComponent;
 
   webdavHasItems = 0;
   nfsHasItems = 0;
@@ -81,12 +85,12 @@ export class SharesDashboardComponent implements AfterViewInit {
   readonly ServiceStatus = ServiceStatus;
 
   constructor(
-    private modalService: ModalService,
     private ws: WebSocketService,
     private dialog: DialogService,
     private router: Router,
     private translate: TranslateService,
     private slideInService: IxSlideInService,
+    private systemGeneralService: SystemGeneralService,
   ) {
     this.getInitialServiceStatus();
   }
@@ -129,6 +133,42 @@ export class SharesDashboardComponent implements AfterViewInit {
     if (this.iscsiHasItems) {
       this.iscsiExpandableState = ExpandableTableState.Expanded;
     }
+    this.setupTableRefreshOnPanelClose();
+  }
+
+  setupTableRefreshOnPanelClose(): void {
+    this.slideInService.onClose$.pipe(untilDestroyed(this)).subscribe(({ modalType }: ResponseOnClose) => {
+      switch (modalType) {
+        case WebdavFormComponent:
+          if (!this.webdavTable.tableComponent) {
+            this.refreshDashboard();
+          }
+          this.webdavTable.tableComponent.getData();
+          break;
+        case SmbFormComponent:
+        case SmbAclComponent:
+          if (!this.smbTable.tableComponent) {
+            this.refreshDashboard();
+          }
+          this.smbTable.tableComponent.getData();
+          break;
+        case NfsFormComponent:
+          if (!this.nfsTable.tableComponent) {
+            this.refreshDashboard();
+          }
+          this.nfsTable.tableComponent.getData();
+          break;
+        case TargetFormComponent:
+          if (!this.iscsiTable.tableComponent) {
+            this.refreshDashboard();
+          }
+          this.iscsiTable.tableComponent.getData();
+          break;
+        default:
+          this.refreshDashboard();
+          break;
+      }
+    });
   }
 
   refreshDashboard(): void {
@@ -166,11 +206,12 @@ export class SharesDashboardComponent implements AfterViewInit {
             },
           ],
           detailsHref: '/sharing/nfs',
-          add() {
-            this.parent.add(this.tableComponent, ShareType.Nfs);
+          add: () => {
+            this.slideInService.open(NfsFormComponent);
           },
-          edit(row: NfsShare) {
-            this.parent.edit(this.tableComponent, ShareType.Nfs, row.id);
+          edit: (row: NfsShare): void => {
+            const form = this.slideInService.open(NfsFormComponent);
+            form.setNfsShareForEdit(row);
           },
           afterGetData: (data: NfsShare[]) => {
             this.nfsHasItems = 0;
@@ -208,11 +249,13 @@ export class SharesDashboardComponent implements AfterViewInit {
               prop: 'alias',
             },
           ],
-          add() {
-            this.parent.add(this.tableComponent, ShareType.Iscsi);
+          add: () => {
+            this.router.navigate(['/', 'sharing', 'iscsi', 'wizard']);
           },
-          edit(row: IscsiTarget) {
-            this.parent.edit(this.tableComponent, ShareType.Iscsi, row.id);
+          addButtonLabel: this.translate.instant('Wizard'),
+          edit: (row: IscsiTarget) => {
+            const targetForm = this.slideInService.open(TargetFormComponent, { wide: true });
+            targetForm.setTargetForEdit(row);
           },
           afterGetData: (data: IscsiTarget[]) => {
             this.iscsiHasItems = 0;
@@ -267,12 +310,13 @@ export class SharesDashboardComponent implements AfterViewInit {
               onChange: (row: WebDavShare) => this.onSlideToggle(ShareType.WebDav, row, 'enabled'),
             },
           ],
-          add() {
-            this.parent.add(this.tableComponent, ShareType.WebDav);
+          add: () => {
+            this.slideInService.open(WebdavFormComponent);
           },
           limitRowsByMaxHeight: true,
-          edit(row: WebDavShare) {
-            this.parent.edit(this.tableComponent, ShareType.WebDav, row.id);
+          edit: (row: WebDavShare) => {
+            const form = this.slideInService.open(WebdavFormComponent);
+            form.setWebdavForEdit(row);
           },
           afterGetData: (data: WebDavShare[]) => {
             this.webdavHasItems = 0;
@@ -313,11 +357,12 @@ export class SharesDashboardComponent implements AfterViewInit {
             },
           ],
           limitRowsByMaxHeight: true,
-          add() {
-            this.parent.add(this.tableComponent, ShareType.Smb);
+          add: () => {
+            this.slideInService.open(SmbFormComponent);
           },
-          edit(row: SmbShare) {
-            this.parent.edit(this.tableComponent, ShareType.Smb, row.id);
+          edit: (row: SmbShare) => {
+            const form = this.slideInService.open(SmbFormComponent);
+            form.setSmbShareForEdit(row);
           },
           afterGetData: (data: SmbShare[]) => {
             this.smbHasItems = 0;
@@ -328,60 +373,67 @@ export class SharesDashboardComponent implements AfterViewInit {
             }
           },
           limitRows: 5,
+          isActionVisible: (actionId: string, row: SmbShare) => {
+            switch (actionId) {
+              case 'edit_acl':
+                const rowName = row.path.replace('/mnt/', '');
+                return rowName.includes('/');
+              default:
+                return true;
+            }
+          },
+          getActions: () => {
+            return [
+              {
+                icon: 'share',
+                name: 'share_acl',
+                matTooltip: helptextSharingSmb.action_share_acl,
+                onClick: (row: SmbShare) => {
+                  this.ws.call('pool.dataset.path_in_locked_datasets', [row.path]).pipe(untilDestroyed(this)).subscribe(
+                    (isLocked) => {
+                      if (isLocked) {
+                        this.lockedPathDialog(row.path);
+                      } else {
+                        // A home share has a name (homes) set; row.name works for other shares
+                        const searchName = row.home ? 'homes' : row.name;
+                        this.ws.call('smb.sharesec.query', [[['share_name', '=', searchName]]]).pipe(untilDestroyed(this)).subscribe(
+                          (sharesecs) => {
+                            const form = this.slideInService.open(SmbAclComponent);
+                            form.setSmbShareName(sharesecs[0].share_name);
+                          },
+                        );
+                      }
+                    },
+                  );
+                },
+              },
+              {
+                icon: 'security',
+                name: 'edit_acl',
+                matTooltip: helptextSharingSmb.action_edit_acl,
+                onClick: (row: SmbShare) => {
+                  const rowName = row.path.replace('/mnt/', '');
+                  const poolName = rowName.split('/')[0];
+                  const datasetId = rowName;
+                  const productType = this.systemGeneralService.getProductType();
+                  this.ws.call('pool.dataset.path_in_locked_datasets', [row.path]).pipe(untilDestroyed(this)).subscribe(
+                    (isLocked) => {
+                      if (isLocked) {
+                        this.lockedPathDialog(row.path);
+                      } else if (productType.includes(ProductType.Scale)) {
+                        this.router.navigate(['/', 'storage', 'id', poolName, 'dataset', 'posix-acl', datasetId]);
+                      } else {
+                        this.router.navigate(['/', 'storage', 'pools', 'id', poolName, 'dataset', 'acl', datasetId]);
+                      }
+                    },
+                  );
+                },
+              },
+            ];
+          },
         };
       }
     }
-  }
-
-  add(tableComponent: TableComponent, share: ShareType, id?: number): void {
-    let formComponent: Type<NfsFormComponent | SmbFormComponent | WebdavFormComponent | TargetFormComponent>;
-    switch (share) {
-      case ShareType.Nfs:
-        formComponent = NfsFormComponent;
-        break;
-      case ShareType.Smb:
-        formComponent = SmbFormComponent;
-        break;
-      case ShareType.WebDav:
-        formComponent = WebdavFormComponent;
-        break;
-      case ShareType.Iscsi:
-        formComponent = TargetFormComponent;
-        break;
-    }
-    if ([ShareType.WebDav, ShareType.Nfs].includes(share)) {
-      const form = this.slideInService.open(formComponent);
-      if (id) {
-        const row = tableComponent.displayedDataSource.find((row) => row.id === id);
-        if (share === ShareType.WebDav) {
-          (form as WebdavFormComponent).setWebdavForEdit(row);
-        } else if (share === ShareType.Nfs) {
-          (form as NfsFormComponent).setNfsShareForEdit(row);
-        }
-      }
-      this.slideInService.onClose$.pipe(untilDestroyed(this)).subscribe(() => {
-        if (!tableComponent) {
-          this.refreshDashboard();
-        } else {
-          tableComponent.getData();
-        }
-      });
-    } else {
-      this.modalService.openInSlideIn(formComponent, id);
-      this.modalService.onClose$.pipe(untilDestroyed(this)).subscribe(() => {
-        if (!tableComponent) {
-          this.refreshDashboard();
-        } else {
-          tableComponent.getData();
-        }
-      }, (err) => {
-        new EntityUtils().handleWsError(this, err, this.dialog);
-      });
-    }
-  }
-
-  edit(tableComponent: TableComponent, share: ShareType, id: number): void {
-    this.add(tableComponent, share, id);
   }
 
   getTablesOrder(): string[] {
@@ -456,31 +508,6 @@ export class SharesDashboardComponent implements AfterViewInit {
     }
   }
 
-  showAddDialog(): void {
-    const conf: DialogFormConfiguration = {
-      title: this.translate.instant('Add New Share'),
-      message: this.translate.instant('Select the type of Share you want to add'),
-      saveButtonText: this.translate.instant('Create'),
-      fieldConfig: [{
-        type: 'radio',
-        name: 'share_type',
-        options: [
-          { label: 'SMB', value: ShareType.Smb },
-          { label: 'NFS', value: ShareType.Nfs },
-          { label: 'iSCSI Target', value: ShareType.Iscsi },
-          { label: 'WebDAV', value: ShareType.WebDav },
-        ],
-        validation: [Validators.required],
-      },
-      ],
-      customSubmit: (dialog: EntityDialogComponent) => {
-        dialog.dialogRef.close();
-        this.add(null, dialog.formValue.share_type);
-      },
-    };
-    this.dialog.dialogForm(conf);
-  }
-
   onSlideToggle(card: ShareType, row: ShareTableRow, param: 'enabled' | 'ro'): void {
     let updateCall: keyof ApiDirectory;
     switch (card) {
@@ -497,15 +524,15 @@ export class SharesDashboardComponent implements AfterViewInit {
         return;
     }
 
-    this.ws.call(updateCall, [row.id, { [param]: row[param] }]).pipe(untilDestroyed(this)).subscribe(
-      (updatedEntity) => {
+    this.ws.call(updateCall, [row.id, { [param]: row[param] }]).pipe(untilDestroyed(this)).subscribe({
+      next: (updatedEntity) => {
         row[param] = updatedEntity[param];
       },
-      (err: WebsocketError) => {
+      error: (err: WebsocketError) => {
         row[param] = !row[param];
         new EntityUtils().handleWsError(this, err, this.dialog);
       },
-    );
+    });
   }
 
   updateTableServiceStatus(service: Service): void {
@@ -531,30 +558,55 @@ export class SharesDashboardComponent implements AfterViewInit {
   getTableExtraActions(service: Service): AppTableHeaderAction[] {
     return [
       {
-        label: service.state === ServiceStatus.Running ? this.translate.instant('Turn Off Service') : this.translate.instant('Turn On Service'),
+        label: service.state === ServiceStatus.Running
+          ? this.translate.instant('Turn Off Service')
+          : this.translate.instant('Turn On Service'),
         onClick: () => {
           const rpc = service.state === ServiceStatus.Running ? 'service.stop' : 'service.start';
           this.updateTableServiceStatus({ ...service, state: ServiceStatus.Loading });
-          this.ws.call(rpc, [service.service]).pipe(untilDestroyed(this)).subscribe((hasChanged: boolean) => {
-            if (hasChanged) {
-              if (service.state === ServiceStatus.Running && rpc === 'service.stop') {
-                this.dialog.info(
-                  this.translate.instant('Service failed to stop'),
-                  this.translate.instant('The {service} service failed to stop.', { service: serviceNames.get(service.service) || service.service }),
+          this.ws.call(rpc, [service.service, { silent: false }])
+            .pipe(untilDestroyed(this))
+            .subscribe({
+              next: (hasChanged: boolean) => {
+                if (hasChanged) {
+                  if (service.state === ServiceStatus.Running && rpc === 'service.stop') {
+                    this.dialog.warn(
+                      this.translate.instant('Service failed to stop'),
+                      this.translate.instant(
+                        'The {service} service failed to stop.',
+                        { service: serviceNames.get(service.service) || service.service },
+                      ),
+                    );
+                  }
+                  service.state = ServiceStatus.Running;
+                } else {
+                  if (service.state === ServiceStatus.Stopped && rpc === 'service.start') {
+                    this.dialog.warn(
+                      this.translate.instant('Service failed to start'),
+                      this.translate.instant(
+                        'The {service} service failed to start.',
+                        { service: serviceNames.get(service.service) || service.service },
+                      ),
+                    );
+                  }
+                  service.state = ServiceStatus.Stopped;
+                }
+                this.updateTableServiceStatus(service);
+              },
+              error: (error) => {
+                let message = this.translate.instant(
+                  'Error starting service {serviceName}.',
+                  { serviceName: serviceNames.get(service.service) || service.service },
                 );
-              }
-              service.state = ServiceStatus.Running;
-            } else {
-              if (service.state === ServiceStatus.Stopped && rpc === 'service.start') {
-                this.dialog.info(
-                  this.translate.instant('Service failed to start'),
-                  this.translate.instant('The {service} service failed to start.', { service: serviceNames.get(service.service) || service.service }),
-                );
-              }
-              service.state = ServiceStatus.Stopped;
-            }
-            this.updateTableServiceStatus(service);
-          });
+                if (rpc === 'service.stop') {
+                  message = this.translate.instant(
+                    'Error stopping service {serviceName}.',
+                    { serviceName: serviceNames.get(service.service) || service.service },
+                  );
+                }
+                this.dialog.errorReport(message, error.reason, error.trace.formatted);
+              },
+            });
         },
       },
       {
@@ -581,5 +633,12 @@ export class SharesDashboardComponent implements AfterViewInit {
       default:
         return 'fn-theme-orange';
     }
+  }
+
+  lockedPathDialog(path: string): void {
+    this.dialog.errorReport(
+      helptextSharingSmb.action_edit_acl_dialog.title,
+      this.translate.instant('The path <i>{path}</i> is in a locked dataset.', { path }),
+    );
   }
 }

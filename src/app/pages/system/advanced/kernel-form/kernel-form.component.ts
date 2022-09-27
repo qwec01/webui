@@ -1,7 +1,7 @@
 import {
   Component, ChangeDetectionStrategy, ChangeDetectorRef,
 } from '@angular/core';
-import { FormBuilder } from '@ngneat/reactive-forms';
+import { FormBuilder } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { helptextSystemAdvanced } from 'app/helptext/system/advanced';
@@ -53,15 +53,18 @@ export class KernelFormComponent {
       debugkernel: values.debugkernel,
     };
     this.isFormLoading = true;
-    this.ws.call('system.advanced.update', [commonBody]).pipe(untilDestroyed(this)).subscribe(() => {
-      this.isFormLoading = false;
-      this.cdr.markForCheck();
-      this.slideInService.close();
-      this.store$.dispatch(advancedConfigUpdated());
-    }, (res) => {
-      this.isFormLoading = false;
-      new EntityUtils().handleWsError(this, res);
-      this.cdr.markForCheck();
+    this.ws.call('system.advanced.update', [commonBody]).pipe(untilDestroyed(this)).subscribe({
+      next: () => {
+        this.isFormLoading = false;
+        this.cdr.markForCheck();
+        this.slideInService.close();
+        this.store$.dispatch(advancedConfigUpdated());
+      },
+      error: (res) => {
+        this.isFormLoading = false;
+        new EntityUtils().handleWsError(this, res);
+        this.cdr.markForCheck();
+      },
     });
   }
 }

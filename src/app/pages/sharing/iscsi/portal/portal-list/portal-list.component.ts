@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
+import { lastValueFrom } from 'rxjs';
 import { Choices } from 'app/interfaces/choices.interface';
 import { EntityTableComponent } from 'app/modules/entity/entity-table/entity-table.component';
 import { EntityTableConfig } from 'app/modules/entity/entity-table/entity-table.interface';
@@ -11,9 +11,9 @@ import { IxSlideInService } from 'app/services/ix-slide-in.service';
 
 @UntilDestroy()
 @Component({
-  selector: 'app-iscsi-portal-list',
+  selector: 'ix-iscsi-portal-list',
   template: `
-    <entity-table [conf]="this" [title]="tableTitle"></entity-table>
+    <ix-entity-table [conf]="this" [title]="tableTitle"></ix-entity-table>
   `,
 })
 export class PortalListComponent implements EntityTableConfig {
@@ -57,7 +57,6 @@ export class PortalListComponent implements EntityTableConfig {
   ipChoices: Choices;
 
   constructor(
-    protected router: Router,
     protected iscsiService: IscsiService,
     protected translate: TranslateService,
     private slideInService: IxSlideInService,
@@ -92,7 +91,7 @@ export class PortalListComponent implements EntityTableConfig {
 
   prerequisite(): Promise<boolean> {
     return new Promise(async (resolve) => {
-      await this.iscsiService.getIpChoices().toPromise().then(
+      await lastValueFrom(this.iscsiService.getIpChoices()).then(
         (ips) => {
           this.ipChoices = ips;
           resolve(true);

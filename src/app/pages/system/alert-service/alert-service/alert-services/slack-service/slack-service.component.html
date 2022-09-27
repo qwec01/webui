@@ -1,0 +1,8 @@
+<ng-container [formGroup]="form">
+  <ix-input
+    formControlName="url"
+    [label]="'Webhook URL' | translate"
+    [required]="true"
+    [tooltip]="helptext.Slack_url_tooltip | translate"
+  ></ix-input>
+</ng-container>

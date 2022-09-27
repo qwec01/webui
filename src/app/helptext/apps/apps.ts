@@ -8,7 +8,6 @@ export default {
     action: T('Choose'),
     jobTitle: T('Configuring...'),
     success: T('Success'),
-    message: T('Using pool '),
     unsetPool: {
       label: T('Unset Pool'),
       confirm: {
@@ -83,15 +82,7 @@ export default {
   },
 
   launch: T('Launch Docker Image'),
-  configure: T('Configure'),
-  refresh: T('Refresh All'),
   catalogs: T('Catalogs'),
-  addCatalog: T('Add Catalog'),
-  pullImage: T('Pull Image'),
-  availablePlaceholder: T('Search Available Applications'),
-  installedPlaceholder: T('Search Installed Applications'),
-  catalogPlaceholder: T('Search Catalogs'),
-  dockerPlaceholder: T('Search Docker Images'),
 
   noPool: {
     title: T('No Pools Found'),
@@ -105,6 +96,10 @@ export default {
       title: T('Settings Requiring Re-Initialization'),
       formWarning: T('Changing settings below will result in Kubernetes cluster re-initialization deleting installed apps and their data.'),
       modalWarning: T('You have changed one of the settings that require Kubernetes cluster re-initialization. Please be aware that this will delete installed apps and their data.'),
+    },
+    validateHostPathWarning: {
+      title: T('Warning'),
+      modalWarning: T('Disabling validation of host path can result in a data loss.'),
     },
     cluster_cidr: {
       placeholder: T('Cluster CIDR'),
@@ -159,22 +154,10 @@ export default {
     },
 
     rollback_dialog: {
-      title: T('Roll Back'),
       version: {
-        placeholder: T('Version'),
         tooltip: T('Enter the version to roll back to.'),
       },
-      snapshot: {
-        placeholder: T('Roll back snapshots'),
-        tooltip: T('Roll back snapshots of ix_volumes'),
-      },
-      force: {
-        placeholder: T('Force'),
-        tooltip: T('Used for rollback of a chart release and snapshots of ix_volumes'),
-      },
-      action: T('Roll back'),
 
-      msg: T('Roll back '),
       job: T('Rolling back...'),
     },
   },
@@ -294,6 +277,24 @@ export default {
       action: T('Choose'),
     },
     pulling: T('Pulling...'),
+  },
+  thirdPartyRepoWarning: {
+    btnMsg: T('Continue'),
+    cancelMsg: T('Cancel'),
+    title: T('Warning'),
+    message: T(`iXsystems does not audit or otherwise validate the contents of third-party applications catalogs. \
+    It is incumbent on the user to verify that the new catalog is from a trusted source and that the third-party \
+    properly audits its chart contents. Failure to exercise due diligence may expose the user and their data to \
+    some or all of the following:<br/>\
+    <ul>
+      <li>Malicious software</li>
+      <li>Broken services on TrueNAS host</li>
+      <li>Service disruption on TrueNAS host</li>
+      <li>Broken filesystem permissions on Host or within application</li>
+      <li>Unexpected deletion of user data</li>
+      <li>Unsafe service configuration in application</li>
+      <li>Degradation of TrueNAS host performance and stability</li>
+    </ul>`),
   },
 
   catalogForm: {

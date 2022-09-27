@@ -1,5 +1,5 @@
 import {
-  Component, AfterViewInit, Input, OnDestroy, ElementRef,
+  Component, Input, ElementRef, OnChanges,
 } from '@angular/core';
 import { MediaObserver } from '@angular/flex-layout';
 import {
@@ -10,24 +10,27 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import { UUID } from 'angular2-uuid';
 import { Chart, ChartColor, ChartDataSets } from 'chart.js';
-import { Subject } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { Subject, Subscription } from 'rxjs';
+import {
+  filter, map, throttleTime,
+} from 'rxjs/operators';
 import { ThemeUtils } from 'app/core/classes/theme-utils/theme-utils';
 import { CoreEvent } from 'app/interfaces/events';
 import { MemoryStatsEventData } from 'app/interfaces/events/memory-stats-event.interface';
-import { Theme } from 'app/interfaces/theme.interface';
 import { WidgetComponent } from 'app/pages/dashboard/components/widget/widget.component';
 import { WidgetMemoryData } from 'app/pages/dashboard/interfaces/widget-data.interface';
-import { CoreService } from 'app/services/core-service/core.service';
 import { ThemeService } from 'app/services/theme/theme.service';
 
 @UntilDestroy()
 @Component({
-  selector: 'widget-memory',
+  selector: 'ix-widget-memory',
   templateUrl: './widget-memory.component.html',
-  styleUrls: ['./widget-memory.component.scss'],
+  styleUrls: [
+    '../widget/widget.component.scss',
+    './widget-memory.component.scss',
+  ],
 })
-export class WidgetMemoryComponent extends WidgetComponent implements AfterViewInit, OnDestroy {
+export class WidgetMemoryComponent extends WidgetComponent implements OnChanges {
   @Input() data: Subject<CoreEvent>;
   @Input() ecc = false;
   chart: Chart;// chart instance
@@ -35,12 +38,6 @@ export class WidgetMemoryComponent extends WidgetComponent implements AfterViewI
   get memData(): WidgetMemoryData { return this._memData; }
   set memData(value) {
     this._memData = value;
-    if (this.legendData && typeof this.legendIndex !== 'undefined') {
-      // C3 does not have a way to update tooltip when new data is loaded.
-      // So this is the workaround
-      this.legendData[0].value = this.memData.data[0][this.legendIndex + 1];
-      this.legendData[1].value = this.memData.data[1][this.legendIndex + 1];
-    }
   }
 
   isReady = false;
@@ -48,18 +45,14 @@ export class WidgetMemoryComponent extends WidgetComponent implements AfterViewI
   subtitle: string = this.translate.instant('% of all cores');
   configurable = false;
   chartId = UUID.UUID();
-  memTotal: number;
-  legendData: any;
   colorPattern: string[];
-  currentTheme: Theme;
 
-  legendColors: string[];
-  private legendIndex: number;
   labels: string[] = [this.translate.instant('Free'), this.translate.instant('ZFS Cache'), this.translate.instant('Services')];
 
   screenType = 'Desktop';
 
   private utils: ThemeUtils;
+  private dataSubscription: Subscription;
 
   constructor(
     public router: Router,
@@ -67,7 +60,6 @@ export class WidgetMemoryComponent extends WidgetComponent implements AfterViewI
     private sanitizer: DomSanitizer,
     public mediaObserver: MediaObserver,
     private el: ElementRef<HTMLElement>,
-    private core: CoreService,
     public themeService: ThemeService,
   ) {
     super(translate);
@@ -80,25 +72,25 @@ export class WidgetMemoryComponent extends WidgetComponent implements AfterViewI
     });
   }
 
-  ngOnDestroy(): void {
-    this.core.unregister({ observerClass: this });
-  }
+  ngOnChanges(): void {
+    if (!this.data) {
+      return;
+    }
 
-  ngAfterViewInit(): void {
-    this.core.register({ observerClass: this })
-      .pipe(
-        switchMap(() => this.data),
-        untilDestroyed(this),
-      ).subscribe((evt: CoreEvent) => {
-        if (evt.name === 'MemoryStats') {
-          if (!evt.data.used) {
-            return;
-          }
+    this.dataSubscription?.unsubscribe();
+    this.dataSubscription = this.data.pipe(
+      filter((evt) => evt.name === 'MemoryStats'),
+      map((evt) => evt.data as MemoryStatsEventData),
+      throttleTime(500),
+      untilDestroyed(this),
+    ).subscribe((data: MemoryStatsEventData) => {
+      if (!data.used) {
+        return;
+      }
 
-          this.setMemData(evt.data);
-          this.renderChart();
-        }
-      });
+      this.setMemData(data);
+      this.renderChart();
+    });
   }
 
   bytesToGigabytes(value: number): number {
@@ -142,8 +134,7 @@ export class WidgetMemoryComponent extends WidgetComponent implements AfterViewI
       data: this.parseMemData(data),
     };
     this.memData = config;
-    this.currentTheme = this.themeService.currentTheme();
-    this.colorPattern = this.processThemeColors(this.currentTheme);
+    this.colorPattern = this.themeService.getColorPattern();
     this.isReady = true;
     this.renderChart();
   }
@@ -216,7 +207,7 @@ export class WidgetMemoryComponent extends WidgetComponent implements AfterViewI
 
     const ds: ChartDataSets = {
       label: this.labels as any,
-      data: data.map((x) => x[1] as any),
+      data: data.map((x) => Number(x[1])),
       backgroundColor: [],
       borderColor: [],
       borderWidth: 1,
@@ -224,26 +215,14 @@ export class WidgetMemoryComponent extends WidgetComponent implements AfterViewI
 
     // Create the data...
     data.forEach((item, index) => {
-      const bgColor = this.colorPattern[index];
-      const bgColorType = this.utils.getValueType(bgColor);
+      const bgRgb = this.themeService.getRgbBackgroundColorByIndex(index);
 
-      const bgRgb = bgColorType === 'hex' ? this.utils.hexToRgb(bgColor).rgb : this.utils.rgbToArray(bgColor);
-
-      (ds.backgroundColor as ChartColor[]).push(this.rgbToString(bgRgb, 0.85));
-      (ds.borderColor as ChartColor[]).push(this.rgbToString(bgRgb));
+      (ds.backgroundColor as ChartColor[]).push(this.utils.rgbToString(bgRgb, 0.85));
+      (ds.borderColor as ChartColor[]).push(this.utils.rgbToString(bgRgb));
     });
 
     datasets.push(ds);
 
     return datasets;
-  }
-
-  private processThemeColors(theme: Theme): string[] {
-    return theme.accentColors.map((color) => theme[color]);
-  }
-
-  rgbToString(rgb: number[], alpha?: number): string {
-    const a = alpha ? alpha.toString() : '1';
-    return 'rgba(' + rgb.join(',') + ',' + a + ')';
   }
 }

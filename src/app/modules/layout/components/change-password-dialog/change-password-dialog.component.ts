@@ -1,15 +1,15 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { FormBuilder } from '@ngneat/reactive-forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, switchMap, tap } from 'rxjs/operators';
 import helptext from 'app/helptext/topbar';
-import { AppLoaderService } from 'app/modules/app-loader/app-loader.service';
 import { matchOtherValidator } from 'app/modules/entity/entity-form/validators/password-validation/password-validation';
 import { EntityUtils } from 'app/modules/entity/utils';
-import IxValidatorsService from 'app/modules/ix-forms/services/ix-validators.service';
+import { IxValidatorsService } from 'app/modules/ix-forms/services/ix-validators.service';
+import { AppLoaderService } from 'app/modules/loader/app-loader.service';
+import { SnackbarService } from 'app/modules/snackbar/services/snackbar.service';
 import { DialogService, WebSocketService } from 'app/services';
 
 @UntilDestroy()
@@ -44,6 +44,7 @@ export class ChangePasswordDialogComponent {
     private ws: WebSocketService,
     private loader: AppLoaderService,
     private validatorsService: IxValidatorsService,
+    private snackbar: SnackbarService,
   ) {}
 
   onSubmit(): void {
@@ -51,31 +52,31 @@ export class ChangePasswordDialogComponent {
     const { currentPassword, password } = this.form.value;
     this.ws.call('auth.check_user', ['root', currentPassword]).pipe(
       tap((passwordVerified) => {
-        if (!passwordVerified) {
-          this.dialogService.info(
-            helptext.changePasswordDialog.pw_invalid_title,
-            helptext.changePasswordDialog.pw_invalid_title,
-            '300px',
-            'warning',
-          );
-          this.loader.close();
+        if (passwordVerified) {
+          return;
         }
+
+        this.dialogService.warn(
+          helptext.changePasswordDialog.pw_invalid_title,
+          helptext.changePasswordDialog.pw_invalid_title,
+        );
+        this.loader.close();
       }),
       filter(Boolean),
       switchMap(() => this.ws.call('user.update', [1, { password }])),
       untilDestroyed(this),
-    ).subscribe(() => {
-      this.dialogService.info(
-        this.translate.instant('Success'),
-        helptext.changePasswordDialog.pw_updated,
-        '300px',
-        'info',
-      );
-      this.loader.close();
-      this.dialogRef.close();
-    }, (error) => {
-      this.loader.close();
-      (new EntityUtils()).errorReport(error, this.dialogService);
+    ).subscribe({
+      next: () => {
+        this.snackbar.success(
+          this.translate.instant(helptext.changePasswordDialog.pw_updated),
+        );
+        this.loader.close();
+        this.dialogRef.close();
+      },
+      error: (error) => {
+        this.loader.close();
+        (new EntityUtils()).errorReport(error, this.dialogService);
+      },
     });
   }
 }

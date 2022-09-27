@@ -1,26 +1,24 @@
 import {
   Component, Input, OnInit, OnChanges,
 } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { EntityTableComponent } from 'app/modules/entity/entity-table/entity-table.component';
 import { EntityTableAction } from 'app/modules/entity/entity-table/entity-table.interface';
 
 @Component({
-  selector: 'app-entity-table-actions',
+  selector: 'ix-entity-table-actions',
   styleUrls: ['./entity-table-actions.component.scss'],
   templateUrl: './entity-table-actions.component.html',
 })
 export class EntityTableActionsComponent implements OnInit, OnChanges {
   @Input() entity: EntityTableComponent;
-  @Input() row: any;
-  @Input() icon_name = 'more_vert';
+  @Input() row: Record<string, unknown>;
+  @Input() iconName = 'more_vert';
   @Input() action: string;
   @Input() groups = false;
 
   actions: EntityTableAction[];
-  showMenu = true;
 
-  key_prop: string;
+  keyProp: string;
 
   get isSingleAction(): boolean {
     if (!this.actions) return;
@@ -36,13 +34,11 @@ export class EntityTableActionsComponent implements OnInit, OnChanges {
     return this.entity.conf.inlineActions || false;
   }
 
-  constructor(protected translate: TranslateService) { }
-
   ngOnInit(): void {
     if (this.entity.conf.config && this.entity.conf.config.deleteMsg) {
-      this.key_prop = this.entity.conf.config.deleteMsg.key_props[0];
+      this.keyProp = this.entity.conf.config.deleteMsg.key_props[0];
     } else if (this.entity.filterColumns) {
-      this.key_prop = this.entity.filterColumns[0].prop;
+      this.keyProp = this.entity.filterColumns[0].prop;
     }
     this.getActions();
   }

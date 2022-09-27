@@ -41,7 +41,6 @@ export class ChassisView {
   container: Container;
   events: Subject<CoreEvent>;
   model: string;
-  driveTray: DriveTray;
   driveTraysOffsetY = 0; // if drives don't start at top.
   driveTraysOffsetX = 0; // if drives don't start at top.
   driveTrays: PIXI.Container;
@@ -95,15 +94,6 @@ export class ChassisView {
     // defaults
     this.rows = 6;
     this.columns = 4;
-  }
-
-  requiredAssets(): { alias: string; path: string }[] {
-    // Return a list of assets for the loader to fetch
-    const assets: { alias: string; path: string }[] = [];
-    assets.push({ alias: this.model + '_chassis', path: this.chassisPath });
-    assets.push({ alias: this.model + '_drivetray_bg', path: this.driveTrayBackgroundPath });
-    assets.push({ alias: this.model + '_drivetray_handle', path: this.driveTrayHandlePath });
-    return assets;
   }
 
   destroy(): void {
@@ -295,24 +285,10 @@ export class ChassisView {
     return { x: nextPositionX, y: nextPositionY };
   }
 
-  generatePerspective(): void {
-    const dts = this.driveTrays;
-    const x = 0;
-    const y = 0;
-    const quad = [
-      { x, y }, // top left
-      { x: x + dts.width, y }, // top right
-      { x: x + dts.width - 25, y: y + dts.height }, // bottom right
-      { x: x + 25, y: y + dts.height }, // bottom left
-    ];
-
-    (dts as any).proj.mapSprite(dts, quad);
-  }
-
   colorDriveTray(slot: number, color: string): void {
     const driveIndex = slot - this.slotRange.start;
     if (driveIndex < 0 || driveIndex >= this.totalDriveTrays) {
-      console.warn('IGNORING DRIVE AT INDEX ' + driveIndex + ' SLOT ' + slot + ' IS OUT OF RANGE');
+      console.warn(`IGNORING DRIVE AT INDEX ${driveIndex} SLOT ${slot} IS OUT OF RANGE`);
       return;
     }
     const dt = this.driveTrayObjects[driveIndex];

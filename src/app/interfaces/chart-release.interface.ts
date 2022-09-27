@@ -1,5 +1,7 @@
 import { ChartReleaseStatus } from 'app/enums/chart-release-status.enum';
+import { ChartSchemaType } from 'app/enums/chart-schema-type.enum';
 import { ChartMetadata } from 'app/interfaces/catalog.interface';
+import { HierarchicalObjectMap } from 'app/interfaces/hierarhical-object-map.interface';
 import { QueryParams } from 'app/interfaces/query-api.interface';
 
 export interface UsedPort {
@@ -38,19 +40,17 @@ export interface ChartResources {
   statefulsets: unknown[];
 }
 
-export interface ChartReleaseCreate {
-  values: { [key: string]: string };
-  catalog: string;
-  item: string;
+export type ChartFormValue = string | number | boolean | Record<string, unknown> | ChartFormValue[];
+
+export interface ChartFormValues extends HierarchicalObjectMap<ChartFormValue> {
   release_name: string;
-  train: string;
-  version: string;
+  version?: string;
 }
 
 export interface ChartRelease {
   name: string;
   info: ChartInfo;
-  config: { [key: string]: any };
+  config: { [key: string]: ChartFormValue };
   hooks: unknown[];
   version: number;
   namespace: string;
@@ -67,13 +67,44 @@ export interface ChartRelease {
   human_version: string;
   human_latest_version: string;
   container_images_update_available: boolean;
-  portals: { [name: string]: string[] };
+  portals: { [portal: string]: string[] };
   chart_schema: ChartSchema;
-  history: { [key: string]: string };
+  history: { [key: string]: ChartReleaseVersion };
   resources?: ChartResources;
 
   // TODO: Frontend field, move to another interface.
   selected?: boolean;
+}
+
+export interface ChartReleaseVersion {
+  catalog: string;
+  catalog_train: string;
+  chart_metadata: ChartMetadata;
+  config: { [key: string]: ChartFormValue };
+  human_version: string;
+  id: string;
+  info: ChartInfo;
+  name: string;
+  namespace: string;
+  version: number;
+}
+
+export interface ChartReleaseCreate {
+  values: { [key: string]: ChartFormValue };
+  catalog: string;
+  item: string;
+  release_name: string;
+  train: string;
+  version: string;
+}
+
+export interface ChartReleaseUpdate {
+  values: { [key: string]: ChartFormValue };
+}
+
+export interface ChartReleaseUpgrade {
+  item_version?: string;
+  values?: { [key: string]: ChartFormValue };
 }
 
 export type ChartReleaseQueryParams = QueryParams<ChartRelease, {
@@ -95,10 +126,10 @@ export interface ChartSchemaEnum {
 }
 
 export interface ChartSchemaNodeConf {
-  type: string;
+  type: ChartSchemaType;
   attrs?: ChartSchemaNode[];
   items?: ChartSchemaNode[];
-  default?: any;
+  default?: unknown;
   enum?: ChartSchemaEnum[];
   required?: boolean;
   value?: string;
@@ -110,8 +141,9 @@ export interface ChartSchemaNodeConf {
   private?: boolean;
   hidden?: boolean;
   show_if?: string[][];
-  show_subquestions_if?: any;
+  show_subquestions_if?: ChartFormValue;
   editable?: boolean;
+  immutable?: boolean;
   subquestions?: ChartSchemaNode[];
 }
 
@@ -140,7 +172,7 @@ export interface ChartSchema {
     groups: ChartSchemaGroup[];
     questions: ChartSchemaNode[];
     portals: {
-      web_portal: {
+      [portal: string]: {
         host: string[];
         ports: string[];
         protocols: string[];
@@ -148,5 +180,5 @@ export interface ChartSchema {
     };
   };
   supported: boolean;
-  values: any;
+  values: { [key: string]: ChartFormValue };
 }

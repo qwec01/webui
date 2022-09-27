@@ -1,7 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
-import { WebSocketService } from 'app/services/ws.service';
 
 export enum EmptyType {
   Loading = 'duration',
@@ -23,22 +20,13 @@ export interface EmptyConfig {
   };
 }
 @Component({
-  selector: 'entity-empty',
+  selector: 'ix-entity-empty',
   templateUrl: './entity-empty.component.html',
   styleUrls: ['./entity-empty.component.scss'],
 })
 
 export class EntityEmptyComponent {
   @Input() conf: EmptyConfig;
-
-  constructor(
-    protected ws: WebSocketService,
-    protected router: Router,
-    protected aroute: ActivatedRoute,
-    public translate: TranslateService,
-  ) {
-
-  }
 
   doAction(): void {
     if (this.conf.button.action) {

@@ -1,9 +1,13 @@
+@import '@material-design-icons/font';
+@import '@mdi/font/scss/materialdesignicons';
+
 // Parts
+@import 'other/root-variables';
+@import 'fonts/index';
 @import 'components/charts';
 @import 'components/mat-card';
 
 // Older scss files
-@import 'other/fonts';
 @import 'other/helpers';
 @import 'other/tn-styles';
 @import 'other/fn-styles';

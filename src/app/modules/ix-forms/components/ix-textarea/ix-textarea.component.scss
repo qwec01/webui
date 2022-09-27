@@ -13,10 +13,6 @@
   padding: 8px 0;
 }
 
-.tooltip {
-  margin: 0 0 0 8px;
-}
-
 .input-container {
   background: var(--bg1);
   border: solid 1.5px var(--lines);
@@ -39,17 +35,12 @@
       opacity: 1;
     }
   }
-}
 
-.label-container {
-  align-items: center;
-  display: flex;
-  margin-bottom: 1px;
-  margin-left: 1px;
-  min-height: 24px;
-}
+  &.readonly {
+    background: var(--bg2);
 
-.label {
-  display: inline-flex;
-  font-size: x-small;
+    input {
+      cursor: copy;
+    }
+  }
 }

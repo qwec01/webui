@@ -63,7 +63,7 @@ describe('CoreService', () => {
     spectator.service.register(payload1);
 
     for (let i = 0; i < 3; i++) {
-      const payload: Registration = { observerClass: mockObserver2, eventName: 'TestEvent' + i, sender: {} };
+      const payload: Registration = { observerClass: mockObserver2, eventName: `TestEvent${i}`, sender: {} };
       spectator.service.register(payload);
     }
 
@@ -139,7 +139,7 @@ describe('CoreService', () => {
       .subscribe((evt: CoreEvent) => {
         totalEvents++;
         expect(evt.sender).toMatchObject(mockSender2);
-        expect(evt.sender.name).toMatch('Sender2');
+        expect((evt.sender as MockObject).name).toMatch('Sender2');
 
         if (totalEvents === 2) spectator.service.unregister({ observerClass: mockObserver });
       });

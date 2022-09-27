@@ -10,7 +10,7 @@ import { ApiDirectory } from 'app/interfaces/api-directory.interface';
 import { EmptyConfig, EmptyType } from 'app/modules/entity/entity-empty/entity-empty.component';
 import { TableService } from 'app/modules/entity/table/table.service';
 
-export interface AppTableAction<Row = any> {
+export interface AppTableAction<Row = unknown> {
   name: string;
   icon: string;
   matTooltip?: string;
@@ -32,7 +32,7 @@ export interface AppTableColumn {
   prop2?: string;
   checkbox?: boolean;
   slideToggle?: boolean;
-  onChange?(data: any): void;
+  onChange?(data: unknown): void;
   width?: string;
   state?: any;
   button?: boolean;
@@ -56,12 +56,12 @@ export interface AppTableConfirmDeleteDialog {
   hideCheckbox?: boolean;
 }
 
-export interface AppTableConfig<P = any> {
+export interface AppTableConfig<P = unknown> {
   title?: string;
   titleHref?: string;
   columns: AppTableColumn[];
   queryCall: keyof ApiDirectory;
-  queryCallOption?: any;
+  queryCallOption?: unknown;
   deleteCall?: keyof ApiDirectory;
   deleteCallIsJob?: boolean;
   complex?: boolean;
@@ -71,12 +71,15 @@ export interface AppTableConfig<P = any> {
     title: string;
     key_props: string[];
     id_prop?: string;
-    doubleConfirm?(item: any): Observable<boolean>;
+    doubleConfirm?(item: unknown): Observable<boolean>;
   }; //
   tableComponent?: TableComponent;
   emptyEntityLarge?: boolean;
   hideEntityEmpty?: boolean;
   alwaysHideViewMore?: boolean;
+  /**
+   * @deprecated Use arrow functions
+   */
   parent: P;
   tableActions?: AppTableHeaderAction[];
   tableExtraActions?: AppTableHeaderAction[];
@@ -87,33 +90,33 @@ export interface AppTableConfig<P = any> {
   afterDelete?(): void;
   edit?(any: unknown): void; // edit row
   delete?(item: unknown, table: TableComponent): void; // customize delete row method
-  dataSourceHelper?(any: any): any; // customise handle/modify dataSource
+  dataSourceHelper?(any: unknown[]): unknown[]; // customise handle/modify dataSource
   getInOutInfo?(any: unknown): void; // get in out info if has state column
   getActions?: () => AppTableAction[]; // actions for each row
   isActionVisible?(actionId: string, entity: unknown): boolean; // determine if action is visible
-  getDeleteCallParams?(row: any, id: any): any; // get delete Params
+  getDeleteCallParams?(row: unknown, id: string | number): unknown; // get delete Params
   onButtonClick?(row: unknown): void;
 
   expandable?: boolean; // field introduced by ExpandableTable, "fake" field
-  afterGetDataExpandable?(data: any): any; // field introduced by ExpandableTable, "fake" field
+  afterGetDataExpandable?<T>(data: T[]): T[]; // field introduced by ExpandableTable, "fake" field
 }
 
 @UntilDestroy()
 @Component({
-  selector: 'app-table',
+  selector: 'ix-conf-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
   providers: [TableService],
 })
-export class TableComponent implements OnInit, AfterViewInit, AfterViewChecked {
+export class TableComponent<Row = Record<string, any>> implements OnInit, AfterViewInit, AfterViewChecked {
   @ViewChild('table') table: ElementRef<HTMLElement>;
   LinkState = LinkState;
 
   _tableConf: AppTableConfig;
   title = '';
   titleHref: string;
-  dataSource: any[];
-  displayedDataSource: any[];
+  dataSource: Row[];
+  displayedDataSource: Row[];
   displayedColumns: string[];
   hideHeader = false;
   actions: AppTableAction[];
@@ -124,7 +127,7 @@ export class TableComponent implements OnInit, AfterViewInit, AfterViewChecked {
   entityEmptyLarge = false;
   enableViewMore = false;
   loaderOpen = false;
-  afterGetDataHook$ = new Subject();
+  afterGetDataHook$ = new Subject<void>();
 
   idProp = 'id';
 
@@ -155,25 +158,27 @@ export class TableComponent implements OnInit, AfterViewInit, AfterViewChecked {
   ) {}
 
   calculateLimitRows(): void {
-    if (this.table) {
-      this.tableHeight = this.table.nativeElement.offsetHeight;
-      if (this.enableViewMore) {
-        return;
-      }
-      this.limitRows = Math.floor(
-        (this.tableHeight - (this._tableConf.hideHeader ? 0 : this.TABLE_HEADER_HEIGHT)) / this.TABLE_ROW_HEIGHT,
-      );
-      this.limitRows = Math.max(this.limitRows, this.TABLE_MIN_ROWS);
+    if (!this.table) {
+      return;
+    }
 
-      if (this.dataSource) {
-        if (this.tableConf.alwaysHideViewMore) {
-          this.limitRows = this.dataSource.length;
-        }
-        this.displayedDataSource = this.dataSource.slice(0, this.limitRows);
-        this.showViewMore = this.dataSource.length !== this.displayedDataSource.length;
-        if (this.showCollapse) {
-          this.showCollapse = this.dataSource.length !== this.displayedDataSource.length;
-        }
+    this.tableHeight = this.table.nativeElement.offsetHeight;
+    if (this.enableViewMore) {
+      return;
+    }
+    this.limitRows = Math.floor(
+      (this.tableHeight - (this._tableConf.hideHeader ? 0 : this.TABLE_HEADER_HEIGHT)) / this.TABLE_ROW_HEIGHT,
+    );
+    this.limitRows = Math.max(this.limitRows, this.TABLE_MIN_ROWS);
+
+    if (this.dataSource) {
+      if (this.tableConf.alwaysHideViewMore) {
+        this.limitRows = this.dataSource.length;
+      }
+      this.displayedDataSource = this.dataSource.slice(0, this.limitRows);
+      this.showViewMore = this.dataSource.length !== this.displayedDataSource.length;
+      if (this.showCollapse) {
+        this.showCollapse = this.dataSource.length !== this.displayedDataSource.length;
       }
     }
   }
@@ -228,7 +233,7 @@ export class TableComponent implements OnInit, AfterViewInit, AfterViewChecked {
     this.displayedColumns = this._tableConf.columns
       .map((column) => {
         if (this.dataSource && column?.hiddenIfEmpty && !column?.hidden) {
-          const hasSomeData = this.dataSource.some((row) => row[column.prop]?.toString().trim());
+          const hasSomeData = this.dataSource.some((row) => (row as any)[column.prop]?.toString().trim());
           column.hidden = !hasSomeData;
         }
         return column;
@@ -242,19 +247,19 @@ export class TableComponent implements OnInit, AfterViewInit, AfterViewChecked {
     }
   }
 
-  editRow(row: any): void {
+  editRow(row: Row): void {
     if (this._tableConf.edit) {
       this._tableConf.edit(row);
     }
   }
 
-  onButtonClick(row: any): void {
+  onButtonClick(row: Row): void {
     if (this._tableConf.onButtonClick) {
       this._tableConf.onButtonClick(row);
     }
   }
 
-  deleteRow(row: any): void {
+  deleteRow(row: Row): void {
     if (this._tableConf.delete) {
       this._tableConf.delete(row, this);
     } else {
@@ -295,7 +300,7 @@ export class TableComponent implements OnInit, AfterViewInit, AfterViewChecked {
     this.showCollapse = false;
   }
 
-  getButtonClass(row: any): string {
+  getButtonClass(row: { warnings: unknown[]; state: JobState }): string {
     // Bring warnings to user's attention even if state is finished or successful.
     if (row.warnings && row.warnings.length > 0) {
       return 'fn-theme-orange';

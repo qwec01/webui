@@ -1,48 +1,51 @@
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import {
-  Component, ElementRef, OnInit, OnDestroy, AfterViewInit, ViewChild, Type,
+  Component, ElementRef, OnInit, OnDestroy, AfterViewInit, ViewChild, TemplateRef,
 } from '@angular/core';
 import {
   Router, ActivatedRoute,
 } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
-import { Subject, BehaviorSubject, forkJoin } from 'rxjs';
+import {
+  addSeconds, differenceInDays, differenceInSeconds, format,
+} from 'date-fns';
+import { forkJoin } from 'rxjs';
 import { ReportTab } from 'app/enums/report-tab.enum';
-import { CoreEvent } from 'app/interfaces/events';
 import { Option } from 'app/interfaces/option.interface';
 import { Disk } from 'app/interfaces/storage.interface';
-import { FieldConfig } from 'app/modules/entity/entity-form/models/field-config.interface';
-import { FieldSet } from 'app/modules/entity/entity-form/models/fieldset.interface';
-import { ToolbarConfig } from 'app/modules/entity/entity-toolbar/models/control-config.interface';
+import { Timeout } from 'app/interfaces/timeout.interface';
 import {
-  SystemGeneralService,
   WebSocketService,
 } from 'app/services';
-import { CoreService } from 'app/services/core-service/core.service';
 import { IxSlideInService } from 'app/services/ix-slide-in.service';
-import { ModalService } from 'app/services/modal.service';
+import { LayoutService } from 'app/services/layout.service';
 import { Report } from './components/report/report.component';
 import { ReportsConfigFormComponent } from './components/reports-config-form/reports-config-form.component';
-import { ReportsGlobalControlsComponent } from './components/reports-global-controls/reports-global-controls.component';
 
-interface Tab {
+export interface Tab {
   label: string;
   value: ReportTab;
 }
 
 @UntilDestroy()
 @Component({
-  selector: 'reportsdashboard',
+  selector: 'ix-reports-dashboard',
   styleUrls: ['./reports-dashboard.scss'],
   templateUrl: './reports-dashboard.component.html',
-  providers: [SystemGeneralService],
 })
 export class ReportsDashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(CdkVirtualScrollViewport, { static: false }) viewport: CdkVirtualScrollViewport;
   @ViewChild('container', { static: true }) container: ElementRef;
+  @ViewChild('pageHeader') pageHeader: TemplateRef<unknown>;
+
   scrollContainer: HTMLElement;
   scrolledIndex = 0;
+  nasDateTime: Date;
+  timeDiffInSeconds: number;
+  timeDiffInDays: number;
+  timeInterval: Timeout;
+  showTimeDiffWarning = false;
 
   diskReports: Report[];
   otherReports: Report[];
@@ -51,40 +54,51 @@ export class ReportsDashboardComponent implements OnInit, OnDestroy, AfterViewIn
   activeTab = { label: this.translate.instant('CPU'), value: ReportTab.Cpu } as Tab;
   activeTabVerified = false;
   allTabs: Tab[] = [];
-  loadingReports = false;
 
-  displayList: number[] = [];
   visibleReports: number[] = [];
 
-  totalVisibleReports = 4;
-  viewportEnd = false;
-  viewportOffset = new BehaviorSubject(null);
-
-  // Report Builder Options (entity-form-embedded)
-  target: Subject<CoreEvent> = new Subject();
-  values: any[] = [];
-  toolbarConfig: ToolbarConfig;
-  protected isEntity = true;
   diskDevices: Option[] = [];
   diskMetrics: Option[] = [];
-  saveSubmitText = this.translate.instant('Generate Reports');
-  actionButtonsAlign = 'left';
-  fieldConfig: FieldConfig[] = [];
-  fieldSets: FieldSet[];
-  diskReportConfigReady = false;
-  actionsConfig: { actionType: Type<ReportsGlobalControlsComponent>; actionConfig: ReportsDashboardComponent };
+  selectedDisks: string[] = [];
 
   constructor(
-    public modalService: ModalService,
     private router: Router,
-    private core: CoreService,
     private route: ActivatedRoute,
     protected ws: WebSocketService,
     protected translate: TranslateService,
     private slideIn: IxSlideInService,
+    private layoutService: LayoutService,
   ) {}
 
+  get timeDiffWarning(): string {
+    if (!this.nasDateTime) {
+      return '';
+    }
+    const nasTimeFormatted = format(this.nasDateTime, 'MMM dd, HH:mm:ss, OOOO');
+    return this.translate.instant('Your NAS time {datetime} does not match your computer time.', { datetime: nasTimeFormatted });
+  }
+
   ngOnInit(): void {
+    this.ws.call('system.info').pipe(untilDestroyed(this)).subscribe(
+      (sysInfo) => {
+        const now = Date.now();
+        const datetime = sysInfo.datetime.$date;
+        this.nasDateTime = new Date(datetime);
+        this.timeDiffInSeconds = differenceInSeconds(datetime, now);
+        this.timeDiffInDays = differenceInDays(datetime, now);
+        if (this.timeDiffInSeconds > 300 || this.timeDiffInDays > 0) {
+          this.showTimeDiffWarning = true;
+        }
+
+        if (this.timeInterval) {
+          clearInterval(this.timeInterval);
+        }
+
+        this.timeInterval = setInterval(() => {
+          this.nasDateTime = addSeconds(this.nasDateTime, 1);
+        }, 1000);
+      },
+    );
     this.scrollContainer = document.querySelector('.rightside-content-hold ');
     this.scrollContainer.style.overflow = 'hidden';
 
@@ -115,25 +129,15 @@ export class ReportsDashboardComponent implements OnInit, OnDestroy, AfterViewIn
     });
   }
 
+  ngAfterViewInit(): void {
+    this.layoutService.pageHeaderUpdater$.next(this.pageHeader);
+  }
+
   ngOnDestroy(): void {
     this.scrollContainer.style.overflow = 'auto';
-    this.core.unregister({ observerClass: this });
-  }
-
-  ngAfterViewInit(): void {
-    this.setupSubscriptions();
-
-    this.actionsConfig = { actionType: ReportsGlobalControlsComponent, actionConfig: this };
-    this.core.emit({ name: 'GlobalActions', data: this.actionsConfig, sender: this });
-  }
-
-  getVisibility(key: number): boolean {
-    const test = this.visibleReports.indexOf(key);
-    return test !== -1;
-  }
-
-  getBatch(): number[] {
-    return this.visibleReports;
+    if (this.timeInterval) {
+      clearInterval(this.timeInterval);
+    }
   }
 
   nextBatch(evt: number): void {
@@ -167,28 +171,11 @@ export class ReportsDashboardComponent implements OnInit, OnDestroy, AfterViewIn
     // the old fashioned way
     window.history.replaceState({}, '', '/reportsdashboard/' + tab.value);
 
-    const pseudoRouteEvent = [
-      {
-        url: '/reportsdashboard/' + tab.value,
-        title: 'Reporting',
-        breadcrumb: 'Reporting',
-        disabled: true,
-      },
-      {
-        url: '',
-        title: tab.label,
-        breadcrumb: tab.label,
-        disabled: true,
-      },
-    ];
-
-    this.core.emit({ name: 'PseudoRouteChange', data: pseudoRouteEvent });
-
     this.activateTab(tab);
 
     if (tab.value === ReportTab.Disk) {
-      const selectedDisks = this.route.snapshot.queryParams.disks;
-      this.diskReportBuilderSetup(selectedDisks);
+      this.selectedDisks = this.route.snapshot.queryParams.disks;
+      this.buildDiskMetrics();
     }
   }
 
@@ -276,83 +263,7 @@ export class ReportsDashboardComponent implements OnInit, OnDestroy, AfterViewIn
     return result;
   }
 
-  // Disk Report Filtering
-
-  diskReportBuilderSetup(selectedDisks: string[]): void {
-    this.generateValues();
-
-    // Entity-Toolbar Config
-    this.toolbarConfig = {
-      target: this.target,
-      controls: [
-        {
-          // type: 'multimenu',
-          type: 'multiselect',
-          name: 'devices',
-          label: this.translate.instant('Devices'),
-          placeholder: this.translate.instant('Devices'),
-          disabled: false,
-          multiple: true,
-          options: this.diskDevices, // eg. [{label:'ada0',value:'ada0'},{label:'ada1', value:'ada1'}],
-          customTriggerValue: this.translate.instant('Select Disks'),
-          value: this.diskDevices?.length && selectedDisks
-            ? this.diskDevices.filter((device) => selectedDisks.includes(device.value as string))
-            : null,
-        },
-        {
-          type: 'multiselect',
-          name: 'metrics',
-          label: this.translate.instant('Metrics'),
-          placeholder: this.translate.instant('Metrics'),
-          customTriggerValue: this.translate.instant('Select Reports'),
-          disabled: false,
-          multiple: true,
-          options: this.diskMetrics ? this.diskMetrics : [this.translate.instant('Not Available')], // eg. [{label:'temperature',value:'temperature'},{label:'operations', value:'disk_ops'}],
-          value: selectedDisks ? this.diskMetrics : undefined,
-        },
-      ],
-    };
-
-    // Entity-Form Config
-    this.fieldSets = [
-      {
-        name: 'Report Options',
-        class: 'preferences',
-        label: false,
-        width: '600px',
-        config: [
-          {
-            type: 'select',
-            name: 'devices',
-            width: 'calc(50% - 16px)',
-            placeholder: this.translate.instant('Choose a Device'),
-            options: this.diskDevices, // eg. [{label:'ada0',value:'ada0'},{label:'ada1', value:'ada1'}],
-            required: true,
-            multiple: true,
-            tooltip: this.translate.instant('Choose a device for your report.'),
-            class: 'inline',
-          },
-          {
-            type: 'select',
-            name: 'metrics',
-            width: 'calc(50% - 16px)',
-            placeholder: this.translate.instant('Choose a metric'),
-
-            // eg. [{label:'temperature',value:'temperature'},{label:'operations', value:'disk_ops'}],
-            options: this.diskMetrics ? this.diskMetrics : [{ label: 'None available', value: 'negative' }],
-            required: true,
-            multiple: true,
-            tooltip: this.translate.instant('Choose a metric to display.'),
-            class: 'inline',
-          },
-        ],
-      },
-    ];
-
-    this.generateFieldConfig();
-  }
-
-  generateValues(): void {
+  buildDiskMetrics(): void {
     const metrics: Option[] = [];
 
     this.diskReports.forEach((item) => {
@@ -366,45 +277,9 @@ export class ReportsDashboardComponent implements OnInit, OnDestroy, AfterViewIn
     this.diskMetrics = metrics;
   }
 
-  generateFieldConfig(): void {
-    this.fieldSets.forEach((fieldSet) => {
-      fieldSet.config.forEach((config) => {
-        this.fieldConfig.push(config);
-      });
-    });
-    this.diskReportConfigReady = true;
-  }
-
-  setupSubscriptions(): void {
-    this.target.pipe(untilDestroyed(this)).subscribe((evt: CoreEvent) => {
-      switch (evt.name) {
-        case 'FormSubmitted':
-          this.buildDiskReport(evt.data.devices, evt.data.metrics);
-          break;
-        case 'ToolbarChanged':
-          if (evt.data.devices && evt.data.metrics) {
-            this.buildDiskReport(evt.data.devices, evt.data.metrics);
-          }
-          break;
-      }
-    });
-
-    this.target.next({ name: 'Refresh' });
-  }
-
-  buildDiskReport(devices: string | any[], metrics: string | any[]): void {
-    // Convert strings to arrays
-    if (typeof devices === 'string') {
-      devices = [devices];
-    } else {
-      devices = devices.map((device) => device.value);
-    }
-
-    if (typeof metrics === 'string') {
-      metrics = [metrics];
-    } else {
-      metrics = metrics.map((metric) => metric.value);
-    }
+  buildDiskReport(event: { devices: Option[]; metrics: Option[] }): void {
+    const metrics = event.metrics.map((metric) => metric.value);
+    const devices = event.devices.map((device) => device.value);
 
     const visible: number[] = [];
     this.activeReports.forEach((item, index) => {

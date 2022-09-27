@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import * as _ from 'lodash';
 import { helptextSharingIscsi } from 'app/helptext/sharing';
 import { IscsiGlobalSession } from 'app/interfaces/iscsi-global-config.interface';
-import { IscsiExtent, IscsiInitiatorGroup } from 'app/interfaces/iscsi.interface';
+import { IscsiInitiatorGroup } from 'app/interfaces/iscsi.interface';
 import { QueryFilter } from 'app/interfaces/query-api.interface';
-import { AppLoaderService } from 'app/modules/app-loader/app-loader.service';
 import {
   FieldConfig,
 } from 'app/modules/entity/entity-form/models/field-config.interface';
@@ -15,13 +14,12 @@ import { RelationGroup } from 'app/modules/entity/entity-form/models/field-relat
 import { RelationAction } from 'app/modules/entity/entity-form/models/relation-action.enum';
 import { EntityFormService } from 'app/modules/entity/entity-form/services/entity-form.service';
 import { FieldRelationService } from 'app/modules/entity/entity-form/services/field-relation.service';
-import { ipv4or6OptionalCidrValidator } from 'app/modules/entity/entity-form/validators/ip-validation';
 import { EntityUtils } from 'app/modules/entity/utils';
+import { AppLoaderService } from 'app/modules/loader/app-loader.service';
 import { WebSocketService, DialogService, NetworkService } from 'app/services';
 
 @UntilDestroy()
 @Component({
-  selector: 'app-iscsi-initiator-form',
   templateUrl: './initiator-form.component.html',
   styleUrls: ['./initiator-form.component.scss', '../../../../../modules/entity/entity-form/entity-form.component.scss'],
   providers: [FieldRelationService, NetworkService],
@@ -30,7 +28,7 @@ export class InitiatorFormComponent implements OnInit {
   protected addCall = 'iscsi.initiator.create' as const;
   protected queryCall = 'iscsi.initiator.query' as const;
   protected editCall = 'iscsi.initiator.update' as const;
-  protected customFilter: [[Partial<QueryFilter<IscsiExtent>>]] = [[['id', '=']]];
+  protected customFilter: [[Partial<QueryFilter<IscsiInitiatorGroup>>]] = [[['id', '=']]];
   routeSuccess: string[] = ['sharing', 'iscsi', 'initiator'];
   protected pk: number;
 
@@ -61,26 +59,6 @@ export class InitiatorFormComponent implements OnInit {
       }],
     },
     {
-      type: 'input-list',
-      name: 'auth_network',
-      placeholder: helptextSharingIscsi.initiator_form_placeholder_auth_network,
-      tooltip: helptextSharingIscsi.initiator_form_tooltip_auth_network,
-      validation: [ipv4or6OptionalCidrValidator()],
-      customEventMethod: (parent) => {
-        for (const selected of parent.source.selectedOptions.selected.length) {
-          parent.listControl.value.add(selected.value.initiator_addr);
-        }
-        parent.source.deselectAll();
-      },
-      relation: [{
-        action: RelationAction.Disable,
-        when: [{
-          name: 'all',
-          value: true,
-        }],
-      }],
-    },
-    {
       type: 'input',
       name: 'comment',
       placeholder: helptextSharingIscsi.initiator_form_placeholder_comment,
@@ -88,7 +66,7 @@ export class InitiatorFormComponent implements OnInit {
     },
   ];
 
-  formGroup: FormGroup;
+  formGroup: UntypedFormGroup;
   connectedInitiators: IscsiGlobalSession[];
   connectedInitiatorsDisabled = false;
   connectedInitiatorsTooltip = helptextSharingIscsi.initiator_form_tooltip_connected_initiators;
@@ -102,18 +80,17 @@ export class InitiatorFormComponent implements OnInit {
     protected entityFormService: EntityFormService,
     protected fieldRelationService: FieldRelationService,
     protected dialog: DialogService,
-    protected networkService: NetworkService,
   ) { }
 
   getConnectedInitiators(): void {
-    this.ws.call('iscsi.global.sessions').pipe(untilDestroyed(this)).subscribe(
-      (res) => {
+    this.ws.call('iscsi.global.sessions').pipe(untilDestroyed(this)).subscribe({
+      next: (res) => {
         this.connectedInitiators = _.unionBy(res, (item) => item['initiator'] && item['initiator_addr']);
       },
-      (err) => {
+      error: (err) => {
         new EntityUtils().handleWsError(this, err);
       },
-    );
+    });
   }
 
   ngOnInit(): void {
@@ -139,26 +116,28 @@ export class InitiatorFormComponent implements OnInit {
     });
 
     if (this.pk) {
-      this.ws.call(this.queryCall, this.customFilter as any).pipe(untilDestroyed(this)).subscribe(
-        (res) => {
-          for (const i in res[0]) {
-            const ctrl = this.formGroup.controls[i];
-            if (ctrl) {
-              if (i === 'initiators' || i === 'auth_network') {
-                ctrl.setValue(new Set(res[0][i]));
-              } else {
-                ctrl.setValue(res[0][i as keyof IscsiInitiatorGroup]);
+      this.ws.call(this.queryCall, this.customFilter as [[QueryFilter<IscsiInitiatorGroup>]])
+        .pipe(untilDestroyed(this))
+        .subscribe({
+          next: (res) => {
+            for (const i in res[0]) {
+              const ctrl = this.formGroup.controls[i];
+              if (ctrl) {
+                if (i === 'initiators') {
+                  ctrl.setValue(new Set(res[0][i]));
+                } else {
+                  ctrl.setValue(res[0][i as keyof IscsiInitiatorGroup]);
+                }
               }
             }
-          }
-          if (res[0]['initiators'].length === 0 && res[0]['auth_network'].length === 0) {
-            this.formGroup.controls['all'].setValue(true);
-          }
-        },
-        (err) => {
-          new EntityUtils().handleWsError(this, err);
-        },
-      );
+            if (res[0]['initiators'].length === 0) {
+              this.formGroup.controls['all'].setValue(true);
+            }
+          },
+          error: (err) => {
+            new EntityUtils().handleWsError(this, err);
+          },
+        });
     }
   }
 
@@ -167,7 +146,6 @@ export class InitiatorFormComponent implements OnInit {
     const value = _.cloneDeep(this.formGroup.value);
 
     value['initiators'] = value['all'] ? [] : Array.from(value['initiators']);
-    value['auth_network'] = value['all'] ? [] : Array.from(value['auth_network']);
     delete value['initiators_input'];
     delete value['auth_network_input'];
     delete value['all'];
@@ -180,16 +158,16 @@ export class InitiatorFormComponent implements OnInit {
     }
 
     this.loader.open();
-    submitFunction.pipe(untilDestroyed(this)).subscribe(
-      () => {
+    submitFunction.pipe(untilDestroyed(this)).subscribe({
+      next: () => {
         this.loader.close();
         this.router.navigate(new Array('/').concat(this.routeSuccess));
       },
-      (err) => {
+      error: (err) => {
         this.loader.close();
         new EntityUtils().handleWsError(this, err);
       },
-    );
+    });
   }
 
   goBack(): void {

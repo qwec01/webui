@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { EntityTableConfig } from 'app/modules/entity/entity-table/entity-table.interface';
 
 @Component({
-  selector: 'app-iscsi-initiator-list',
+  selector: 'ix-iscsi-initiator-list',
   template: `
-    <entity-table [conf]="this" [title]="tableTitle"></entity-table>
+    <ix-entity-table [conf]="this" [title]="tableTitle"></ix-entity-table>
   `,
 })
 export class InitiatorListComponent implements EntityTableConfig {
@@ -27,10 +26,7 @@ export class InitiatorListComponent implements EntityTableConfig {
     {
       name: this.translate.instant('Initiators'),
       prop: 'initiators',
-    },
-    {
-      name: this.translate.instant('Authorized Networks'),
-      prop: 'auth_network',
+      emptyText: this.translate.instant('Allow all initiators'),
     },
     {
       name: this.translate.instant('Description'),
@@ -48,7 +44,6 @@ export class InitiatorListComponent implements EntityTableConfig {
   };
 
   constructor(
-    protected router: Router,
     protected translate: TranslateService,
   ) {}
 }

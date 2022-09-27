@@ -1,23 +1,20 @@
 import { ModuleWithProviders } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { marker as T } from '@biesbjerg/ngx-translate-extract-marker';
+import { ServicesComponent } from 'app/pages/services/services.component';
+import { ShellComponent } from 'app/pages/shell/shell.component';
 import { AlertServiceListComponent } from 'app/pages/system/alert-service/alert-service-list/alert-service-list.component';
+import { FailoverSettingsComponent } from 'app/pages/system/failover-settings/failover-settings.component';
 import { GeneralSettingsComponent } from 'app/pages/system/general-settings/general-settings.component';
-import { ManualUpdateComponent } from 'app/pages/system/update/manual-update/manual-update.component';
+import { ManualUpdateFormComponent } from 'app/pages/system/update/manual-update-form/manual-update-form.component';
 import { ViewEnclosureComponent } from 'app/pages/system/view-enclosure/components/view-enclosure/view-enclosure.component';
-import { ServicesComponent } from '../services/services.component';
-import { ShellComponent } from '../shell/shell.component';
 import { AdvancedSettingsComponent } from './advanced/advanced-settings.component';
 import { CronListComponent } from './advanced/cron/cron-list/cron-list.component';
 import { InitshutdownListComponent } from './advanced/initshutdown/initshutdown-list/initshutdown-list.component';
-import { AlertServiceComponent } from './alert-service/alert-service/alert-service.component';
-import { AlertConfigComponent } from './alert/alert.component';
-import { BootPoolAttachFormComponent } from './bootenv/boot-pool-attach/boot-pool-attach-form.component';
-import { BootPoolReplaceFormComponent } from './bootenv/boot-pool-replace/boot-pool-replace-form.component';
+import { AlertConfigFormComponent } from './alert-config-form/alert-config-form.component';
 import { BootEnvironmentListComponent } from './bootenv/bootenv-list/bootenv-list.component';
 import { BootStatusListComponent } from './bootenv/bootenv-status/bootenv-status.component';
 import { EmailComponent } from './email/email.component';
-import { FailoverComponent } from './failover/failover.component';
 import { EulaComponent } from './general-settings/support/eula/eula.component';
 import { SupportComponent } from './general-settings/support/support.component';
 import { TunableListComponent } from './tunable/tunable-list/tunable-list.component';
@@ -54,15 +51,7 @@ export const routes: Routes = [
       }, {
         path: 'status',
         component: BootStatusListComponent,
-        data: { title: T('Status'), breadcrumb: T('Status') },
-      }, {
-        path: 'attach/:pk',
-        component: BootPoolAttachFormComponent,
-        data: { title: T('Attach'), breadcrumb: ('Attach') },
-      }, {
-        path: 'replace/:pk',
-        component: BootPoolReplaceFormComponent,
-        data: { title: T('Replace'), breadcrumb: T('Replace') },
+        data: { title: T('Boot Pool Status'), breadcrumb: T('Status') },
       },
       ],
     }, {
@@ -96,7 +85,7 @@ export const routes: Routes = [
           children: [
             {
               path: '',
-              component: ManualUpdateComponent,
+              component: ManualUpdateFormComponent,
               data: { title: T('Manual Update'), breadcrumb: T('Manual Update') },
             },
           ],
@@ -109,28 +98,15 @@ export const routes: Routes = [
       data: { title: T('Email'), breadcrumb: T('Email'), icon: 'email' },
     }, {
       path: 'alertsettings',
-      component: AlertConfigComponent,
+      component: AlertConfigFormComponent,
       data: { title: T('Alert Settings'), breadcrumb: T('Alert Settings'), icon: 'notifications_active' },
     }, {
       path: 'alertservice',
       data: { title: T('Alert Services'), breadcrumb: T('Alert Services'), icon: 'notifications' },
-      children: [{
-        path: '',
-        component: AlertServiceListComponent,
-        data: { title: T('Alert Services'), breadcrumb: T('Alert Services') },
-      }, {
-        path: 'add',
-        component: AlertServiceComponent,
-        data: { title: T('Add Alert Service'), breadcrumb: T('Add Alert Service') },
-      }, {
-        path: 'edit/:pk',
-        component: AlertServiceComponent,
-        data: { title: T('Edit Alert Service'), breadcrumb: T('Edit Alert Service') },
-      },
-      ],
+      component: AlertServiceListComponent,
     }, {
       path: 'failover',
-      component: FailoverComponent,
+      component: FailoverSettingsComponent,
       data: { title: T('Failover'), breadcrumb: T('Failover'), icon: 'device_hub' },
     }, {
       path: 'support',

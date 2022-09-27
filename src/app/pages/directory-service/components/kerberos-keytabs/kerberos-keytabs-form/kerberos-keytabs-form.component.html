@@ -1,0 +1,36 @@
+<ix-modal-header [title]="title" [loading]="isLoading"></ix-modal-header>
+<mat-card>
+  <mat-card-content>
+    <form class="ix-form-container" [formGroup]="form" (submit)="onSubmit()">
+      <ix-fieldset>
+        <ix-input
+          formControlName="name"
+          [label]="helptext.kkt_ktname_placeholder | translate"
+          [tooltip]="helptext.kkt_ktname_tooltip | translate"
+          [placeholder]="helptext.kkt_ktname_placeholder | translate"
+          [required]="true"
+        ></ix-input>
+
+        <ix-file-input
+          formControlName="file"
+          [label]="helptext.kkt_ktfile_placeholder | translate"
+          [tooltip]="helptext.kkt_ktfile_tooltip | translate"
+          [multiple]="false"
+          [required]="true"
+          [acceptedFiles]="'binary'"
+        ></ix-file-input>
+      </ix-fieldset>
+
+      <div class="form-actions">
+        <button
+          mat-button
+          type="submit"
+          color="primary"
+          [disabled]="form.invalid || isLoading"
+        >
+          {{ 'Save' | translate }}
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

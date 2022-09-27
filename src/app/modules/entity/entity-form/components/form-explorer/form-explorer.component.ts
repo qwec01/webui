@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import {
-  TREE_ACTIONS, KEYS, IActionMapping, TreeNode, ITreeOptions,
+  TREE_ACTIONS, KEYS, IActionMapping, TreeNode, ITreeOptions, TreeModel,
 } from '@circlon/angular-tree-component';
 import { TranslateService } from '@ngx-translate/core';
 import { ExplorerType } from 'app/enums/explorer-type.enum';
@@ -10,8 +10,14 @@ import { FormExplorerConfig } from 'app/modules/entity/entity-form/models/field-
 import { Field } from 'app/modules/entity/entity-form/models/field.interface';
 import { EntityFormService } from 'app/modules/entity/entity-form/services/entity-form.service';
 
+interface TreeNodeEvent {
+  isExpanded?: boolean;
+  node?: TreeNode;
+  treeModel: TreeModel;
+  eventName: string;
+}
+
 @Component({
-  selector: 'form-explorer',
   templateUrl: './form-explorer.component.html',
   styleUrls: [
     '../dynamic-field/dynamic-field.scss',
@@ -20,9 +26,9 @@ import { EntityFormService } from 'app/modules/entity/entity-form/services/entit
 })
 export class FormExplorerComponent implements Field, OnInit {
   config: FormExplorerConfig;
-  group: FormGroup;
+  group: UntypedFormGroup;
   fieldShow: string;
-  nodes: any; // TODO: Likely ListdirChild[]
+  nodes: (Partial<ListdirChild> & { mountpoint?: string })[];
 
   private rootSelectable: boolean;
 
@@ -112,13 +118,19 @@ export class FormExplorerComponent implements Field, OnInit {
     }
   }
 
+  shouldBeDisabled(): boolean {
+    return this.config.disabled || this.config.readonly;
+  }
+
   setPath(node: TreeNode): void {
     this.group.controls[this.config.name].setValue(node.data.name);
   }
 
-  onClick(event: any): void {
-    const selectedTreeNodes = Object.entries(event.treeModel.selectedLeafNodeIds)
-      .filter(([, value]) => (value === true)).map((node) => event.treeModel.getNodeById(node[0]));
+  onClick(event: TreeNodeEvent): void {
+    const selectedTreeNodes = Object
+      .entries(event.treeModel.selectedLeafNodeIds)
+      .filter(([, value]) => value)
+      .map((node) => event.treeModel.getNodeById(node[0]));
     // this is to mark selected node, but not update form value
     if (event.eventName === 'select' && this.group.controls[this.config.name].value && this.group.controls[this.config.name].value.indexOf(event.node.data.name) > -1) {
       return;
@@ -152,7 +164,7 @@ export class FormExplorerComponent implements Field, OnInit {
     this.group.controls[this.config.name].setValue(res);
   }
 
-  loadNodeChildren(event: any): void {
+  loadNodeChildren(event: TreeNodeEvent): void {
     if (this.customTemplateStringOptions.useCheckbox && this.group.controls[this.config.name].value) {
       for (const item of (event.node.data.children || [])) {
         if (this.group.controls[this.config.name].value.indexOf(item.name) > -1) {
@@ -163,7 +175,7 @@ export class FormExplorerComponent implements Field, OnInit {
     }
   }
 
-  onToggle(event: any): void {
+  onToggle(event: TreeNodeEvent): void {
     if (
       event.isExpanded
       && this.customTemplateStringOptions.useCheckbox

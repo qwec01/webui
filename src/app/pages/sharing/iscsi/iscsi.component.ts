@@ -1,13 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { LicenseFeature } from 'app/enums/license-feature.enum';
 import { WebSocketService, IscsiService } from 'app/services';
+import { AppState } from 'app/store';
+import { waitForSystemInfo } from 'app/store/system-info/system-info.selectors';
 
 @UntilDestroy()
 @Component({
-  selector: 'iscsi',
+  selector: 'ix-iscsi',
   templateUrl: './iscsi.component.html',
   providers: [IscsiService],
 })
@@ -42,7 +45,7 @@ export class IscsiComponent implements OnInit {
     path: '/sharing/iscsi/associatedtarget',
   },
   ];
-  protected route_wizard = ['sharing', 'iscsi', 'wizard'];
+  protected wizardRoute = ['sharing', 'iscsi', 'wizard'];
   fcEnabled = false;
 
   constructor(
@@ -50,10 +53,11 @@ export class IscsiComponent implements OnInit {
     protected aroute: ActivatedRoute,
     protected ws: WebSocketService,
     protected translate: TranslateService,
+    private store$: Store<AppState>,
   ) {}
 
   ngOnInit(): void {
-    this.ws.call('system.info').pipe(untilDestroyed(this)).subscribe(
+    this.store$.pipe(waitForSystemInfo, untilDestroyed(this)).subscribe(
       (systemInfo) => {
         if (systemInfo.license && systemInfo.license.features.includes(LicenseFeature.FibreChannel)) {
           this.fcEnabled = true;
@@ -70,6 +74,6 @@ export class IscsiComponent implements OnInit {
   }
 
   gotoWizard(): void {
-    this.router.navigate(new Array('/').concat(this.route_wizard));
+    this.router.navigate(new Array('/').concat(this.wizardRoute));
   }
 }

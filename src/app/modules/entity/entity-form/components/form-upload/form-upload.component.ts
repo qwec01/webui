@@ -2,36 +2,37 @@ import {
   HttpClient, HttpRequest, HttpEventType, HttpResponse,
 } from '@angular/common/http';
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
-import { AppLoaderService } from 'app/modules/app-loader/app-loader.service';
 import { FormUploadConfig } from 'app/modules/entity/entity-form/models/field-config.interface';
+import { AppLoaderService } from 'app/modules/loader/app-loader.service';
 import { WebSocketService, DialogService } from 'app/services';
 
 @UntilDestroy()
 @Component({
-  selector: 'app-form-upload',
   templateUrl: './form-upload.component.html',
   styleUrls: ['../dynamic-field/dynamic-field.scss', 'form-upload.component.scss'],
 })
 export class FormUploadComponent {
   @ViewChild('fileInput', { static: false }) fileInput: ElementRef<HTMLInputElement>;
   config: FormUploadConfig;
-  group: FormGroup;
+  group: UntypedFormGroup;
   fieldShow: string;
   busy: Subscription[] = [];
   sub: Subscription;
   jobId: number;
-  fileBrowser = true;
   apiEndPoint = '/_upload?auth_token=' + this.ws.token;
   fileList: FileList;
   fbrowser: HTMLInputElement;
 
   constructor(
-    protected ws: WebSocketService, protected http: HttpClient, private loader: AppLoaderService,
-    public dialog: DialogService, public translate: TranslateService,
+    protected ws: WebSocketService,
+    protected http: HttpClient,
+    private loader: AppLoaderService,
+    public dialog: DialogService,
+    public translate: TranslateService,
   ) {}
 
   fileBtnClick(): void {
@@ -61,23 +62,26 @@ export class FormUploadComponent {
         reportProgress: true,
       });
       this.loader.open();
-      this.http.request(req).pipe(untilDestroyed(this)).subscribe((event) => {
-        if (event.type === HttpEventType.UploadProgress) {
-          const percentDone = Math.round(100 * event.loaded / event.total);
-          this.loader.dialogRef.componentInstance.title = `${percentDone}% Uploaded`;
-        } else if (event instanceof HttpResponse) {
-          if (event.statusText === 'OK') {
-            this.newMessage(location + '/' + fileBrowser.files[0].name);
-            this.loader.close();
-            this.dialog.info(this.translate.instant('File upload complete'), '', '300px', 'info', true);
+      this.http.request(req).pipe(untilDestroyed(this)).subscribe({
+        next: (event) => {
+          if (event.type === HttpEventType.UploadProgress) {
+            const percentDone = Math.round(100 * event.loaded / event.total);
+            this.loader.dialogRef.componentInstance.title = `${percentDone}% Uploaded`;
+          } else if (event instanceof HttpResponse) {
+            if (event.statusText === 'OK') {
+              this.newMessage(location + '/' + fileBrowser.files[0].name);
+              this.loader.close();
+              this.dialog.info(this.translate.instant('File upload complete'), '');
+            }
           }
-        }
-      }, (error) => {
-        this.loader.close();
-        this.dialog.errorReport(this.translate.instant('Error'), error.statusText, error.message);
+        },
+        error: (error) => {
+          this.loader.close();
+          this.dialog.errorReport(this.translate.instant('Error'), error.statusText, error.message);
+        },
       });
     } else {
-      this.dialog.info(this.translate.instant('Please make sure to select a file'), '', '300px', 'info', true);
+      this.dialog.warn(this.translate.instant('Please make sure to select a file'), '');
     }
   }
 

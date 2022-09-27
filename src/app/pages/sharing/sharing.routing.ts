@@ -1,14 +1,10 @@
 import { ModuleWithProviders } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { marker as T } from '@biesbjerg/ngx-translate-extract-marker';
 import { SharesDashboardComponent } from 'app/pages/sharing/components/shares-dashboard/shares-dashboard.component';
-import { ExtentFormComponent } from './iscsi/extent/extent-form/extent-form.component';
 import { InitiatorFormComponent } from './iscsi/initiator/initiator-form/initiator-form.component';
 import { IscsiWizardComponent } from './iscsi/iscsi-wizard/iscsi-wizard.component';
 import { IscsiComponent } from './iscsi/iscsi.component';
-import { TargetFormComponent } from './iscsi/target/target-form/target-form.component';
 import { NfsListComponent } from './nfs/nfs-list/nfs-list.component';
-import { SmbAclComponent } from './smb/smb-acl/smb-acl.component';
 import { SmbFormComponent } from './smb/smb-form/smb-form.component';
 import { SmbListComponent } from './smb/smb-list/smb-list.component';
 import { WebdavFormComponent } from './webdav/webdav-form/webdav-form.component';
@@ -64,10 +60,6 @@ export const routes: Routes = [
           path: 'edit/:pk',
           component: SmbFormComponent,
           data: { title: 'Edit', breadcrumb: 'Edit' },
-        }, {
-          path: 'acl/:pk',
-          component: SmbAclComponent,
-          data: { title: T('Share ACL'), breadcrumb: T('Share ACL') },
         }],
       }, {
         path: 'iscsi',
@@ -80,6 +72,7 @@ export const routes: Routes = [
               {
                 path: '',
                 redirectTo: 'configuration',
+                pathMatch: 'full',
               },
               {
                 path: 'wizard',
@@ -92,9 +85,6 @@ export const routes: Routes = [
                 data: { title: '', breadcrumb: '' },
               },
               {
-                path: 'portals',
-                data: { title: 'Portals', breadcrumb: 'Portals' },
-              }, {
                 path: 'initiators',
                 data: { title: 'Initiators', breadcrumb: 'Initiators' },
                 children: [{
@@ -106,39 +96,6 @@ export const routes: Routes = [
                   component: InitiatorFormComponent,
                   data: { title: 'Edit', breadcrumb: 'Edit' },
                 }],
-              }, {
-                path: 'auth',
-                data: { title: 'Authorized Access', breadcrumb: 'Authorized Access' },
-              },
-              {
-                path: 'target',
-                data: { title: 'Targets', breadcrumb: 'Targets' },
-                children: [{
-                  path: 'add',
-                  component: TargetFormComponent,
-                  data: { title: 'Add', breadcrumb: 'Add' },
-                }, {
-                  path: 'edit/:pk',
-                  component: TargetFormComponent,
-                  data: { title: 'Edit', breadcrumb: 'Edit' },
-                }],
-              },
-              {
-                path: 'extent',
-                data: { title: 'Extents', breadcrumb: 'Extents' },
-                children: [{
-                  path: 'add',
-                  component: ExtentFormComponent,
-                  data: { title: 'Add', breadcrumb: 'Add' },
-                }, {
-                  path: 'edit/:pk',
-                  component: ExtentFormComponent,
-                  data: { title: 'Edit', breadcrumb: 'Edit' },
-                }],
-              },
-              {
-                path: 'associatedtarget',
-                data: { title: 'Associated Targets', breadcrumb: 'Associated Targets' },
               }],
           }],
       },

@@ -1,0 +1,33 @@
+<h1 mat-dialog-title>{{ helptext.radio_preset | translate }}</h1>
+<div mat-dialog-content>
+  <p>{{ helptext.radio_preset_tooltip | translate }}</p>
+
+  <p *ngIf="!data.allowCustom" [innerHTML]="helptext.message | translate"></p>
+
+  <form [formGroup]="form">
+    <ix-radio-group
+      *ngIf="data.allowCustom"
+      formControlName="usePreset"
+      [options]="usePresetOptions$"
+    ></ix-radio-group>
+    <!-- TODO: Add [required]="true" once FormsModule is removed -->
+    <ix-select
+      *ngIf="form.value.usePreset"
+      formControlName="presetName"
+      [label]="'Preset' | translate"
+      [options]="presetOptions$"
+    ></ix-select>
+  </form>
+</div>
+<div mat-dialog-actions class="buttons">
+  <button mat-button matDialogClose>{{ 'Cancel' | translate }}</button>
+  <button
+    mat-button
+    color="primary"
+    matDialogClose
+    [disabled]="form.invalid"
+    (click)="onContinuePressed()"
+  >
+    {{ 'Continue' | translate }}
+  </button>
+</div>

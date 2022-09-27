@@ -1,40 +1,35 @@
 import {
-  Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef,
+  Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewChild, TemplateRef, AfterViewInit,
 } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { NavigationExtras, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
-import { Subject } from 'rxjs';
 import {
   filter, map, switchMap,
 } from 'rxjs/operators';
 import { ServiceName, serviceNames } from 'app/enums/service-name.enum';
 import { ServiceStatus } from 'app/enums/service-status.enum';
-import { CoreEvent } from 'app/interfaces/events';
 import { Service, ServiceRow } from 'app/interfaces/service.interface';
 import { EmptyConfig, EmptyType } from 'app/modules/entity/entity-empty/entity-empty.component';
-import { EntityToolbarComponent } from 'app/modules/entity/entity-toolbar/entity-toolbar.component';
-import { ToolbarConfig } from 'app/modules/entity/entity-toolbar/models/control-config.interface';
 import { IscsiService } from 'app/services/';
-import { CoreService } from 'app/services/core-service/core.service';
 import { DialogService } from 'app/services/dialog.service';
+import { LayoutService } from 'app/services/layout.service';
 import { WebSocketService } from 'app/services/ws.service';
 
 @UntilDestroy()
 @Component({
-  selector: 'services',
+  selector: 'ix-services',
   styleUrls: ['./services.component.scss'],
   templateUrl: './services.component.html',
   providers: [IscsiService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ServicesComponent implements OnInit {
+export class ServicesComponent implements OnInit, AfterViewInit {
+  @ViewChild('pageHeader') pageHeader: TemplateRef<unknown>;
+
   dataSource: MatTableDataSource<ServiceRow> = new MatTableDataSource([]);
   displayedColumns = ['name', 'state', 'enable', 'actions'];
-  toolbarConfig: ToolbarConfig;
-  settingsEvent$: Subject<CoreEvent> = new Subject();
-  filterString = '';
   error = false;
   loading = true;
   loadingConf: EmptyConfig = {
@@ -54,13 +49,16 @@ export class ServicesComponent implements OnInit {
     private dialog: DialogService,
     private iscsiService: IscsiService,
     private cdr: ChangeDetectorRef,
-    private core: CoreService,
+    private layoutService: LayoutService,
   ) {}
 
   ngOnInit(): void {
-    this.setupToolbar();
     this.getData();
     this.getUpdates();
+  }
+
+  ngAfterViewInit(): void {
+    this.layoutService.pageHeaderUpdater$.next(this.pageHeader);
   }
 
   getData(): void {
@@ -80,24 +78,24 @@ export class ServicesComponent implements OnInit {
         return transformed;
       }),
       untilDestroyed(this),
-    ).subscribe(
-      (services) => {
+    ).subscribe({
+      next: (services) => {
         this.dataSource = new MatTableDataSource(services);
         this.loading = false;
         this.error = false;
         this.cdr.markForCheck();
       },
-      () => {
+      error: () => {
         this.error = true;
         this.loading = false;
         this.cdr.markForCheck();
       },
-      () => {
+      complete: () => {
         for (const key of serviceNames.keys()) {
           this.serviceLoadingMap.set(key, false);
         }
       },
-    );
+    });
   }
 
   getUpdates(): void {
@@ -169,38 +167,41 @@ export class ServicesComponent implements OnInit {
     this.cdr.markForCheck();
 
     const serviceName = this.serviceNames.get(service.service);
-    this.ws.call(rpc, [service.service]).pipe(
+    this.ws.call(rpc, [service.service, { silent: false }]).pipe(
       untilDestroyed(this),
-    ).subscribe((success) => {
-      if (success) {
-        if (service.state === ServiceStatus.Running && rpc === 'service.stop') {
-          this.dialog.info(
-            this.translate.instant('Service failed to stop'),
-            this.translate.instant('{serviceName} service failed to stop.', { serviceName }),
+    ).subscribe({
+      next: (success) => {
+        if (success) {
+          if (service.state === ServiceStatus.Running && rpc === 'service.stop') {
+            this.dialog.warn(
+              this.translate.instant('Service failed to stop'),
+              this.translate.instant('{serviceName} service failed to stop.', { serviceName }),
+            );
+          }
+        } else if (service.state === ServiceStatus.Stopped && rpc === 'service.start') {
+          this.dialog.warn(
+            this.translate.instant('Service failed to start'),
+            this.translate.instant('{serviceName} service failed to start.', { serviceName }),
           );
         }
-      } else if (service.state === ServiceStatus.Stopped && rpc === 'service.start') {
-        this.dialog.info(
-          this.translate.instant('Service failed to start'),
-          this.translate.instant('{serviceName} service failed to start.', { serviceName }),
-        );
-      }
-    }, (error) => {
-      let message = this.translate.instant('Error starting service {serviceName}.', { serviceName });
-      if (rpc === 'service.stop') {
-        message = this.translate.instant('Error stopping service {serviceName}.', { serviceName });
-      }
-      this.dialog.errorReport(message, error.message, error.stack);
-      this.serviceLoadingMap.set(service.service, false);
-      this.cdr.markForCheck();
+      },
+      error: (error) => {
+        let message = this.translate.instant('Error starting service {serviceName}.', { serviceName });
+        if (rpc === 'service.stop') {
+          message = this.translate.instant('Error stopping service {serviceName}.', { serviceName });
+        }
+        this.dialog.errorReport(message, error.reason, error.trace.formatted);
+        this.serviceLoadingMap.set(service.service, false);
+        this.cdr.markForCheck();
+      },
     });
   }
 
   enableToggle(service: Service): void {
     this.ws.call('service.update', [service.id, { enable: service.enable }])
       .pipe(untilDestroyed(this))
-      .subscribe((res) => {
-        if (!res) {
+      .subscribe((updated) => {
+        if (!updated) {
           // To uncheck the checkbox
           service.enable = false;
           // Middleware should return the service id
@@ -229,36 +230,7 @@ export class ServicesComponent implements OnInit {
     }
   }
 
-  setupToolbar(): void {
-    this.settingsEvent$ = new Subject();
-    this.settingsEvent$.pipe(
-      untilDestroyed(this),
-    ).subscribe((event: CoreEvent) => {
-      if (event.data.event_control === 'filter') {
-        this.filterString = event.data.filter;
-        this.dataSource.filter = event.data.filter;
-      }
-    });
-
-    const controls = [
-      {
-        name: 'filter',
-        type: 'input',
-        value: this.filterString,
-        placeholder: this.translate.instant('Search'),
-      },
-    ];
-
-    const toolbarConfig = {
-      target: this.settingsEvent$,
-      controls,
-    };
-    const settingsConfig = {
-      actionType: EntityToolbarComponent,
-      actionConfig: toolbarConfig,
-    };
-
-    this.toolbarConfig = toolbarConfig;
-    this.core.emit({ name: 'GlobalActions', data: settingsConfig, sender: this });
+  onSearch(query: string): void {
+    this.dataSource.filter = query;
   }
 }

@@ -1,4 +1,16 @@
+<ng-template #pageHeader>
+  <ix-page-title-header>
+    <button *ngIf="canAdd" mat-button color="primary" (click)="doAdd()">
+      {{ 'Add' | translate }}
+    </button>
+  </ix-page-title-header>
+</ng-template>
+
 <div class="vm-summary" *ngIf="hasVirtualizationSupport">
-  <p *ngIf="availMem"><strong>{{memTitle | translate}}</strong> {{availMem}} - {{memWarning | translate}}</p>
+  <p *ngIf="availableMemory">
+    <strong>{{ memTitle | translate }}</strong> {{ availableMemory }} -
+    {{ memWarning | translate }}
+  </p>
 </div>
-<entity-table [title]='title' [conf]='this'></entity-table>
+
+<ix-entity-table [title]="title" [conf]="this"></ix-entity-table>

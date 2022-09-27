@@ -1,7 +1,7 @@
 import {
   ChangeDetectionStrategy, ChangeDetectorRef, Component,
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import _ from 'lodash';
@@ -22,7 +22,6 @@ import { generalConfigUpdated } from 'app/store/system-config/system-config.acti
 
 @UntilDestroy()
 @Component({
-  selector: 'localization-form',
   templateUrl: './localization-form.component.html',
   styleUrls: ['./localization-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,7 +33,7 @@ export class LocalizationFormComponent {
 
   sortLanguagesByName = true;
 
-  formGroup: FormGroup = this.fb.group({
+  formGroup: UntypedFormGroup = this.fb.group({
     language: ['', [Validators.required]],
     kbdmap: [''],
     timezone: ['', [Validators.required]],
@@ -48,11 +47,11 @@ export class LocalizationFormComponent {
     tooltip: string;
     provider: SimpleAsyncComboboxProvider;
   } = {
-    fcName: 'language',
-    label: helptext.stg_language.placeholder,
-    tooltip: helptext.stg_language.tooltip,
-    provider: new SimpleAsyncComboboxProvider(this.sysGeneralService.languageOptions(this.sortLanguagesByName)),
-  };
+      fcName: 'language',
+      label: helptext.stg_language.placeholder,
+      tooltip: helptext.stg_language.tooltip,
+      provider: new SimpleAsyncComboboxProvider(this.sysGeneralService.languageOptions(this.sortLanguagesByName)),
+    };
 
   kbdMap: {
     readonly fcName: 'kbdmap';
@@ -60,11 +59,11 @@ export class LocalizationFormComponent {
     tooltip: string;
     options: Observable<Option[]>;
   } = {
-    fcName: 'kbdmap',
-    label: helptext.stg_kbdmap.placeholder,
-    tooltip: helptext.stg_kbdmap.tooltip,
-    options: this.sysGeneralService.kbdMapChoices(),
-  };
+      fcName: 'kbdmap',
+      label: helptext.stg_kbdmap.placeholder,
+      tooltip: helptext.stg_kbdmap.tooltip,
+      options: this.sysGeneralService.kbdMapChoices(),
+    };
 
   timezone: {
     readonly fcName: 'timezone';
@@ -72,13 +71,13 @@ export class LocalizationFormComponent {
     tooltip: string;
     provider: IxComboboxProvider;
   } = {
-    fcName: 'timezone',
-    label: helptext.stg_timezone.placeholder,
-    tooltip: helptext.stg_timezone.tooltip,
-    provider: new SimpleAsyncComboboxProvider(this.sysGeneralService.timezoneChoices().pipe(map(
-      (tzChoices) => _.sortBy(tzChoices, [(option) => option.label.toLowerCase()]),
-    ))),
-  };
+      fcName: 'timezone',
+      label: helptext.stg_timezone.placeholder,
+      tooltip: helptext.stg_timezone.tooltip,
+      provider: new SimpleAsyncComboboxProvider(this.sysGeneralService.timezoneChoices().pipe(map(
+        (tzChoices) => _.sortBy(tzChoices, [(option) => option.label.toLowerCase()]),
+      ))),
+    };
 
   dateFormat: {
     readonly fcName: 'date_format';
@@ -86,10 +85,10 @@ export class LocalizationFormComponent {
     tooltip: string;
     options?: Observable<Option[]>;
   } = {
-    fcName: 'date_format',
-    label: helptext.date_format.placeholder,
-    tooltip: helptext.date_format.tooltip,
-  };
+      fcName: 'date_format',
+      label: helptext.date_format.placeholder,
+      tooltip: helptext.date_format.tooltip,
+    };
 
   timeFormat: {
     readonly fcName: 'time_format';
@@ -97,14 +96,14 @@ export class LocalizationFormComponent {
     tooltip: string;
     options?: Observable<Option[]>;
   } = {
-    fcName: 'time_format',
-    label: helptext.time_format.placeholder,
-    tooltip: helptext.time_format.tooltip,
-  };
+      fcName: 'time_format',
+      label: helptext.time_format.placeholder,
+      tooltip: helptext.time_format.tooltip,
+    };
 
   constructor(
     private sysGeneralService: SystemGeneralService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     public localeService: LocaleService,
     protected ws: WebSocketService,
     protected langService: LanguageService,
@@ -141,17 +140,20 @@ export class LocalizationFormComponent {
     }));
     delete body.date_format;
     delete body.time_format;
-    this.ws.call('system.general.update', [body]).pipe(untilDestroyed(this)).subscribe(() => {
-      this.store$.dispatch(generalConfigUpdated());
-      this.isFormLoading = false;
-      this.cdr.markForCheck();
-      this.slideInService.close();
-      this.setTimeOptions(body.timezone);
-      this.langService.setLanguage(body.language);
-    }, (error) => {
-      this.isFormLoading = false;
-      this.errorHandler.handleWsFormError(error, this.formGroup);
-      this.cdr.markForCheck();
+    this.ws.call('system.general.update', [body]).pipe(untilDestroyed(this)).subscribe({
+      next: () => {
+        this.store$.dispatch(generalConfigUpdated());
+        this.isFormLoading = false;
+        this.cdr.markForCheck();
+        this.slideInService.close();
+        this.setTimeOptions(body.timezone);
+        this.langService.setLanguage(body.language);
+      },
+      error: (error) => {
+        this.isFormLoading = false;
+        this.errorHandler.handleWsFormError(error, this.formGroup);
+        this.cdr.markForCheck();
+      },
     });
   }
 }

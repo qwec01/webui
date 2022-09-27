@@ -3,8 +3,9 @@ import { OnOff } from 'app/enums/on-off.enum';
 import { PoolScanFunction } from 'app/enums/pool-scan-function.enum';
 import { PoolScanState } from 'app/enums/pool-scan-state.enum';
 import { PoolStatus } from 'app/enums/pool-status.enum';
+import { PoolTopologyCategory } from 'app/enums/pool-topology-category.enum';
 import { ApiTimestamp } from 'app/interfaces/api-date.interface';
-import { VDev } from 'app/interfaces/storage.interface';
+import { TopologyItem } from 'app/interfaces/storage.interface';
 import { ZfsProperty } from 'app/interfaces/zfs-property.interface';
 
 export interface Pool {
@@ -34,24 +35,22 @@ export interface Pool {
   is_decrypted: boolean;
   name: string;
   path: string;
-  scan: PoolScan;
+  scan: PoolScanUpdate;
   status: PoolStatus;
   status_detail: string;
   topology: PoolTopology;
+
+  /**
+   * Available with extra is_upgraded=true
+   */
+  is_upgraded?: boolean;
 }
 
-export interface PoolTopology {
-  cache: VDev[];
-  data: VDev[];
-  dedup: VDev[];
-  log: VDev[];
-  spare: VDev[];
-  special: VDev[];
-}
+export type PoolTopology = {
+  [category in PoolTopologyCategory]: TopologyItem[];
+};
 
-export type PoolTopologyCategory = keyof PoolTopology;
-
-export interface PoolScan {
+export interface PoolScanUpdate {
   bytes_issued: number;
   bytes_processed: number;
   bytes_to_process: number;
@@ -83,10 +82,10 @@ export interface CreatePool {
 }
 
 export interface UpdatePool {
-  topology: {
+  topology?: {
     [key in PoolTopologyCategory]: { type: string; disks?: string[] }[];
   };
-  autotrim: OnOff;
+  autotrim?: OnOff;
   allow_duplicate_serials?: boolean;
 }
 
@@ -109,3 +108,31 @@ export type PoolExpandParams = [
   id: number,
   params?: { geli: { passphrase: string } },
 ];
+
+export type PoolInstanceParams = [
+  name: string,
+];
+
+export interface PoolInstance {
+  id: number;
+  name: string;
+  guid: string;
+  encrypt: number;
+  encryptkey: string;
+  encryptkey_path: string;
+  is_decrypted: boolean;
+  status: PoolStatus;
+  path: string;
+  scan: PoolScanUpdate;
+  is_upgraded: boolean;
+  healthy: boolean;
+  warning: boolean;
+  status_detail: string;
+  size: number;
+  allocated: number;
+  free: number;
+  freeing: number;
+  fragmentation: string;
+  autotrim: ZfsProperty<string>;
+  topology: PoolTopology;
+}

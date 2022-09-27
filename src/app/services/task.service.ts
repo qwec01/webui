@@ -3,11 +3,9 @@ import * as cronParser from 'cron-parser';
 import { Options as CronOptions } from 'cronstrue/dist/options';
 import cronstrue from 'cronstrue/i18n';
 import { formatDistanceToNow } from 'date-fns';
-import { Observable } from 'rxjs';
 import { Option } from 'app/interfaces/option.interface';
-import { Pool } from 'app/interfaces/pool.interface';
+import { LocaleService } from 'app/services/locale.service';
 import { LanguageService } from './language.service';
-import { WebSocketService } from './ws.service';
 
 @Injectable({ providedIn: 'root' })
 export class TaskService {
@@ -115,14 +113,13 @@ export class TaskService {
     locale: this.language.currentLanguage,
   };
 
-  constructor(protected ws: WebSocketService, protected language: LanguageService) {}
+  constructor(
+    protected language: LanguageService,
+    protected localeService: LocaleService,
+  ) {}
 
   getTimeOptions(): Option[] {
     return this.timeOptions;
-  }
-
-  getVolumeList(): Observable<Pool[]> {
-    return this.ws.call('pool.query', []);
   }
 
   /**
@@ -139,8 +136,8 @@ export class TaskService {
       .map(() => schedule.next().value.toDate());
   }
 
-  getTaskNextRun(scheduleExpression: string): string {
-    const schedule = cronParser.parseExpression(scheduleExpression, { iterator: true });
+  getTaskNextRun(scheduleExpression: string, timeZone: string): string {
+    const schedule = cronParser.parseExpression(scheduleExpression, { iterator: true, tz: timeZone });
 
     return formatDistanceToNow(
       schedule.next().value.toDate(),
@@ -158,6 +155,7 @@ export class TaskService {
    * @deprecated Use crontabDescription pipe.
    */
   getTaskCronDescription(scheduleExpression: string, options: CronOptions = this.cronOptions): string {
+    options.use24HourTimeFormat = this.localeService.getPreferredTimeFormat() === 'HH:mm:ss';
     return cronstrue.toString(scheduleExpression, options);
   }
 }

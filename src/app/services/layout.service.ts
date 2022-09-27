@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, TemplateRef } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import * as domHelper from 'app/helpers/dom.helper';
 
 @Injectable({
@@ -6,6 +7,8 @@ import * as domHelper from 'app/helpers/dom.helper';
 })
 export class LayoutService {
   private readonly collapsedMenuClass = 'collapsed-menu';
+
+  readonly pageHeaderUpdater$ = new BehaviorSubject<TemplateRef<unknown>>(null);
 
   get isMobile(): boolean {
     return window.innerWidth < 960;

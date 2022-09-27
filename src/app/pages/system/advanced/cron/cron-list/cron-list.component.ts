@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, switchMap } from 'rxjs/operators';
 import { Cronjob } from 'app/interfaces/cronjob.interface';
@@ -12,16 +12,19 @@ import {
   EntityTableConfigConfig,
 } from 'app/modules/entity/entity-table/entity-table.interface';
 import { EntityUtils } from 'app/modules/entity/utils';
+import { CronFormComponent } from 'app/pages/system/advanced/cron/cron-form/cron-form.component';
 import { CronjobRow } from 'app/pages/system/advanced/cron/cron-list/cronjob-row.interface';
-import { DialogService, TaskService, WebSocketService } from 'app/services';
+import {
+  DialogService, TaskService, WebSocketService,
+} from 'app/services';
 import { IxSlideInService } from 'app/services/ix-slide-in.service';
 import { UserService } from 'app/services/user.service';
-import { CronFormComponent } from '../cron-form/cron-form.component';
+import { AppState } from 'app/store';
+import { selectTimezone } from 'app/store/system-config/system-config.selectors';
 
 @UntilDestroy()
 @Component({
-  selector: 'app-cron-list',
-  template: '<entity-table [title]="title" [conf]="this"></entity-table>',
+  template: '<ix-entity-table [title]="title" [conf]="this"></ix-entity-table>',
   providers: [TaskService, UserService],
 })
 export class CronListComponent implements EntityTableConfig<CronjobRow> {
@@ -63,13 +66,12 @@ export class CronListComponent implements EntityTableConfig<CronjobRow> {
   };
 
   constructor(
-    public router: Router,
     protected ws: WebSocketService,
     public translate: TranslateService,
     protected taskService: TaskService,
     public dialog: DialogService,
     public slideInService: IxSlideInService,
-    public userService: UserService,
+    private store$: Store<AppState>,
   ) {}
 
   afterInit(entityList: EntityTableComponent): void {
@@ -109,21 +111,18 @@ export class CronListComponent implements EntityTableConfig<CronjobRow> {
               filter((run) => !!run),
               switchMap(() => this.ws.call('cronjob.run', [row.id])),
             )
-            .pipe(untilDestroyed(this)).subscribe(
-              () => {
+            .pipe(untilDestroyed(this)).subscribe({
+              next: () => {
                 const message = row.enabled
                   ? this.translate.instant('This job is scheduled to run again {nextRun}.', { nextRun: row.next_run })
                   : this.translate.instant('This job will not run again until it is enabled.');
                 this.dialog.info(
                   this.translate.instant('Job {job} Completed Successfully', { job: row.description }),
                   message,
-                  '500px',
-                  'info',
-                  true,
                 );
               },
-              (err: WebsocketError) => new EntityUtils().handleError(this, err),
-            );
+              error: (err: WebsocketError) => new EntityUtils().handleError(this, err),
+            });
         },
       },
       {
@@ -149,11 +148,16 @@ export class CronListComponent implements EntityTableConfig<CronjobRow> {
     return data.map((job) => {
       const cronSchedule = `${job.schedule.minute} ${job.schedule.hour} ${job.schedule.dom} ${job.schedule.month} ${job.schedule.dow}`;
 
-      return {
+      const transformedData = {
         ...job,
         cron_schedule: cronSchedule,
-        next_run: this.taskService.getTaskNextRun(cronSchedule),
-      };
+      } as CronjobRow;
+
+      this.store$.select(selectTimezone).pipe(untilDestroyed(this)).subscribe((timezone) => {
+        transformedData.next_run = this.taskService.getTaskNextRun(cronSchedule, timezone);
+      });
+
+      return transformedData;
     });
   }
 }

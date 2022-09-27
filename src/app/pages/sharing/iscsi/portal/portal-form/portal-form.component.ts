@@ -3,7 +3,6 @@ import {
   ChangeDetectorRef, Component,
 } from '@angular/core';
 import { Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { FormBuilder, FormControl } from '@ngneat/reactive-forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
@@ -82,19 +81,13 @@ export class PortalFormComponent {
   private ipAddressFromControls = [
     {
       name: 'ip',
-      default: [] as string[],
+      default: '' as string,
       validator: [Validators.required, ipValidator('all')],
-    },
-    {
-      name: 'port',
-      default: 3260,
-      validator: [Validators.required],
     },
   ];
 
   constructor(
     private fb: FormBuilder,
-    protected router: Router,
     private translate: TranslateService,
     protected ws: WebSocketService,
     private cdr: ChangeDetectorRef,
@@ -106,16 +99,14 @@ export class PortalFormComponent {
   setupForm(iscsiPortal: IscsiPortal): void {
     this.editingIscsiPortal = iscsiPortal;
 
-    Object.entries(_.groupBy(iscsiPortal.listen, 'port')).forEach(([port, listen], index) => {
-      const newListItem: any = {};
+    iscsiPortal.listen.forEach((listen, index) => {
+      const newListItem = {} as IscsiInterface;
       this.ipAddressFromControls.forEach((fc) => {
-        let defaultValue = Number(port) as number | string[];
         if (fc.name === 'ip') {
-          defaultValue = listen.map((item) => item.ip);
+          const defaultValue = listen.ip;
+          newListItem[fc.name] = defaultValue;
+          this.form.addControl(`${fc.name}${this.listPrefix}${index}`, new FormControl(defaultValue, fc.validator));
         }
-
-        newListItem[fc.name] = defaultValue;
-        this.form.addControl(`${fc.name}${this.listPrefix}${index}`, new FormControl(defaultValue, fc.validator));
       });
       this.listen.push(newListItem);
     });
@@ -128,9 +119,9 @@ export class PortalFormComponent {
 
   onAdd(): void {
     const newIndex = this.listen.length;
-    const newListItem: any = {};
+    const newListItem = {} as IscsiInterface;
     this.ipAddressFromControls.forEach((fc) => {
-      newListItem[fc.name] = fc.default;
+      newListItem[fc.name as keyof IscsiInterface] = fc.default;
       this.form.addControl(`${fc.name}${this.listPrefix}${newIndex}`, new FormControl(fc.default, fc.validator));
     });
 
@@ -145,27 +136,21 @@ export class PortalFormComponent {
     this.listen.splice(index, 1);
   }
 
-  prepareSubmit(values: any): IscsiInterface[] {
+  prepareSubmit(values: PortalFormComponent['form']['value']): IscsiInterface[] {
     const listen = [] as IscsiInterface[];
 
     const tempListen: { name: string; index: string; value: string | number | string[] }[] = [];
     Object.keys(values).forEach((key) => {
       const keys = key.split(this.listPrefix);
       if (keys.length > 1) {
-        tempListen.push({ name: keys[0], index: keys[1], value: values[key] });
+        tempListen.push({ name: keys[0], index: keys[1], value: values[key as keyof PortalFormComponent['form']['value']] });
       }
     });
 
     Object.values(_.groupBy(tempListen, 'index')).forEach((item) => {
-      const ip = item.find((ele) => ele.name === 'ip')?.value as string[];
-      const port = item.find((ele) => ele.name === 'port')?.value;
-      if (ip && port) {
-        ip.forEach((sip) => {
-          listen.push({
-            ip: sip,
-            port: Number(port),
-          });
-        });
+      const ip = item.find((ele) => ele.name === 'ip')?.value as string;
+      if (ip) {
+        listen.push({ ip });
       }
     });
 
@@ -189,14 +174,17 @@ export class PortalFormComponent {
       request$ = this.ws.call('iscsi.portal.update', [this.editingIscsiPortal.id, params]);
     }
 
-    request$.pipe(untilDestroyed(this)).subscribe(() => {
-      this.isLoading = false;
-      this.cdr.markForCheck();
-      this.slideInService.close();
-    }, (error) => {
-      this.isLoading = false;
-      this.errorHandler.handleWsFormError(error, this.form);
-      this.cdr.markForCheck();
+    request$.pipe(untilDestroyed(this)).subscribe({
+      next: () => {
+        this.isLoading = false;
+        this.cdr.markForCheck();
+        this.slideInService.close();
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.errorHandler.handleWsFormError(error, this.form);
+        this.cdr.markForCheck();
+      },
     });
   }
 }

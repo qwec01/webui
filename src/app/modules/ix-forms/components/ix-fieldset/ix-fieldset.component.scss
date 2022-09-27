@@ -1,6 +1,9 @@
 fieldset {
   border: none;
   margin: 0;
+
+  // Needed to prevent overflow of flexbox children with white-space: nowrap
+  min-width: 0;
 }
 
 .title-container {
@@ -12,7 +15,7 @@ fieldset {
 
 legend {
   color: var(--fg1);
-  font-family: 'IBM Plex Sans', sans-serif;
+  font-family: var(--font-family-body);
   font-size: 15px;
   font-weight: 600;
   padding: 0;

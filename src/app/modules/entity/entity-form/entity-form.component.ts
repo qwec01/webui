@@ -12,7 +12,7 @@ import {
   AfterViewChecked,
 } from '@angular/core';
 import {
-  FormBuilder, FormControl, FormGroup, FormArray, AbstractControl,
+  UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, UntypedFormArray, AbstractControl,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -21,7 +21,6 @@ import * as _ from 'lodash';
 import { Observable, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { FormConfiguration } from 'app/interfaces/entity-form.interface';
-import { AppLoaderService } from 'app/modules/app-loader/app-loader.service';
 import { FieldSets } from 'app/modules/entity/entity-form/classes/field-sets';
 import {
   FieldConfig, FormArrayConfig, FormDictConfig, FormListConfig, FormSelectConfig,
@@ -31,12 +30,13 @@ import { EntityFormService } from 'app/modules/entity/entity-form/services/entit
 import { FieldRelationService } from 'app/modules/entity/entity-form/services/field-relation.service';
 import { EntityTemplateDirective } from 'app/modules/entity/entity-template.directive';
 import { EntityUtils } from 'app/modules/entity/utils';
+import { AppLoaderService } from 'app/modules/loader/app-loader.service';
 import { WebSocketService, DialogService } from 'app/services';
 import { ModalService } from 'app/services/modal.service';
 
 @UntilDestroy()
 @Component({
-  selector: 'entity-form',
+  selector: 'ix-entity-form',
   templateUrl: './entity-form.component.html',
   styleUrls: ['./entity-form.component.scss'],
   providers: [EntityFormService, FieldRelationService],
@@ -44,22 +44,19 @@ import { ModalService } from 'app/services/modal.service';
 export class EntityFormComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit, AfterViewChecked {
   @Input() conf: FormConfiguration;
 
-  pk: any;
+  pk: string | number;
   fieldSetDisplay = 'default';
   fieldSets: FieldSet[];
-  formGroup: FormGroup;
+  formGroup: UntypedFormGroup;
   fieldConfig: FieldConfig[];
   resourceName: string;
-  getFunction: any;
+  getFunction: Observable<any>;
   submitFunction = this.editCall;
   isNew = false;
   hasConf = true;
   wsResponse: any;
   wsfg: AbstractControl;
-  wsResponseIdx: any;
-  queryResponse: any;
   saveSubmitText: string = this.translate.instant('Save');
-  showPassword = false;
   successMessage: string = this.translate.instant('Settings saved.');
 
   loaderOpen = false;
@@ -68,19 +65,19 @@ export class EntityFormComponent implements OnInit, OnDestroy, OnChanges, AfterV
   get controls(): FieldConfig[] {
     return this.fieldConfig.filter(({ type }) => type !== 'button');
   }
-  get changes(): Observable<any> {
+  get changes(): Observable<unknown> {
     return this.formGroup.valueChanges;
   }
   get valid(): boolean {
     return this.formGroup.valid;
   }
-  get value(): any {
+  get value(): unknown {
     return this.formGroup.value;
   }
 
   templateTop: TemplateRef<unknown>;
   @ContentChildren(EntityTemplateDirective)
-  templates: QueryList<EntityTemplateDirective>;
+    templates: QueryList<EntityTemplateDirective>;
 
   sub: Subscription;
   error: string;
@@ -93,7 +90,7 @@ export class EntityFormComponent implements OnInit, OnDestroy, OnChanges, AfterV
     protected router: Router,
     protected route: ActivatedRoute,
     protected ws: WebSocketService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     protected entityFormService: EntityFormService,
     protected fieldRelationService: FieldRelationService,
     public loader: AppLoaderService,
@@ -229,7 +226,7 @@ export class EntityFormComponent implements OnInit, OnDestroy, OnChanges, AfterV
             this.submitFunction = this.editCall;
             // But to my eyes it almost looks like a bug when I first saw it. FYI
           } else {
-            this.resourceName = this.resourceName + this.pk + '/';
+            this.resourceName = `${this.resourceName}${this.pk}/`;
           }
         } else {
           if (this.conf.saveSubmitText === undefined) {
@@ -250,7 +247,7 @@ export class EntityFormComponent implements OnInit, OnDestroy, OnChanges, AfterV
       }
 
       if (!this.conf.queryCall) {
-        this.getFunction = this.noGetFunction();
+        this.getFunction = undefined;
       } else if (this.conf.queryCall) {
         if (this.pk) {
           let pk = this.pk;
@@ -266,7 +263,7 @@ export class EntityFormComponent implements OnInit, OnDestroy, OnChanges, AfterV
             filter = this.conf.customFilter;
           }
           if (this.conf.queryKey) {
-            filter = [[[this.conf.queryKey, '=', parseInt(pk, 10) || pk]]]; // parse pk to int if possible (returns NaN otherwise)
+            filter = [[[this.conf.queryKey, '=', parseInt(pk as string, 10) || pk]]]; // parse pk to int if possible (returns NaN otherwise)
           }
           this.getFunction = this.ws.call(this.conf.queryCall, filter);
         } else {
@@ -277,7 +274,7 @@ export class EntityFormComponent implements OnInit, OnDestroy, OnChanges, AfterV
       if (!this.isNew && this.conf.queryCall && this.getFunction) {
         this.loader.open();
         this.loaderOpen = true;
-        this.getFunction.pipe(untilDestroyed(this)).subscribe((res: any) => {
+        this.getFunction.pipe(untilDestroyed(this)).subscribe((res) => {
           if (res.data) {
             this.data = res.data;
             if (typeof (this.conf.resourceTransformIncomingRestData) !== 'undefined') {
@@ -293,9 +290,9 @@ export class EntityFormComponent implements OnInit, OnDestroy, OnChanges, AfterV
               if (fg) {
                 const currentField: FieldConfig = this.fieldConfig.find((control) => control.name === key);
                 if (currentField.type === 'array') {
-                  this.setArrayValue(this.data[key], fg as FormArray, key);
+                  this.setArrayValue(this.data[key], fg as UntypedFormArray, key);
                 } else if (currentField.type === 'list') {
-                  this.setListValue(this.data[key], fg as FormArray, key);
+                  this.setListValue(this.data[key], fg as UntypedFormArray, key);
                 } else if (currentField.type === 'dict') {
                   fg.patchValue(this.data[key]);
                 } else {
@@ -312,7 +309,6 @@ export class EntityFormComponent implements OnInit, OnDestroy, OnChanges, AfterV
               }
             }
           } else {
-            this.queryResponse = res;
             if (res[0]) {
               this.wsResponse = res[0];
             } else {
@@ -332,13 +328,12 @@ export class EntityFormComponent implements OnInit, OnDestroy, OnChanges, AfterV
             } else {
               for (const key in this.wsResponse) {
                 this.wsfg = this.formGroup.controls[key];
-                this.wsResponseIdx = this.wsResponse[key];
                 if (this.wsfg) {
                   const currentField: FieldConfig = this.fieldConfig.find((control) => control.name === key);
                   const selectField: FormSelectConfig = currentField as FormSelectConfig;
 
                   if (currentField.type === 'array') {
-                    this.setArrayValue(this.wsResponse[key], this.wsfg as FormArray, key);
+                    this.setArrayValue(this.wsResponse[key], this.wsfg as UntypedFormArray, key);
                   } else if (currentField.type === 'list' || currentField.type === 'dict') {
                     this.setObjectListValue(this.wsResponse[key], this.wsfg, currentField);
                   } else if (!(selectField.type === 'select' && selectField.options.length === 0)) {
@@ -371,24 +366,22 @@ export class EntityFormComponent implements OnInit, OnDestroy, OnChanges, AfterV
     }
   }
 
-  noGetFunction(): void {
-
-  }
-
   ngOnChanges(): void {
-    if (this.formGroup) {
-      const controls = Object.keys(this.formGroup.controls);
-      const configControls = this.controls.map((item) => item.name);
-
-      controls.filter((control) => !configControls.includes(control))
-        .forEach((control) => this.formGroup.removeControl(control));
-
-      configControls.filter((control) => !controls.includes(control))
-        .forEach((name) => {
-          const config = this.fieldConfig.find((control) => control.name === name);
-          this.formGroup.addControl(name, this.createControl(config));
-        });
+    if (!this.formGroup) {
+      return;
     }
+
+    const controls = Object.keys(this.formGroup.controls);
+    const configControls = this.controls.map((item) => item.name);
+
+    controls.filter((control) => !configControls.includes(control))
+      .forEach((control) => this.formGroup.removeControl(control));
+
+    configControls.filter((control) => !controls.includes(control))
+      .forEach((name) => {
+        const config = this.fieldConfig.find((control) => control.name === name);
+        this.formGroup.addControl(name, this.createControl(config));
+      });
   }
 
   goBack(): void {
@@ -483,8 +476,8 @@ export class EntityFormComponent implements OnInit, OnDestroy, OnChanges, AfterV
       this.loader.open();
       this.loaderOpen = true;
       this.submitFunction(value)
-        .pipe(untilDestroyed(this)).subscribe(
-          (res) => {
+        .pipe(untilDestroyed(this)).subscribe({
+          next: (res) => {
             this.loader.close();
             this.loaderOpen = false;
 
@@ -521,7 +514,7 @@ export class EntityFormComponent implements OnInit, OnDestroy, OnChanges, AfterV
               });
             }
           },
-          (res) => {
+          error: (res) => {
             this.loader.close();
             this.loaderOpen = false;
             if (this.conf.errorReport) {
@@ -532,7 +525,7 @@ export class EntityFormComponent implements OnInit, OnDestroy, OnChanges, AfterV
               new EntityUtils().handleError(this, res);
             }
           },
-        );
+        });
     }
   }
 
@@ -570,7 +563,7 @@ export class EntityFormComponent implements OnInit, OnDestroy, OnChanges, AfterV
     this.router.navigate(new Array('/').concat(route));
   }
 
-  createControl(config: FieldConfig): FormControl {
+  createControl(config: FieldConfig): UntypedFormControl {
     const { disabled, validation, value } = config;
     return this.fb.control({ disabled, value }, validation);
   }
@@ -582,11 +575,11 @@ export class EntityFormComponent implements OnInit, OnDestroy, OnChanges, AfterV
     }
   }
 
-  setValue(name: string, value: any): void {
+  setValue(name: string, value: unknown): void {
     this.formGroup.controls[name].setValue(value, { emitEvent: true });
   }
 
-  setArrayValue(data: any[], formArray: FormArray, name: string): void {
+  setArrayValue(data: any[], formArray: UntypedFormArray, name: string): void {
     let arrayFieldConfigs: FieldConfig[];
     this.fieldConfig.forEach((config) => {
       if (config.name === name) {
@@ -608,7 +601,7 @@ export class EntityFormComponent implements OnInit, OnDestroy, OnChanges, AfterV
     });
   }
 
-  setListValue(data: string[], formArray: FormArray, fieldName: string): void {
+  setListValue(data: string[], formArray: UntypedFormArray, fieldName: string): void {
     const fieldConfig = this.fieldConfig.find((conf) => conf.name === fieldName);
     const config: FormListConfig = fieldConfig as FormListConfig;
     const template: FieldConfig[] = config.templateListField;
@@ -663,11 +656,13 @@ export class EntityFormComponent implements OnInit, OnDestroy, OnChanges, AfterV
     if (listConfig.type === 'list' && listConfig.listFields) {
       listConfig.listFields.forEach((field) => {
         const formGroup = this.entityFormService.createFormGroup(field);
-        (formControl as FormArray).push(formGroup);
+        (formControl as UntypedFormArray).push(formGroup);
       });
       for (let i = 0; i < listConfig.listFields.length; i++) {
         listConfig.listFields[i].forEach((subFieldConfig) => {
-          this.fieldRelationService.setRelation(subFieldConfig, (formControl as FormArray).at(i) as FormGroup);
+          this.fieldRelationService.setRelation(
+            subFieldConfig, (formControl as UntypedFormArray).at(i) as UntypedFormGroup,
+          );
         });
       }
     } else if (dictConfig.type === 'dict' && dictConfig.subFields) {

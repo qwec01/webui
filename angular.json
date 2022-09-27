@@ -25,8 +25,6 @@
             "polyfills": "src/polyfills.ts",
             "assets": [
               "src/assets",
-              "src/favicon.ico",
-              "src/icons",
               "src/assets/images",
               "src/assets/fonts",
               "src/assets/fonts/Roboto",
@@ -42,7 +40,6 @@
               "node_modules/chartist/dist/chartist.min.css",
               "node_modules/@swimlane/ngx-datatable/assets/icons.css",
               "node_modules/@circlon/angular-tree-component/css/angular-tree-component.css",
-              "node_modules/primeicons/primeicons.css",
               "node_modules/primeng/resources/primeng.min.css",
               "src/assets/styles/index.scss"
             ],
@@ -105,17 +102,17 @@
       }
     }
   },
-  "defaultProject": "truenas-scale-ui",
   "schematics": {
     "@ngneat/spectator:spectator-component": {
       "jest": true
     },
     "@schematics/angular:component": {
-      "prefix": "app",
-      "style": "scss"
+      "prefix": "ix",
+      "style": "scss",
+      "changeDetection": "OnPush"
     },
     "@schematics/angular:directive": {
-      "prefix": "app"
+      "prefix": "ix"
     }
   },
   "cli": {

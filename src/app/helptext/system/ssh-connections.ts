@@ -1,16 +1,12 @@
 import { marker as T } from '@biesbjerg/ngx-translate-extract-marker';
 
 export default {
-  fieldset_basic: T('Name and Method'),
-  fieldset_authentication: T('Authentication'),
-  fieldset_advanced: T('More Options'),
-
   name_placeholder: T('Name'),
   name_tooltip: T('Name of this SSH connection. SSH connection names \
  must be unique.'),
 
   setup_method_placeholder: T('Setup Method'),
-  setup_method_tooltip: T('How to configure the connection\:<br><br> \
+  setup_method_tooltip: T('How to configure the connection:<br><br> \
  <i>Manual</i> requires configuring authentication on the remote system. \
  This can include copying SSH keys and modifying the <i>root</i> user \
  account on that system.<br><br> \
@@ -33,13 +29,11 @@ export default {
  <i>Generate New</i> to create a new keypair and use it for this \
  connection.'),
 
-  remote_host_key_placeholder: T('Remote Host Key'),
   remote_host_key_tooltip: T('Remote system SSH key for this system to \
  authenticate the connection. When all other fields are properly \
  configured, click <b>DISCOVER REMOTE HOST KEY</b> to query the remote \
  system and automatically populate this field.'),
 
-  cipher_placeholder: T('Cipher'),
   cipher_tooltip: T('Connection security level:<br> \
  <ul><li><i>Standard</i> is most secure, but has the greatest impact on \
  connection speed.</li><br> \
@@ -49,8 +43,7 @@ export default {
  connection speed. Disabling the security should only be used within a \
  secure, trusted network.</li></ul>'),
 
-  connect_timeout_placeholder: T('Connect Timeout'),
-  connect_timeout_tooltip: T('Time \(in seconds\) before the system \
+  connect_timeout_tooltip: T('Time (in seconds) before the system \
  stops attempting to establish a connection with the remote system.'),
 
   url_placeholder: T('TrueNAS URL'),
@@ -61,7 +54,6 @@ export default {
   password_placeholder: T('Password'),
   password_tooltip: T('User account password for logging into the \
  remote system.'),
-
-  discover_remote_host_key_button: T('Discover Remote Host Key'),
-  formTitle: T('SSH Connections'),
+  otp_placeholder: T('One-Time Password (if necessary)'),
+  otp_tooltip: T('One-Time Password if two factor authentication is enabled.'),
 };

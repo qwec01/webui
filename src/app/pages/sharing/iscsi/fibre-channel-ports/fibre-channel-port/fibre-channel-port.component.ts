@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormGroup, Validators } from '@angular/forms';
+import { UntypedFormGroup, Validators } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import * as _ from 'lodash';
@@ -16,7 +16,6 @@ import {
 
 @UntilDestroy()
 @Component({
-  selector: 'app-iscsi-fibre-channel-port',
   templateUrl: './fibre-channel-port.component.html',
   styleUrls: ['./fibre-channel-port.component.scss', '../../../../../modules/entity/entity-form/entity-form.component.scss'],
   providers: [IscsiService],
@@ -80,7 +79,7 @@ export class FibreChannelPortComponent implements OnInit {
     },
   ];
   fieldConfig: FieldConfig[] = [];
-  formGroup: FormGroup;
+  formGroup: UntypedFormGroup;
 
   constructor(
     private ws: WebSocketService,
@@ -91,16 +90,18 @@ export class FibreChannelPortComponent implements OnInit {
     private dialogService: DialogService,
   ) {
     const targetField = _.find(this.fieldSets[1].config, { name: 'target' }) as FormSelectConfig;
-    this.iscsiService.getTargets().pipe(untilDestroyed(this)).subscribe((targets) => {
-      targetField.options = targets.map((target) => {
-        return {
-          label: target.name,
-          value: target.id,
-        };
-      });
-    },
-    (err) => {
-      new EntityUtils().handleWsError(this, err, this.dialogService);
+    this.iscsiService.getTargets().pipe(untilDestroyed(this)).subscribe({
+      next: (targets) => {
+        targetField.options = targets.map((target) => {
+          return {
+            label: target.name,
+            value: target.id,
+          };
+        });
+      },
+      error: (err) => {
+        new EntityUtils().handleWsError(this, err, this.dialogService);
+      },
     });
   }
 
@@ -145,20 +146,18 @@ export class FibreChannelPortComponent implements OnInit {
       value['target'] = null;
     }
     this.loader.open();
-    this.ws.call('fcport.update', [this.config.id, value]).pipe(untilDestroyed(this)).subscribe(
-      () => {
+    this.ws.call('fcport.update', [this.config.id, value]).pipe(untilDestroyed(this)).subscribe({
+      next: () => {
         this.loader.close();
         this.dialogService.info(
           this.translate.instant('Updated'),
           this.translate.instant('Fibre Channel Port {name} update successful.', { name: this.config.name }),
-          '500px',
-          'info',
         );
       },
-      (err) => {
+      error: (err) => {
         this.loader.close();
         this.dialogService.errorReport(err.trace.class, err.reason, err.trace.formatted);
       },
-    );
+    });
   }
 }

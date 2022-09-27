@@ -1,18 +1,17 @@
 import {
   ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit,
 } from '@angular/core';
-import { Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { FormBuilder } from '@ngneat/reactive-forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { Weekday } from 'app/enums/weekday.enum';
 import helptext from 'app/helptext/storage/resilver/resilver';
+import { ResilverConfigUpdate } from 'app/interfaces/resilver-config.interface';
+import { EntityUtils } from 'app/modules/entity/utils';
 import { FormErrorHandlerService } from 'app/modules/ix-forms/services/form-error-handler.service';
 import { DialogService, TaskService, WebSocketService } from 'app/services';
-import { EntityUtils } from '../../../../modules/entity/utils';
-import { CalendarService } from '../../../../services/calendar.service';
+import { CalendarService } from 'app/services/calendar.service';
 
 @UntilDestroy()
 @Component({
@@ -53,7 +52,6 @@ export class ResilverConfigComponent implements OnInit {
     private errorHandler: FormErrorHandlerService,
     private cdr: ChangeDetectorRef,
     private fb: FormBuilder,
-    private translate: TranslateService,
     private calendarService: CalendarService,
     private taskService: TaskService,
     private dialogService: DialogService,
@@ -65,34 +63,37 @@ export class ResilverConfigComponent implements OnInit {
 
     this.ws.call('pool.resilver.config')
       .pipe(untilDestroyed(this))
-      .subscribe(
-        (config) => {
+      .subscribe({
+        next: (config) => {
           this.form.patchValue(config);
           this.isFormLoading = false;
           this.cdr.markForCheck();
         },
-        (error) => {
+        error: (error) => {
           this.isFormLoading = false;
           this.cdr.markForCheck();
-          new EntityUtils().handleWsError(null, error, this.dialogService);
+          new EntityUtils().handleWsError(this, error, this.dialogService);
         },
-      );
+      });
   }
 
   onSubmit(): void {
     const values = this.form.value;
 
     this.isFormLoading = true;
-    this.ws.call('pool.resilver.update', [values])
+    this.ws.call('pool.resilver.update', [values as ResilverConfigUpdate])
       .pipe(untilDestroyed(this))
-      .subscribe(() => {
-        this.isFormLoading = false;
-        this.cdr.markForCheck();
-        this.router.navigate(['/data-protection']);
-      }, (error) => {
-        this.isFormLoading = false;
-        this.errorHandler.handleWsFormError(error, this.form);
-        this.cdr.markForCheck();
+      .subscribe({
+        next: () => {
+          this.isFormLoading = false;
+          this.cdr.markForCheck();
+          this.router.navigate(['/data-protection']);
+        },
+        error: (error) => {
+          this.isFormLoading = false;
+          this.errorHandler.handleWsFormError(error, this.form);
+          this.cdr.markForCheck();
+        },
       });
   }
 }

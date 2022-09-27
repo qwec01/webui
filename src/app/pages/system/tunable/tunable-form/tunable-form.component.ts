@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
-import { Validators } from '@angular/forms';
-import { FormBuilder } from '@ngneat/reactive-forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
@@ -58,10 +57,10 @@ export class TunableFormComponent {
   }
 
   onSubmit(): void {
-    const values: TunableUpdate = {
+    const values = {
       ...this.form.value,
       type: TunableType.Sysctl,
-    };
+    } as TunableUpdate;
 
     this.isFormLoading = true;
     let request$: Observable<unknown>;
@@ -74,14 +73,17 @@ export class TunableFormComponent {
       ]);
     }
 
-    request$.pipe(untilDestroyed(this)).subscribe(() => {
-      this.isFormLoading = false;
-      this.cdr.markForCheck();
-      this.slideInService.close();
-    }, (error) => {
-      this.isFormLoading = false;
-      this.errorHandler.handleWsFormError(error, this.form);
-      this.cdr.markForCheck();
+    request$.pipe(untilDestroyed(this)).subscribe({
+      next: () => {
+        this.isFormLoading = false;
+        this.cdr.markForCheck();
+        this.slideInService.close();
+      },
+      error: (error) => {
+        this.isFormLoading = false;
+        this.errorHandler.handleWsFormError(error, this.form);
+        this.cdr.markForCheck();
+      },
     });
   }
 }

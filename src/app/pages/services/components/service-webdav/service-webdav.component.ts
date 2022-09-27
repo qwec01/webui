@@ -3,10 +3,10 @@ import {
   ChangeDetectorRef, Component, OnInit,
 } from '@angular/core';
 import {
+  FormBuilder,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder } from '@ngneat/reactive-forms';
+import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -18,7 +18,6 @@ import { WebSocketService, ValidationService, DialogService } from 'app/services
 
 @UntilDestroy()
 @Component({
-  selector: 'webdav-edit',
   templateUrl: './service-webdav.component.html',
   styleUrls: ['./service-webdav.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -97,7 +96,6 @@ export class ServiceWebdavComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     protected router: Router,
-    protected route: ActivatedRoute,
     protected ws: WebSocketService,
     protected validationService: ValidationService,
     private cdr: ChangeDetectorRef,
@@ -108,18 +106,18 @@ export class ServiceWebdavComponent implements OnInit {
   ngOnInit(): void {
     this.isFormLoading = true;
 
-    this.ws.call('webdav.config').pipe(untilDestroyed(this)).subscribe(
-      (config: WebdavConfig) => {
+    this.ws.call('webdav.config').pipe(untilDestroyed(this)).subscribe({
+      next: (config: WebdavConfig) => {
         this.form.patchValue(config);
         this.isFormLoading = false;
         this.cdr.markForCheck();
       },
-      (error) => {
+      error: (error) => {
         this.isFormLoading = false;
-        new EntityUtils().handleWsError(null, error, this.dialogService);
+        new EntityUtils().handleWsError(this, error, this.dialogService);
         this.cdr.markForCheck();
       },
-    );
+    });
 
     this.form.controls.protocol.valueChanges.pipe(untilDestroyed(this)).subscribe(
       (value: WebdavProtocol) => {
@@ -167,14 +165,17 @@ export class ServiceWebdavComponent implements OnInit {
 
     const values = this.form.value;
     delete values.password2;
-    this.ws.call('webdav.update', [values] as [WebdavConfigUpdate]).pipe(untilDestroyed(this)).subscribe(() => {
-      this.isFormLoading = false;
-      this.cdr.markForCheck();
-      this.router.navigate(['/', 'services']);
-    }, (error) => {
-      this.isFormLoading = false;
-      this.errorHandler.handleWsFormError(error, this.form);
-      this.cdr.markForCheck();
+    this.ws.call('webdav.update', [values] as [WebdavConfigUpdate]).pipe(untilDestroyed(this)).subscribe({
+      next: () => {
+        this.isFormLoading = false;
+        this.cdr.markForCheck();
+        this.router.navigate(['/', 'services']);
+      },
+      error: (error) => {
+        this.isFormLoading = false;
+        this.errorHandler.handleWsFormError(error, this.form);
+        this.cdr.markForCheck();
+      },
     });
   }
 

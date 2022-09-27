@@ -1,7 +1,8 @@
 import { ComponentHarness, HarnessPredicate, parallel } from '@angular/cdk/testing';
 import { MatSelectHarness, SelectHarnessFilters } from '@angular/material/select/testing';
+import { IxLabelHarness } from 'app/modules/ix-forms/components/ix-label/ix-label.harness';
 import { IxFormControlHarness } from 'app/modules/ix-forms/interfaces/ix-form-control-harness.interface';
-import { getErrorText } from '../../utils/harness.utils';
+import { getErrorText } from 'app/modules/ix-forms/utils/harness.utils';
 
 export interface IxSelectHarnessFilters extends SelectHarnessFilters {
   label?: string;
@@ -20,8 +21,11 @@ export class IxSelectHarness extends ComponentHarness implements IxFormControlHa
   getErrorText = getErrorText;
 
   async getLabelText(): Promise<string> {
-    const label = await this.locatorFor('label')();
-    return label.text({ exclude: '.required' });
+    const label = await this.locatorForOptional(IxLabelHarness)();
+    if (!label) {
+      return '';
+    }
+    return label.getLabel();
   }
 
   async getValue(): Promise<string | string[]> {

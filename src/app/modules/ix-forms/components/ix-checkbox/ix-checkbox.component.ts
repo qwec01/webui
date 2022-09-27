@@ -4,7 +4,7 @@ import {
 import {
   ControlValueAccessor, NgControl,
 } from '@angular/forms';
-import { MatCheckboxChange } from '@angular/material/checkbox/checkbox';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
 @UntilDestroy()
@@ -18,6 +18,7 @@ export class IxCheckboxComponent implements ControlValueAccessor {
   @Input() label: string;
   @Input() hint: string;
   @Input() tooltip: string;
+  @Input() warning: string;
   @Input() required: boolean;
 
   isDisabled = false;

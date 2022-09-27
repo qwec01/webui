@@ -1,7 +1,7 @@
 import {
   ChangeDetectorRef, Component, Inject, OnInit,
 } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import helptext from 'app/helptext/topbar';
@@ -16,7 +16,6 @@ export interface TruecommandSignupModalState {
 
 @UntilDestroy()
 @Component({
-  selector: 'truecommand-signup-modal',
   styleUrls: ['./truecommand-signup-modal.component.scss'],
   templateUrl: './truecommand-signup-modal.component.html',
 })
@@ -38,7 +37,7 @@ export class TruecommandSignupModalComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) private data: TruecommandSignupModalState,
     private dialogService: DialogService,
     private dialogRef: MatDialogRef<TruecommandSignupModalComponent>,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private loader: AppLoaderService,
     private ws: WebSocketService,
   ) {}
@@ -67,20 +66,20 @@ export class TruecommandSignupModalComponent implements OnInit {
       params.api_key = this.form.value.api_key;
     }
 
-    this.ws.call('truecommand.update', [params]).pipe(untilDestroyed(this)).subscribe(
-      () => {
+    this.ws.call('truecommand.update', [params]).pipe(untilDestroyed(this)).subscribe({
+      next: () => {
         this.loader.close();
         this.dialogRef.close();
 
         if (!this.isConnected) {
-          this.dialogService.info(helptext.checkEmailInfoDialog.title, helptext.checkEmailInfoDialog.message, '500px', 'info');
+          this.dialogService.info(helptext.checkEmailInfoDialog.title, helptext.checkEmailInfoDialog.message);
         }
       },
-      (err) => {
+      error: (err) => {
         this.loader.close();
         new EntityUtils().handleWsError(this, err, this.dialogService);
       },
-    );
+    });
   }
 
   onDeregister(): void {
@@ -97,8 +96,8 @@ export class TruecommandSignupModalComponent implements OnInit {
       this.loader.open();
       this.ws.call('truecommand.update', [{ api_key: null, enabled: false }])
         .pipe(untilDestroyed(this))
-        .subscribe(
-          () => {
+        .subscribe({
+          next: () => {
             this.loader.close();
             this.dialogRef.close({ deregistered: true });
             this.dialogService.generalDialog({
@@ -107,11 +106,11 @@ export class TruecommandSignupModalComponent implements OnInit {
               hideCancel: true,
             });
           },
-          (err) => {
+          error: (err) => {
             this.loader.close();
             new EntityUtils().handleWsError(this, err, this.dialogService);
           },
-        );
+        });
     });
   }
 }

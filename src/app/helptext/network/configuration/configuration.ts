@@ -13,6 +13,9 @@ export default {
   hostname_virtual_tooltip: T('When using a virtual host, this is also \
  used as the Kerberos principal name.'),
 
+  inherit_dhcp_placeholder: T('Inherit domain from DHCP'),
+  inherit_dhcp_tooltip: T('When this checkbox is checked, domain is inherited from DHCP.'),
+
   domain_placeholder: T('Domain'),
   domain_tooltip: T('System domain name, like <i>example.com</i>'),
 
@@ -66,6 +69,7 @@ export default {
   gateway: T('Default Gateway'),
   nameservers: T('DNS Servers'),
   outbound_network: T('Outbound Network'),
+  outbound_activity: T('Outbound Activity'),
   other: T('Other Settings'),
   service_announcement: T('Service Announcement'),
 
@@ -101,6 +105,7 @@ communicate externally. All other external traffic is restricted.'),
     },
   },
   outbound_network_value: {
+    placeholder: T('Allowed Services'),
     tooltip: T('Select the system services that will be allowed to \
 communicate externally.'),
   },

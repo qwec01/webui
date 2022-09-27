@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy, ChangeDetectorRef, Component, Input,
 } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { MatSelectChange } from '@angular/material/select/select';
+import { MatSelectChange } from '@angular/material/select';
 import { NetworkService } from 'app/services';
 
 @Component({
@@ -72,6 +72,7 @@ export class IxIpInputWithNetmaskComponent implements ControlValueAccessor {
   }
 
   private setAddressAndNetmask(ipWithNetmask: string): void {
+    ipWithNetmask = ipWithNetmask || '';
     const [address, netmask] = ipWithNetmask.split('/');
     this.address = address;
     this.netmask = netmask;

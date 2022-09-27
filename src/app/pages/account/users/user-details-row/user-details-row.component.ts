@@ -3,6 +3,7 @@ import {
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
+import { lastValueFrom } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Option } from 'app/interfaces/option.interface';
 import { User } from 'app/interfaces/user.interface';
@@ -17,7 +18,7 @@ import { IxSlideInService } from 'app/services/ix-slide-in.service';
 
 @UntilDestroy()
 @Component({
-  selector: 'user-details-row',
+  selector: 'ix-user-details-row',
   templateUrl: './user-details-row.component.html',
   styleUrls: ['./user-details-row.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,7 +27,6 @@ export class UserDetailsRowComponent {
   @Input() user: User;
   @Input() colspan: number;
   @Output() update = new EventEmitter<void>();
-  private editForm: UserFormComponent;
 
   constructor(
     private ws: WebSocketService,
@@ -45,7 +45,6 @@ export class UserDetailsRowComponent {
       { label: this.translate.instant('Password Disabled'), value: user.password_disabled.toString() },
       { label: this.translate.instant('Lock User'), value: user.locked.toString() },
       { label: this.translate.instant('Permit Sudo'), value: user.sudo.toString() },
-      { label: this.translate.instant('Microsoft Account'), value: user.microsoft_account.toString() },
       { label: this.translate.instant('Samba Authentication'), value: user.smb.toString() },
     ];
   }
@@ -59,9 +58,11 @@ export class UserDetailsRowComponent {
 
   async doDelete(user: User): Promise<void> {
     this.loader.open();
-    const showCheckboxIfLastMember = await this.ws.call('group.query', [[['id', '=', user.group.id]]]).pipe(
-      map((groups) => (groups.length ? groups[0].users.length === 1 : false)),
-    ).toPromise();
+    const showCheckboxIfLastMember = await lastValueFrom(
+      this.ws.call('group.query', [[['id', '=', user.group.id]]]).pipe(
+        map((groups) => (groups.length ? groups[0].users.length === 1 : false)),
+      ),
+    );
 
     const confirmOptions: DialogFormConfiguration = {
       title: this.translate.instant('Delete User'),
@@ -82,14 +83,14 @@ export class UserDetailsRowComponent {
       },
       customSubmit: (entityDialog: EntityDialogComponent) => {
         entityDialog.dialogRef.close(true);
-        this.ws.call('user.delete', [user.id, entityDialog.formValue]).pipe(untilDestroyed(this)).subscribe(
-          () => {
+        this.ws.call('user.delete', [user.id, entityDialog.formValue]).pipe(untilDestroyed(this)).subscribe({
+          next: () => {
             this.update.emit();
           },
-          (err) => {
+          error: (err) => {
             new EntityUtils().handleWsError(this, err, this.dialogService);
           },
-        );
+        });
       },
     };
 

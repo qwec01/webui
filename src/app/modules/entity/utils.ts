@@ -1,22 +1,9 @@
 import * as _ from 'lodash';
-import { ExplorerType } from 'app/enums/explorer-type.enum';
-import { ChartSchemaNode } from 'app/interfaces/chart-release.interface';
 import { Job } from 'app/interfaces/job.interface';
 import { Option } from 'app/interfaces/option.interface';
 import { WebsocketError } from 'app/interfaces/websocket-error.interface';
 import { EntityErrorHandler } from 'app/modules/entity/entity-form/interfaces/entity-error-handler.interface';
-import {
-  FieldConfig,
-  FormCheckboxConfig,
-  FormDictConfig,
-  FormExplorerConfig,
-  FormInputConfig,
-  FormIpWithNetmaskConfig,
-  FormListConfig,
-  FormSelectConfig,
-} from 'app/modules/entity/entity-form/models/field-config.interface';
-import { Relation, RelationGroup } from 'app/modules/entity/entity-form/models/field-relation.interface';
-import { RelationAction } from 'app/modules/entity/entity-form/models/relation-action.enum';
+import { FieldConfig } from 'app/modules/entity/entity-form/models/field-config.interface';
 import { DialogService } from 'app/services';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -36,33 +23,33 @@ export interface FlattenedData extends Record<string, unknown> {
 }
 
 export class EntityUtils {
-  handleError(entity: any, res: any): void {
-    if (res.code === 409) {
-      this.handleObjError(entity, res);
-    } else if (res.code === 400) {
-      if (typeof res.error === 'object') {
-        this.handleObjError(entity, res);
+  handleError(entity: any, error: any): void {
+    if (error.code === 409) {
+      this.handleObjError(entity, error);
+    } else if (error.code === 400) {
+      if (typeof error.error === 'object') {
+        this.handleObjError(entity, error);
       } else {
-        entity.error = res.error;
+        entity.error = error.error;
       }
-    } else if (res.code === 500) {
-      if (res.error.error_message) {
-        entity.error = res.error.error_message;
+    } else if (error.code === 500) {
+      if (error.error.error_message) {
+        entity.error = error.error.error_message;
       } else {
-        entity.error = 'Server error: ' + res.error;
+        entity.error = 'Server error: ' + error.error;
       }
     } else {
       entity.error = 'Fatal error! Check logs.';
-      console.error('Unknown error code', res.code);
+      console.error('Unknown error code', error.code);
     }
   }
 
-  handleObjError(entity: EntityErrorHandler, res: any): void {
+  handleObjError(entity: EntityErrorHandler, error: any): void {
     let scroll = false;
     entity.error = '';
-    for (const i in res.error) {
-      if (res.error.hasOwnProperty(i)) {
-        const field = res.error[i];
+    for (const i in error.error) {
+      if (error.error.hasOwnProperty(i)) {
+        const field = error.error[i];
         const fc = _.find(entity.fieldConfig, { name: i });
         if (fc) {
           const element = document.getElementById(i);
@@ -277,190 +264,6 @@ export class EntityUtils {
     }
 
     return result;
-  }
-
-  createRelations(relations: Relation[]): RelationGroup[] {
-    const result = relations.map((relation) => {
-      const relationFieldName = relation.fieldName;
-
-      return {
-        action: RelationAction.Show,
-        when: [{
-          name: relationFieldName,
-          operator: relation.operatorName,
-          value: relation.operatorValue,
-        }],
-      };
-    });
-
-    return result;
-  }
-
-  parseSchemaFieldConfig(schemaConfig: ChartSchemaNode): FieldConfig[] {
-    let results: FieldConfig[] = [];
-
-    if (schemaConfig.schema.hidden) {
-      return results;
-    }
-
-    const name = schemaConfig.variable;
-
-    let fieldConfig: FieldConfig = {
-      name,
-    } as FieldConfig;
-
-    if (schemaConfig.schema.required !== undefined) {
-      fieldConfig.required = schemaConfig.schema.required;
-    }
-    if (schemaConfig.schema.default !== undefined) {
-      fieldConfig.value = schemaConfig.schema.default;
-    }
-    if (schemaConfig.description !== undefined) {
-      fieldConfig.tooltip = schemaConfig.description;
-    }
-    if (schemaConfig.label !== undefined) {
-      fieldConfig.placeholder = schemaConfig.label;
-    }
-
-    let relations: Relation[] = null;
-    if (schemaConfig.schema.show_if) {
-      relations = schemaConfig.schema.show_if.map((item) => ({
-        fieldName: item[0],
-        operatorName: item[1],
-        operatorValue: item[2],
-      }));
-    }
-
-    // TODO: Check if condition can be simplified to !schemaConfig.schema.editable
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-boolean-literal-compare
-    if (schemaConfig.schema.editable === false) {
-      fieldConfig['readonly'] = true;
-    }
-
-    if (schemaConfig.schema.enum) {
-      const selectConfig = fieldConfig as FormSelectConfig;
-      selectConfig['type'] = 'select';
-      selectConfig['enableTextWrapForOptions'] = true;
-      selectConfig['options'] = schemaConfig.schema.enum.map((option) => ({
-        value: option.value,
-        label: option.description,
-      }));
-    } else if (schemaConfig.schema.type === 'string') {
-      const inputConfig = fieldConfig as FormInputConfig;
-      inputConfig['type'] = 'input';
-      if (schemaConfig.schema.private) {
-        inputConfig['inputType'] = 'password';
-        inputConfig['togglePw'] = true;
-      }
-
-      if (schemaConfig.schema.min_length !== undefined) {
-        inputConfig['min'] = schemaConfig.schema.min_length;
-      }
-
-      if (schemaConfig.schema.max_length !== undefined) {
-        inputConfig['max'] = schemaConfig.schema.max_length;
-      }
-    } else if (schemaConfig.schema.type === 'int') {
-      const inputConfig = fieldConfig as FormInputConfig;
-      inputConfig['type'] = 'input';
-      inputConfig['inputType'] = 'number';
-      if (schemaConfig.schema.min !== undefined) {
-        inputConfig['min'] = schemaConfig.schema.min;
-      }
-
-      if (schemaConfig.schema.max !== undefined) {
-        inputConfig['max'] = schemaConfig.schema.max;
-      }
-    } else if (schemaConfig.schema.type === 'boolean') {
-      const checkboxConfig = fieldConfig as FormCheckboxConfig;
-      checkboxConfig['type'] = 'checkbox';
-    } else if (schemaConfig.schema.type === 'ipaddr') {
-      if (!schemaConfig.schema.cidr) {
-        const ipInputConfig = fieldConfig as FormInputConfig;
-        ipInputConfig['type'] = 'input';
-      } else {
-        const ipConfig = fieldConfig as FormIpWithNetmaskConfig;
-        ipConfig['type'] = 'ipwithnetmask';
-      }
-    } else if (schemaConfig.schema.type === 'hostpath') {
-      fieldConfig = {
-        ...fieldConfig,
-        type: 'explorer',
-        initial: '/mnt',
-        explorerType: ExplorerType.File,
-      } as FormExplorerConfig;
-    } else if (schemaConfig.schema.type === 'path') {
-      const inputConfig = fieldConfig as FormInputConfig;
-      inputConfig['type'] = 'input';
-    } else if (schemaConfig.schema.type === 'list') {
-      const listConfig = fieldConfig as FormListConfig;
-      listConfig['type'] = 'list';
-      listConfig['label'] = `Configure ${schemaConfig.label}`;
-      listConfig['width'] = '100%';
-      listConfig['listFields'] = [];
-
-      let listFields: FieldConfig[] = [];
-      schemaConfig.schema.items.forEach((item) => {
-        const fields = this.parseSchemaFieldConfig(item);
-        listFields = listFields.concat(fields);
-      });
-
-      listConfig['templateListField'] = listFields;
-    } else if (schemaConfig.schema.type === 'dict') {
-      const dictConfig = fieldConfig as FormDictConfig;
-      dictConfig['type'] = 'dict';
-      dictConfig['label'] = schemaConfig.label;
-      dictConfig['width'] = '100%';
-
-      if (schemaConfig.schema.attrs.length > 0) {
-        if (relations) {
-          dictConfig['relation'] = this.createRelations(relations);
-        }
-
-        let subFields: FieldConfig[] = [];
-        schemaConfig.schema.attrs.forEach((dictConfig) => {
-          const fields = this.parseSchemaFieldConfig(dictConfig);
-          subFields = subFields.concat(fields);
-        });
-        dictConfig['subFields'] = subFields;
-      }
-    }
-
-    if (fieldConfig) {
-      if (fieldConfig['type']) {
-        if (fieldConfig && relations) {
-          fieldConfig['relation'] = this.createRelations(relations);
-        }
-
-        results.push(fieldConfig);
-
-        if (schemaConfig.schema.subquestions) {
-          schemaConfig.schema.subquestions.forEach((subquestion) => {
-            const subResults = this.parseSchemaFieldConfig(subquestion);
-
-            if (schemaConfig.schema.show_subquestions_if !== undefined) {
-              subResults.forEach((subFieldConfig) => {
-                subFieldConfig['isHidden'] = true;
-
-                subFieldConfig['relation'] = [{
-                  action: RelationAction.Show,
-                  when: [{
-                    name,
-                    value: schemaConfig.schema.show_subquestions_if,
-                  }],
-                }];
-              });
-            }
-
-            results = results.concat(subResults);
-          });
-        }
-      } else {
-        console.error('Unsupported type=', schemaConfig);
-      }
-    }
-
-    return results;
   }
 
   snakeToPascal(str: string): string {

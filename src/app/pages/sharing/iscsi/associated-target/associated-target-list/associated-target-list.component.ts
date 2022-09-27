@@ -10,17 +10,17 @@ import { WebsocketError } from 'app/interfaces/websocket-error.interface';
 import { EntityTableComponent } from 'app/modules/entity/entity-table/entity-table.component';
 import { EntityTableAction, EntityTableConfig } from 'app/modules/entity/entity-table/entity-table.interface';
 import { EntityUtils } from 'app/modules/entity/utils';
+import { AssociatedTargetFormComponent } from 'app/pages/sharing/iscsi/associated-target/associated-target-form/associated-target-form.component';
 import {
   AppLoaderService, DialogService, IscsiService, WebSocketService,
 } from 'app/services';
 import { IxSlideInService } from 'app/services/ix-slide-in.service';
-import { AssociatedTargetFormComponent } from '../associated-target-form/associated-target-form.component';
 
 @UntilDestroy()
 @Component({
-  selector: 'app-iscsi-associated-target-list',
+  selector: 'ix-iscsi-associated-target-list',
   template: `
-    <entity-table [conf]="this" [title]="tableTitle"></entity-table>
+    <ix-entity-table [conf]="this" [title]="tableTitle"></ix-entity-table>
   `,
   providers: [IscsiService],
 })
@@ -125,13 +125,13 @@ export class AssociatedTargetListComponent implements EntityTableConfig {
             }).pipe(filter(Boolean), untilDestroyed(this)).subscribe(() => {
               this.loader.open();
               this.entityList.loaderOpen = true;
-              this.ws.call(this.wsDelete, [rowinner.id, true]).pipe(untilDestroyed(this)).subscribe(
-                () => { this.entityList.getData(); },
-                (error: WebsocketError) => {
+              this.ws.call(this.wsDelete, [rowinner.id, true]).pipe(untilDestroyed(this)).subscribe({
+                next: () => this.entityList.getData(),
+                error: (error: WebsocketError) => {
                   new EntityUtils().handleError(this, error);
                   this.loader.close();
                 },
-              );
+              });
             });
           },
         );

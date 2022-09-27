@@ -1,0 +1,20 @@
+<span class="prefix-icon">
+  <ix-icon name="search"></ix-icon>
+</span>
+
+<input
+  #ixSearchInput
+  matInput
+  [value]="searchValue"
+  [disabled]="disabled"
+  [placeholder]="'Search' | translate"
+  (input)="onInput(ixSearchInput.value)"
+/>
+
+<span
+  *ngIf="!!ixSearchInput.value"
+  class="reset-icon reset-input"
+  (click)="onResetInput();"
+>
+  <ix-icon name="mdi-close-circle"></ix-icon>
+</span>

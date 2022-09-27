@@ -6,21 +6,25 @@ import {
   OnDestroy,
   OnChanges,
   SimpleChanges,
+  OnInit,
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { UUID } from 'angular2-uuid';
 import { add, sub } from 'date-fns';
-import { filter, take } from 'rxjs/operators';
+import { dygraphs } from 'dygraphs';
+import _ from 'lodash';
+import { lastValueFrom } from 'rxjs';
+import {
+  delay, filter, map, take,
+} from 'rxjs/operators';
+import { toggleMenuDuration } from 'app/constants/toggle-menu-duration';
 import { ProductType } from 'app/enums/product-type.enum';
 import { CoreEvent } from 'app/interfaces/events';
-import { ThemeChangedEvent, ThemeDataEvent } from 'app/interfaces/events/theme-events.interface';
 import { ReportingGraph } from 'app/interfaces/reporting-graph.interface';
-import { ReportingData } from 'app/interfaces/reporting.interface';
-import { Theme } from 'app/interfaces/theme.interface';
+import { ReportingAggregationKeys, ReportingData } from 'app/interfaces/reporting.interface';
 import { EmptyConfig, EmptyType } from 'app/modules/entity/entity-empty/entity-empty.component';
 import { WidgetComponent } from 'app/pages/dashboard/components/widget/widget.component';
 import { LineChartComponent } from 'app/pages/reports-dashboard/components/line-chart/line-chart.component';
@@ -29,7 +33,9 @@ import { WebSocketService } from 'app/services/';
 import { CoreService } from 'app/services/core-service/core.service';
 import { DialogService } from 'app/services/dialog.service';
 import { LocaleService } from 'app/services/locale.service';
+import { ThemeService } from 'app/services/theme/theme.service';
 import { AppState } from 'app/store';
+import { selectTheme, waitForPreferences } from 'app/store/preferences/preferences.selectors';
 import { selectTimezone } from 'app/store/system-config/system-config.selectors';
 
 interface DateTime {
@@ -55,13 +61,18 @@ export interface Report extends ReportingGraph {
   errorConf?: EmptyConfig;
 }
 
+export type LegendDataWithStackedTotalHtml = dygraphs.LegendData & {
+  stackedTotalHTML: string;
+  stackedTotal?: number;
+};
+
 @UntilDestroy()
 @Component({
-  selector: 'report',
+  selector: 'ix-report',
   templateUrl: './report.component.html',
   styleUrls: ['./report.component.scss'],
 })
-export class ReportComponent extends WidgetComponent implements AfterViewInit, OnChanges, OnDestroy {
+export class ReportComponent extends WidgetComponent implements AfterViewInit, OnInit, OnChanges, OnDestroy {
   // Labels
   @Input() localControls?: boolean = true;
   @Input() dateFormat?: DateTime;
@@ -78,15 +89,15 @@ export class ReportComponent extends WidgetComponent implements AfterViewInit, O
   readonly ProductType = ProductType;
 
   get reportTitle(): string {
-    const trimmed = this.report.title.replace(/[\(\)]/g, '');
+    const trimmed = this.report.title.replace(/[()]/g, '');
     return this.identifier ? trimmed.replace(/{identifier}/, this.identifier) : this.report.title;
   }
 
-  get aggregationKeys(): (keyof ReportingData['aggregations'])[] {
-    return Object.keys(this.data.aggregations) as (keyof ReportingData['aggregations'])[];
+  get aggregationKeys(): ReportingAggregationKeys[] {
+    return Object.keys(this.data.aggregations) as ReportingAggregationKeys[];
   }
 
-  legendData: any = {};
+  legendData: LegendDataWithStackedTotalHtml = {} as LegendDataWithStackedTotalHtml;
   subtitle: string = this.translate.instant('% of all cores');
   altTitle = '';
   isActive = true;
@@ -135,8 +146,48 @@ export class ReportComponent extends WidgetComponent implements AfterViewInit, O
     return result.toLowerCase() !== 'invalid date' ? result : null;
   }
 
+  formatInterfaceUnit(value: string): string {
+    if (value && value.split(' ', 2)[0] !== '0') {
+      if (value.split(' ', 2)[1]) {
+        value += '/s';
+      } else {
+        value += 'b/s';
+      }
+    }
+    return value;
+  }
+
+  formatLegendSeries(series: dygraphs.SeriesLegendData[], data: ReportingData): dygraphs.SeriesLegendData[] {
+    switch (data.name) {
+      case 'interface':
+        series.forEach((element) => {
+          element.yHTML = this.formatInterfaceUnit(element.yHTML);
+        });
+        break;
+      default:
+        break;
+    }
+    return series;
+  }
+
+  formatData(data: ReportingData): ReportingData {
+    switch (data.name) {
+      case 'interface':
+        if (data.aggregations) {
+          for (const key in data.aggregations) {
+            _.set(data.aggregations, key, data.aggregations[key as ReportingAggregationKeys].map(
+              (value) => this.formatInterfaceUnit(value),
+            ));
+          }
+        }
+        break;
+      default:
+        break;
+    }
+    return data;
+  }
+
   constructor(
-    public router: Router,
     public translate: TranslateService,
     private reportsService: ReportsService,
     private ws: WebSocketService,
@@ -144,35 +195,51 @@ export class ReportComponent extends WidgetComponent implements AfterViewInit, O
     private dialog: DialogService,
     private core: CoreService,
     private store$: Store<AppState>,
+    private themeService: ThemeService,
   ) {
     super(translate);
 
     this.core.register({ observerClass: this, eventName: 'ReportData-' + this.chartId }).pipe(
       untilDestroyed(this),
     ).subscribe((evt: CoreEvent) => {
-      this.data = evt.data;
+      this.data = this.formatData(evt.data);
       this.handleError(evt);
     });
 
     this.core.register({ observerClass: this, eventName: 'LegendEvent-' + this.chartId }).pipe(untilDestroyed(this)).subscribe((evt: CoreEvent) => {
       const clone = { ...evt.data };
       clone.xHTML = this.formatTime(evt.data.xHTML);
+      clone.series = this.formatLegendSeries(evt.data.series, this.data);
       this.legendData = clone;
     });
 
-    this.core.register({ observerClass: this, eventName: 'ThemeData' }).pipe(untilDestroyed(this)).subscribe((evt: ThemeDataEvent) => {
-      this.chartColors = this.processThemeColors(evt.data);
+    this.store$.select(selectTheme).pipe(
+      filter(Boolean),
+      map(() => this.themeService.currentTheme()),
+      untilDestroyed(this),
+    ).subscribe(() => {
+      this.chartColors = this.themeService.getColorPattern();
     });
-
-    this.core.register({ observerClass: this, eventName: 'ThemeChanged' }).pipe(untilDestroyed(this)).subscribe((evt: ThemeChangedEvent) => {
-      this.chartColors = this.processThemeColors(evt.data);
-    });
-
-    this.core.emit({ name: 'ThemeDataRequest', sender: this });
 
     this.store$.select(selectTimezone).pipe(untilDestroyed(this)).subscribe((timezone) => {
       this.timezone = timezone;
     });
+
+    this.store$.pipe(
+      waitForPreferences,
+      filter(() => Boolean(this.lineChart?.chart)),
+      delay(toggleMenuDuration),
+      untilDestroyed(this),
+    ).subscribe(() => {
+      this.lineChart.chart.resize();
+    });
+  }
+
+  async ngOnInit(): Promise<void> {
+    const zoom = this.zoomLevels[this.timeZoomIndex];
+    const rrdOptions = await this.convertTimespan(zoom.timespan);
+    const identifier = this.report.identifiers ? this.report.identifiers[0] : null;
+    this.fetchReportData(rrdOptions, this.report, identifier);
   }
 
   ngOnDestroy(): void {
@@ -202,20 +269,11 @@ export class ReportComponent extends WidgetComponent implements AfterViewInit, O
     }
   }
 
-  // TODO: Helps with template type checking. To be removed when 'strict' checks are enabled.
-  aggregationKey(key: keyof ReportingData['aggregations']): keyof ReportingData['aggregations'] {
-    return key;
-  }
-
   private async setupData(changes: SimpleChanges): Promise<void> {
     const zoom = this.zoomLevels[this.timeZoomIndex];
     const rrdOptions = await this.convertTimespan(zoom.timespan);
     const identifier = changes.report.currentValue.identifiers ? changes.report.currentValue.identifiers[0] : null;
     this.fetchReportData(rrdOptions, changes.report.currentValue, identifier);
-  }
-
-  private processThemeColors(theme: Theme): string[] {
-    return theme.accentColors.map((color) => theme[color]);
   }
 
   setChartInteractive(value: boolean): void {
@@ -276,7 +334,7 @@ export class ReportComponent extends WidgetComponent implements AfterViewInit, O
     let durationUnit: keyof Duration;
     let value: number;
 
-    const now = await this.reportsService.getServerTime().pipe(untilDestroyed(this)).toPromise();
+    const now = await lastValueFrom(this.reportsService.getServerTime().pipe(untilDestroyed(this)));
 
     let startDate: Date;
     let endDate: Date;

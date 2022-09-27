@@ -1,42 +1,55 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Params } from '@angular/router';
+import {
+  ActivatedRoute, NavigationEnd, Router,
+} from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 export interface RoutePart {
   title: string;
   breadcrumb: string;
-  params?: Params;
   url: string;
-  toplevel: boolean;
   disabled?: boolean;
 }
 
 @Injectable()
 export class RoutePartsService {
-  routeParts: RoutePart[];
+  private fullRouteParts: RoutePart[];
 
-  generateRouteParts(snapshot: ActivatedRouteSnapshot): RoutePart[] {
-    let routeParts: RoutePart[] = [];
-    if (snapshot) {
-      if (snapshot.firstChild) {
-        routeParts = routeParts.concat(this.generateRouteParts(snapshot.firstChild));
+  constructor(private activatedRoute: ActivatedRoute, private router: Router) {
+    // only execute when routechange
+    this.fullRouteParts = this.generateRouteParts(this.activatedRoute.root);
+    this.router.events.pipe(
+      filter((event) => event instanceof NavigationEnd),
+    ).subscribe(() => {
+      this.fullRouteParts = this.generateRouteParts(this.activatedRoute.root);
+    });
+  }
+
+  private generateRouteParts(route: ActivatedRoute, url = '', routeParts: RoutePart[] = []): RoutePart[] {
+    const children: ActivatedRoute[] = route.children;
+
+    if (children.length === 0) {
+      return routeParts;
+    }
+
+    for (const child of children) {
+      const routeUrl: string = child.snapshot.url.map((segment) => segment.path).join('/');
+      if (routeUrl) {
+        url += `/${routeUrl}`;
       }
-      if (snapshot.data['title'] && snapshot.url.length) {
-        let targetUrl: any = snapshot.url[0];
-        for (let i = 1; i < snapshot.url.length; i++) {
-          targetUrl = targetUrl + '/' + snapshot.url[i];
-        }
-        let toplevel = false;
-        if (snapshot.data['toplevel']) {
-          toplevel = snapshot.data['toplevel'];
-        }
+
+      const { title, breadcrumb, disabled } = child.snapshot.data;
+      if (title) {
         routeParts.push({
-          title: snapshot.data['title'],
-          breadcrumb: snapshot.data['breadcrumb'],
-          url: targetUrl,
-          toplevel,
+          title, breadcrumb, disabled, url,
         });
       }
+
+      return this.generateRouteParts(child, url, routeParts);
     }
-    return routeParts;
+  }
+
+  get routeParts(): RoutePart[] {
+    return this.fullRouteParts;
   }
 }

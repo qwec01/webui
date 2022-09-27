@@ -1,7 +1,7 @@
 import {
   ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit,
 } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { choicesToOptions } from 'app/helpers/options.helper';
@@ -31,30 +31,30 @@ export class ServiceLldpComponent implements OnInit {
     label: string;
     tooltip: string;
   } = {
-    fcName: 'intdesc',
-    label: helptext.lldp_intdesc_placeholder,
-    tooltip: helptext.lldp_intdesc_tooltip,
-  };
+      fcName: 'intdesc',
+      label: helptext.lldp_intdesc_placeholder,
+      tooltip: helptext.lldp_intdesc_tooltip,
+    };
 
   country: {
     readonly fcName: 'country';
     label: string;
     tooltip: string;
   } = {
-    fcName: 'country',
-    label: helptext.lldp_country_placeholder,
-    tooltip: helptext.lldp_country_tooltip,
-  };
+      fcName: 'country',
+      label: helptext.lldp_country_placeholder,
+      tooltip: helptext.lldp_country_tooltip,
+    };
 
   location: {
     readonly fcName: 'location';
     label: string;
     tooltip: string;
   } = {
-    fcName: 'location',
-    label: helptext.lldp_location_placeholder,
-    tooltip: helptext.lldp_location_tooltip,
-  };
+      fcName: 'location',
+      label: helptext.lldp_location_placeholder,
+      tooltip: helptext.lldp_location_tooltip,
+    };
 
   locationProvider = new SimpleAsyncComboboxProvider(this.ws.call('lldp.country_choices').pipe(choicesToOptions()));
 
@@ -64,7 +64,7 @@ export class ServiceLldpComponent implements OnInit {
     protected ws: WebSocketService,
     protected services: ServicesService,
     private cdr: ChangeDetectorRef,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private dialogService: DialogService,
     private errorHandler: FormErrorHandlerService,
   ) { }
@@ -72,15 +72,17 @@ export class ServiceLldpComponent implements OnInit {
   ngOnInit(): void {
     this.isFormLoading = true;
     this.ws.call('lldp.config').pipe(untilDestroyed(this)).subscribe(
-      (config) => {
-        this.form.patchValue(config);
-        this.isFormLoading = false;
-        this.cdr.markForCheck();
-      },
-      (error) => {
-        this.isFormLoading = false;
-        new EntityUtils().handleWsError(null, error, this.dialogService);
-        this.cdr.markForCheck();
+      {
+        next: (config) => {
+          this.form.patchValue(config);
+          this.isFormLoading = false;
+          this.cdr.markForCheck();
+        },
+        error: (error) => {
+          this.isFormLoading = false;
+          new EntityUtils().handleWsError(this, error, this.dialogService);
+          this.cdr.markForCheck();
+        },
       },
     );
   }
@@ -92,14 +94,17 @@ export class ServiceLldpComponent implements OnInit {
 
     this.ws.call('lldp.update', [values])
       .pipe(untilDestroyed(this))
-      .subscribe(() => {
-        this.isFormLoading = false;
-        this.router.navigate(['/services']);
-        this.cdr.markForCheck();
-      }, (error) => {
-        this.isFormLoading = false;
-        this.errorHandler.handleWsFormError(error, this.form);
-        this.cdr.markForCheck();
+      .subscribe({
+        next: () => {
+          this.isFormLoading = false;
+          this.router.navigate(['/services']);
+          this.cdr.markForCheck();
+        },
+        error: (error) => {
+          this.isFormLoading = false;
+          this.errorHandler.handleWsFormError(error, this.form);
+          this.cdr.markForCheck();
+        },
       });
   }
 

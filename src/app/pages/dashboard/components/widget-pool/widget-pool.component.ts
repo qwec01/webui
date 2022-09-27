@@ -5,7 +5,6 @@ import {
   ElementRef,
   Input,
   OnChanges,
-  OnDestroy,
   OnInit,
   SimpleChanges,
   TemplateRef,
@@ -17,14 +16,15 @@ import { TranslateService } from '@ngx-translate/core';
 import filesize from 'filesize';
 import { styler, tween } from 'popmotion';
 import { PoolStatus } from 'app/enums/pool-status.enum';
-import { VDevType } from 'app/enums/v-dev-type.enum';
-import { VDevStatus } from 'app/enums/vdev-status.enum';
-import { Pool, PoolTopologyCategory } from 'app/interfaces/pool.interface';
-import { Disk, VDev } from 'app/interfaces/storage.interface';
+import { PoolTopologyCategory } from 'app/enums/pool-topology-category.enum';
+import { TopologyItemType } from 'app/enums/v-dev-type.enum';
+import { TopologyItemStatus } from 'app/enums/vdev-status.enum';
+import { Pool } from 'app/interfaces/pool.interface';
+import { Disk, TopologyItem } from 'app/interfaces/storage.interface';
 import { VolumeData } from 'app/interfaces/volume-data.interface';
 import { WidgetComponent } from 'app/pages/dashboard/components/widget/widget.component';
+import { getPoolDisks } from 'app/pages/storage/modules/disks/utils/get-pool-disks.utils';
 import { WebSocketService } from 'app/services';
-import { CoreService } from 'app/services/core-service/core.service';
 
 interface Slide {
   name: string;
@@ -47,28 +47,42 @@ enum PoolHealthLevel {
 
 @UntilDestroy()
 @Component({
-  selector: 'widget-pool',
+  selector: 'ix-widget-pool',
   templateUrl: './widget-pool.component.html',
-  styleUrls: ['./widget-pool.component.scss'],
+  styleUrls: [
+    '../widget/widget.component.scss',
+    './widget-pool.component.scss',
+  ],
 })
-export class WidgetPoolComponent extends WidgetComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
-  readonly VDevStatus = VDevStatus;
+export class WidgetPoolComponent extends WidgetComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() poolState: Pool;
   @Input() volumeData: VolumeData;
+
   @ViewChild('carousel', { static: true }) carousel: ElementRef;
   @ViewChild('carouselparent', { static: false }) carouselParent: ElementRef;
-
   @ViewChild('overview', { static: false }) overview: TemplateRef<void>;
   @ViewChild('data', { static: false }) data: TemplateRef<void>;
   @ViewChild('disks', { static: false }) disks: TemplateRef<void>;
   @ViewChild('diskDetails', { static: false }) diskDetails: TemplateRef<void>;
   @ViewChild('empty', { static: false }) empty: TemplateRef<void>;
+
   templates: { [template: string]: TemplateRef<void> };
   tpl: TemplateRef<void>;
+  path: Slide[] = [];
+  title: string;
+  displayValue: string;
+  diskSize: string;
+  diskSizeLabel: string;
+  poolHealth: PoolDiagnosis = {
+    isHealthy: true,
+    level: PoolHealthLevel.Safe,
+  };
+  currentDiskDetails: Disk;
 
+  readonly TopologyItemStatus = TopologyItemStatus;
   readonly PoolStatus = PoolStatus;
+  readonly PoolTopologyCategory = PoolTopologyCategory;
 
-  // NAVIGATION
   currentSlide = '0';
 
   get currentSlideTopology(): PoolTopologyCategory {
@@ -87,13 +101,11 @@ export class WidgetPoolComponent extends WidgetComponent implements OnInit, Afte
     return this.currentSlide === '0' ? 0 : parseInt(this.currentSlide) - 1;
   }
 
-  path: Slide[] = [];
-
   get totalDisks(): string {
     if (this.poolState && this.poolState.topology) {
       let total = 0;
       this.poolState.topology.data.forEach((item) => {
-        if (item.type === VDevType.Disk) {
+        if (item.type === TopologyItemType.Disk) {
           total++;
         } else {
           total += item.children.length;
@@ -107,17 +119,16 @@ export class WidgetPoolComponent extends WidgetComponent implements OnInit, Afte
   get unhealthyDisks(): { totalErrors: number | string; disks: string[] } {
     if (this.poolState && this.poolState.topology) {
       const unhealthy: string[] = []; // Disks with errors
-      // TODO: Check if this `item.read_errors` and related should read from `stats`
-      this.poolState.topology.data.forEach((item: any) => {
-        if (item.type === VDevType.Disk) {
-          const diskErrors = item.read_errors + item.write_errors + item.checksum_errors;
+      this.poolState.topology.data.forEach((item) => {
+        if (item.type === TopologyItemType.Disk) {
+          const diskErrors = item.stats.read_errors + item.stats.write_errors + item.stats.checksum_errors;
 
           if (diskErrors > 0) {
             unhealthy.push(item.disk);
           }
         } else {
-          item.children.forEach((device: any) => {
-            const diskErrors = device.read_errors + device.write_errors + device.checksum_errors;
+          item.children.forEach((device) => {
+            const diskErrors = device.stats.read_errors + device.stats.write_errors + device.stats.checksum_errors;
 
             if (diskErrors > 0) {
               unhealthy.push(device.disk);
@@ -130,48 +141,10 @@ export class WidgetPoolComponent extends WidgetComponent implements OnInit, Afte
     return { totalErrors: 'Unknown', disks: [] };
   }
 
-  get allDiskNames(): string[] {
-    if (!this.poolState || !this.poolState.topology) {
-      return [];
-    }
-
-    const allDiskNames: string[] = [];
-    (['cache', 'data', 'dedup', 'log', 'spare', 'special'] as PoolTopologyCategory[]).forEach((categoryName) => {
-      const category = this.poolState.topology[categoryName];
-
-      if (!category || !category.length) {
-        return;
-      }
-
-      category.forEach((item) => {
-        if (item.type === 'DISK' && item.disk) {
-          allDiskNames.push(item.disk);
-        } else {
-          item.children.forEach((device) => {
-            if (!device.disk) {
-              return;
-            }
-
-            allDiskNames.push(device.disk);
-          });
-        }
-      });
-    });
-
-    return allDiskNames;
+  get poolDisks(): string[] {
+    return getPoolDisks(this.poolState);
   }
 
-  title: string;
-  voldataavail = false;
-  displayValue: string;
-  diskSize: string;
-  diskSizeLabel: string;
-  poolHealth: PoolDiagnosis = {
-    isHealthy: true,
-    level: PoolHealthLevel.Safe,
-  };
-
-  currentDiskDetails: Disk;
   get currentDiskDetailsKeys(): (keyof Disk)[] {
     return this.currentDiskDetails ? Object.keys(this.currentDiskDetails) as (keyof Disk)[] : [];
   }
@@ -180,7 +153,6 @@ export class WidgetPoolComponent extends WidgetComponent implements OnInit, Afte
     public router: Router,
     public translate: TranslateService,
     private cdr: ChangeDetectorRef,
-    private core: CoreService,
     private ws: WebSocketService,
   ) {
     super(translate);
@@ -190,10 +162,6 @@ export class WidgetPoolComponent extends WidgetComponent implements OnInit, Afte
   ngOnInit(): void {
     this.title = this.path.length > 0 && this.poolState && this.currentSlide !== '0' ? this.poolState.name : 'Pool';
     this.tpl = this.overview;
-  }
-
-  ngOnDestroy(): void {
-    this.core.unregister({ observerClass: this });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -245,10 +213,6 @@ export class WidgetPoolComponent extends WidgetComponent implements OnInit, Afte
       // When Locked, Bail before we try to get details.
       // (errors start after this...)
       return 0;
-    }
-
-    if (!Number.isNaN(this.volumeData.avail)) {
-      this.voldataavail = true;
     }
 
     this.displayValue = filesize(this.volumeData.avail, { standard: 'iec' });
@@ -311,7 +275,7 @@ export class WidgetPoolComponent extends WidgetComponent implements OnInit, Afte
     slideIndex: number,
     dataIndex?: number,
     topology?: PoolTopologyCategory,
-    vdev?: VDev,
+    vdev?: TopologyItem,
   ): void {
     if (name !== 'overview' && !verified) { return; }
     const dataSource = vdev || { children: this.poolState.topology[topology] };
@@ -394,7 +358,7 @@ export class WidgetPoolComponent extends WidgetComponent implements OnInit, Afte
     }
   }
 
-  percentAsNumber(value: string): number {
+  convertPercentToNumber(value: string): number {
     const spl = value.split('%');
     return parseInt(spl[0]);
   }

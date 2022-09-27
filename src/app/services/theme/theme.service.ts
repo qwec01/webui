@@ -1,57 +1,51 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { select, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { filter } from 'rxjs/operators';
 import { ThemeUtils } from 'app/core/classes/theme-utils/theme-utils';
+import { WINDOW } from 'app/helpers/window.helper';
 import { Theme } from 'app/interfaces/theme.interface';
-import { WebSocketService } from 'app/services';
-import { CoreService } from 'app/services/core-service/core.service';
 import { allThemes, defaultTheme } from 'app/services/theme/theme.constants';
 import { AppState } from 'app/store';
 import { themeNotFound } from 'app/store/preferences/preferences.actions';
 import { selectTheme } from 'app/store/preferences/preferences.selectors';
 
 @UntilDestroy()
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class ThemeService {
-  activeTheme = 'default';
   defaultTheme = defaultTheme.name;
-  activeThemeSwatch: string[];
-
-  // Theme lists
+  activeTheme = this.defaultTheme;
   allThemes: Theme[] = allThemes;
 
   private utils: ThemeUtils;
 
-  userThemeLoaded = false;
   constructor(
-    private ws: WebSocketService,
-    private core: CoreService,
     private store$: Store<AppState>,
+    @Inject(WINDOW) private window: Window,
   ) {
     this.utils = new ThemeUtils();
+    this.onThemeChanged(this.activeTheme);
 
-    // Set default list
-    this.core.register({ observerClass: this, eventName: 'ThemeDataRequest' }).pipe(untilDestroyed(this)).subscribe(() => {
-      this.core.emit({ name: 'ThemeData', data: this.findTheme(this.activeTheme), sender: this });
-    });
+    const savedTheme = this.window.sessionStorage.getItem('theme');
+    if (savedTheme) {
+      this.onThemeChanged(savedTheme);
+    }
 
-    this.store$.pipe(
-      select(selectTheme),
+    this.store$.select(selectTheme).pipe(
       filter(Boolean),
+      filter((theme) => theme !== this.activeTheme),
       untilDestroyed(this),
-    ).subscribe((theme: string) => this.onThemeChanged(theme));
+    ).subscribe((theme: string) => {
+      this.window.sessionStorage.setItem('theme', theme);
+      this.onThemeChanged(theme);
+    });
   }
 
   onThemeChanged(theme: string): void {
-    this.activeTheme = this.getNormalizedThemeName(theme);
+    this.activeTheme = theme;
     this.setCssVars(this.findTheme(this.activeTheme, true));
-    this.userThemeLoaded = true;
-    this.core.emit({ name: 'ThemeChanged', data: this.findTheme(this.activeTheme), sender: this });
-  }
-
-  getNormalizedThemeName(theme: string): string {
-    return theme === 'default' ? this.defaultTheme : theme;
   }
 
   resetToDefaultTheme(): void {
@@ -67,8 +61,6 @@ export class ThemeService {
   }
 
   findTheme(name: string, reset?: boolean): Theme {
-    name = this.getNormalizedThemeName(name);
-
     const theme = this.allThemes.find((theme) => theme.name === name);
     if (theme) {
       return theme;
@@ -157,19 +149,6 @@ export class ThemeService {
       topbarTextColor = this.utils.textContrast(theme[primaryColor] as string, theme['bg2']);
       document.documentElement.style.setProperty('--topbar-txt', topbarTextColor);
     }
-
-    // Logo light/dark
-    if (theme['hasDarkLogo']) {
-      theme.logoPath = 'assets/images/logo.svg';
-      theme.logoTextPath = 'assets/images/logo-text.svg';
-    } else {
-      theme.logoPath = 'assets/images/light-logo.svg';
-      theme.logoTextPath = 'assets/images/light-logo-text.svg';
-    }
-  }
-
-  hexToRgb(str: string): { hex: string; rgb: number[] } {
-    return this.utils.hexToRgb(str);
   }
 
   darkTest(css: string): boolean {
@@ -182,5 +161,32 @@ export class ThemeService {
   isDarkTheme(name: string = this.activeTheme): boolean {
     const theme = this.findTheme(name);
     return this.darkTest(theme.bg2);
+  }
+
+  /**
+   * Gets color pattern for active theme
+   * @returns array of colors
+   */
+  getColorPattern(): string[] {
+    return this.currentTheme().accentColors.map((color) => this.currentTheme()[color]);
+  }
+
+  getUtils(): ThemeUtils {
+    return this.utils;
+  }
+
+  /**
+   * Gets rgb background color by index
+   * @param index
+   * @returns rgb background color
+   */
+  getRgbBackgroundColorByIndex(index: number): number[] {
+    const bgColor = this.getColorPattern()[index];
+    const bgColorType = this.utils.getValueType(bgColor);
+
+    if (bgColorType === 'hex') {
+      return this.utils.hexToRgb(bgColor).rgb;
+    }
+    return this.utils.rgbToArray(bgColor);
   }
 }

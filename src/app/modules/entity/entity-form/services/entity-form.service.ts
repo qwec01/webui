@@ -1,10 +1,11 @@
 import { Inject, Injectable } from '@angular/core';
 import {
-  AbstractControl, FormArray, FormBuilder, FormControl, FormGroup,
+  AbstractControl, UntypedFormArray, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup,
 } from '@angular/forms';
 import { TreeNode } from '@circlon/angular-tree-component';
 import * as _ from 'lodash';
-import { DatasetType } from 'app/enums/dataset-type.enum';
+import { lastValueFrom } from 'rxjs';
+import { DatasetType } from 'app/enums/dataset.enum';
 import { ExplorerType } from 'app/enums/explorer-type.enum';
 import { FileType } from 'app/enums/file-type.enum';
 import { FileRecord } from 'app/interfaces/file-record.interface';
@@ -40,11 +41,11 @@ export class EntityFormService {
     duration: 'MINUTE',
   };
   constructor(
-    @Inject(FormBuilder) private formBuilder: FormBuilder,
+    @Inject(UntypedFormBuilder) private formBuilder: UntypedFormBuilder,
     protected ws: WebSocketService,
   ) {}
 
-  createFormGroup(controls: FieldConfig[]): FormGroup {
+  createFormGroup(controls: FieldConfig[]): UntypedFormGroup {
     const formGroup: { [id: string]: AbstractControl } = {};
 
     if (controls) {
@@ -80,12 +81,12 @@ export class EntityFormService {
       } else if (listConfig.listFields) {
         formControl = this.formBuilder.array([]);
         listConfig.listFields.forEach((listField) => {
-          (formControl as FormArray).push(this.createFormGroup(listField));
+          (formControl as UntypedFormArray).push(this.createFormGroup(listField));
         });
       } else if (dictConfig.subFields) {
         formControl = this.createFormGroup(dictConfig.subFields);
       } else if (fieldConfig.type !== 'label') {
-        formControl = new FormControl(
+        formControl = new UntypedFormControl(
           { value: fieldConfig.value, disabled: fieldConfig.disabled },
           fieldConfig.type === 'input-list' as FieldType ? [] : fieldConfig.validation,
           fieldConfig.asyncValidation,
@@ -96,7 +97,7 @@ export class EntityFormService {
     return formControl;
   }
 
-  createFormArray(controls: FieldConfig[], initialCount: number): FormArray {
+  createFormArray(controls: FieldConfig[], initialCount: number): UntypedFormArray {
     const formArray = this.formBuilder.array([]);
 
     for (let i = 0; i < initialCount; i++) {
@@ -104,15 +105,6 @@ export class EntityFormService {
       formArray.push(subFormGroup);
     }
     return formArray;
-  }
-
-  insertFormArrayGroup(index: number, formArray: FormArray, controls: FieldConfig[]): void {
-    const formGroup = this.createFormGroup(controls);
-    formArray.insert(index, formGroup);
-  }
-
-  removeFormArrayGroup(index: number, formArray: FormArray): void {
-    formArray.removeAt(index);
   }
 
   /**
@@ -128,8 +120,9 @@ export class EntityFormService {
       typeFilter = [['type', '=', FileType.Directory]];
     }
 
-    return this.ws.call('filesystem.listdir', [node.data.name, typeFilter,
-      { order_by: ['name'], limit: 1000 }]).toPromise().then((files) => {
+    return lastValueFrom(
+      this.ws.call('filesystem.listdir', [node.data.name, typeFilter, { order_by: ['name'], limit: 1000 }]),
+    ).then((files) => {
       files = _.sortBy(files, (file) => file.name.toLowerCase());
 
       const children: ListdirChild[] = [];
@@ -156,9 +149,12 @@ export class EntityFormService {
     });
   }
 
+  /**
+   * @deprecated Use DatasetService.getDatasetNodeProvider
+   */
   getPoolDatasets(param: [DatasetType[]?] = []): Promise<ListdirChild[]> {
     const nodes: ListdirChild[] = [];
-    return this.ws.call('pool.filesystem_choices', param).toPromise().then((res) => {
+    return lastValueFrom(this.ws.call('pool.filesystem_choices', param)).then((res) => {
       res.forEach((filesystem) => {
         const pathArr = filesystem.split('/');
         if (pathArr.length === 1) {
@@ -186,13 +182,6 @@ export class EntityFormService {
         }
       });
       return nodes;
-    });
-  }
-
-  clearFormError(fieldConfig: FieldConfig[]): void {
-    fieldConfig.forEach((config) => {
-      config['errors'] = '';
-      config['hasErrors'] = false;
     });
   }
 
@@ -243,14 +232,14 @@ export class EntityFormService {
           return NaN;
         }
       }
-      return num + ' ' + humanReableUnit;
+      return `${num} ${humanReableUnit}`;
     }
     return NaN;
   }
 
   getHumanReadableUnit(num: number, unit: string, type: UnitType): string {
     if (type === UnitType.Duration) {
-      let readableUnit = unit.length > 1 ? unit : (this.shortDurationUnit as any)[unit];
+      let readableUnit = unit.length > 1 ? unit : this.shortDurationUnit[unit as 'M' | 'h' | 'd' | 'w' | 'm' | 'y'];
       if (num <= 1 && _.endsWith(readableUnit, 'S')) {
         readableUnit = readableUnit.substring(0, readableUnit.length - 1);
       } else if (num > 1 && !_.endsWith(readableUnit, 'S')) {

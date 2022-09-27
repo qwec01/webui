@@ -1,11 +1,11 @@
 import { Component, Output, EventEmitter } from '@angular/core';
-import { MatCheckboxChange } from '@angular/material/checkbox/checkbox';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialogRef } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { ApiMethod } from 'app/interfaces/api-directory.interface';
 
 @Component({
-  selector: 'confirm-dialog',
+  selector: 'ix-confirm-dialog',
   templateUrl: './confirm-dialog.component.html',
   styleUrls: ['./confirm-dialog.component.scss'],
 })
@@ -19,16 +19,14 @@ export class ConfirmDialogComponent {
   secondaryCheckBox = false;
   secondaryCheckBoxMsg = '';
   method: ApiMethod;
-  data: string;
+  data: unknown;
   tooltip: string;
   hideCancel = false;
-  textToCopy: string;
-  keyTextArea: boolean;
   customSubmit: () => void;
 
   @Output() switchSelectionEmitter = new EventEmitter<boolean>();
 
-  constructor(public dialogRef: MatDialogRef < ConfirmDialogComponent >, protected translate: TranslateService) {
+  constructor(public dialogRef: MatDialogRef<ConfirmDialogComponent>, protected translate: TranslateService) {
   }
 
   toggleSubmit(data: MatCheckboxChange): void {

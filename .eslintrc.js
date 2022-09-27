@@ -1,3 +1,5 @@
+const { rules: airbnbRules } = require('eslint-config-airbnb-typescript/lib/shared');
+
 module.exports = {
   "root": true,
   "ignorePatterns": [
@@ -21,13 +23,15 @@ module.exports = {
         "airbnb-typescript/base",
         "plugin:@angular-eslint/recommended",
         "plugin:@typescript-eslint/recommended",
-        "plugin:@typescript-eslint/recommended-requiring-type-checking"
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        "plugin:rxjs/recommended"
       ],
       "plugins": [
         "rxjs",
         "rxjs-angular",
         "unicorn",
-        "angular-file-naming"
+        "angular-file-naming",
+        "@shopify"
       ],
       "rules": {
         // TODO: Conflicts with ngx-translate-extract
@@ -50,6 +54,7 @@ module.exports = {
           "ignoreStrings": true, // TODO: Consider enabling later.
           "ignoreTemplateLiterals": true
         }],
+        "radix": "off",
         "no-console": ["error", { allow: ["warn", "error", "info"] }],
         "import/order": ["error", {
           "groups": ["builtin", "external", ["internal", "parent", "sibling", "index"]],
@@ -76,6 +81,7 @@ module.exports = {
         }],
         "@typescript-eslint/no-use-before-define": ["error", "nofunc"],
         "no-prototype-builtins": "off",
+        "no-trailing-spaces": ["error"],
         "@typescript-eslint/unbound-method": "off",
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "@typescript-eslint/no-misused-promises": ["error", { checksVoidReturn: false }],
@@ -107,6 +113,11 @@ module.exports = {
             format: ['strictCamelCase'],
           },
           {
+            selector: ['classProperty'],
+            format: ['strictCamelCase', 'StrictPascalCase', 'UPPER_CASE'],
+            leadingUnderscore: 'allow', // TODO: Remove later
+          },
+          {
             selector: ['variable', 'parameter'],
             modifiers: ['unused'],
             format: ['strictCamelCase'],
@@ -126,13 +137,11 @@ module.exports = {
         "no-restricted-syntax": "off",
         "guard-for-in": "off",
         "no-param-reassign": "off",
-        "radix": "off",
         "@typescript-eslint/no-loop-func": "off",
         "no-await-in-loop": "off",
         "@typescript-eslint/no-shadow": "off",
         "no-case-declarations": "off",
         "no-multi-str": "off",
-        "no-useless-escape": "off",
         "no-mixed-operators": ["error", {
           groups: [
             // TODO: Some operators from default config not implemented.
@@ -144,7 +153,6 @@ module.exports = {
           allowSamePrecedence: true
         }],
         "default-case": "off",
-        "import/no-cycle": "off",
         "no-async-promise-executor": "off",
         "@typescript-eslint/member-ordering": "off",
         "@typescript-eslint/no-unsafe-assignment": "off",
@@ -152,15 +160,25 @@ module.exports = {
         "@typescript-eslint/no-unsafe-return": "off",
         "@typescript-eslint/no-unsafe-call": "off",
         "@typescript-eslint/no-unsafe-member-access": "off",
-        "@typescript-eslint/restrict-plus-operands": "off",
         "@typescript-eslint/no-floating-promises": "off",
         "@typescript-eslint/prefer-regexp-exec": "off",
 
         // Other temporary disables
+        "@typescript-eslint/no-unsafe-argument": "off",
         "@typescript-eslint/dot-notation": ["off", { allowIndexSignaturePropertyAccess: true }],
+        "rxjs/no-implicit-any-catch": ["off"],
+        "rxjs/no-nested-subscribe": ["off"],
 
         // Other overwrites
         "@typescript-eslint/lines-between-class-members": "off",
+        "@typescript-eslint/indent": ["error", 2, {
+          ...airbnbRules['@typescript-eslint/indent'][2],
+          ignoredNodes: [
+            ...airbnbRules['@typescript-eslint/indent'][2]['ignoredNodes'],
+            "PropertyDefinition[decorators]",
+          ]
+        }],
+        "@typescript-eslint/restrict-plus-operands": ["error", { allowAny: true }],
 
         // Extra rules
         "@angular-eslint/use-lifecycle-interface": ["error"],
@@ -184,11 +202,17 @@ module.exports = {
         "unused-imports/no-unused-vars": ["error", {
           vars: "local",
           args: "after-used",
-          argsIgnorePattern: "^_$"
+          argsIgnorePattern: "^_$",
+          ignoreRestSiblings: true,
         }],
         "@typescript-eslint/ban-types": ["error"],
         "unicorn/filename-case": ["error", { case: "kebabCase"}],
         "unicorn/prefer-array-find": ["error"],
+        "@angular-eslint/component-selector": ["error", {
+          "type": "element",
+          "prefix": "ix",
+          "style": "kebab-case"
+        }],
         "@angular-eslint/component-max-inline-declarations": ["error"],
         "@angular-eslint/contextual-decorator": ["error"],
         "@angular-eslint/contextual-lifecycle": ["error"],
@@ -197,8 +221,18 @@ module.exports = {
             "name": "@ngneat/spectator",
             "importNames": ["createComponentFactory", "createHostFactory", "createRoutingFactory", "mockProvider"],
             "message": "Use imports from @ngneat/spectator/jest instead."
-          }]
+          }, {
+            "name": "@angular/material/icon",
+            "importNames": ["MatIconModule"],
+            "message": "Use IxIconModule instead."
+          }],
+          "patterns": [{
+            "group": [ "../**"],
+            "message": "Use alias 'app' to replace part '../' of the path."
+          }],
         }],
+        "@shopify/typescript/prefer-singular-enums": "error",
+        "@shopify/prefer-early-return": ["error", { maximumStatements: 3 }],
 
         // RxJS rules
         "rxjs/no-unsafe-takeuntil": ["error", {
@@ -217,6 +251,7 @@ module.exports = {
           "functions": false,
           "methods": false,
         }],
+        "rxjs/prefer-observer": ["error"],
         "id-length": ["error", {
           exceptions: ['a', 'b', 'x', 'y', '_', 'i', 'n'],
           properties: 'never',

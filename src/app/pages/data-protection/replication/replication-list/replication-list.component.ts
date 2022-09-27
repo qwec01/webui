@@ -1,23 +1,24 @@
 import { DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
-import { Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import { filter } from 'rxjs/operators';
-import { ExplorerType } from 'app/enums/explorer-type.enum';
 import { JobState } from 'app/enums/job-state.enum';
-import helptext from 'app/helptext/data-protection/replication/replication';
 import globalHelptext from 'app/helptext/global-helptext';
 import { Job } from 'app/interfaces/job.interface';
 import { ReplicationTask, ReplicationTaskUi } from 'app/interfaces/replication-task.interface';
-import { AppLoaderService } from 'app/modules/app-loader/app-loader.service';
-import { DialogFormConfiguration } from 'app/modules/entity/entity-dialog/dialog-form-configuration.interface';
-import { EntityDialogComponent } from 'app/modules/entity/entity-dialog/entity-dialog.component';
 import { EntityFormService } from 'app/modules/entity/entity-form/services/entity-form.service';
+import { EntityJobComponent } from 'app/modules/entity/entity-job/entity-job.component';
 import { EntityTableComponent } from 'app/modules/entity/entity-table/entity-table.component';
 import { EntityTableAction, EntityTableConfig } from 'app/modules/entity/entity-table/entity-table.interface';
 import { EntityUtils } from 'app/modules/entity/utils';
+import { AppLoaderService } from 'app/modules/loader/app-loader.service';
 import { ReplicationFormComponent } from 'app/pages/data-protection/replication/replication-form/replication-form.component';
+import {
+  ReplicationRestoreDialogComponent,
+} from 'app/pages/data-protection/replication/replication-restore-dialog/replication-restore-dialog.component';
 import { ReplicationWizardComponent } from 'app/pages/data-protection/replication/replication-wizard/replication-wizard.component';
 import {
   DialogService,
@@ -32,8 +33,7 @@ import { ModalService } from 'app/services/modal.service';
 
 @UntilDestroy()
 @Component({
-  selector: 'app-replication-list',
-  template: '<entity-table [title]="title" [conf]="this"></entity-table>',
+  template: '<ix-entity-table [title]="title" [conf]="this"></ix-entity-table>',
   providers: [
     JobService,
     StorageService,
@@ -53,6 +53,7 @@ export class ReplicationListComponent implements EntityTableConfig {
   routeSuccess: string[] = ['tasks', 'replication'];
   entityList: EntityTableComponent;
   asyncView = true;
+  filterValue = '';
 
   columns = [
     { name: this.translate.instant('Name'), prop: 'name', always_display: true },
@@ -86,7 +87,11 @@ export class ReplicationListComponent implements EntityTableConfig {
     protected modalService: ModalService,
     protected loader: AppLoaderService,
     private translate: TranslateService,
-  ) {}
+    private matDialog: MatDialog,
+    private route: ActivatedRoute,
+  ) {
+    this.filterValue = this.route.snapshot.paramMap.get('dataset') || '';
+  }
 
   afterInit(entityList: EntityTableComponent): void {
     this.entityList = entityList;
@@ -99,7 +104,7 @@ export class ReplicationListComponent implements EntityTableConfig {
     return tasks.map((task) => {
       return {
         ...task,
-        ssh_connection: task.ssh_credentials ? (task.ssh_credentials as any).name : '-',
+        ssh_connection: task.ssh_credentials ? task.ssh_credentials.name : '-',
         task_last_snapshot: task.state.last_snapshot ? task.state.last_snapshot : this.translate.instant('No snapshots sent yet'),
       };
     });
@@ -119,13 +124,11 @@ export class ReplicationListComponent implements EntityTableConfig {
             hideCheckBox: true,
           }).pipe(filter(Boolean), untilDestroyed(this)).subscribe(() => {
             row.state = { state: JobState.Running };
-            this.ws.call('replication.run', [row.id]).pipe(untilDestroyed(this)).subscribe(
-              (jobId: number) => {
+            this.ws.call('replication.run', [row.id]).pipe(untilDestroyed(this)).subscribe({
+              next: (jobId: number) => {
                 this.dialog.info(
                   this.translate.instant('Task started'),
                   this.translate.instant('Replication <i>{name}</i> has started.', { name: row.name }),
-                  '500px',
-                  'info',
                   true,
                 );
                 this.job.getJobStatus(jobId).pipe(untilDestroyed(this)).subscribe((job: Job) => {
@@ -133,58 +136,30 @@ export class ReplicationListComponent implements EntityTableConfig {
                   row.job = job;
                 });
               },
-              (err) => {
+              error: (err) => {
                 new EntityUtils().handleWsError(this.entityList, err);
               },
-            );
+            });
           });
         },
       },
       {
-        actionName: (parentrow as any).description,
+        actionName: 'restore',
         id: 'restore',
         name: 'restore',
         label: this.translate.instant('Restore'),
         icon: 'restore',
         onClick: (row: ReplicationTaskUi) => {
-          const conf: DialogFormConfiguration = {
-            title: helptext.replication_restore_dialog.title,
-            fieldConfig: [
-              {
-                type: 'input',
-                name: 'name',
-                placeholder: helptext.name_placeholder,
-                tooltip: helptext.name_tooltip,
-                validation: [Validators.required],
-                required: true,
-              },
-              {
-                type: 'explorer',
-                explorerType: ExplorerType.Dataset,
-                initial: '',
-                name: 'target_dataset',
-                placeholder: helptext.target_dataset_placeholder,
-                tooltip: helptext.target_dataset_tooltip,
-                validation: [Validators.required],
-                required: true,
-              },
-            ],
-            saveButtonText: helptext.replication_restore_dialog.saveButton,
-            customSubmit: (entityDialog: EntityDialogComponent) => {
-              this.loader.open();
-              this.ws.call('replication.restore', [row.id, entityDialog.formValue]).pipe(untilDestroyed(this)).subscribe(
-                () => {
-                  entityDialog.dialogRef.close(true);
-                  this.entityList.getData();
-                },
-                (err) => {
-                  this.loader.close();
-                  new EntityUtils().handleWsError(entityDialog, err, this.dialog);
-                },
-              );
-            },
-          };
-          this.dialog.dialogFormWide(conf);
+          const dialog = this.matDialog.open(ReplicationRestoreDialogComponent, {
+            data: row.id,
+          });
+          dialog
+            .afterClosed()
+            .pipe(untilDestroyed(this))
+            .subscribe(() => {
+              this.entityList.needRefreshTable = true;
+              this.entityList.getData();
+            });
         },
       },
       {
@@ -215,9 +190,39 @@ export class ReplicationListComponent implements EntityTableConfig {
   stateButton(row: ReplicationTaskUi): void {
     if (row.job) {
       if (row.state.state === JobState.Running) {
-        this.entityList.runningStateButton(row.job.id);
+        const dialogRef = this.matDialog.open(EntityJobComponent, { data: { title: this.translate.instant('Task is running') } });
+        dialogRef.componentInstance.jobId = row.job.id;
+        dialogRef.componentInstance.job = row.job;
+        let subId: string = null;
+        if (row.job.logs_path) {
+          dialogRef.componentInstance.enableRealtimeLogs(true);
+          subId = dialogRef.componentInstance.getRealtimeLogs();
+        }
+        dialogRef.componentInstance.wsshow();
+        dialogRef.componentInstance.success.pipe(untilDestroyed(this)).subscribe(() => {
+          dialogRef.close();
+          if (subId) {
+            this.ws.unsubscribe('filesystem.file_tail_follow:' + row.job.logs_path);
+            this.ws.unsub('filesystem.file_tail_follow:' + row.job.logs_path, subId);
+          }
+        });
+        dialogRef.componentInstance.failure.pipe(untilDestroyed(this)).subscribe(() => {
+          dialogRef.close();
+          if (subId) {
+            this.ws.unsubscribe('filesystem.file_tail_follow:' + row.job.logs_path);
+            this.ws.unsub('filesystem.file_tail_follow:' + row.job.logs_path, subId);
+          }
+        });
+        dialogRef.componentInstance.aborted.pipe(untilDestroyed(this)).subscribe(() => {
+          dialogRef.close();
+          this.dialog.info(this.translate.instant('Task Aborted'), '');
+          if (subId) {
+            this.ws.unsubscribe('filesystem.file_tail_follow:' + row.job.logs_path);
+            this.ws.unsub('filesystem.file_tail_follow:' + row.job.logs_path, subId);
+          }
+        });
       } else if (row.state.state === JobState.Hold) {
-        this.dialog.info(this.translate.instant('Task is on hold'), row.state.reason, '500px', 'info', true);
+        this.dialog.info(this.translate.instant('Task is on hold'), row.state.reason);
       } else if (row.state.warnings && row.state.warnings.length > 0) {
         let list = '';
         row.state.warnings.forEach((warning: string) => {
@@ -228,23 +233,23 @@ export class ReplicationListComponent implements EntityTableConfig {
         this.dialog.errorReport(row.state.state, `<pre>${row.state.error}</pre>`);
       }
     } else {
-      this.dialog.info(globalHelptext.noLogDialog.title, globalHelptext.noLogDialog.message);
+      this.dialog.warn(globalHelptext.noLogDialog.title, globalHelptext.noLogDialog.message);
     }
   }
 
   onCheckboxChange(row: ReplicationTaskUi): void {
-    this.ws.call('replication.update', [row.id, { enabled: row.enabled }]).pipe(untilDestroyed(this)).subscribe(
-      (res) => {
+    this.ws.call('replication.update', [row.id, { enabled: row.enabled }]).pipe(untilDestroyed(this)).subscribe({
+      next: (res) => {
         row.enabled = res.enabled;
         if (!res) {
           row.enabled = !row.enabled;
         }
       },
-      (err) => {
+      error: (err) => {
         row.enabled = !row.enabled;
         new EntityUtils().handleWsError(this, err, this.dialog);
       },
-    );
+    });
   }
 
   doAdd(): void {

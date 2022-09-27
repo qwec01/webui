@@ -1,20 +1,29 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { JobState } from 'app/enums/job-state.enum';
-import { PeriodicSnapshotTask, PeriodicSnapshotTaskUi } from 'app/interfaces/periodic-snapshot-task.interface';
+import {
+  PeriodicSnapshotTask,
+  PeriodicSnapshotTaskUi,
+  PeriodicSnapshotTaskUpdate,
+} from 'app/interfaces/periodic-snapshot-task.interface';
 import { EntityTableComponent } from 'app/modules/entity/entity-table/entity-table.component';
 import { EntityTableConfig } from 'app/modules/entity/entity-table/entity-table.interface';
 import { EntityUtils } from 'app/modules/entity/utils';
-import { SnapshotFormComponent } from 'app/pages/data-protection/snapshot/snapshot-form/snapshot-form.component';
-import { DialogService, StorageService, WebSocketService } from 'app/services';
-import { ModalService } from 'app/services/modal.service';
+import { SnapshotTaskComponent } from 'app/pages/data-protection/snapshot/snapshot-task/snapshot-task.component';
+import {
+  DialogService, StorageService, WebSocketService,
+} from 'app/services';
+import { IxSlideInService } from 'app/services/ix-slide-in.service';
 import { TaskService } from 'app/services/task.service';
+import { AppState } from 'app/store';
+import { selectTimezone } from 'app/store/system-config/system-config.selectors';
 
 @UntilDestroy()
 @Component({
-  selector: 'app-snapshot-task-list',
-  template: '<entity-table [title]="title" [conf]="this"></entity-table>',
+  template: '<ix-entity-table [title]="title" [conf]="this"></ix-entity-table>',
   providers: [TaskService, StorageService],
 })
 export class SnapshotListComponent implements EntityTableConfig<PeriodicSnapshotTaskUi> {
@@ -27,6 +36,7 @@ export class SnapshotListComponent implements EntityTableConfig<PeriodicSnapshot
   routeEdit: string[] = ['tasks', 'snapshot', 'edit'];
   entityList: EntityTableComponent;
   asyncView = true;
+  filterValue = '';
 
   columns = [
     { name: this.translate.instant('Pool/Dataset'), prop: 'dataset', always_display: true },
@@ -57,19 +67,23 @@ export class SnapshotListComponent implements EntityTableConfig<PeriodicSnapshot
     private dialogService: DialogService,
     private ws: WebSocketService,
     private taskService: TaskService,
-    private modalService: ModalService,
     private translate: TranslateService,
-  ) {}
+    private slideInService: IxSlideInService,
+    private route: ActivatedRoute,
+    private store$: Store<AppState>,
+  ) {
+    this.filterValue = this.route.snapshot.paramMap.get('dataset') || '';
+  }
 
   afterInit(entityList: EntityTableComponent): void {
     this.entityList = entityList;
-    this.modalService.onClose$.pipe(untilDestroyed(this)).subscribe(() => {
+    this.slideInService.onClose$.pipe(untilDestroyed(this)).subscribe(() => {
       this.entityList.getData();
     });
   }
 
-  resourceTransformIncomingRestData(data: PeriodicSnapshotTask[]): PeriodicSnapshotTaskUi[] {
-    return data.map((task) => {
+  resourceTransformIncomingRestData(tasks: PeriodicSnapshotTask[]): PeriodicSnapshotTaskUi[] {
+    return tasks.map((task) => {
       const transformedTask = {
         ...task,
         keepfor: `${task.lifetime_value} ${task.lifetime_unit}(S)`,
@@ -77,11 +91,16 @@ export class SnapshotListComponent implements EntityTableConfig<PeriodicSnapshot
         cron_schedule: `${task.schedule.minute} ${task.schedule.hour} ${task.schedule.dom} ${task.schedule.month} ${task.schedule.dow}`,
       } as PeriodicSnapshotTaskUi;
 
-      return {
+      const transformedData = {
         ...transformedTask,
-        next_run: this.taskService.getTaskNextRun(transformedTask.cron_schedule),
         frequency: this.taskService.getTaskCronDescription(transformedTask.cron_schedule),
       };
+
+      this.store$.select(selectTimezone).pipe(untilDestroyed(this)).subscribe((timezone) => {
+        transformedData.next_run = this.taskService.getTaskNextRun(transformedData.cron_schedule, timezone);
+      });
+
+      return transformedData;
     });
   }
 
@@ -97,24 +116,28 @@ export class SnapshotListComponent implements EntityTableConfig<PeriodicSnapshot
 
   onCheckboxChange(row: PeriodicSnapshotTaskUi): void {
     row.enabled = !row.enabled;
-    this.ws.call(this.updateCall, [row.id, { enabled: row.enabled }]).pipe(untilDestroyed(this)).subscribe(
-      (res) => {
-        if (!res) {
+    this.ws.call(this.updateCall, [row.id, { enabled: row.enabled } as PeriodicSnapshotTaskUpdate])
+      .pipe(untilDestroyed(this))
+      .subscribe({
+        next: (task) => {
+          if (!task) {
+            row.enabled = !row.enabled;
+          }
+        },
+        error: (err) => {
           row.enabled = !row.enabled;
-        }
-      },
-      (err) => {
-        row.enabled = !row.enabled;
-        new EntityUtils().handleWsError(this, err, this.dialogService);
-      },
-    );
+          new EntityUtils().handleWsError(this, err, this.dialogService);
+        },
+      });
   }
 
-  doAdd(id?: number): void {
-    this.modalService.openInSlideIn(SnapshotFormComponent, id);
+  doAdd(): void {
+    this.slideInService.open(SnapshotTaskComponent, { wide: true });
   }
 
   doEdit(id: number): void {
-    this.doAdd(id);
+    const row = this.entityList.rows.find((row) => row.id === id);
+    const form = this.slideInService.open(SnapshotTaskComponent, { wide: true });
+    form.setTaskForEdit(row);
   }
 }

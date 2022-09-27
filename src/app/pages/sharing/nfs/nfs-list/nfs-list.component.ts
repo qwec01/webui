@@ -6,15 +6,14 @@ import { NfsShare } from 'app/interfaces/nfs-share.interface';
 import { EntityTableComponent } from 'app/modules/entity/entity-table/entity-table.component';
 import { EntityTableConfig } from 'app/modules/entity/entity-table/entity-table.interface';
 import { EntityUtils } from 'app/modules/entity/utils';
+import { NfsFormComponent } from 'app/pages/sharing/nfs/nfs-form/nfs-form.component';
 import { WebSocketService } from 'app/services';
 import { DialogService } from 'app/services/dialog.service';
 import { IxSlideInService } from 'app/services/ix-slide-in.service';
-import { NfsFormComponent } from '../nfs-form/nfs-form.component';
 
 @UntilDestroy()
 @Component({
-  selector: 'app-nfs-list',
-  template: '<entity-table [title]="title" [conf]="this"></entity-table>',
+  template: '<ix-entity-table [title]="title" [conf]="this"></ix-entity-table>',
 })
 export class NfsListComponent implements EntityTableConfig<NfsShare> {
   title = this.translate.instant('NFS');
@@ -90,14 +89,14 @@ export class NfsListComponent implements EntityTableConfig<NfsShare> {
   onCheckboxChange(row: NfsShare): void {
     this.ws.call(this.updateCall, [row.id, { enabled: row.enabled }])
       .pipe(untilDestroyed(this))
-      .subscribe(
-        (res) => {
-          row.enabled = res.enabled;
+      .subscribe({
+        next: (share) => {
+          row.enabled = share.enabled;
         },
-        (err) => {
+        error: (err) => {
           row.enabled = !row.enabled;
           new EntityUtils().handleWsError(this, err, this.dialog);
         },
-      );
+      });
   }
 }

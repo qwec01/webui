@@ -1,8 +1,7 @@
 import {
   ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit,
 } from '@angular/core';
-import { Validators } from '@angular/forms';
-import { FormBuilder } from '@ngneat/reactive-forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import * as _ from 'lodash';
@@ -14,9 +13,10 @@ import {
 } from 'rxjs/operators';
 import { ServiceName } from 'app/enums/service-name.enum';
 import { helptextSharingIscsi, shared } from 'app/helptext/sharing';
-import { numberValidator } from 'app/modules/entity/entity-form/validators/number-validation';
+import { IscsiGlobalConfigUpdate } from 'app/interfaces/iscsi-global-config.interface';
 import { EntityUtils } from 'app/modules/entity/utils';
 import { FormErrorHandlerService } from 'app/modules/ix-forms/services/form-error-handler.service';
+import { SnackbarService } from 'app/modules/snackbar/services/snackbar.service';
 import { DialogService, WebSocketService } from 'app/services';
 
 @UntilDestroy()
@@ -33,7 +33,8 @@ export class TargetGlobalConfigurationComponent implements OnInit {
   form = this.fb.group({
     basename: ['', Validators.required],
     isns_servers: [[] as string[]],
-    pool_avail_threshold: [null as number, numberValidator()],
+    pool_avail_threshold: [null as number],
+    listen_port: [null as number, Validators.required],
   });
 
   readonly tooltips = {
@@ -50,6 +51,7 @@ export class TargetGlobalConfigurationComponent implements OnInit {
     private errorHandler: FormErrorHandlerService,
     private dialogService: DialogService,
     private translate: TranslateService,
+    private snackbar: SnackbarService,
   ) {}
 
   ngOnInit(): void {
@@ -59,7 +61,7 @@ export class TargetGlobalConfigurationComponent implements OnInit {
   onSubmit(): void {
     this.areSettingsSaved = false;
     this.setLoading(true);
-    const values = this.form.value;
+    const values = this.form.value as IscsiGlobalConfigUpdate;
 
     this.ws.call('iscsi.global.update', [values])
       .pipe(
@@ -83,16 +85,16 @@ export class TargetGlobalConfigurationComponent implements OnInit {
   private loadFormValues(): void {
     this.setLoading(true);
 
-    this.ws.call('iscsi.global.config').pipe(untilDestroyed(this)).subscribe(
-      (config) => {
+    this.ws.call('iscsi.global.config').pipe(untilDestroyed(this)).subscribe({
+      next: (config) => {
         this.form.patchValue(config);
         this.setLoading(false);
       },
-      (error) => {
-        new EntityUtils().handleWsError(null, error, this.dialog);
+      error: (error) => {
+        new EntityUtils().handleWsError(this, error, this.dialog);
         this.setLoading(false);
       },
-    );
+    });
   }
 
   private checkIfServiceShouldBeEnabled(): Observable<unknown> {
@@ -112,14 +114,11 @@ export class TargetGlobalConfigurationComponent implements OnInit {
           filter(Boolean),
           switchMap(() => forkJoin([
             this.ws.call('service.update', [service.id, { enable: true }]),
-            this.ws.call('service.start', [service.service]),
+            this.ws.call('service.start', [service.service, { silent: false }]),
           ])),
           tap(() => {
-            this.dialogService.info(
-              this.translate.instant('{service} Service', { service: 'iSCSI' }),
+            this.snackbar.success(
               this.translate.instant('The {service} service has been enabled.', { service: 'iSCSI' }),
-              '250px',
-              'info',
             );
           }),
           catchError((error) => {

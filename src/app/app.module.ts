@@ -1,7 +1,6 @@
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { NgModule, ErrorHandler } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserModule } from '@angular/platform-browser';
@@ -18,6 +17,7 @@ import * as Sentry from '@sentry/angular';
 import { environment } from 'environments/environment';
 import { MarkdownModule } from 'ngx-markdown';
 import { NgxPopperjsModule } from 'ngx-popperjs';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import {
   TranslateMessageFormatCompiler,
 } from 'ngx-translate-messageformat-compiler';
@@ -26,20 +26,24 @@ import { IcuMissingTranslationHandler } from 'app/core/classes/icu-missing-trans
 import { createTranslateLoader } from 'app/core/classes/icu-translations-loader';
 import { CoreComponents } from 'app/core/core-components.module';
 import { CommonDirectivesModule } from 'app/directives/common/common-directives.module';
+import { getWindow, WINDOW } from 'app/helpers/window.helper';
 import { DownloadKeyDialogComponent } from 'app/modules/common/dialog/download-key/download-key-dialog.component';
+import { SnackbarModule } from 'app/modules/snackbar/snackbar.module';
 import { TerminalModule } from 'app/modules/terminal/terminal.module';
 import { TooltipModule } from 'app/modules/tooltip/tooltip.module';
 import { IxFileUploadService } from 'app/services/ix-file-upload.service';
 import { IxSlideInService } from 'app/services/ix-slide-in.service';
+import { ThemeService } from 'app/services/theme/theme.service';
 import { rootEffects, rootReducers } from 'app/store';
 import { CustomRouterStateSerializer } from 'app/store/router/custom-router-serializer';
 import { AppComponent } from './app.component';
 import { rootRouterConfig } from './app.routes';
-import { AppLoaderModule } from './modules/app-loader/app-loader.module';
-import { AppLoaderService } from './modules/app-loader/app-loader.service';
 import { AppCommonModule } from './modules/common/app-common.module';
 import { EntityModule } from './modules/entity/entity.module';
+import { AppLoaderModule } from './modules/loader/app-loader.module';
+import { AppLoaderService } from './modules/loader/app-loader.service';
 import { AuthService } from './services/auth/auth.service';
+import { EntityTableService } from './services/entity-table.service';
 import { NavigationService } from './services/navigation/navigation.service';
 import { RoutePartsService } from './services/route-parts/route-parts.service';
 import { WebSocketService } from './services/ws.service';
@@ -74,8 +78,6 @@ import { WebSocketService } from './services/ws.service';
     NgxPopperjsModule.forRoot({ appendTo: 'body' }),
     MarkdownModule.forRoot(),
     CoreComponents,
-    FormsModule,
-    ReactiveFormsModule,
     EntityModule,
     MatSnackBarModule,
     TerminalModule,
@@ -100,6 +102,13 @@ import { WebSocketService } from './services/ws.service';
     }),
     EffectsModule.forRoot(rootEffects),
     MatDialogModule,
+    SnackbarModule,
+    NgxSkeletonLoaderModule.forRoot({
+      theme: {
+        'background-color': 'var(--alt-bg2)',
+        opacity: 0.25,
+      },
+    }),
   ],
   declarations: [
     AppComponent,
@@ -111,13 +120,19 @@ import { WebSocketService } from './services/ws.service';
     AuthService,
     WebSocketService,
     AppLoaderService,
+    EntityTableService,
     IxSlideInService,
     IxFileUploadService,
+    ThemeService,
     {
       provide: ErrorHandler,
       useValue: Sentry.createErrorHandler({
         showDialog: false,
       }),
+    },
+    {
+      provide: WINDOW,
+      useFactory: getWindow,
     },
   ],
   bootstrap: [

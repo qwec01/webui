@@ -11,18 +11,20 @@ import {
   KeychainSshKeyPair,
 } from 'app/interfaces/keychain-credential.interface';
 import { AppTableAction, AppTableConfig } from 'app/modules/entity/table/table.component';
+import {
+  CloudCredentialsFormComponent,
+} from 'app/pages/credentials/backup-credentials/cloud-credentials-form/cloud-credentials-form.component';
+import {
+  SshConnectionFormComponent,
+} from 'app/pages/credentials/backup-credentials/ssh-connection-form/ssh-connection-form.component';
 import { SshKeypairFormComponent } from 'app/pages/credentials/backup-credentials/ssh-keypair-form/ssh-keypair-form.component';
 import {
   KeychainCredentialService, ReplicationService, StorageService, CloudCredentialService,
 } from 'app/services';
 import { IxSlideInService } from 'app/services/ix-slide-in.service';
-import { ModalService } from 'app/services/modal.service';
-import { CloudCredentialsFormComponent } from './forms/cloud-credentials-form.component';
-import { SshConnectionsFormComponent } from './forms/ssh-connections-form.component';
 
 @UntilDestroy()
 @Component({
-  selector: 'app-backup-credentials',
   templateUrl: './backup-credentials.component.html',
   providers: [KeychainCredentialService, ReplicationService, CloudCredentialService],
 })
@@ -31,12 +33,12 @@ export class BackupCredentialsComponent implements OnInit {
 
   private navigation: Navigation;
   protected providers: CloudsyncProvider[];
+  private isFirstCredentialsLoad = true;
 
   constructor(
     private router: Router,
     private storage: StorageService,
     private cloudCredentialsService: CloudCredentialService,
-    private modalService: ModalService,
     private slideInService: IxSlideInService,
     private translate: TranslateService,
   ) {
@@ -44,10 +46,6 @@ export class BackupCredentialsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.modalService.refreshTable$.pipe(untilDestroyed(this)).subscribe(() => {
-      this.getCards();
-    });
-
     this.slideInService.onClose$.pipe(untilDestroyed(this)).subscribe(() => {
       this.getCards();
     });
@@ -71,24 +69,32 @@ export class BackupCredentialsComponent implements OnInit {
           name: 'cloudCreds',
           columns: [
             { name: this.translate.instant('Name'), prop: 'name' },
-            { name: this.translate.instant('Provider'), prop: 'provider' },
+            { name: this.translate.instant('Provider'), prop: 'providerTitle' },
           ],
           hideHeader: false,
           parent: this,
           add: () => {
-            this.modalService.openInSlideIn(CloudCredentialsFormComponent);
+            this.slideInService.open(CloudCredentialsFormComponent);
           },
-          edit: (row: CloudsyncCredential) => {
-            this.modalService.openInSlideIn(CloudCredentialsFormComponent, row.id);
+          edit: (credential: CloudsyncCredential) => {
+            const form = this.slideInService.open(CloudCredentialsFormComponent);
+            form.setCredentialsForEdit(credential);
           },
           dataSourceHelper: this.cloudCredentialsDataSourceHelper.bind(this),
-          afterGetData: () => {
+          afterGetData: (credentials: CloudsyncCredential[]) => {
             const state = this.navigation.extras.state as { editCredential: string; id: string };
-            if (state && state.editCredential) {
-              if (state.editCredential === 'cloudcredentials') {
-                this.modalService.openInSlideIn(CloudCredentialsFormComponent, state.id);
-              }
+            if (!state || state.editCredential !== 'cloudcredentials' || !this.isFirstCredentialsLoad) {
+              return;
             }
+
+            const credentialToEdit = credentials.find((credential) => credential.id === Number(state.id));
+            if (!credentialToEdit) {
+              return;
+            }
+
+            const form = this.slideInService.open(CloudCredentialsFormComponent);
+            form.setCredentialsForEdit(credentialToEdit);
+            this.isFirstCredentialsLoad = false;
           },
         },
       }, {
@@ -105,10 +111,11 @@ export class BackupCredentialsComponent implements OnInit {
           hideHeader: true,
           parent: this,
           add: () => {
-            this.modalService.openInSlideIn(SshConnectionsFormComponent);
+            this.slideInService.open(SshConnectionFormComponent);
           },
-          edit: (row: KeychainCredential) => {
-            this.modalService.openInSlideIn(SshConnectionsFormComponent, row.id);
+          edit: (row: KeychainSshCredentials) => {
+            const form = this.slideInService.open(SshConnectionFormComponent);
+            form.setConnectionForEdit(row);
           },
         },
       }, {
@@ -137,27 +144,32 @@ export class BackupCredentialsComponent implements OnInit {
     ];
   }
 
-  cloudCredentialsDataSourceHelper(res: CloudsyncCredential[]): CloudsyncCredential[] {
-    return res.map((item) => {
+  cloudCredentialsDataSourceHelper(
+    credentials: CloudsyncCredential[],
+  ): (CloudsyncCredential & { providerTitle?: string })[] {
+    return credentials.map((credential) => {
       if (this.providers) {
-        const credentialProvider = this.providers.find((provider) => provider.name === item.provider);
+        const credentialProvider = this.providers.find((provider) => provider.name === credential.provider);
         if (credentialProvider) {
-          item.provider = credentialProvider.title;
+          return {
+            ...credential,
+            providerTitle: credentialProvider.title,
+          };
         }
       }
-      return item;
+      return credential;
     });
   }
 
-  sshConnectionsDataSourceHelper(res: KeychainCredential[]): KeychainSshCredentials[] {
-    return res.filter((item) => {
-      return item.type === KeychainCredentialType.SshCredentials;
+  sshConnectionsDataSourceHelper(credentials: KeychainCredential[]): KeychainSshCredentials[] {
+    return credentials.filter((credential) => {
+      return credential.type === KeychainCredentialType.SshCredentials;
     }) as KeychainSshCredentials[];
   }
 
-  sshKeyPairsDataSourceHelper(res: KeychainCredential[]): KeychainSshKeyPair[] {
-    return res.filter((item) => {
-      return item.type === KeychainCredentialType.SshKeyPair;
+  sshKeyPairsDataSourceHelper(credentials: KeychainCredential[]): KeychainSshKeyPair[] {
+    return credentials.filter((credential) => {
+      return credential.type === KeychainCredentialType.SshKeyPair;
     }) as KeychainSshKeyPair[];
   }
 

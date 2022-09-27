@@ -2,51 +2,14 @@
 
 /* TYPOGRAPHY */
 
-body {
-  background: var(--bg1);
-}
-
-@font-face {
-  font-family: 'IBM Plex Sans';
-  src: url('../../fonts/IBM_Plex_Sans/IBMPlexSans-Regular.ttf') format('truetype');
-}
-
-@font-face {
-  font-family: Epilogue;
-  src: url('../../fonts/Epilogue/Epilogue-VariableFont_wght.ttf') format('truetype');
-}
-
-html {font-size: 87.5%;} /*14px*/
-
-/* CSS Vars */
-:root {
-  --fn-dropshadow: 0 1px 2px rgba(0, 0, 0, 0);
-  --contrast-normal: var(--bg2);
-  --light-theme-lines: var(--contrast-darkest);
-  --dark-theme-lines: var(--contrast-lighter);
-  --lines: var(--dark-theme-lines);
-  --sidenav-width: 240px;
-  --btn-default-bg: var(--alt-bg2);
-  --hover-bg: var(--lines) !important;
-  --primary-lighter: var(--primary);
-  --font-family-body: 'IBM Plex Sans';
-}
-
-body {
-  font-family: var(--font-family-body), sans-serif;
-  font-weight: 400;
-  line-height: 1.65;
-}
-
-p {margin-bottom: 1.15rem;}
-
+p { margin-bottom: 1.15rem; }
 
 h1,
 h2,
 h3,
 h4,
 h5 {
-  font-family: 'IBM Plex Sans', sans-serif;
+  font-family: var(--font-family-body);
   font-weight: 400;
   line-height: 1.15;
   margin: 2.75rem 0 1.05rem;
@@ -54,14 +17,14 @@ h5 {
 }
 
 h1 {
+  color: var(--fg1);
   font-size: 2.488em;
   margin-top: 0;
 }
-h1 { color: var(--fg1);}
 
 h1,
 h2 {
-  font-family: 'Epilogue', sans-serif;
+  font-family: 'Epilogue', var(--font-family-body);
   font-weight: 500;
 }
 
@@ -80,7 +43,7 @@ small,
 
 span.code {
   background: rgba(255, 255, 255, 0.1);
-  font-family: 'Inconsolata';
+  font-family: 'Inconsolata', monospace;
   opacity: 0.75;
 }
 
@@ -117,8 +80,8 @@ span.code {
   padding: 16px 32px !important;
 }
 
-entity-table .mat-card,
-entity-form .mat-card {
+ix-entity-table .mat-card,
+ix-entity-form .mat-card {
   padding: 0 !important;
 }
 
@@ -127,8 +90,8 @@ entity-form .mat-card {
   max-width: 960px;
 }
 
-entity-form .mat-card > *,
-entity-table .mat-card > * {
+ix-entity-form .mat-card > *,
+ix-entity-table .mat-card > * {
   margin: 0 !important;
   padding: 16px !important;
 }
@@ -166,17 +129,17 @@ entity-table .mat-card > * {
   text-align: right;
 }
 
-entity-table .multiactions-title {
+ix-entity-table .multiactions-title {
   margin-bottom: 16px;
 }
 
-entity-table .mat-toolbar.mat-card-toolbar {
+ix-entity-table .mat-toolbar.mat-card-toolbar {
   position: relative;
   z-index: 2;
 }
 /* Elements with shadows */
 .datatable-header,
-entity-table .mat-toolbar.mat-card-toolbar {
+ix-entity-table .mat-toolbar.mat-card-toolbar {
   box-shadow: var(--fn-dropshadow);
 }
 
@@ -193,9 +156,15 @@ entity-table .mat-toolbar.mat-card-toolbar {
 }
 
 .form-element .label-container {
+  align-items: center;
+  display: flex;
   height: 24px;
   margin-bottom: 4px;
   padding: 4px 0;
+
+  label {
+    margin-right: 8px;
+  }
 }
 
 /* Bring back the native placeholder */
@@ -271,19 +240,19 @@ textarea.mat-input-element::placeholder {
   width: 100% !important;
 }
 
-entity-form-list .list-action-block-wrapper .form-element,
-entity-form-list .list-action-block-wrapper #password,
-entity-form-list .list-action-block-wrapper .form-element.form-combobox .mat-form-field,
-entity-form-list .list-action-block-wrapper .form-element.form-ip-netmask .mat-form-field,
-entity-form-list .list-action-block-wrapper .form-element.form-combobox .mat-menu-trigger,
-entity-form-list .list-action-block-wrapper .form-element .mat-form-field-wrapper,
-entity-form-list .list-action-block-wrapper .form-element input[type = 'password'],
-entity-form-list .list-action-block-wrapper .form-element input[type = 'email'],
-entity-form-list .list-action-block-wrapper .form-element input[type = 'text'],
-entity-form-list .list-action-block-wrapper .form-element input[type = 'number'],
-entity-form-list .list-action-block-wrapper .form-element textarea,
-entity-form-list .list-action-block-wrapper .has-tooltip mat-form-field.full-width,
-entity-form-list .list-action-block-wrapper .form-element select {
+ix-entity-form-list .list-action-block-wrapper .form-element,
+ix-entity-form-list .list-action-block-wrapper #password,
+ix-entity-form-list .list-action-block-wrapper .form-element.form-combobox .mat-form-field,
+ix-entity-form-list .list-action-block-wrapper .form-element.form-ip-netmask .mat-form-field,
+ix-entity-form-list .list-action-block-wrapper .form-element.form-combobox .mat-menu-trigger,
+ix-entity-form-list .list-action-block-wrapper .form-element .mat-form-field-wrapper,
+ix-entity-form-list .list-action-block-wrapper .form-element input[type = 'password'],
+ix-entity-form-list .list-action-block-wrapper .form-element input[type = 'email'],
+ix-entity-form-list .list-action-block-wrapper .form-element input[type = 'text'],
+ix-entity-form-list .list-action-block-wrapper .form-element input[type = 'number'],
+ix-entity-form-list .list-action-block-wrapper .form-element textarea,
+ix-entity-form-list .list-action-block-wrapper .has-tooltip mat-form-field.full-width,
+ix-entity-form-list .list-action-block-wrapper .form-element select {
   width: 100% !important;
 }
 
@@ -376,6 +345,7 @@ entity-form-list .list-action-block-wrapper .form-element select {
   width: 100% !important;
 }
 
+
 .login-form .form-element .mat-form-field-wrapper input {
   background: none;
   border: none;
@@ -392,17 +362,23 @@ entity-form-list .list-action-block-wrapper .form-element select {
 }
 
 .login-form .form-element.username .mat-form-field-prefix {
-  top: -5px;
+  top: -6px;
+}
+
+.login-form .form-element.username .mat-form-field-flex {
+  align-items: flex-start;
+  position: relative;
+  top: -2px;
 }
 
 .login-form .form-element.password .mat-form-field-prefix {
-  top: -16px;
+  top: -11px;
 }
 
 .login-form .form-element input[type = 'password'],
 .login-form .form-element .has_toggle_pw input {
-  padding: 0;
-  top: -8px;
+  padding: 2px 0 0;
+  top: -10px;
 }
 
 .login-form .form-element button.toggle_pw {
@@ -467,12 +443,12 @@ entity-form-list .list-action-block-wrapper .form-element select {
   opacity: 0.75;
 }
 
-tooltip button i {
+ix-tooltip button i {
   opacity: 0.5;
 }
 
-.label-container tooltip {
-  margin: 0 0 4px 4px;
+.label-container ix-tooltip {
+  margin: 0;
 }
 
 .tooltip .material-icons {
@@ -488,12 +464,17 @@ tooltip button i {
 
 .mat-form-field-appearance-legacy .mat-form-field-infix {
   border: 0;
-  height: 20px;
+  height: fit-content;
   overflow: hidden;
   padding: 0;
 }
 
 /* Buttons */
+.mat-button,
+.mat-raised-button {
+  font-weight: 400 !important;
+}
+
 .mat-button,
 .mat-flat-button {
   border-radius: 0 !important;
@@ -767,7 +748,7 @@ thead.ui-treetable-thead tr {
 
 .label,
 .mat-list-item .label {
-  margin-right: 16px;
+  margin-right: 8px;
 }
 
 .standard-list .label {
@@ -776,32 +757,6 @@ thead.ui-treetable-thead tr {
 
 mat-card.mat-card .mat-list-base {
   padding-top: 0;
-}
-
-/* This should probably be implemented as a component */
-.page-title {
-  border-bottom: solid 1px var(--lines);
-  color: var(--fg1);
-  margin: 0 auto 32px;
-  padding-bottom: 8px;
-  width: calc(100% - 16px);
-}
-
-.page-title > div {
-  min-height: 40px;
-}
-
-.page-title .form-element.form-combobox .mat-form-field,
-.page-title .form-element.form-ip-netmask .mat-form-field,
-.page-title .form-element.form-combobox .mat-menu-trigger,
-.page-title .form-element .mat-form-field-wrapper,
-.page-title .form-element input[type = 'password'],
-.page-title .form-element input[type = 'email'],
-.page-title .form-element input[type = 'text'],
-.page-title .form-element input[type = 'number'],
-.page-title .form-element textarea,
-.page-title .form-element select {
-  background-color: rgba(0, 0, 0, 0.1);
 }
 
 .mat-paginator-page-size {
@@ -952,6 +907,7 @@ ul.nested-list li {
 
 
 .expanded-table mat-card {
+  border: 0 !important;
   margin: 0 !important;
 }
 
@@ -996,4 +952,18 @@ ul.nested-list li {
 
 .form-list-item .form-element {
   margin: 8px 0;
+}
+
+.mat-tab-header-pagination-chevron {
+  border-color: unset !important;
+  color: var(--fg2);
+}
+
+.mat-tab-header-pagination {
+  background-color: var(--lines);
+  opacity: 0.6;
+}
+
+.mat-tab-header-pagination-disabled {
+  opacity: 0.2;
 }

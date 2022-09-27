@@ -5,7 +5,7 @@ import {
   Input,
   OnChanges,
 } from '@angular/core';
-import { ThemePalette } from '@angular/material/core/common-behaviors/color';
+import { ThemePalette } from '@angular/material/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
@@ -24,6 +24,7 @@ import { selectTimezone } from 'app/store/system-config/system-config.selectors'
 })
 export class AlertComponent implements OnChanges {
   @Input() alert: Alert;
+  @Input() isHa: boolean;
 
   alertLevelColor: ThemePalette;
   icon: string;
@@ -36,8 +37,6 @@ export class AlertComponent implements OnChanges {
   get isDismissed(): boolean {
     return this.alert.dismissed;
   }
-
-  readonly alertLevelLabels = alertLevelLabels;
 
   constructor(
     private store$: Store<AppState>,

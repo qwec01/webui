@@ -1,20 +1,25 @@
 import {
   ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit,
 } from '@angular/core';
-import { Validators } from '@angular/forms';
-import { FormBuilder } from '@ngneat/reactive-forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import _ from 'lodash';
-import { Observable, of } from 'rxjs';
-import { filter, switchMap } from 'rxjs/operators';
+import { EMPTY, Observable, of } from 'rxjs';
+import {
+  catchError, filter, switchMap, tap,
+} from 'rxjs/operators';
+import { JobState } from 'app/enums/job-state.enum';
+import { ServiceName } from 'app/enums/service-name.enum';
+import { ServiceStatus } from 'app/enums/service-status.enum';
+import { choicesToOptions } from 'app/helpers/options.helper';
+import { EntityUtils } from 'app/modules/entity/utils';
 import { FormErrorHandlerService } from 'app/modules/ix-forms/services/form-error-handler.service';
 import { DialogService, WebSocketService } from 'app/services';
 import { IxSlideInService } from 'app/services/ix-slide-in.service';
-import { ServiceName } from '../../../../enums/service-name.enum';
-import { ServiceStatus } from '../../../../enums/service-status.enum';
-import { choicesToOptions } from '../../../../helpers/options.helper';
-import { EntityUtils } from '../../../../modules/entity/utils';
+import { AppState } from 'app/store';
+import { advancedConfigUpdated } from 'app/store/system-config/system-config.actions';
 
 @UntilDestroy()
 @Component({
@@ -39,6 +44,7 @@ export class SystemDatasetPoolComponent implements OnInit {
     private fb: FormBuilder,
     private dialogService: DialogService,
     private translate: TranslateService,
+    private store$: Store<AppState>,
   ) {}
 
   ngOnInit(): void {
@@ -46,40 +52,47 @@ export class SystemDatasetPoolComponent implements OnInit {
 
     this.ws.call('systemdataset.config')
       .pipe(untilDestroyed(this))
-      .subscribe(
-        (config) => {
+      .subscribe({
+        next: (config) => {
           this.isFormLoading = false;
           this.form.patchValue(config);
           this.cdr.markForCheck();
         },
-        (error) => {
+        error: (error) => {
           this.isFormLoading = false;
-          new EntityUtils().handleWsError(null, error, this.dialogService);
+          new EntityUtils().handleWsError(this, error, this.dialogService);
           this.cdr.markForCheck();
         },
-      );
+      });
   }
 
   onSubmit(): void {
-    this.isFormLoading = true;
     const values = this.form.value;
 
     this.confirmSmbRestartIfNeeded().pipe(
       filter(Boolean),
-      switchMap(() => this.ws.job('systemdataset.update', [values])),
+      switchMap(() => {
+        this.isFormLoading = true;
+        return this.ws.job('systemdataset.update', [values]).pipe(
+          tap((job) => {
+            if (job.state !== JobState.Success) {
+              return;
+            }
+            this.isFormLoading = false;
+            this.store$.dispatch(advancedConfigUpdated());
+            this.cdr.markForCheck();
+            this.slideInService.close();
+          }),
+          catchError((error) => {
+            this.isFormLoading = false;
+            this.errorHandler.handleWsFormError(error, this.form);
+            this.cdr.markForCheck();
+            return EMPTY;
+          }),
+        );
+      }),
       untilDestroyed(this),
-    ).subscribe(
-      () => {
-        this.isFormLoading = false;
-        this.cdr.markForCheck();
-        this.slideInService.close();
-      },
-      (error) => {
-        this.isFormLoading = false;
-        this.errorHandler.handleWsFormError(error, this.form);
-        this.cdr.markForCheck();
-      },
-    );
+    ).subscribe();
   }
 
   /**

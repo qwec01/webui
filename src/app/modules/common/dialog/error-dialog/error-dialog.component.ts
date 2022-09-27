@@ -1,16 +1,14 @@
-import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { TranslateService } from '@ngx-translate/core';
 import { Job } from 'app/interfaces/job.interface';
+import { EntityUtils } from 'app/modules/entity/utils';
 import { StorageService } from 'app/services/storage.service';
 import { WebSocketService } from 'app/services/ws.service';
-import { EntityUtils } from '../../../entity/utils';
 
 @UntilDestroy()
 @Component({
-  selector: 'error-dialog',
+  selector: 'ix-error-dialog',
   templateUrl: './error-dialog.component.html',
   styleUrls: ['./error-dialog.component.scss'],
 })
@@ -23,9 +21,7 @@ export class ErrorDialogComponent {
 
   constructor(
     public dialogRef: MatDialogRef<ErrorDialogComponent>,
-    public translate: TranslateService,
     private ws: WebSocketService,
-    public http: HttpClient,
     public storage: StorageService,
   ) {}
 
@@ -59,25 +55,28 @@ export class ErrorDialogComponent {
   }
 
   downloadLogs(): void {
-    this.ws.call('core.download', ['filesystem.get', [this.logs.logs_path], this.logs.id + '.log']).pipe(untilDestroyed(this)).subscribe(
-      (res) => {
+    this.ws.call('core.download', ['filesystem.get', [this.logs.logs_path], `${this.logs.id}.log`]).pipe(untilDestroyed(this)).subscribe({
+      next: (res) => {
         const url = res[1];
         const mimetype = 'text/plain';
-        this.storage.streamDownloadFile(this.http, url, this.logs.id + '.log', mimetype).pipe(untilDestroyed(this)).subscribe((file) => {
-          this.storage.downloadBlob(file, this.logs.id + '.log');
-          if (this.dialogRef) {
-            this.dialogRef.close();
-          }
-        }, (err) => {
-          if (this.dialogRef) {
-            this.dialogRef.close();
-          }
-          new EntityUtils().handleWsError(this, err);
+        this.storage.streamDownloadFile(url, `${this.logs.id}.log`, mimetype).pipe(untilDestroyed(this)).subscribe({
+          next: (file) => {
+            this.storage.downloadBlob(file, `${this.logs.id}.log`);
+            if (this.dialogRef) {
+              this.dialogRef.close();
+            }
+          },
+          error: (err) => {
+            if (this.dialogRef) {
+              this.dialogRef.close();
+            }
+            new EntityUtils().handleWsError(this, err);
+          },
         });
       },
-      (err) => {
+      error: (err) => {
         new EntityUtils().handleWsError(this, err);
       },
-    );
+    });
   }
 }

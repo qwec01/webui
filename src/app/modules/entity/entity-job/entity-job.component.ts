@@ -2,7 +2,7 @@ import {
   HttpClient, HttpErrorResponse, HttpEvent, HttpEventType,
 } from '@angular/common/http';
 import {
-  OnInit, Component, EventEmitter, Output, Inject,
+  OnInit, Component, EventEmitter, Output, Inject, AfterViewChecked,
 } from '@angular/core';
 import {
   MatDialog, MatDialogConfig, MatDialogRef, MAT_DIALOG_DATA,
@@ -20,16 +20,15 @@ import { WebSocketService } from 'app/services';
 
 @UntilDestroy()
 @Component({
-  selector: 'entity-job',
   templateUrl: 'entity-job.component.html',
   styleUrls: ['./entity-job.component.scss'],
 })
-export class EntityJobComponent implements OnInit {
+export class EntityJobComponent implements OnInit, AfterViewChecked {
   job: Job = {} as Job;
   progressTotalPercent = 0;
   description: string;
   method: ApiMethod;
-  args: any[] = [];
+  args: ApiDirectory[keyof ApiDirectory]['params'] = [];
 
   title = '';
   showHttpProgress = false;
@@ -112,6 +111,10 @@ export class EntityJobComponent implements OnInit {
     }
   }
 
+  ngAfterViewChecked(): void {
+    this.scrollBottom();
+  }
+
   setCall<K extends ApiMethod>(method: K, args?: ApiDirectory[K]['params']): void {
     this.method = method;
     if (args) {
@@ -142,8 +145,8 @@ export class EntityJobComponent implements OnInit {
   submit(): void {
     let subscriptionId: string = null;
     this.ws.job(this.method, this.args)
-      .pipe(untilDestroyed(this)).subscribe(
-        (job) => {
+      .pipe(untilDestroyed(this)).subscribe({
+        next: (job) => {
           this.job = job;
           this.showAbortButton = this.job.abortable;
           if (this.showRealtimeLogs && this.job.logs_path && !this.realtimeLogsSubscribed) {
@@ -156,10 +159,10 @@ export class EntityJobComponent implements OnInit {
             this.aborted.emit(this.job);
           }
         },
-        () => {
+        error: () => {
           this.failure.emit(this.job);
         },
-        () => {
+        complete: () => {
           if (this.job.state === JobState.Success) {
             this.success.emit(this.job);
           } else if (this.job.state === JobState.Failed) {
@@ -170,46 +173,50 @@ export class EntityJobComponent implements OnInit {
             this.ws.unsub('filesystem.file_tail_follow:' + this.job.logs_path, subscriptionId);
           }
         },
-      );
+      });
   }
 
   wspostWithProgressUpdates(path: string, options: unknown): void {
     this.showHttpProgress = true;
     this.http.post(path, options, { reportProgress: true, observe: 'events' })
       .pipe(untilDestroyed(this))
-      .subscribe((event: HttpEvent<Job>) => {
-        if (event.type === HttpEventType.UploadProgress) {
-          const eventTotal = event.total ? event.total : 0;
-          let progress = 0;
-          if (eventTotal !== 0) {
-            progress = Math.round(event.loaded / eventTotal * 100);
+      .subscribe({
+        next: (event: HttpEvent<Job>) => {
+          if (event.type === HttpEventType.UploadProgress) {
+            const eventTotal = event.total ? event.total : 0;
+            let progress = 0;
+            if (eventTotal !== 0) {
+              progress = Math.round(event.loaded / eventTotal * 100);
+            }
+            this.uploadPercentage = progress;
+          } else if (event.type === HttpEventType.Response) {
+            this.showHttpProgress = false;
+            this.job = event.body;
+            if (this.job && (this.job as any).job_id) {
+              this.jobId = (this.job as any).job_id;
+            }
+            this.wsshow();
           }
-          this.uploadPercentage = progress;
-        } else if (event.type === HttpEventType.Response) {
+        },
+        error: (err: HttpErrorResponse) => {
           this.showHttpProgress = false;
-          this.job = event.body;
-          if (this.job && (this.job as any).job_id) {
-            this.jobId = (this.job as any).job_id;
-          }
-          this.wsshow();
-        }
-      },
-      (err: HttpErrorResponse) => {
-        this.showHttpProgress = false;
-        this.prefailure.emit(err);
+          this.prefailure.emit(err);
+        },
       });
   }
 
   wspost(path: string, options: unknown): void {
-    this.http.post(path, options).pipe(untilDestroyed(this)).subscribe((res: Job) => {
-      this.job = res;
-      if (this.job && (this.job as any).job_id) {
-        this.jobId = (this.job as any).job_id;
-      }
-      this.wsshow();
-    },
-    (err: HttpErrorResponse) => {
-      this.prefailure.emit(err);
+    this.http.post(path, options).pipe(untilDestroyed(this)).subscribe({
+      next: (res: Job) => {
+        this.job = res;
+        if (this.job && (this.job as any).job_id) {
+          this.jobId = (this.job as any).job_id;
+        }
+        this.wsshow();
+      },
+      error: (err: HttpErrorResponse) => {
+        this.prefailure.emit(err);
+      },
     });
   }
 
@@ -271,7 +278,6 @@ export class EntityJobComponent implements OnInit {
     const subscriptionId = UUID.UUID();
     const subName = 'filesystem.file_tail_follow:' + this.job.logs_path;
     this.ws.sub(subName, subscriptionId).pipe(untilDestroyed(this)).subscribe((res) => {
-      this.scrollBottom();
       if (res && res.data && typeof res.data === 'string') {
         this.realtimeLogs += res.data;
       }
@@ -281,6 +287,10 @@ export class EntityJobComponent implements OnInit {
 
   scrollBottom(): void {
     const cardContainer = document.getElementsByClassName('entity-job-dialog')[0];
-    cardContainer.scrollTop = cardContainer.scrollHeight;
+    const logsContainer = cardContainer.getElementsByClassName('logs-container')[0];
+    if (!logsContainer) {
+      return;
+    }
+    logsContainer.scrollTop = logsContainer.scrollHeight;
   }
 }

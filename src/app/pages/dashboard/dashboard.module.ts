@@ -1,11 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -17,8 +16,11 @@ import { CommonDirectivesModule } from 'app/directives/common/common-directives.
 import { CastModule } from 'app/modules/cast/cast.module';
 import { ChartsModule } from 'app/modules/charts/charts.module';
 import { AppCommonModule } from 'app/modules/common/app-common.module';
+import { EntityModule } from 'app/modules/entity/entity.module';
 import { IxDropGridModule } from 'app/modules/ix-drop-grid/ix-drop-grid.module';
 import { IxFormsModule } from 'app/modules/ix-forms/ix-forms.module';
+import { IxIconModule } from 'app/modules/ix-icon/ix-icon.module';
+import { LayoutModule } from 'app/modules/layout/layout.module';
 import { DashboardFormComponent } from 'app/pages/dashboard/components/dashboard-form/dashboard-form.component';
 import { DashboardComponent } from 'app/pages/dashboard/components/dashboard/dashboard.component';
 import { WidgetControllerComponent } from 'app/pages/dashboard/components/widget-controller/widget-controller.component';
@@ -29,13 +31,11 @@ import { WidgetNetworkComponent } from 'app/pages/dashboard/components/widget-ne
 import { WidgetNicComponent } from 'app/pages/dashboard/components/widget-nic/widget-nic.component';
 import { WidgetPoolComponent } from 'app/pages/dashboard/components/widget-pool/widget-pool.component';
 import { WidgetStorageComponent } from 'app/pages/dashboard/components/widget-storage/widget-storage.component';
-import { SimpleFailoverBtnDialogComponent } from 'app/pages/dashboard/components/widget-sys-info/simple-failover-btn-dialog.component';
 import {
   SimpleFailoverBtnComponent,
 } from 'app/pages/dashboard/components/widget-sys-info/simple-failover-btn.component';
 import { WidgetSysInfoComponent } from 'app/pages/dashboard/components/widget-sys-info/widget-sys-info.component';
 import { WidgetComponent } from 'app/pages/dashboard/components/widget/widget.component';
-import { EntityModule } from '../../modules/entity/entity.module';
 import { routing } from './dashboard.routing';
 
 @NgModule({
@@ -43,12 +43,11 @@ import { routing } from './dashboard.routing';
     CoreComponents,
     CommonModule,
     CommonDirectivesModule,
-    FormsModule,
     ReactiveFormsModule,
     IxFormsModule,
     routing,
     MatCardModule,
-    MatIconModule,
+    IxIconModule,
     MatMenuModule,
     MatListModule,
     MatProgressSpinnerModule,
@@ -63,6 +62,7 @@ import { routing } from './dashboard.routing';
     CastModule,
     IxDropGridModule,
     ChartsModule,
+    LayoutModule,
   ],
   declarations: [
     DashboardComponent,
@@ -78,7 +78,6 @@ import { routing } from './dashboard.routing';
     WidgetNetworkComponent,
     WidgetStorageComponent,
     SimpleFailoverBtnComponent,
-    SimpleFailoverBtnDialogComponent,
   ],
 })
 export class DashboardModule {

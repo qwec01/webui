@@ -1,8 +1,7 @@
 import {
   ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit,
 } from '@angular/core';
-import { Validators } from '@angular/forms';
-import { FormBuilder } from '@ngneat/reactive-forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { of } from 'rxjs';
 import { NetworkActivityType } from 'app/enums/network-activity-type.enum';
@@ -15,7 +14,7 @@ import {
 import { ipv4Validator, ipv6Validator } from 'app/modules/entity/entity-form/validators/ip-validation';
 import { EntityUtils } from 'app/modules/entity/utils';
 import { FormErrorHandlerService } from 'app/modules/ix-forms/services/form-error-handler.service';
-import { DialogService, WebSocketService } from 'app/services';
+import { DialogService, SystemGeneralService, WebSocketService } from 'app/services';
 import { IxSlideInService } from 'app/services/ix-slide-in.service';
 
 @UntilDestroy()
@@ -31,6 +30,7 @@ export class NetworkConfigurationComponent implements OnInit {
     hostname: ['', Validators.required],
     hostname_b: [null as string],
     hostname_virtual: [null as string],
+    inherit_dhcp: [false],
     domain: [''],
     domains: [[] as string[]],
     netbios: [false],
@@ -57,18 +57,24 @@ export class NetworkConfigurationComponent implements OnInit {
     tooltip: helptext.hostname_tooltip,
   };
 
-  hostname_b = {
+  hostnameB = {
     fcName: 'hostname_b',
     label: helptext.hostname_b_placeholder,
     tooltip: helptext.hostname_b_tooltip,
     hidden: true,
   };
 
-  hostname_virtual = {
+  hostnameVirtual = {
     fcName: 'hostname_virtual',
     label: helptext.hostname_virtual_placeholder,
     tooltip: helptext.hostname_virtual_tooltip,
     hidden: true,
+  };
+
+  inheritDhcp = {
+    fcName: 'inherit_dhcp',
+    label: helptext.inherit_dhcp_placeholder,
+    tooltip: helptext.inherit_dhcp_tooltip,
   };
 
   domain = {
@@ -131,18 +137,19 @@ export class NetworkConfigurationComponent implements OnInit {
     tooltip: helptext.ipv6gateway_tooltip,
   };
 
-  outbound_network_activity = {
+  outboundNetworkActivity = {
     fcName: 'outbound_network_activity',
-    label: '',
+    label: helptext.outbound_activity,
     tooltip: '',
     options: of([
-      // deny type + empty list
+      // Mismatch between enum and label is expected.
+      // We will send empty list of services when Allow All or Deny All is selected.
+      // I.e. selecting 'Allow All' will send Deny [], effectively allowing all services.
       {
         label: helptext.outbound_network_activity.allow.placeholder,
         value: NetworkActivityType.Deny,
         tooltip: helptext.outbound_network_activity.allow.tooltip,
       },
-      // allow type + empty list
       {
         label: helptext.outbound_network_activity.deny.placeholder,
         value: NetworkActivityType.Allow,
@@ -156,9 +163,9 @@ export class NetworkConfigurationComponent implements OnInit {
     ]),
   };
 
-  outbound_network_value = {
+  outboundNetworkValue = {
     fcName: 'outbound_network_value',
-    label: '',
+    label: helptext.outbound_network_value.placeholder,
     tooltip: helptext.outbound_network_value.tooltip,
     options: this.ws.call('network.configuration.activity_choices').pipe(arrayToOptions()),
     hidden: true,
@@ -170,13 +177,13 @@ export class NetworkConfigurationComponent implements OnInit {
     tooltip: helptext.httpproxy_tooltip,
   };
 
-  netwait_enabled = {
+  netwaitEnabled = {
     fcName: 'netwait_enabled',
     label: helptext.netwait_enabled_placeholder,
     tooltip: helptext.netwait_enabled_tooltip,
   };
 
-  netwait_ip = {
+  netwaitIp = {
     fcName: 'netwait_ip',
     label: helptext.netwait_ip_placeholder,
     tooltip: helptext.netwait_ip_tooltip,
@@ -196,6 +203,7 @@ export class NetworkConfigurationComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private fb: FormBuilder,
     private dialogService: DialogService,
+    private systemGeneralService: SystemGeneralService,
   ) {}
 
   ngOnInit(): void {
@@ -205,26 +213,32 @@ export class NetworkConfigurationComponent implements OnInit {
     this.form.controls.outbound_network_activity.valueChanges.pipe(untilDestroyed(this)).subscribe(
       (value: NetworkActivityType) => {
         if ([NetworkActivityType.Allow, NetworkActivityType.Deny].includes(value)) {
-          this.outbound_network_value.hidden = true;
+          this.outboundNetworkValue.hidden = true;
         } else {
-          this.outbound_network_value.hidden = false;
+          this.outboundNetworkValue.hidden = false;
         }
       },
     );
     this.form.controls.netwait_enabled.valueChanges.pipe(untilDestroyed(this)).subscribe(
       (value: boolean) => {
+        this.netwaitIp.hidden = !value;
+      },
+    );
+
+    this.form.controls.inherit_dhcp.valueChanges.pipe(untilDestroyed(this)).subscribe(
+      (value: boolean) => {
         if (value) {
-          this.netwait_ip.hidden = false;
+          this.form.controls.domain.disable();
         } else {
-          this.netwait_ip.hidden = true;
+          this.form.controls.domain.enable();
         }
       },
     );
 
-    if ([ProductType.Enterprise, ProductType.ScaleEnterprise].includes(window.localStorage.getItem('product_type') as ProductType)) {
+    if (this.systemGeneralService.getProductType() === ProductType.ScaleEnterprise) {
       this.ws.call('failover.licensed').pipe(untilDestroyed(this)).subscribe((isHa) => {
-        this.hostname_b.hidden = !isHa;
-        this.hostname_virtual.hidden = !isHa;
+        this.hostnameB.hidden = !isHa;
+        this.hostnameVirtual.hidden = !isHa;
       });
     }
   }
@@ -232,12 +246,13 @@ export class NetworkConfigurationComponent implements OnInit {
   private loadConfig(): void {
     this.ws.call('network.configuration.config')
       .pipe(untilDestroyed(this))
-      .subscribe(
-        (config: NetworkConfiguration) => {
+      .subscribe({
+        next: (config: NetworkConfiguration) => {
           const transformed: NetworkConfigurationConfig = {
             hostname: config.hostname,
             hostname_b: config.hostname_b,
             hostname_virtual: config.hostname_virtual,
+            inherit_dhcp: config.domain === '',
             domain: config.domain,
             domains: config.domains,
             nameserver1: config.nameserver1,
@@ -273,12 +288,12 @@ export class NetworkConfigurationComponent implements OnInit {
           this.isFormLoading = false;
           this.cdr.markForCheck();
         },
-        (error) => {
-          new EntityUtils().handleWsError(null, error, this.dialogService);
+        error: (error) => {
+          new EntityUtils().handleWsError(this, error, this.dialogService);
           this.isFormLoading = false;
           this.cdr.markForCheck();
         },
-      );
+      });
   }
 
   onSubmit(): void {
@@ -289,6 +304,10 @@ export class NetworkConfigurationComponent implements OnInit {
       activity = { type: values.outbound_network_activity, activities: [] };
     } else {
       activity = { type: NetworkActivityType.Allow, activities: values.outbound_network_value };
+    }
+
+    if (values.inherit_dhcp) {
+      values.domain = '';
     }
 
     const serviceAnnouncement = {
@@ -302,6 +321,7 @@ export class NetworkConfigurationComponent implements OnInit {
 
     delete values.outbound_network_activity;
     delete values.outbound_network_value;
+    delete values.inherit_dhcp;
 
     const params = {
       ...values,
@@ -313,17 +333,17 @@ export class NetworkConfigurationComponent implements OnInit {
     this.isFormLoading = true;
     this.ws.call('network.configuration.update', [params] as [NetworkConfigurationUpdate])
       .pipe(untilDestroyed(this))
-      .subscribe(
-        () => {
+      .subscribe({
+        next: () => {
           this.isFormLoading = false;
           this.cdr.markForCheck();
           this.slideInService.close();
         },
-        (error) => {
+        error: (error) => {
           this.isFormLoading = false;
           this.errorHandler.handleWsFormError(error, this.form);
           this.cdr.markForCheck();
         },
-      );
+      });
   }
 }

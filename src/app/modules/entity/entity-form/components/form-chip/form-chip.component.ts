@@ -2,7 +2,7 @@ import { ENTER } from '@angular/cdk/keycodes';
 import {
   Component, OnInit, ElementRef, ViewChild,
 } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent, MatAutocomplete, MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -13,16 +13,15 @@ import { Field } from 'app/modules/entity/entity-form/models/field.interface';
 
 @UntilDestroy()
 @Component({
-  selector: 'form-chip',
   templateUrl: './form-chip.component.html',
   styleUrls: ['../dynamic-field/dynamic-field.scss', './form-chip.component.scss'],
 })
 export class FormChipComponent implements Field, OnInit {
   config: FormChipConfig;
-  group: FormGroup;
+  group: UntypedFormGroup;
   fieldShow: string;
   chipLists: string[];
-  chipCtrl = new FormControl();
+  chipCtrl = new UntypedFormControl();
 
   @ViewChild('chipInput') chipInput: ElementRef<HTMLInputElement>;
   @ViewChild('autoComplete') matAutocomplete: MatAutocomplete;

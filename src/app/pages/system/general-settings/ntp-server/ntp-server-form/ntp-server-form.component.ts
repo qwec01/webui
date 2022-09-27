@@ -1,12 +1,12 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { Validators, FormBuilder } from '@angular/forms';
+import { Validators, UntypedFormBuilder } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { helptextSystemNtpservers as helptext } from 'app/helptext/system/ntp-servers';
 import { CreateNtpServer, NtpServer } from 'app/interfaces/ntp-server.interface';
 import { FormErrorHandlerService } from 'app/modules/ix-forms/services/form-error-handler.service';
-import { ValidationService, WebSocketService, DialogService } from 'app/services';
+import { ValidationService, WebSocketService } from 'app/services';
 import { IxSlideInService } from 'app/services/ix-slide-in.service';
 
 @UntilDestroy()
@@ -40,8 +40,7 @@ export class NtpServerFormComponent {
   constructor(
     private slideInService: IxSlideInService,
     private validationService: ValidationService,
-    private dialogService: DialogService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private ws: WebSocketService,
     private cdr: ChangeDetectorRef,
     private translate: TranslateService,
@@ -85,14 +84,17 @@ export class NtpServerFormComponent {
       request$ = this.ws.call('system.ntpserver.update', [this.editingServer.id, body]);
     }
 
-    request$.pipe(untilDestroyed(this)).subscribe(() => {
-      this.isFormLoading = false;
-      this.cdr.markForCheck();
-      this.slideInService.close();
-    }, (error) => {
-      this.isFormLoading = false;
-      this.cdr.markForCheck();
-      this.errorHandler.handleWsFormError(error, this.formGroup);
+    request$.pipe(untilDestroyed(this)).subscribe({
+      next: () => {
+        this.isFormLoading = false;
+        this.cdr.markForCheck();
+        this.slideInService.close();
+      },
+      error: (error) => {
+        this.isFormLoading = false;
+        this.cdr.markForCheck();
+        this.errorHandler.handleWsFormError(error, this.formGroup);
+      },
     });
   }
 }

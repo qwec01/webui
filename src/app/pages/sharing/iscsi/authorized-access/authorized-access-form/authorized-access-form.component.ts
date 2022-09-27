@@ -1,17 +1,16 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
-import { Validators } from '@angular/forms';
-import { FormBuilder } from '@ngneat/reactive-forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { helptextSharingIscsi } from 'app/helptext/sharing';
-import { IscsiAuthAccess } from 'app/interfaces/iscsi.interface';
+import { IscsiAuthAccess, IscsiAuthAccessUpdate } from 'app/interfaces/iscsi.interface';
 import {
   doesNotEqualValidator,
   matchOtherValidator,
 } from 'app/modules/entity/entity-form/validators/password-validation/password-validation';
 import { FormErrorHandlerService } from 'app/modules/ix-forms/services/form-error-handler.service';
-import IxValidatorsService from 'app/modules/ix-forms/services/ix-validators.service';
+import { IxValidatorsService } from 'app/modules/ix-forms/services/ix-validators.service';
 import { WebSocketService } from 'app/services';
 import { IxSlideInService } from 'app/services/ix-slide-in.service';
 
@@ -97,31 +96,31 @@ export class AuthorizedAccessFormComponent {
   }
 
   onSubmit(): void {
-    const values = {
-      ...this.form.value,
-      tag: Number(this.form.value.tag),
-    };
+    const values = this.form.value;
     delete values['secret_confirm'];
     delete values['peersecret_confirm'];
 
     this.isLoading = true;
     let request$: Observable<unknown>;
     if (this.isNew) {
-      request$ = this.ws.call('iscsi.auth.create', [values]);
+      request$ = this.ws.call('iscsi.auth.create', [values as IscsiAuthAccessUpdate]);
     } else {
       request$ = this.ws.call('iscsi.auth.update', [
         this.editingAccess.id,
-        values,
+        values as IscsiAuthAccessUpdate,
       ]);
     }
 
-    request$.pipe(untilDestroyed(this)).subscribe(() => {
-      this.isLoading = false;
-      this.slideInService.close();
-    }, (error) => {
-      this.isLoading = false;
-      this.errorHandler.handleWsFormError(error, this.form);
-      this.cdr.markForCheck();
+    request$.pipe(untilDestroyed(this)).subscribe({
+      next: () => {
+        this.isLoading = false;
+        this.slideInService.close();
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.errorHandler.handleWsFormError(error, this.form);
+        this.cdr.markForCheck();
+      },
     });
   }
 }

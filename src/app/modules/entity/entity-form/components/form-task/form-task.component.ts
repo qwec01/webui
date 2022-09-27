@@ -1,10 +1,9 @@
 import {
   Component, AfterViewInit, OnInit, ViewChild,
 } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 import { MatTabGroup } from '@angular/material/tabs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { TranslateService } from '@ngx-translate/core';
 import * as _ from 'lodash';
 import {
   FieldConfig,
@@ -15,24 +14,22 @@ import { EntityFormService } from 'app/modules/entity/entity-form/services/entit
 
 @UntilDestroy()
 @Component({
-  selector: 'form-task',
   templateUrl: './form-task.component.html',
   styleUrls: ['./form-task.component.scss'],
 })
 export class FormTaskComponent implements Field, AfterViewInit, OnInit {
   config: FormTaskConfig;
-  group: FormGroup;
+  group: UntypedFormGroup;
   fieldShow: string;
 
-  tabFormGroup: FormGroup;
+  tabFormGroup: UntypedFormGroup;
   protected control: AbstractControl;
   protected activeTabField: FieldConfig;
-  protected value: any;
+  protected value: string | number | string[] | number[];
   protected init: boolean;
   @ViewChild('tabGroup', { static: true }) tabGroup: MatTabGroup;
 
-  constructor(protected entityFormService: EntityFormService,
-    public translate: TranslateService) {}
+  constructor(protected entityFormService: EntityFormService) {}
 
   ngAfterViewInit(): void {
     this.activeTabField = this.config.tabs[this.tabGroup.selectedIndex];
@@ -75,10 +72,10 @@ export class FormTaskComponent implements Field, AfterViewInit, OnInit {
   setControlValue(): void {
     this.value = this.tabFormGroup.controls[this.activeTabField.name].value;
     if (this.activeTabField.type === 'slider' && this.value) {
-      this.value = '*/' + this.value;
+      this.value = `*/${String(this.value)}`;
     }
     if (this.activeTabField.type === 'togglebutton' && this.value) {
-      this.value = this.value.join();
+      this.value = (this.value as unknown[]).join();
     }
     this.control.setValue(this.value);
   }

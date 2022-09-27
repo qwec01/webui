@@ -1,8 +1,3 @@
-.widget {
-  height: 400px;
-  width: 600px;
-}
-
 .widget mat-card-content {
   width: 100%;
 }
@@ -13,12 +8,15 @@
   font-size: 1.5rem;
   height: 48px;
   left: 0;
-  line-height: 180%;
   padding: 0 8px;
   position: absolute;
   text-align: left;
   width: 100%;
   z-index: 4;
+
+  &.view-overview {
+    padding: 0 16px;
+  }
 }
 
 .xs.widget mat-toolbar-row.view-overview .controls,
@@ -70,7 +68,7 @@
 .slide.overview .left {
   background-blend-mode: overlay;
   background-color: #666;
-  background-image: url('../../../../../assets/images/backgrounds/rj45.jpg');
+  background-image: url('~assets/images/backgrounds/rj45.jpg');
   background-position-x: 65%;
   background-position-y: center;
   background-size: cover;
@@ -136,19 +134,8 @@
 
 .link-state .mat-icon {
   font-size: 18px;
-  position: relative;
-  top: 2px;
-}
-
-.controls {
-  color: var(--fg2);
-  position: absolute;
-  right: 16px;
-  top: 0;
-}
-
-.controls button {
-  display: inline-block;
+  height: 18px;
+  width: 18px;
 }
 
 .carousel-nav {
@@ -214,6 +201,10 @@
 
 .mat-list-base .mat-list-item {
   border-bottom: solid 1px rgba(0, 0, 0, 0.1);
+
+  strong {
+    margin-right: 6px;
+  }
 }
 
 .list-subheader {
@@ -239,5 +230,9 @@
 }
 
 .xs.widget .nic-traffic {
+  margin-left: 4px;
+}
+
+.more-addresses {
   margin-left: 4px;
 }

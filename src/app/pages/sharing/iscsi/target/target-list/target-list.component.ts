@@ -8,14 +8,14 @@ import { EntityTableComponent } from 'app/modules/entity/entity-table/entity-tab
 import { EntityTableAction, EntityTableConfig } from 'app/modules/entity/entity-table/entity-table.interface';
 import { EntityUtils } from 'app/modules/entity/utils';
 import { TargetFormComponent } from 'app/pages/sharing/iscsi/target/target-form/target-form.component';
-import { ModalService } from 'app/services';
 import { IscsiService } from 'app/services/iscsi.service';
+import { IxSlideInService } from 'app/services/ix-slide-in.service';
 
 @UntilDestroy()
 @Component({
-  selector: 'app-iscsi-target-list',
+  selector: 'ix-iscsi-target-list',
   template: `
-    <entity-table [conf]="this" [title]="title"></entity-table>
+    <ix-entity-table [conf]="this" [title]="title"></ix-entity-table>
   `,
   providers: [IscsiService],
 })
@@ -52,7 +52,7 @@ export class TargetListComponent implements EntityTableConfig, OnInit {
   protected entityList: EntityTableComponent;
   constructor(
     private iscsiService: IscsiService,
-    private modalService: ModalService,
+    private slideInService: IxSlideInService,
     private translate: TranslateService,
   ) {}
 
@@ -67,17 +67,19 @@ export class TargetListComponent implements EntityTableConfig, OnInit {
 
   afterInit(entityList: EntityTableComponent): void {
     this.entityList = entityList;
-  }
-
-  doAdd(rowId: string = null): void {
-    this.modalService.openInSlideIn(TargetFormComponent, rowId);
-    this.modalService.onClose$.pipe(untilDestroyed(this)).subscribe(() => {
-      this.entityList.getData();
+    this.slideInService.onClose$.pipe(untilDestroyed(this)).subscribe(() => {
+      entityList.getData();
     });
   }
 
+  doAdd(): void {
+    this.slideInService.open(TargetFormComponent, { wide: true });
+  }
+
   doEdit(id: string): void {
-    this.doAdd(id);
+    const row = this.entityList.rows.find((row) => row.id === id);
+    const form = this.slideInService.open(TargetFormComponent, { wide: true });
+    form.setTargetForEdit(row);
   }
 
   getActions(row: IscsiTarget): EntityTableAction<IscsiTarget>[] {
@@ -95,10 +97,10 @@ export class TargetListComponent implements EntityTableConfig, OnInit {
       onClick: (rowinner: IscsiTarget) => {
         let deleteMsg = this.entityList.getDeleteMessage(rowinner);
         this.iscsiService.getGlobalSessions().pipe(untilDestroyed(this)).subscribe(
-          (res) => {
+          (sessions) => {
             const payload: [id: number, force?: boolean] = [rowinner.id];
             let warningMsg = '';
-            for (const session of res) {
+            for (const session of sessions) {
               if (session.target.split(':')[1] === rowinner.name) {
                 warningMsg = `<font color="red">${this.translate.instant('Warning: iSCSI Target is already in use.</font><br>')}`;
                 payload.push(true); // enable force delele
@@ -114,13 +116,13 @@ export class TargetListComponent implements EntityTableConfig, OnInit {
             }).pipe(filter(Boolean), untilDestroyed(this)).subscribe(() => {
               this.entityList.loader.open();
               this.entityList.loaderOpen = true;
-              this.entityList.ws.call(this.wsDelete, payload).pipe(untilDestroyed(this)).subscribe(
-                () => { this.entityList.getData(); },
-                (error: WebsocketError) => {
+              this.entityList.ws.call(this.wsDelete, payload).pipe(untilDestroyed(this)).subscribe({
+                next: () => this.entityList.getData(),
+                error: (error: WebsocketError) => {
                   new EntityUtils().handleWsError(this, error, this.entityList.dialogService);
                   this.entityList.loader.close();
                 },
-              );
+              });
             });
           },
         );

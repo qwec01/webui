@@ -1,18 +1,18 @@
 import {
   ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit,
 } from '@angular/core';
-import { Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { FormBuilder } from '@ngneat/reactive-forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
+import { SmartPowerMode } from 'app/enums/smart-power.mode';
 import helptext from 'app/helptext/services/components/service-smart';
+import { SmartConfigUpdate } from 'app/interfaces/smart-test.interface';
 import { numberValidator } from 'app/modules/entity/entity-form/validators/number-validation';
+import { EntityUtils } from 'app/modules/entity/utils';
 import { FormErrorHandlerService } from 'app/modules/ix-forms/services/form-error-handler.service';
 import { DialogService, WebSocketService } from 'app/services';
-import { SmartPowerMode } from '../../../../enums/smart-power.mode';
-import { EntityUtils } from '../../../../modules/entity/utils';
 
 @UntilDestroy()
 @Component({
@@ -60,47 +60,37 @@ export class ServiceSmartComponent implements OnInit {
     this.isFormLoading = true;
     this.ws.call('smart.config')
       .pipe(untilDestroyed(this))
-      .subscribe(
-        (config) => {
+      .subscribe({
+        next: (config) => {
           this.form.patchValue(config);
           this.isFormLoading = false;
           this.cdr.markForCheck();
         },
-        (error) => {
-          new EntityUtils().handleWsError(null, error, this.dialogService);
+        error: (error) => {
+          new EntityUtils().handleWsError(this, error, this.dialogService);
           this.isFormLoading = false;
           this.cdr.markForCheck();
         },
-      );
+      });
   }
 
   onSubmit(): void {
     const values = this.form.value;
 
-    // Converting to numbers is only necessary for unit tests,
-    // which don't play nicely with numbers in inputs.
-    const params = {
-      interval: Number(values.interval),
-      powermode: values.powermode,
-      difference: Number(values.difference),
-      informational: Number(values.informational),
-      critical: Number(values.critical),
-    };
-
     this.isFormLoading = true;
-    this.ws.call('smart.update', [params])
+    this.ws.call('smart.update', [values as SmartConfigUpdate])
       .pipe(untilDestroyed(this))
-      .subscribe(
-        () => {
+      .subscribe({
+        next: () => {
           this.isFormLoading = false;
           this.cdr.markForCheck();
           this.router.navigate(['/services']);
         },
-        (error) => {
+        error: (error) => {
           this.isFormLoading = false;
           this.errorHandler.handleWsFormError(error, this.form);
           this.cdr.markForCheck();
         },
-      );
+      });
   }
 }

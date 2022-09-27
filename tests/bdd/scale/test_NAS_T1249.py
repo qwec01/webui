@@ -68,20 +68,21 @@ def in_the_dropdown_click_export_disconnect(driver):
 @then('click the checkboxes, enter name, and click export')
 def click_the_checkboxes_enter_name_and_click_export(driver):
     """click the checkboxes, enter name, and click export."""
-    assert wait_on_element(driver, 5, '//mat-checkbox[@ix-auto="checkbox__Destroy data on this pool?"]', 'clickable')
-    driver.find_element_by_xpath('//mat-checkbox[@ix-auto="checkbox__Destroy data on this pool?"]').click()   
-    assert wait_on_element(driver, 5, '//input[@ix-auto="input__"]', 'inputable')
-    driver.find_element_by_xpath('//input[@ix-auto="input__"]').click()
-    #driver.find_element_by_xpath('//input[@ix-auto="input__"]').clear()
-    driver.find_element_by_xpath('//input[@ix-auto="input__"]').send_keys("encrypted_tank")
-    assert wait_on_element(driver, 10, '//mat-checkbox[@ix-auto="checkbox__Confirm Export/Disconnect"]', 'clickable')
-    driver.find_element_by_xpath('//mat-checkbox[@ix-auto="checkbox__Confirm Export/Disconnect"]').click()   
+    assert wait_on_element(driver, 5, '//ix-checkbox[@formcontrolname = "destroy"]//mat-checkbox', 'clickable')
+    driver.find_element_by_xpath('//ix-checkbox[@formcontrolname = "destroy"]//mat-checkbox').click()   
+    assert wait_on_element(driver, 5, '//ix-input[@formcontrolname = "nameInput"]//input', 'inputable')
+    driver.find_element_by_xpath('//ix-input[@formcontrolname = "nameInput"]//input').click()
+    #driver.find_element_by_xpath('//ix-input[@formcontrolname = "nameInput"]//input').clear()
+    driver.find_element_by_xpath('//ix-input[@formcontrolname = "nameInput"]//input').send_keys("encrypted_tank")
+    assert wait_on_element(driver, 10, '//ix-checkbox[@formcontrolname = "confirm"]//mat-checkbox', 'clickable')
+    driver.find_element_by_xpath('//ix-checkbox[@formcontrolname = "confirm"]//mat-checkbox').click()   
     assert wait_on_element(driver, 5, '//button[@ix-auto="button__EXPORT/DISCONNECT"]', 'clickable')
     driver.find_element_by_xpath('//button[@ix-auto="button__EXPORT/DISCONNECT"]').click()
+
 
 @then('storage page should load and the pool should be gone')
 def storage_page_should_load_and_the_pool_should_be_gone(driver):
     """storage page should load and the pool should be gone."""
     assert wait_on_element(driver, 20, '//button[@ix-auto="button__CLOSE"]', 'clickable')
     driver.find_element_by_xpath('//button[@ix-auto="button__CLOSE"]').click()
-    assert wait_on_element(driver, 10, '//div[contains(.,"encrypted_tank")]') is False
+    assert wait_on_element_disappear(driver, 10, '//div[contains(.,"encrypted_tank")]')

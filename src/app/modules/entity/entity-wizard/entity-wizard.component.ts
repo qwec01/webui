@@ -3,7 +3,7 @@ import {
   Component, Input, OnInit, ViewChild,
 } from '@angular/core';
 import {
-  AbstractControl, FormBuilder, FormGroup,
+  AbstractControl, UntypedFormBuilder, UntypedFormGroup,
 } from '@angular/forms';
 import { MatStep, MatStepper } from '@angular/material/stepper';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -11,17 +11,17 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import * as _ from 'lodash';
 import { WizardConfiguration } from 'app/interfaces/entity-wizard.interface';
-import { AppLoaderService } from 'app/modules/app-loader/app-loader.service';
 import { FieldConfig } from 'app/modules/entity/entity-form/models/field-config.interface';
 import { FieldSet } from 'app/modules/entity/entity-form/models/fieldset.interface';
 import { EntityFormService } from 'app/modules/entity/entity-form/services/entity-form.service';
 import { FieldRelationService } from 'app/modules/entity/entity-form/services/field-relation.service';
 import { EntityUtils } from 'app/modules/entity/utils';
+import { AppLoaderService } from 'app/modules/loader/app-loader.service';
 import { WebSocketService, DialogService } from 'app/services';
 
 @UntilDestroy()
 @Component({
-  selector: 'entity-wizard',
+  selector: 'ix-entity-wizard',
   templateUrl: './entity-wizard.component.html',
   styleUrls: ['./entity-wizard.component.scss', '../entity-form/entity-form.component.scss'],
   providers: [EntityFormService, FieldRelationService],
@@ -30,10 +30,10 @@ export class EntityWizardComponent implements OnInit {
   @Input() conf: WizardConfiguration;
   @ViewChild('stepper', { static: true }) stepper: MatStepper;
 
-  formGroup: FormGroup;
+  formGroup: UntypedFormGroup;
   showSpinner = false;
 
-  summaryValue: any;
+  summaryValue: unknown;
   summaryFieldConfigs: FieldConfig[] = [];
 
   saveSubmitText: string = this.translate.instant('Save');
@@ -42,7 +42,7 @@ export class EntityWizardComponent implements OnInit {
 
   constructor(
     protected ws: WebSocketService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private entityFormService: EntityFormService,
     public loader: AppLoaderService,
     protected fieldRelationService: FieldRelationService,
@@ -111,7 +111,7 @@ export class EntityWizardComponent implements OnInit {
 
     this.conf.wizardConfig.forEach((config, i) => {
       this.summaryFieldConfigs = this.summaryFieldConfigs.concat(config.fieldConfig);
-      const formGroup = this.formArray.get(String(i)) as FormGroup;
+      const formGroup = this.formArray.get(String(i)) as UntypedFormGroup;
       config.fieldConfig.forEach((fieldConfig) => {
         this.fieldRelationService.setRelation(fieldConfig, formGroup);
       });
@@ -156,9 +156,9 @@ export class EntityWizardComponent implements OnInit {
       });
     });
 
-    if ((this.formArray.get([stepIndex]) as FormGroup).controls[name]) {
+    if ((this.formArray.get([stepIndex]) as UntypedFormGroup).controls[name]) {
       const method = disable ? 'disable' : 'enable';
-      (this.formArray.get([stepIndex]) as FormGroup).controls[name][method]();
+      (this.formArray.get([stepIndex]) as UntypedFormGroup).controls[name][method]();
     }
   }
 
@@ -180,22 +180,22 @@ export class EntityWizardComponent implements OnInit {
     } else {
       this.loader.open();
 
-      this.ws.job(this.conf.addWsCall, [value]).pipe(untilDestroyed(this)).subscribe(
-        (res) => {
+      this.ws.job(this.conf.addWsCall, [value]).pipe(untilDestroyed(this)).subscribe({
+        next: (res) => {
           this.loader.close();
           if (res.error) {
             this.dialog.errorReport(res.error, (res as any).reason, res.exception);
           } else if (this.conf.routeSuccess) {
             this.router.navigate(new Array('/').concat(this.conf.routeSuccess));
           } else {
-            this.dialog.info(this.translate.instant('Settings saved'), '', '300px', 'info', true);
+            this.dialog.info(this.translate.instant('Settings saved'), '');
           }
         },
-        (res) => {
+        error: (res) => {
           this.loader.close();
           new EntityUtils().handleError(this, res);
         },
-      );
+      });
     }
   }
 

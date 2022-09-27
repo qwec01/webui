@@ -1,20 +1,19 @@
 import {
   Component, OnInit,
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import {
   FormColorPickerConfig,
 } from 'app/modules/entity/entity-form/models/field-config.interface';
 import { Field } from 'app/modules/entity/entity-form/models/field.interface';
 
 @Component({
-  selector: 'form-colorpicker',
   templateUrl: './form-colorpicker.component.html',
   styleUrls: ['./form-colorpicker.component.scss'],
 })
 export class FormColorpickerComponent implements Field, OnInit {
   config: FormColorPickerConfig;
-  group: FormGroup;
+  group: UntypedFormGroup;
   fieldShow: string;
   picker = false;
 

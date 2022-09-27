@@ -1,15 +1,15 @@
 import {
   ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit,
 } from '@angular/core';
-import { Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { FormBuilder } from '@ngneat/reactive-forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { of } from 'rxjs';
 import helptext from 'app/helptext/services/components/service-snmp';
+import { SnmpConfigUpdate } from 'app/interfaces/snmp-config.interface';
 import { EntityUtils } from 'app/modules/entity/utils';
 import { FormErrorHandlerService } from 'app/modules/ix-forms/services/form-error-handler.service';
-import IxValidatorsService from 'app/modules/ix-forms/services/ix-validators.service';
+import { IxValidatorsService } from 'app/modules/ix-forms/services/ix-validators.service';
 import { DialogService, WebSocketService } from 'app/services';
 
 @UntilDestroy()
@@ -24,7 +24,7 @@ export class ServiceSnmpComponent implements OnInit {
   form = this.fb.group({
     location: [''],
     contact: ['', Validators.email],
-    community: ['', Validators.pattern(/^[\w\_\-\.\s]*$/)],
+    community: ['', Validators.pattern(/^[\w_\-.\s]*$/)],
 
     v3: [false],
     v3_username: [''],
@@ -92,27 +92,33 @@ export class ServiceSnmpComponent implements OnInit {
       values.v3_privpassphrase = '';
     }
 
-    this.ws.call('snmp.update', [values]).pipe(untilDestroyed(this)).subscribe(() => {
-      this.isFormLoading = false;
-      this.cdr.markForCheck();
-      this.router.navigate(['/services']);
-    }, (error) => {
-      this.isFormLoading = false;
-      this.errorHandler.handleWsFormError(error, this.form);
-      this.cdr.markForCheck();
+    this.ws.call('snmp.update', [values as SnmpConfigUpdate]).pipe(untilDestroyed(this)).subscribe({
+      next: () => {
+        this.isFormLoading = false;
+        this.cdr.markForCheck();
+        this.router.navigate(['/services']);
+      },
+      error: (error) => {
+        this.isFormLoading = false;
+        this.errorHandler.handleWsFormError(error, this.form);
+        this.cdr.markForCheck();
+      },
     });
   }
 
   private loadCurrentSettings(): void {
     this.isFormLoading = true;
-    this.ws.call('snmp.config').pipe(untilDestroyed(this)).subscribe((config) => {
-      this.isFormLoading = false;
-      this.form.patchValue(config);
-      this.cdr.markForCheck();
-    }, (error) => {
-      new EntityUtils().handleWsError(null, error, this.dialogService);
-      this.isFormLoading = false;
-      this.cdr.markForCheck();
+    this.ws.call('snmp.config').pipe(untilDestroyed(this)).subscribe({
+      next: (config) => {
+        this.isFormLoading = false;
+        this.form.patchValue(config);
+        this.cdr.markForCheck();
+      },
+      error: (error) => {
+        new EntityUtils().handleWsError(this, error, this.dialogService);
+        this.isFormLoading = false;
+        this.cdr.markForCheck();
+      },
     });
   }
 }

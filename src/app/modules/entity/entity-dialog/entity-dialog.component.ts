@@ -1,22 +1,22 @@
 import { DatePipe } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { MatCheckboxChange } from '@angular/material/checkbox/checkbox';
+import { UntypedFormGroup } from '@angular/forms';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import * as _ from 'lodash';
-import { AppLoaderService } from 'app/modules/app-loader/app-loader.service';
 import { DialogFormConfiguration } from 'app/modules/entity/entity-dialog/dialog-form-configuration.interface';
 import { FieldConfig } from 'app/modules/entity/entity-form/models/field-config.interface';
 import { EntityFormService } from 'app/modules/entity/entity-form/services/entity-form.service';
 import { FieldRelationService } from 'app/modules/entity/entity-form/services/field-relation.service';
 import { EntityUtils } from 'app/modules/entity/utils';
+import { AppLoaderService } from 'app/modules/loader/app-loader.service';
 import { WebSocketService } from 'app/services/ws.service';
 
 @UntilDestroy()
 @Component({
-  selector: 'app-entity-dialog',
+  selector: 'ix-entity-dialog',
   templateUrl: './entity-dialog.component.html',
   styleUrls: ['./entity-dialog.component.scss'],
   providers: [EntityFormService, DatePipe, FieldRelationService],
@@ -27,7 +27,7 @@ export class EntityDialogComponent implements OnInit {
   title: string;
   warning: string;
   fieldConfig: FieldConfig[];
-  formGroup: FormGroup;
+  formGroup: UntypedFormGroup;
   saveButtonText: string;
   cancelButtonText = 'Cancel';
   error: string;
@@ -44,7 +44,6 @@ export class EntityDialogComponent implements OnInit {
     public ws: WebSocketService,
     public loader: AppLoaderService,
     public mdDialog: MatDialog,
-    public datePipe: DatePipe,
     protected fieldRelationService: FieldRelationService,
   ) {}
 
@@ -89,18 +88,17 @@ export class EntityDialogComponent implements OnInit {
       this.conf.customSubmit(this);
     } else {
       this.loader.open();
-      this.ws.call(this.conf.method_ws, [this.formValue]).pipe(untilDestroyed(this)).subscribe(
-        () => {},
-        (error) => {
+      this.ws.call(this.conf.method_ws, [this.formValue]).pipe(untilDestroyed(this)).subscribe({
+        error: (error) => {
           this.loader.close();
           this.dialogRef.close(false);
           new EntityUtils().handleWsError(this, error);
         },
-        () => {
+        complete: () => {
           this.loader.close();
           this.dialogRef.close(true);
         },
-      );
+      });
     }
   }
 

@@ -2,14 +2,14 @@ import { BaseHarnessFilters, ComponentHarness, HarnessPredicate } from '@angular
 import { MatButtonHarness } from '@angular/material/button/testing';
 import { MatInputHarness } from '@angular/material/input/testing';
 import { IxFormControlHarness } from 'app/modules/ix-forms/interfaces/ix-form-control-harness.interface';
-import { getErrorText } from '../utils/harness.utils';
+import { getErrorText } from 'app/modules/ix-forms/utils/harness.utils';
 
 export interface JiraOauthHarnessFilters extends BaseHarnessFilters {
   label: string;
 }
 
 export class JiraOauthHarness extends ComponentHarness implements IxFormControlHarness {
-  static hostSelector = 'app-jira-oauth';
+  static hostSelector = 'ix-jira-oauth';
 
   static with(options: JiraOauthHarnessFilters): HarnessPredicate<JiraOauthHarness> {
     return new HarnessPredicate(JiraOauthHarness, options)

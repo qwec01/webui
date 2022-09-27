@@ -1,11 +1,11 @@
 import { ElementRef } from '@angular/core';
 import { ValidatorFn, AsyncValidatorFn } from '@angular/forms';
-import { MatCheckboxChange } from '@angular/material/checkbox/checkbox';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatSelectionListChange } from '@angular/material/list';
-import { MatRadioChange } from '@angular/material/radio/radio';
+import { MatRadioChange } from '@angular/material/radio';
 import { MatSelectChange } from '@angular/material/select';
 import { ITreeOptions } from '@circlon/angular-tree-component';
-import { DatasetType } from 'app/enums/dataset-type.enum';
+import { DatasetType } from 'app/enums/dataset.enum';
 import { ExplorerType } from 'app/enums/explorer-type.enum';
 import { Option } from 'app/interfaces/option.interface';
 import { FieldType } from 'app/modules/entity/entity-form/components/dynamic-field/dynamic-field.directive';
@@ -77,6 +77,7 @@ export interface FormCheckboxConfig<P = unknown> extends BaseFieldConfig<P> {
   expandedHeight?: boolean;
   onChange?(data: { event: MatCheckboxChange }): void;
   type: 'checkbox';
+  inlineLabel?: boolean;
   updater?: (parent: P) => void;
   customEventMethod?: () => void;
 }
@@ -207,7 +208,6 @@ export interface FormSchedulerConfig<P = unknown> extends BaseFieldConfig<P> {
 }
 
 export interface FormSelectConfig<P = unknown> extends BaseFieldConfig<P> {
-  alert?: { message: string; forValues: any[] };
   enableTextWrapForOptions?: boolean;
   fileLocation?: string;
   inlineLabel?: string;

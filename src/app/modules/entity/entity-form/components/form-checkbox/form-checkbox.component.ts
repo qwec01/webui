@@ -1,19 +1,19 @@
 import { Component } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { MatCheckboxChange } from '@angular/material/checkbox/checkbox';
+import { UntypedFormGroup } from '@angular/forms';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { TranslateService } from '@ngx-translate/core';
 import { FormCheckboxConfig } from 'app/modules/entity/entity-form/models/field-config.interface';
 import { Field } from 'app/modules/entity/entity-form/models/field.interface';
 
 @Component({
-  selector: 'form-checkbox',
+  selector: 'ix-form-checkbox',
   styleUrls:
       ['form-checkbox.component.scss', '../dynamic-field/dynamic-field.scss'],
   templateUrl: './form-checkbox.component.html',
 })
 export class FormCheckboxComponent implements Field {
   config: FormCheckboxConfig;
-  group: FormGroup;
+  group: UntypedFormGroup;
   fieldShow: string;
 
   constructor(public translate: TranslateService) {}

@@ -1,5 +1,11 @@
 import {
-  Component, OnInit, ChangeDetectorRef, ViewChild, ChangeDetectionStrategy, ViewChildren, QueryList,
+  Component,
+  OnInit,
+  ChangeDetectorRef,
+  ViewChild, ChangeDetectionStrategy,
+  ViewChildren, QueryList,
+  AfterViewInit,
+  TemplateRef,
 } from '@angular/core';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -7,23 +13,20 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { select, Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import {
-  combineLatest, Observable, of, Subject,
+  combineLatest, Observable, of,
 } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { CoreEvent } from 'app/interfaces/events';
 import { User } from 'app/interfaces/user.interface';
 import { EmptyConfig, EmptyType } from 'app/modules/entity/entity-empty/entity-empty.component';
-import { EntityToolbarComponent } from 'app/modules/entity/entity-toolbar/entity-toolbar.component';
-import { ControlConfig, ToolbarConfig } from 'app/modules/entity/entity-toolbar/models/control-config.interface';
 import { IxDetailRowDirective } from 'app/modules/ix-tables/directives/ix-detail-row.directive';
 import { userPageEntered } from 'app/pages/account/users/store/user.actions';
 import { selectUsers, selectUserState, selectUsersTotal } from 'app/pages/account/users/store/user.selectors';
-import { CoreService } from 'app/services/core-service/core.service';
+import { UserFormComponent } from 'app/pages/account/users/user-form/user-form.component';
+import { IxSlideInService } from 'app/services/ix-slide-in.service';
+import { LayoutService } from 'app/services/layout.service';
 import { AppState } from 'app/store';
 import { builtinUsersToggled } from 'app/store/preferences/preferences.actions';
 import { waitForPreferences } from 'app/store/preferences/preferences.selectors';
-import { IxSlideInService } from '../../../../services/ix-slide-in.service';
-import { UserFormComponent } from '../user-form/user-form.component';
 
 @UntilDestroy()
 @Component({
@@ -31,11 +34,11 @@ import { UserFormComponent } from '../user-form/user-form.component';
   styleUrls: ['./user-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserListComponent implements OnInit {
+export class UserListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort, { static: false }) sort: MatSort;
+  @ViewChild('pageHeader') pageHeader: TemplateRef<unknown>;
 
   displayedColumns: string[] = ['username', 'uid', 'builtin', 'full_name', 'actions'];
-  settingsEvent$: Subject<CoreEvent> = new Subject();
   filterString = '';
   dataSource: MatTableDataSource<User> = new MatTableDataSource([]);
   defaultSort: Sort = { active: 'uid', direction: 'asc' };
@@ -56,11 +59,12 @@ export class UserListComponent implements OnInit {
   };
   expandedRow: User;
   @ViewChildren(IxDetailRowDirective) private detailRows: QueryList<IxDetailRowDirective>;
-  error$ = this.store$.select(selectUserState).pipe(map((state) => state.error));
   isLoading$ = this.store$.select(selectUserState).pipe(map((state) => state.isLoading));
-  isEmpty$ = this.store$.select(selectUsersTotal).pipe(map((total) => total === 0));
-  emptyOrErrorConfig$: Observable<EmptyConfig> = combineLatest([this.isEmpty$, this.error$]).pipe(
-    switchMap(([_, isError]) => {
+  emptyOrErrorConfig$: Observable<EmptyConfig> = combineLatest([
+    this.store$.select(selectUsersTotal).pipe(map((total) => total === 0)),
+    this.store$.select(selectUserState).pipe(map((state) => state.error)),
+  ]).pipe(
+    switchMap(([, isError]) => {
       if (isError) {
         return of(this.errorConfig);
       }
@@ -68,14 +72,14 @@ export class UserListComponent implements OnInit {
       return of(this.emptyConfig);
     }),
   );
-  private hideBuiltinUsers = true;
+  hideBuiltinUsers = true;
 
   constructor(
     private translate: TranslateService,
     private slideIn: IxSlideInService,
     private cdr: ChangeDetectorRef,
-    private core: CoreService,
     private store$: Store<AppState>,
+    private layoutService: LayoutService,
   ) { }
 
   ngOnInit(): void {
@@ -84,13 +88,16 @@ export class UserListComponent implements OnInit {
     this.getUsers();
   }
 
+  ngAfterViewInit(): void {
+    this.layoutService.pageHeaderUpdater$.next(this.pageHeader);
+  }
+
   getPreferences(): void {
     this.store$.pipe(
       waitForPreferences,
       untilDestroyed(this),
     ).subscribe((preferences) => {
       this.hideBuiltinUsers = preferences.hideBuiltinUsers;
-      this.setupToolbar();
       this.cdr.markForCheck();
     });
   }
@@ -99,12 +106,15 @@ export class UserListComponent implements OnInit {
     this.store$.pipe(
       select(selectUsers),
       untilDestroyed(this),
-    ).subscribe((users) => {
-      this.createDataSource(users);
-      this.cdr.markForCheck();
-    }, () => {
-      this.createDataSource();
-      this.cdr.markForCheck();
+    ).subscribe({
+      next: (users) => {
+        this.createDataSource(users);
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.createDataSource();
+        this.cdr.markForCheck();
+      },
     });
   }
 
@@ -145,58 +155,7 @@ export class UserListComponent implements OnInit {
     });
   }
 
-  setupToolbar(): void {
-    this.settingsEvent$ = new Subject();
-    this.settingsEvent$.pipe(
-      untilDestroyed(this),
-    ).subscribe((event: CoreEvent) => {
-      switch (event.data.event_control) {
-        case 'filter':
-          this.filterString = event.data.filter;
-          this.dataSource.filter = event.data.filter;
-          break;
-        case 'add':
-          this.doAdd();
-          break;
-        case 'config':
-          this.toggleBuiltins();
-          break;
-        default:
-          break;
-      }
-    });
-
-    const controls: ControlConfig[] = [
-      {
-        name: 'filter',
-        type: 'input',
-        value: this.filterString,
-        placeholder: this.translate.instant('Search'),
-      },
-      {
-        name: 'config',
-        type: 'slide-toggle',
-        value: !this.hideBuiltinUsers,
-        label: this.translate.instant('Show Built-In Users'),
-      },
-      {
-        name: 'add',
-        type: 'button',
-        label: this.translate.instant('Add'),
-        color: 'primary',
-        ixAutoIdentifier: 'Users_ADD',
-      },
-    ];
-
-    const toolbarConfig: ToolbarConfig = {
-      target: this.settingsEvent$,
-      controls,
-    };
-    const settingsConfig = {
-      actionType: EntityToolbarComponent,
-      actionConfig: toolbarConfig,
-    };
-
-    this.core.emit({ name: 'GlobalActions', data: settingsConfig, sender: this });
+  onListFiltered(query: string): void {
+    this.dataSource.filter = query;
   }
 }

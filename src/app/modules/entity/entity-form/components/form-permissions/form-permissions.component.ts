@@ -1,7 +1,7 @@
 import {
   Component, OnInit,
 } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import { PosixPermission } from 'app/enums/posix-acl.enum';
@@ -11,13 +11,12 @@ import { Field } from 'app/modules/entity/entity-form/models/field.interface';
 
 @UntilDestroy()
 @Component({
-  selector: 'form-permissions',
   styleUrls: ['../dynamic-field/dynamic-field.scss', 'form-permissions.scss'],
   templateUrl: './form-permissions.component.html',
 })
 export class FormPermissionsComponent implements Field, OnInit {
   config: FormPermissionsConfig;
-  group: FormGroup;
+  group: UntypedFormGroup;
   fieldShow: string;
 
   ownerRead = false;

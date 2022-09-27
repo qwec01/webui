@@ -5,13 +5,13 @@ import { FieldConfig, FormDictConfig } from 'app/modules/entity/entity-form/mode
 import { EntityUtils } from 'app/modules/entity/utils';
 
 @Component({
-  selector: 'wizard-summary',
+  selector: 'ix-wizard-summary',
   templateUrl: './wizard-summary.component.html',
   styleUrls: ['../../entity-wizard.component.scss'],
 })
 export class WizardSummaryComponent {
   @Input() fieldConfigs: FieldConfig[];
-  @Input() value: any;
+  @Input() value: Record<string, any>;
   @Input() isRoot: boolean;
   @Input() summary: Record<string, unknown>;
 

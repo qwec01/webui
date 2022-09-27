@@ -1,10 +1,9 @@
 import {
   ChangeDetectionStrategy, Component,
 } from '@angular/core';
-import { Validators } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { FormControl } from '@ngneat/reactive-forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { switchMap } from 'rxjs/operators';
 import { idNameArrayToOptions } from 'app/helpers/options.helper';
@@ -46,17 +45,17 @@ export class DownloadClientConfigModalComponent {
         }),
         untilDestroyed(this),
       )
-      .subscribe(
-        (key) => {
+      .subscribe({
+        next: (key) => {
           this.loader.close();
           this.dialogRef.close();
           this.storageService.downloadText(key, 'openVPNClientConfig.ovpn');
         },
-        (error) => {
+        error: (error) => {
           this.loader.close();
           new EntityUtils().handleWsError(this, error, this.dialogService);
         },
-      );
+      });
   }
 
   certificatesLinkClicked(): void {

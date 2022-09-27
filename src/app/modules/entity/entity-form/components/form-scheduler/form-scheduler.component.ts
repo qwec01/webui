@@ -1,26 +1,25 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { FormSchedulerConfig } from 'app/modules/entity/entity-form/models/field-config.interface';
 import { Field } from 'app/modules/entity/entity-form/models/field.interface';
 
 @UntilDestroy()
 @Component({
-  selector: 'form-scheduler',
   templateUrl: './form-scheduler.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormSchedulerComponent implements Field, OnInit {
   config: FormSchedulerConfig;
-  group: FormGroup;
+  group: UntypedFormGroup;
   fieldShow: string;
 
   startTime: string;
   endTime: string;
-  formControl: FormControl;
+  formControl: UntypedFormControl;
 
   ngOnInit(): void {
-    this.formControl = this.group.controls[this.config.name] as FormControl;
+    this.formControl = this.group.controls[this.config.name] as UntypedFormControl;
 
     if (this.config.options && this.config.options.length === 2) {
       this.setTimeBoundaries();

@@ -1,12 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import { VmDeviceType } from 'app/enums/vm.enum';
 import { VmDevice, VmDeviceDelete, VmDiskDevice } from 'app/interfaces/vm-device.interface';
 import { EntityUtils } from 'app/modules/entity/utils';
-import IxValidatorsService from 'app/modules/ix-forms/services/ix-validators.service';
+import { IxValidatorsService } from 'app/modules/ix-forms/services/ix-validators.service';
 import { AppLoaderService, DialogService, WebSocketService } from 'app/services';
 
 export interface DeviceDeleteModalState {
@@ -15,7 +15,6 @@ export interface DeviceDeleteModalState {
 
 @UntilDestroy()
 @Component({
-  selector: 'device-delete-modal',
   styleUrls: ['./device-delete-modal.component.scss'],
   templateUrl: './device-delete-modal.component.html',
 })
@@ -34,40 +33,42 @@ export class DeviceDeleteModalComponent implements OnInit {
   constructor(
     private loader: AppLoaderService,
     @Inject(MAT_DIALOG_DATA) public data: DeviceDeleteModalState,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private dialogRef: MatDialogRef<DeviceDeleteModalComponent>,
     private dialogService: DialogService,
     private translate: TranslateService,
     private validatorsService: IxValidatorsService,
     private ws: WebSocketService,
   ) {
-    if (this.data.row.dtype === VmDeviceType.Disk) {
-      const zvolConfirmRequired = this.validatorsService.withMessage(
-        Validators.required,
-        this.translate.instant('Name of the zvol is required'),
-      );
-
-      const zvolName = this.getZvolName(this.data.row);
-
-      const zvolConfirmMustMatch = this.validatorsService.withMessage(
-        Validators.pattern(new RegExp(`^${zvolName}$`)),
-        this.translate.instant('Name of the zvol must be correct'),
-      );
-
-      this.form.controls['zvolConfirm'].setValidators([
-        this.validatorsService.validateOnCondition(
-          (control: AbstractControl) => control.parent.get('zvol').value,
-          Validators.compose([
-            zvolConfirmRequired,
-            zvolConfirmMustMatch,
-          ]),
-        ),
-      ]);
-
-      this.form.updateValueAndValidity();
-
-      this.zvolConfirmLabelText = this.translate.instant('Enter <strong>{zvolName}</strong> below to confirm.', { zvolName });
+    if (this.data.row.dtype !== VmDeviceType.Disk) {
+      return;
     }
+
+    const zvolConfirmRequired = this.validatorsService.withMessage(
+      Validators.required,
+      this.translate.instant('Name of the zvol is required'),
+    );
+
+    const zvolName = this.getZvolName(this.data.row);
+
+    const zvolConfirmMustMatch = this.validatorsService.withMessage(
+      Validators.pattern(new RegExp(`^${zvolName}$`)),
+      this.translate.instant('Name of the zvol must be correct'),
+    );
+
+    this.form.controls['zvolConfirm'].setValidators([
+      this.validatorsService.validateOnCondition(
+        (control: AbstractControl) => control.parent.get('zvol').value,
+        Validators.compose([
+          zvolConfirmRequired,
+          zvolConfirmMustMatch,
+        ]),
+      ),
+    ]);
+
+    this.form.updateValueAndValidity();
+
+    this.zvolConfirmLabelText = this.translate.instant('Enter <strong>{zvolName}</strong> below to confirm.', { zvolName });
   }
 
   ngOnInit(): void {
@@ -92,16 +93,16 @@ export class DeviceDeleteModalComponent implements OnInit {
       },
     ])
       .pipe(untilDestroyed(this))
-      .subscribe(
-        () => {
+      .subscribe({
+        next: () => {
           this.dialogRef.close(true);
           this.loader.close();
         },
-        (err) => {
+        error: (err) => {
           new EntityUtils().handleWsError(this, err, this.dialogService);
           this.loader.close();
         },
-      );
+      });
   }
 
   onDestroyCheckedStateChanged($event: unknown): void {

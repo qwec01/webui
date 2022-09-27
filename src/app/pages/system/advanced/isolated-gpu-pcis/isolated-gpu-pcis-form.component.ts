@@ -1,7 +1,7 @@
 import {
   ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef,
 } from '@angular/core';
-import { FormBuilder } from '@ngneat/reactive-forms';
+import { FormBuilder } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
@@ -89,17 +89,20 @@ export class IsolatedGpuPcisFormComponent implements OnInit {
     this.isFormLoading = true;
     const isolatedGpuPciIds = this.formGroup.controls['isolated_gpu_pci_ids'].value;
 
-    this.ws.call('system.advanced.update', [{ isolated_gpu_pci_ids: isolatedGpuPciIds }]).pipe(
+    this.ws.call('system.advanced.update_gpu_pci_ids', [isolatedGpuPciIds]).pipe(
       untilDestroyed(this),
-    ).subscribe(() => {
-      this.isFormLoading = false;
-      this.cdr.markForCheck();
-      this.store$.dispatch(advancedConfigUpdated());
-      this.modal.close();
-    }, (error) => {
-      this.isFormLoading = false;
-      this.errorHandler.handleWsFormError(error, this.formGroup);
-      this.cdr.markForCheck();
+    ).subscribe({
+      next: () => {
+        this.isFormLoading = false;
+        this.cdr.markForCheck();
+        this.store$.dispatch(advancedConfigUpdated());
+        this.modal.close();
+      },
+      error: (error) => {
+        this.isFormLoading = false;
+        this.errorHandler.handleWsFormError(error, this.formGroup);
+        this.cdr.markForCheck();
+      },
     });
   }
 }

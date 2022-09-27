@@ -9,7 +9,6 @@ import { Option } from 'app/interfaces/option.interface';
 import { AppState } from 'app/store';
 import { waitForPreferences } from 'app/store/preferences/preferences.selectors';
 import { selectTimezone } from 'app/store/system-config/system-config.selectors';
-import { SystemGeneralService } from '.';
 
 @UntilDestroy()
 @Injectable()
@@ -21,7 +20,6 @@ export class LocaleService {
   target: Subject<CoreEvent> = new Subject();
 
   constructor(
-    public sysGeneralService: SystemGeneralService,
     private store$: Store<AppState>,
   ) {
     combineLatest([
@@ -30,8 +28,11 @@ export class LocaleService {
     ]).pipe(untilDestroyed(this)).subscribe(([timezone, preferences]) => {
       this.timezone = timezone;
 
-      if (preferences) {
+      if (preferences?.dateFormat) {
         this.dateFormat = this.formatDateTimeToDateFns(preferences.dateFormat);
+      }
+
+      if (preferences?.timeFormat) {
         this.timeFormat = this.formatDateTimeToDateFns(preferences.timeFormat);
       }
     });
@@ -118,16 +119,6 @@ export class LocaleService {
     return [format(date, `${this.dateFormat}`), format(date, `${this.timeFormat}`)];
   }
 
-  getCopyrightYearFromBuildTime(): string {
-    const buildTime = localStorage.getItem('buildtime')?.trim();
-    if (!buildTime) {
-      return '';
-    }
-
-    const buildTimeInMillis = parseInt(buildTime);
-    return new Date(buildTimeInMillis).getFullYear().toString();
-  }
-
   formatDateTimeToDateFns(format: string): string {
     let dateFnsFormat = format
       .replace('YYYY', 'yyyy')
@@ -135,7 +126,7 @@ export class LocaleService {
       .replace('DD', 'dd')
       .replace('D', 'd')
       .replace(' A', ' aa');
-    if (!dateFnsFormat.includes('aa')) {
+    if (dateFnsFormat && !dateFnsFormat.includes('aa')) {
       dateFnsFormat = dateFnsFormat.replace(' a', ' aaaaa\'m\'');
     }
     return dateFnsFormat;

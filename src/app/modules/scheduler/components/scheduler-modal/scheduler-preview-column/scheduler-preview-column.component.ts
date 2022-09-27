@@ -6,8 +6,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { MatCalendar } from '@angular/material/datepicker';
-import { MatCalendarCellClassFunction } from '@angular/material/datepicker/calendar-body';
+import { MatCalendar, MatCalendarCellClassFunction } from '@angular/material/datepicker';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   getDate, isBefore,
@@ -29,8 +28,6 @@ export class SchedulerPreviewColumnComponent implements OnChanges, OnInit {
 
   @Input() startTime: string;
   @Input() endTime: string;
-
-  scheduleExamples: Date[] = [];
 
   /**
    * 1 for 1st day of the month, etc.

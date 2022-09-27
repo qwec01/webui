@@ -11,13 +11,12 @@ import { IxSlideInService } from 'app/services/ix-slide-in.service';
 
 @UntilDestroy()
 @Component({
-  template: '<entity-table [title]="title" [conf]="this"></entity-table>',
+  template: '<ix-entity-table [title]="title" [conf]="this"></ix-entity-table>',
 })
 export class KerberosRealmsListComponent implements EntityTableConfig {
   title = this.translate.instant('Kerberos Realms');
   queryCall = 'kerberos.realm.query' as const;
   wsDelete = 'kerberos.realm.delete' as const;
-  keyList = ['admin_server', 'kdc', 'kpasswd_server'] as const;
   protected entityList: EntityTableComponent;
 
   columns = [

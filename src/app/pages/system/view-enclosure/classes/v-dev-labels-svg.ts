@@ -1,4 +1,3 @@
-import { ElementRef } from '@angular/core';
 import { Selection } from 'd3';
 import * as d3 from 'd3';
 import { Application, Container } from 'pixi.js';
@@ -22,28 +21,27 @@ export class VDevLabelsSvg {
 
   protected svg: Selection<SVGSVGElement, unknown, HTMLElement, unknown>; // Our d3 generated svg layer
   protected mainStage: Container; // WebGL Canvas
-  protected app: Application;
-  protected chassis: ChassisView; // The chassis we are labelling
   color: string;
   selectedDiskColor: string;
   highlightColor: string;
   highlightedDiskName: string;
-  selectedDisk: EnclosureDisk;
 
   private trays: Record<string, { x: number; y: number; width: number; height: number }> = {};
 
-  constructor(chassis: ChassisView, app: Application, theme: Theme, disk: EnclosureDisk) {
-    this.selectedDisk = disk;
+  constructor(
+    private chassis: ChassisView,
+    private app: Application,
+    private selectedDisk: EnclosureDisk,
+    theme: Theme,
+  ) {
     this.color = 'var(--cyan)';
     this.selectedDiskColor = 'var(--yellow)';
     this.highlightColor = theme.yellow;
 
-    this.onInit(chassis, app);
+    this.onInit();
   }
 
-  onInit(chassis: ChassisView, app: Application): void {
-    this.chassis = chassis;
-    this.app = app;
+  onInit(): void {
     this.mainStage = this.app.stage;
     this.d3Init();
 
@@ -170,23 +168,6 @@ export class VDevLabelsSvg {
     });
   }
 
-  calculateParentOffsets(el: ElementRef): { x: number; y: number } {
-    // Template uses CSS to center and align text so
-    // we need to compensate with absolute positions
-    // of wrapper elements
-
-    // 1 up
-    const legend = el.nativeElement.childNodes[0].childNodes[1];
-
-    // 2 up
-    const content = el.nativeElement.childNodes[0];
-
-    const xOffset = el.nativeElement.offsetLeft + legend.offsetLeft + content.offsetLeft;
-    const yOffset = el.nativeElement.offsetTop + legend.offsetTop + content.offsetTop;
-
-    return { x: xOffset, y: yOffset - 6 };
-  }
-
   showTile(devname: string): void {
     const targetEl: HTMLElement = this.getParent().querySelector('rect.tile_' + devname);
     if (targetEl) {
@@ -211,9 +192,5 @@ export class VDevLabelsSvg {
     tiles.forEach((item) => {
       item.style.opacity = '1';
     });
-  }
-
-  protected parseColor(color: string): number {
-    return parseInt('0x' + color.substring(1), 16);
   }
 }

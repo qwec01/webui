@@ -4,14 +4,14 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import { EntityTableComponent } from 'app/modules/entity/entity-table/entity-table.component';
 import { EntityTableConfig } from 'app/modules/entity/entity-table/entity-table.interface';
+import { AuthorizedAccessFormComponent } from 'app/pages/sharing/iscsi/authorized-access/authorized-access-form/authorized-access-form.component';
 import { IxSlideInService } from 'app/services/ix-slide-in.service';
-import { AuthorizedAccessFormComponent } from '../authorized-access-form/authorized-access-form.component';
 
 @UntilDestroy()
 @Component({
-  selector: 'app-iscsi-authorizedaccess-list',
+  selector: 'ix-iscsi-authorizedaccess-list',
   template: `
-    <entity-table [conf]="this" [title]="tableTitle"></entity-table>
+    <ix-entity-table [conf]="this" [title]="tableTitle"></ix-entity-table>
   `,
 })
 export class AuthorizedAccessListComponent implements EntityTableConfig {

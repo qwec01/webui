@@ -1,8 +1,8 @@
 import {
   Component, OnInit,
 } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
-import { MatSelectChange } from '@angular/material/select/select';
+import { AbstractControl, UntypedFormGroup } from '@angular/forms';
+import { MatSelectChange } from '@angular/material/select';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import { FormIpWithNetmaskConfig } from 'app/modules/entity/entity-form/models/field-config.interface';
@@ -11,20 +11,18 @@ import { NetworkService } from 'app/services';
 
 @UntilDestroy()
 @Component({
-  selector: 'form-ipwithnetmask',
   templateUrl: './form-ipwithnetmask.component.html',
   styleUrls: ['../dynamic-field/dynamic-field.scss'],
 })
 export class FormIpWithNetmaskComponent implements Field, OnInit {
   config: FormIpWithNetmaskConfig;
-  group: FormGroup;
+  group: UntypedFormGroup;
   fieldShow: string;
 
   address = '';
   netmask = '24';
   netmaskOptions = this.network.getV4Netmasks();
   value: string;
-  netmaskPreset: number;
 
   private ipv6netmaskoptions = this.network.getV6PrefixLength();
   private ipv4netmaskoptions = this.network.getV4Netmasks();

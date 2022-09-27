@@ -17,21 +17,17 @@
   width: 36px;
 }
 
-.truenas-scale .app-logo {
-  height: 40px;
-  top: 12px;
-  width: 40px;
-}
-
 .branding {
   align-items: center;
-  color: #444;
+  background-color: var(--topbar) !important;
+  color: var(--topbar-txt) !important;
   display: flex;
   height: 48px;
   justify-content: center;
   left: 0;
   line-height: 64px;
   max-width: var(--sidenav-width); /*15rem;*/
+  overflow: hidden;
   position: fixed;
   text-align: center;
   top: 0;
@@ -47,11 +43,18 @@
     height: 40px;
     width: auto;
   }
+
+  &.truenas-scale .app-logo {
+    height: 40px;
+    top: 12px;
+    width: 40px;
+  }
 }
 
 .branding .app-logo-text {
   height: auto;
-  top: 11px;
+  margin-right: 8px;
+  top: 24px;
   width: 96px;
 }
 
@@ -66,18 +69,12 @@
   outline-width: 0;
 }
 
-.branding.topbar {
-  background-color: var(--topbar) !important;
-  color: var(--topbar-txt) !important;
-  overflow: hidden;
-}
-
 .app-side-nav-container {
   height: 100vh;
   height: 100%;
 }
 
-.enterprise-logo mat-icon {
+.enterprise-logo .mat-icon {
   height: auto !important;
   margin-left: -4px !important;
   top: 14px !important;
@@ -101,13 +98,15 @@
 }
 
 .sidenav-copyright-txt {
-  bottom: 0;
   font-size: 0.6rem;
   margin: 1rem auto;
   opacity: 0.5;
-  position: absolute;
   text-align: center;
   width: 100%;
+
+  .copyright-line {
+    margin: 0 58px;
+  }
 }
 
 .sidenav-copyright-icon {
@@ -116,7 +115,7 @@
   text-align: center;
 }
 
-jw-modal {
+ix-jw-modal {
   display: block;
 }
 
@@ -155,29 +154,14 @@ jw-modal {
 
   &.has-footer {
     height: calc(100% - 95px);
-    padding-bottom: 95px;
   }
 }
 
-.footer-console-bar {
-  background-color: #000;
-  bottom: 0;
-  height: 45px;
-  position: absolute;
-  width: 100%;
-  z-index: 10;
+.isdark {
+  display: block;
+}
 
-  .message {
-    background-color: #000;
-    color: #0f0;
-    font-family: monospace, Courier New, Courier;
-    font-size: 9pt;
-    height: 39px;
-    line-height: 1;
-    margin: 0;
-    max-height: 42px;
-    overflow: hidden;
-    padding: 3px 20px 0;
-    white-space: pre-wrap;
-  }
+ix-navigation {
+  height: 100%;
+  overflow: auto;
 }

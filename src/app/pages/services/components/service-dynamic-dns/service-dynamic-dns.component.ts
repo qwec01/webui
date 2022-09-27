@@ -48,7 +48,7 @@ export class ServiceDynamicDnsComponent implements OnInit {
     checkip_path: helptext.checkip_path_tooltip,
     ssl: helptext.ssl_tooltip,
     custom_ddns_server: helptext.custom_ddns_server_tooltip,
-    custom_ddns_path: helptext.custom_ddns_server_tooltip,
+    custom_ddns_path: helptext.custom_ddns_path_tooltip,
     domain: helptext.domain_tooltip,
     period: helptext.period_tooltip,
     username: helptext.username_tooltip,
@@ -78,18 +78,18 @@ export class ServiceDynamicDnsComponent implements OnInit {
     this.isFormLoading = true;
     this.ws.call('dyndns.config')
       .pipe(untilDestroyed(this))
-      .subscribe(
-        (config) => {
+      .subscribe({
+        next: (config) => {
           this.isFormLoading = false;
           this.form.patchValue(config);
           this.cdr.markForCheck();
         },
-        (error) => {
-          new EntityUtils().handleWsError(null, error, this.dialogService);
+        error: (error) => {
+          new EntityUtils().handleWsError(this, error, this.dialogService);
           this.isFormLoading = false;
           this.cdr.markForCheck();
         },
-      );
+      });
 
     this.subscriptions.push(
       this.form.controls['custom_ddns_server'].enabledWhile(this.isCustomProvider$),
@@ -98,20 +98,20 @@ export class ServiceDynamicDnsComponent implements OnInit {
   }
 
   onSubmit(): void {
-    const values = {
-      ...this.form.value,
-      period: Number(this.form.controls['period'].value),
-    };
+    const values = this.form.value;
 
     this.isFormLoading = true;
-    this.ws.call('dyndns.update', [values]).pipe(untilDestroyed(this)).subscribe(() => {
-      this.isFormLoading = false;
-      this.cdr.markForCheck();
-      this.router.navigate(['/services']);
-    }, (error) => {
-      this.isFormLoading = false;
-      this.errorHandler.handleWsFormError(error, this.form);
-      this.cdr.markForCheck();
+    this.ws.call('dyndns.update', [values]).pipe(untilDestroyed(this)).subscribe({
+      next: () => {
+        this.isFormLoading = false;
+        this.cdr.markForCheck();
+        this.router.navigate(['/services']);
+      },
+      error: (error) => {
+        this.isFormLoading = false;
+        this.errorHandler.handleWsFormError(error, this.form);
+        this.cdr.markForCheck();
+      },
     });
   }
 

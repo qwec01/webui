@@ -6,12 +6,18 @@ export enum NetworkInterfaceType {
   Unknown = 'UNKNOWN',
 }
 
+export enum CreateNetworkInterfaceType {
+  Bridge = 'BRIDGE',
+  LinkAggregation = 'LINK_AGGREGATION',
+  Vlan = 'VLAN',
+}
+
 export enum NetworkInterfaceAliasType {
   Inet = 'INET',
   Inet6 = 'INET6',
 }
 
-export enum NetworkInterfaceFlags {
+export enum NetworkInterfaceFlag {
   Multicast = 'MULTICAST',
   Up = 'UP',
   Broadcast = 'BROADCAST',
@@ -34,6 +40,7 @@ export enum XmitHashPolicy {
 export enum LinkState {
   Up = 'LINK_STATE_UP',
   Down = 'LINK_STATE_DOWN',
+  Unknown = 'LINK_STATE_UNKNOWN',
 }
 
 export enum LacpduRate {

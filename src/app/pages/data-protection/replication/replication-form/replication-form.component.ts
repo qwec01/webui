@@ -6,18 +6,19 @@ import * as _ from 'lodash';
 import { take } from 'rxjs/operators';
 import { CompressionType } from 'app/enums/compression-type.enum';
 import { Direction } from 'app/enums/direction.enum';
+import { EncryptionKeyFormat } from 'app/enums/encryption-key-format.enum';
 import { ExplorerType } from 'app/enums/explorer-type.enum';
 import { LifetimeUnit } from 'app/enums/lifetime-unit.enum';
 import { LoggingLevel } from 'app/enums/logging-level.enum';
 import { NetcatMode } from 'app/enums/netcat-mode.enum';
 import { ReadOnlyMode } from 'app/enums/readonly-mode.enum';
-import { ReplicationEncryptionKeyFormat } from 'app/enums/replication-encryption-key-format.enum';
 import { RetentionPolicy } from 'app/enums/retention-policy.enum';
 import { SnapshotNamingOption } from 'app/enums/snapshot-naming-option.enum';
 import { TransportMode } from 'app/enums/transport-mode.enum';
 import helptext from 'app/helptext/data-protection/replication/replication';
 import repwizardhelptext from 'app/helptext/data-protection/replication/replication-wizard';
 import globalHelptext from 'app/helptext/global-helptext';
+import { CountManualSnapshotsParams } from 'app/interfaces/count-manual-snapshots.interface';
 import { FormConfiguration } from 'app/interfaces/entity-form.interface';
 import { ListdirChild } from 'app/interfaces/listdir-child.interface';
 import { QueryFilter } from 'app/interfaces/query-api.interface';
@@ -41,8 +42,7 @@ import { ModalService } from 'app/services/modal.service';
 
 @UntilDestroy()
 @Component({
-  selector: 'app-replication-form',
-  template: '<entity-form [conf]="this"></entity-form>',
+  template: '<ix-entity-form [conf]="this"></ix-entity-form>',
   providers: [TaskService, KeychainCredentialService, ReplicationService, StorageService],
 })
 export class ReplicationFormComponent implements FormConfiguration {
@@ -786,11 +786,11 @@ export class ReplicationFormComponent implements FormConfiguration {
           options: [
             {
               label: this.translate.instant('HEX'),
-              value: ReplicationEncryptionKeyFormat.Hex,
+              value: EncryptionKeyFormat.Hex,
             },
             {
               label: this.translate.instant('PASSPHRASE'),
-              value: ReplicationEncryptionKeyFormat.Passphrase,
+              value: EncryptionKeyFormat.Passphrase,
             },
           ],
           relation: [
@@ -822,7 +822,7 @@ export class ReplicationFormComponent implements FormConfiguration {
                 },
                 {
                   name: 'encryption_key_format',
-                  value: ReplicationEncryptionKeyFormat.Hex,
+                  value: EncryptionKeyFormat.Hex,
                 },
               ],
             },
@@ -844,7 +844,7 @@ export class ReplicationFormComponent implements FormConfiguration {
                 },
                 {
                   name: 'encryption_key_format',
-                  value: ReplicationEncryptionKeyFormat.Hex,
+                  value: EncryptionKeyFormat.Hex,
                 },
                 {
                   name: 'encryption_key_generate',
@@ -872,7 +872,7 @@ export class ReplicationFormComponent implements FormConfiguration {
                 },
                 {
                   name: 'encryption_key_format',
-                  value: ReplicationEncryptionKeyFormat.Passphrase,
+                  value: EncryptionKeyFormat.Passphrase,
                 },
               ],
             },
@@ -1151,7 +1151,7 @@ export class ReplicationFormComponent implements FormConfiguration {
     }
 
     const datasets = this.entityForm.formGroup.controls['target_dataset_PUSH'].value;
-    const payload: any = {
+    const payload: CountManualSnapshotsParams = {
       datasets: (Array.isArray(datasets) ? datasets : [datasets]) || [],
       transport: this.entityForm.formGroup.controls['transport'].value,
       ssh_credentials: this.entityForm.formGroup.controls['ssh_credentials'].value,
@@ -1165,8 +1165,8 @@ export class ReplicationFormComponent implements FormConfiguration {
 
     this.ws
       .call('replication.count_eligible_manual_snapshots', [payload])
-      .pipe(untilDestroyed(this)).subscribe(
-        (res) => {
+      .pipe(untilDestroyed(this)).subscribe({
+        next: (res) => {
           this.formMessage.type = res.eligible === 0 ? 'warning' : 'info';
           this.formMessage.content = this.translate.instant(
             '{eligible} of {total} existing snapshots of dataset {targetDataset} would be replicated with this task.',
@@ -1177,16 +1177,16 @@ export class ReplicationFormComponent implements FormConfiguration {
             },
           );
         },
-        (err) => {
+        error: (err) => {
           this.formMessage.content = '';
           new EntityUtils().handleWsError(this, err);
         },
-      );
+      });
   }
 
   afterInit(entityForm: EntityFormComponent): void {
     this.entityForm = entityForm;
-    this.pk = entityForm.pk;
+    this.pk = entityForm.pk as number;
     this.isNew = entityForm.isNew;
     this.title = entityForm.isNew ? helptext.replication_task_add : helptext.replication_task_edit;
 
@@ -1377,7 +1377,7 @@ export class ReplicationFormComponent implements FormConfiguration {
       delete wsResponse.encryption_key_location;
     }
 
-    if (wsResponse.encryption_key_format === ReplicationEncryptionKeyFormat.Hex) {
+    if (wsResponse.encryption_key_format === EncryptionKeyFormat.Hex) {
       wsResponse.encryption_key_generate = false;
       wsResponse.encryption_key_hex = wsResponse.encryption_key;
     } else {
@@ -1423,7 +1423,7 @@ export class ReplicationFormComponent implements FormConfiguration {
       data['properties'] = true;
       data['exclude'] = [];
     }
-    const propertiesExcludeObj: any = {};
+    const propertiesExcludeObj: Record<string, string> = {};
     if (data['properties_override']) {
       for (let item of data['properties_override']) {
         item = item.split('=');
@@ -1502,7 +1502,7 @@ export class ReplicationFormComponent implements FormConfiguration {
     }
     delete data['encryption_key_location_truenasdb'];
 
-    if (data['encryption_key_format'] === ReplicationEncryptionKeyFormat.Passphrase) {
+    if (data['encryption_key_format'] === EncryptionKeyFormat.Passphrase) {
       data['encryption_key'] = data['encryption_key_passphrase'];
     } else {
       data['encryption_key'] = data['encryption_key_generate']

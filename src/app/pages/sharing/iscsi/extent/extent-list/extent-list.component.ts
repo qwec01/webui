@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import { IscsiExtentType } from 'app/enums/iscsi.enum';
@@ -10,12 +9,14 @@ import { EntityDialogComponent } from 'app/modules/entity/entity-dialog/entity-d
 import { EntityTableComponent } from 'app/modules/entity/entity-table/entity-table.component';
 import { EntityTableAction, EntityTableConfig } from 'app/modules/entity/entity-table/entity-table.interface';
 import { EntityUtils } from 'app/modules/entity/utils';
+import { ExtentFormComponent } from 'app/pages/sharing/iscsi/extent/extent-form/extent-form.component';
+import { IxSlideInService } from 'app/services/ix-slide-in.service';
 
 @UntilDestroy()
 @Component({
-  selector: 'app-iscsi-extent-list',
+  selector: 'ix-iscsi-extent-list',
   template: `
-    <entity-table [conf]="this" [title]="tableTitle"></entity-table>
+    <ix-entity-table [conf]="this" [title]="tableTitle"></ix-entity-table>
   `,
 })
 export class ExtentListComponent implements EntityTableConfig {
@@ -60,9 +61,26 @@ export class ExtentListComponent implements EntityTableConfig {
   };
 
   constructor(
-    protected router: Router,
+    private slideInService: IxSlideInService,
     protected translate: TranslateService,
   ) {}
+
+  afterInit(entityList: EntityTableComponent): void {
+    this.entityTable = entityList;
+    this.slideInService.onClose$.pipe(untilDestroyed(this)).subscribe(() => {
+      entityList.getData();
+    });
+  }
+
+  doAdd(): void {
+    this.slideInService.open(ExtentFormComponent, { wide: true });
+  }
+
+  doEdit(id: string): void {
+    const row = this.entityTable.rows.find((row) => row.id === id);
+    const form = this.slideInService.open(ExtentFormComponent, { wide: true });
+    form.setExtentForEdit(row);
+  }
 
   getActions(): EntityTableAction[] {
     return [{
@@ -112,23 +130,19 @@ export class ExtentListComponent implements EntityTableConfig {
         const value = entityDialog.formValue;
         entityTable.loader.open();
         entityTable.loaderOpen = true;
-        entityTable.ws.call(this.wsDelete, [id, value.remove, value.force]).pipe(untilDestroyed(this)).subscribe(
-          () => {
+        entityTable.ws.call(this.wsDelete, [id, value.remove, value.force]).pipe(untilDestroyed(this)).subscribe({
+          next: () => {
             entityDialog.dialogRef.close(true);
             entityTable.getData();
             entityTable.excuteDeletion = true;
           },
-          (err: WebsocketError) => {
+          error: (err: WebsocketError) => {
             entityTable.loader.close();
             new EntityUtils().handleWsError(entityTable, err, entityTable.dialogService);
           },
-        );
+        });
       },
     };
     this.entityTable.dialogService.dialogForm(conf);
-  }
-
-  afterInit(entityList: EntityTableComponent): void {
-    this.entityTable = entityList;
   }
 }

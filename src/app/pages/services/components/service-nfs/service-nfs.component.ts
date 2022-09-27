@@ -1,17 +1,16 @@
 import {
   ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit,
 } from '@angular/core';
-import { Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { FormBuilder } from '@ngneat/reactive-forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import { choicesToOptions } from 'app/helpers/options.helper';
 import helptext from 'app/helptext/services/components/service-nfs';
 import { rangeValidator, portRangeValidator } from 'app/modules/entity/entity-form/validators/range-validation';
+import { EntityUtils } from 'app/modules/entity/utils';
 import { FormErrorHandlerService } from 'app/modules/ix-forms/services/form-error-handler.service';
 import { DialogService, WebSocketService } from 'app/services';
-import { EntityUtils } from '../../../../modules/entity/utils';
 
 @UntilDestroy()
 @Component({
@@ -69,30 +68,23 @@ export class ServiceNfsComponent implements OnInit {
   }
 
   onSubmit(): void {
-    const values = this.form.value;
-    const params = {
-      ...this.form.value,
-      mountd_port: values.mountd_port ? Number(values.mountd_port) : null,
-      rpcstatd_port: values.rpcstatd_port ? Number(values.rpcstatd_port) : null,
-      rpclockd_port: values.rpclockd_port ? Number(values.rpclockd_port) : null,
-      servers: Number(values.servers),
-    };
+    const params = this.form.value;
 
     this.isFormLoading = true;
     this.ws.call('nfs.update', [params])
       .pipe(untilDestroyed(this))
-      .subscribe(
-        () => {
+      .subscribe({
+        next: () => {
           this.isFormLoading = false;
           this.cdr.markForCheck();
           this.router.navigate(['/services']);
         },
-        (error) => {
+        error: (error) => {
           this.isFormLoading = false;
           this.errorHandler.handleWsFormError(error, this.form);
           this.cdr.markForCheck();
         },
-      );
+      });
   }
 
   onCancel(): void {
@@ -102,18 +94,18 @@ export class ServiceNfsComponent implements OnInit {
   private loadConfig(): void {
     this.ws.call('nfs.config')
       .pipe(untilDestroyed(this))
-      .subscribe(
-        (config) => {
+      .subscribe({
+        next: (config) => {
           this.form.patchValue(config);
           this.isFormLoading = false;
           this.cdr.markForCheck();
         },
-        (error) => {
-          new EntityUtils().handleWsError(null, error, this.dialogService);
+        error: (error) => {
+          new EntityUtils().handleWsError(this, error, this.dialogService);
           this.isFormLoading = false;
           this.cdr.markForCheck();
         },
-      );
+      });
   }
 
   private setFieldDependencies(): void {
@@ -122,14 +114,23 @@ export class ServiceNfsComponent implements OnInit {
         this.form.patchValue({ v4_v3owner: false });
       }
 
-      this.form.controls['v4_v3owner'].setEnable(nsf4Enabled);
+      if (nsf4Enabled) {
+        this.form.controls['v4_v3owner'].enable();
+      } else {
+        this.form.controls['v4_v3owner'].disable();
+      }
     });
 
     this.form.controls['v4_v3owner'].valueChanges.pipe(untilDestroyed(this)).subscribe((v3Owner) => {
       if (v3Owner) {
         this.form.patchValue({ userd_manage_gids: false });
       }
-      this.form.controls['userd_manage_gids'].setEnable(!v3Owner);
+
+      if (v3Owner) {
+        this.form.controls['userd_manage_gids'].disable();
+      } else {
+        this.form.controls['userd_manage_gids'].enable();
+      }
     });
   }
 }

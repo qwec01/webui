@@ -8,11 +8,13 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRippleModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
@@ -22,9 +24,12 @@ import { TranslateModule } from '@ngx-translate/core';
 import { NgxFilesizeModule } from 'ngx-filesize';
 import { CoreComponents } from 'app/core/core-components.module';
 import { CommonDirectivesModule } from 'app/directives/common/common-directives.module';
+import { AppCommonModule } from 'app/modules/common/app-common.module';
 import { EntityModule } from 'app/modules/entity/entity.module';
 import { IxFormsModule } from 'app/modules/ix-forms/ix-forms.module';
+import { IxIconModule } from 'app/modules/ix-icon/ix-icon.module';
 import { IxTableModule } from 'app/modules/ix-tables/ix-table.module';
+import { LayoutModule } from 'app/modules/layout/layout.module';
 import { UserEffects } from 'app/pages/account/users/store/user.effects';
 import { userReducer } from 'app/pages/account/users/store/user.reducer';
 import { userStateKey } from 'app/pages/account/users/store/user.selectors';
@@ -45,15 +50,19 @@ import { UserDetailsRowComponent } from './user-details-row/user-details-row.com
     IxTableModule,
     FlexLayoutModule,
     MatButtonModule,
-    MatIconModule,
+    IxIconModule,
     MatListModule,
     MatMenuModule,
     MatRippleModule,
+    MatSlideToggleModule,
+    MatFormFieldModule,
+    MatInputModule,
     MatCheckboxModule,
     MatSortModule,
     MatExpansionModule,
     MatCardModule,
     MatDialogModule,
+    AppCommonModule,
     MatTooltipModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
@@ -64,6 +73,7 @@ import { UserDetailsRowComponent } from './user-details-row/user-details-row.com
     TranslateModule,
     TranslateModule,
     NgxFilesizeModule,
+    LayoutModule,
   ],
   declarations: [
     UserListComponent,

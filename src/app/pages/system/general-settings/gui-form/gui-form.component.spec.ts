@@ -7,12 +7,13 @@ import { Store } from '@ngrx/store';
 import { provideMockStore } from '@ngrx/store/testing';
 import { of } from 'rxjs';
 import { mockCall, mockWebsocket } from 'app/core/testing/utils/mock-websocket.utils';
+import { WINDOW } from 'app/helpers/window.helper';
 import { Certificate } from 'app/interfaces/certificate.interface';
 import { SystemGeneralConfig } from 'app/interfaces/system-config.interface';
-import { AppLoaderModule } from 'app/modules/app-loader/app-loader.module';
 import { IxFormsModule } from 'app/modules/ix-forms/ix-forms.module';
 import { FormErrorHandlerService } from 'app/modules/ix-forms/services/form-error-handler.service';
 import { IxFormHarness } from 'app/modules/ix-forms/testing/ix-form.harness';
+import { AppLoaderModule } from 'app/modules/loader/app-loader.module';
 import { GuiFormComponent } from 'app/pages/system/general-settings/gui-form/gui-form.component';
 import { WebSocketService, SystemGeneralService, DialogService } from 'app/services';
 import { IxSlideInService } from 'app/services/ix-slide-in.service';
@@ -98,6 +99,15 @@ describe('GuiFormComponent', () => {
         ],
       }),
       ThemeService,
+      {
+        provide: WINDOW,
+        useValue: {
+          sessionStorage: {
+            getItem: () => 'ix-dark',
+            setItem: () => {},
+          },
+        },
+      },
     ],
   });
 
@@ -150,6 +160,24 @@ describe('GuiFormComponent', () => {
         usage_collection: true,
       },
     ]);
+  });
+
+  it('shows confirm dialog if enable redirect HTTPS', async () => {
+    const websocket = spectator.inject(WebSocketService);
+    websocket.connected = true;
+
+    const form = await loader.getHarness(IxFormHarness);
+    await form.fillForm({
+      'Web Interface HTTP -> HTTPS Redirect': true,
+    });
+
+    const saveButton = await loader.getHarness(MatButtonHarness.with({ text: 'Save' }));
+    await saveButton.click();
+
+    const dialog = spectator.inject(DialogService);
+    expect(dialog.confirm).toHaveBeenCalledWith(expect.objectContaining({
+      title: 'Enable HTTPS Redirect',
+    }));
   });
 
   it('shows confirm dialog if service restart is needed and restarts it', async () => {

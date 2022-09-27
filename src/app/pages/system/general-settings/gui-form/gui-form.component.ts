@@ -3,23 +3,25 @@ import {
   ChangeDetectorRef, Component,
 } from '@angular/core';
 import {
+  FormBuilder,
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { FormBuilder } from '@ngneat/reactive-forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, of } from 'rxjs';
-import { filter, takeUntil, tap } from 'rxjs/operators';
+import {
+  filter, switchMap, takeUntil, tap,
+} from 'rxjs/operators';
 import { choicesToOptions } from 'app/helpers/options.helper';
 import { helptextSystemGeneral as helptext } from 'app/helptext/system/general';
 import { SystemGeneralConfig, SystemGeneralConfigUpdate } from 'app/interfaces/system-config.interface';
 import { WebsocketError } from 'app/interfaces/websocket-error.interface';
-import { AppLoaderService } from 'app/modules/app-loader/app-loader.service';
 import { ipValidator } from 'app/modules/entity/entity-form/validators/ip-validation';
 import { numberValidator } from 'app/modules/entity/entity-form/validators/number-validation';
 import { FormErrorHandlerService } from 'app/modules/ix-forms/services/form-error-handler.service';
+import { AppLoaderService } from 'app/modules/loader/app-loader.service';
 import {
   DialogService, SystemGeneralService, WebSocketService,
 } from 'app/services';
@@ -97,31 +99,43 @@ export class GuiFormComponent {
 
   onSubmit(): void {
     const values = this.formGroup.value;
-    const body: SystemGeneralConfigUpdate = {
+    const params = {
+      ...values,
       ui_certificate: parseInt(values.ui_certificate),
-      ui_address: values.ui_address,
-      ui_v6address: values.ui_v6address,
-      ui_port: values.ui_port,
-      ui_httpsport: values.ui_httpsport,
-      ui_httpsprotocols: values.ui_httpsprotocols,
-      ui_httpsredirect: values.ui_httpsredirect,
-      crash_reporting: values.crash_reporting,
-      usage_collection: values.usage_collection,
-      ui_consolemsg: values.ui_consolemsg,
     };
+    delete params.theme;
 
-    this.isFormLoading = true;
-    this.store$.dispatch(guiFormSubmitted({ theme: values.theme }));
-    this.ws.call('system.general.update', [body]).pipe(
+    (
+      !this.configData.ui_httpsredirect && values.ui_httpsredirect
+        ? this.dialog.confirm({
+          title: this.translate.instant(helptext.redirect_confirm_title),
+          message: this.translate.instant(helptext.redirect_confirm_message),
+          hideCheckBox: true,
+        })
+        : of(true)
+    ).pipe(
+      filter(Boolean),
+      tap(() => {
+        this.store$.dispatch(guiFormSubmitted({ theme: values.theme }));
+        // prevent to revert momentarily to previous value due to `guiFormSubmitted`
+        this.formGroup.controls.ui_httpsredirect.setValue(values.ui_httpsredirect);
+      }),
+      switchMap(() => {
+        this.isFormLoading = true;
+        return this.ws.call('system.general.update', [params as SystemGeneralConfigUpdate]);
+      }),
       untilDestroyed(this),
-    ).subscribe(() => {
-      this.isFormLoading = false;
-      this.cdr.markForCheck();
-      this.handleServiceRestart(body);
-    }, (error) => {
-      this.isFormLoading = false;
-      this.errorHandler.handleWsFormError(error, this.formGroup);
-      this.cdr.markForCheck();
+    ).subscribe({
+      next: () => {
+        this.isFormLoading = false;
+        this.cdr.markForCheck();
+        this.handleServiceRestart(params as SystemGeneralConfigUpdate);
+      },
+      error: (error) => {
+        this.isFormLoading = false;
+        this.errorHandler.handleWsFormError(error, this.formGroup);
+        this.cdr.markForCheck();
+      },
     });
   }
 
@@ -184,12 +198,12 @@ export class GuiFormComponent {
         this.ws.shuttingdown = true; // not really shutting down, just stop websocket detection temporarily
         this.ws.call('system.general.ui_restart').pipe(
           untilDestroyed(this),
-        ).subscribe(
-          () => {
+        ).subscribe({
+          next: () => {
             this.ws.reconnect(protocol, hostname + ':' + port);
             this.reconnect(href);
           },
-          (error: WebsocketError) => {
+          error: (error: WebsocketError) => {
             this.loader.close();
             this.dialog.errorReport(
               helptext.dialog_error_title,
@@ -197,7 +211,7 @@ export class GuiFormComponent {
               error.trace.formatted,
             );
           },
-        );
+        });
       });
     } else {
       this.slideInService.close(null, true);
@@ -213,7 +227,7 @@ export class GuiFormComponent {
     ).subscribe(([config, preferences]) => {
       this.configData = config;
       this.formGroup.patchValue({
-        theme: this.themeService.getNormalizedThemeName(preferences.userTheme),
+        theme: preferences.userTheme,
         ui_certificate: config.ui_certificate?.id.toString(),
         ui_address: config.ui_address,
         ui_v6address: config.ui_v6address,

@@ -3,10 +3,10 @@ import {
   ChangeDetectorRef, Component, OnInit,
 } from '@angular/core';
 import {
+  FormBuilder,
   Validators,
 } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { FormBuilder } from '@ngneat/reactive-forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { of } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -79,8 +79,8 @@ export class TwoFactorComponent implements OnInit {
   ngOnInit(): void {
     this.isFormLoading = true;
 
-    this.ws.call('auth.twofactor.config').pipe(untilDestroyed(this)).subscribe(
-      (config: TwoFactorConfig) => {
+    this.ws.call('auth.twofactor.config').pipe(untilDestroyed(this)).subscribe({
+      next: (config: TwoFactorConfig) => {
         this.secret = config.secret;
         this.twoFactorEnabled = config.enabled;
         this.digitsOnLoad = config.otp_digits;
@@ -93,12 +93,12 @@ export class TwoFactorComponent implements OnInit {
         this.isFormLoading = false;
         this.cdr.markForCheck();
       },
-      (error) => {
+      error: (error) => {
         this.isFormLoading = false;
-        new EntityUtils().handleWsError(null, error, this.dialogService);
+        new EntityUtils().handleWsError(this, error, this.dialogService);
         this.cdr.markForCheck();
       },
-    );
+    });
 
     this.getUri(false);
 
@@ -114,9 +114,9 @@ export class TwoFactorComponent implements OnInit {
   onSubmit(): void {
     const values = this.form.value;
     const params = {
-      otp_digits: Number(values.otp_digits),
-      interval: Number(values.interval),
-      window: Number(values.window),
+      otp_digits: values.otp_digits,
+      interval: values.interval,
+      window: values.window,
       enabled: this.twoFactorEnabled,
       services: { ssh: values.ssh },
     };
@@ -140,16 +140,19 @@ export class TwoFactorComponent implements OnInit {
   doSubmit(params: TwoFactorConfigUpdate, openQr = false): void {
     this.isFormLoading = true;
 
-    this.ws.call('auth.twofactor.update', [params]).pipe(untilDestroyed(this)).subscribe(() => {
-      this.isFormLoading = false;
-      this.cdr.markForCheck();
-      if (openQr) {
-        this.openQrDialog();
-      }
-    }, (err) => {
-      this.isFormLoading = false;
-      this.errorHandler.handleWsFormError(err, this.form);
-      this.cdr.markForCheck();
+    this.ws.call('auth.twofactor.update', [params]).pipe(untilDestroyed(this)).subscribe({
+      next: () => {
+        this.isFormLoading = false;
+        this.cdr.markForCheck();
+        if (openQr) {
+          this.openQrDialog();
+        }
+      },
+      error: (err) => {
+        this.isFormLoading = false;
+        this.errorHandler.handleWsFormError(err, this.form);
+        this.cdr.markForCheck();
+      },
     });
   }
 
@@ -169,13 +172,16 @@ export class TwoFactorComponent implements OnInit {
     if (this.twoFactorEnabled) {
       this.twoFactorEnabled = false;
       this.ws.call('auth.twofactor.update', [{ enabled: false }])
-        .pipe(untilDestroyed(this)).subscribe(() => {
-          this.isFormLoading = false;
-        }, (err) => {
-          this.isFormLoading = false;
-          this.twoFactorEnabled = true;
-          this.dialogService.errorReport(helptext.two_factor.error,
-            err.reason, err.trace.formatted);
+        .pipe(untilDestroyed(this)).subscribe({
+          next: () => {
+            this.isFormLoading = false;
+          },
+          error: (err) => {
+            this.isFormLoading = false;
+            this.twoFactorEnabled = true;
+            this.dialogService.errorReport(helptext.two_factor.error,
+              err.reason, err.trace.formatted);
+          },
         });
     } else {
       this.dialogService.confirm({
@@ -187,14 +193,17 @@ export class TwoFactorComponent implements OnInit {
         this.isFormLoading = true;
 
         this.ws.call('auth.twofactor.update', [{ enabled: true }])
-          .pipe(untilDestroyed(this)).subscribe(() => {
-            this.isFormLoading = false;
-            this.twoFactorEnabled = true;
-            this.updateSecretAndUri();
-          }, (err) => {
-            this.isFormLoading = false;
-            this.dialogService.errorReport(helptext.two_factor.error,
-              err.reason, err.trace.formatted);
+          .pipe(untilDestroyed(this)).subscribe({
+            next: () => {
+              this.isFormLoading = false;
+              this.twoFactorEnabled = true;
+              this.updateSecretAndUri();
+            },
+            error: (err) => {
+              this.isFormLoading = false;
+              this.dialogService.errorReport(helptext.two_factor.error,
+                err.reason, err.trace.formatted);
+            },
           });
       });
     }
@@ -216,40 +225,43 @@ export class TwoFactorComponent implements OnInit {
     }).pipe(filter(Boolean), untilDestroyed(this)).subscribe(() => {
       this.isFormLoading = true;
 
-      this.ws.call('auth.twofactor.renew_secret').pipe(untilDestroyed(this)).subscribe(() => {
-        this.isFormLoading = false;
-        this.updateSecretAndUri();
-      },
-      (err) => {
-        this.isFormLoading = false;
-        this.dialogService.errorReport(helptext.two_factor.error,
-          err.reason, err.trace.formatted);
+      this.ws.call('auth.twofactor.renew_secret').pipe(untilDestroyed(this)).subscribe({
+        next: () => {
+          this.isFormLoading = false;
+          this.updateSecretAndUri();
+        },
+        error: (err) => {
+          this.isFormLoading = false;
+          this.dialogService.errorReport(helptext.two_factor.error,
+            err.reason, err.trace.formatted);
+        },
       });
     });
   }
 
   updateSecretAndUri(): void {
     this.isFormLoading = true;
-    this.ws.call('auth.twofactor.config').pipe(untilDestroyed(this)).subscribe(
-      (config: TwoFactorConfig) => {
+    this.ws.call('auth.twofactor.config').pipe(untilDestroyed(this)).subscribe({
+      next: (config: TwoFactorConfig) => {
         this.isFormLoading = false;
 
         this.form.controls.secret.setValue(config.secret);
         this.cdr.markForCheck();
         this.secret = config.secret;
         this.getUri();
-      }, (err) => {
+      },
+      error: (err) => {
         this.isFormLoading = false;
         this.dialogService.errorReport(helptext.two_factor.error,
           err.reason, err.trace.formatted);
       },
-    );
+    });
   }
 
   getUri(openQr = true): void {
     this.isFormLoading = true;
-    this.ws.call('auth.twofactor.provisioning_uri').pipe(untilDestroyed(this)).subscribe(
-      (provisioningUri: string) => {
+    this.ws.call('auth.twofactor.provisioning_uri').pipe(untilDestroyed(this)).subscribe({
+      next: (provisioningUri: string) => {
         this.isFormLoading = false;
 
         this.form.controls.uri.setValue(provisioningUri);
@@ -257,11 +269,12 @@ export class TwoFactorComponent implements OnInit {
         if (this.secret && openQr) {
           this.openQrDialog();
         }
-      }, (err) => {
+      },
+      error: (err) => {
         this.isFormLoading = false;
         this.dialogService.errorReport(helptext.two_factor.error,
           err.reason, err.trace.formatted);
       },
-    );
+    });
   }
 }

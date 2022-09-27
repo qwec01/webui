@@ -46,7 +46,7 @@ export default {
                 remote server.'),
   rsync_preserveperm_tooltip: T('Set to preserve original file permissions. This is\
                 useful when the user is set to <i>root</i>.'),
-  rsync_preserveattr_tooltip: T('<a\ href="https://en.wikipedia.org/wiki/Extended_file_attributes"\
+  rsync_preserveattr_tooltip: T('<a href="https://en.wikipedia.org/wiki/Extended_file_attributes"\
                 target="_blank">Extended attributes</a> are\
                 preserved, but must be supported by both systems.'),
   rsync_delayupdates_tooltip: T('Set to save the temporary file from each updated\
@@ -60,4 +60,8 @@ export default {
      inside single quotes (\'*.txt\').'),
   rsync_enabled_tooltip: T('Enable this rsync task. Unset to disable this\
                 rsync task without deleting it.'),
+  rsync_ssh_connect_mode_tooltip: T('Choose to connect using either SSH private key stored \
+  in user\'s home directory or SSH connection from the keychain'),
+  rsync_ssh_credentials_tooltip: T('Select an existing SSH connection to a remote system or \
+  choose Create New to create a new SSH connection.'),
 };

@@ -1,29 +1,26 @@
 import {
-  Component, ViewChild, Input, AfterViewInit, ChangeDetectorRef,
+  Component, ViewChild, Input, AfterViewInit, ChangeDetectorRef, Output, EventEmitter,
 } from '@angular/core';
 import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
-import { TranslateService } from '@ngx-translate/core';
-import { Subject } from 'rxjs';
 import { getUniqueId } from 'app/helpers/get-unique-id.helper';
 import { Option } from 'app/interfaces/option.interface';
-import { ControlConfig } from 'app/modules/entity/entity-toolbar/models/control-config.interface';
-import { Control } from 'app/modules/entity/entity-toolbar/models/control.interface';
+import { ControlConfig, ToolbarOption } from 'app/modules/entity/entity-toolbar/models/control-config.interface';
 
 @Component({
-  selector: 'toolbar-multiselect',
+  selector: 'ix-toolbar-multiselect',
   templateUrl: './toolbar-multiselect.component.html',
   styleUrls: ['./toolbar-multiselect.component.scss'],
 })
 export class ToolbarMultiSelectComponent implements AfterViewInit {
   @ViewChild('matSelectRef') matSelectRef: MatSelect;
   @Input() config?: ControlConfig;
-  @Input() controller: Subject<Control>;
+  @Output() selectionChange = new EventEmitter<ToolbarOption[]>();
+
   values: Option[] = [];
   id = getUniqueId();
 
   constructor(
-    public translate: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
   ) {}
 
@@ -52,13 +49,12 @@ export class ToolbarMultiSelectComponent implements AfterViewInit {
 
   updateController(): void {
     this.config.value = this.values;
-    const message: Control = { name: this.config.name, value: this.values };
-    this.controller.next(message);
+    this.selectionChange.next(this.values);
   }
 
   isAllSelected(): boolean {
     return this.config.options.every(
-      (option: Option) => this.values.find(((value) => value.value === option.value)),
+      (option) => this.values.find(((value) => value.value === option.value)),
     );
   }
 
@@ -72,20 +68,20 @@ export class ToolbarMultiSelectComponent implements AfterViewInit {
   }
 
   isOptionSelected(index: number): boolean {
-    const option = this.config.options[index] as Option;
+    const option = this.config.options[index];
 
     return Boolean(this.values.find((value) => value.value === option.value));
   }
 
   selectOption(index: number): void {
-    const option = this.config.options[index] as Option;
+    const option = this.config.options[index];
     this.values.push(option);
 
     this.triggerMatOptionSelectionUpdate([this.matSelectRef.options.get(index)], true);
   }
 
   deselectOption(index: number): void {
-    const option = this.config.options[index] as Option;
+    const option = this.config.options[index];
     this.values.splice(this.values.indexOf(option), 1);
 
     this.triggerMatOptionSelectionUpdate([this.matSelectRef.options.get(index)], false);

@@ -3,24 +3,48 @@ import { DiskPowerLevel } from 'app/enums/disk-power-level.enum';
 import { DiskStandby } from 'app/enums/disk-standby.enum';
 import { DiskType } from 'app/enums/disk-type.enum';
 import { DiskWipeMethod } from 'app/enums/disk-wipe-method.enum';
-import { VDevStatus } from 'app/enums/vdev-status.enum';
+import { TopologyItemType } from 'app/enums/v-dev-type.enum';
+import { TopologyItemStatus } from 'app/enums/vdev-status.enum';
+import { Alert } from 'app/interfaces/alert.interface';
+import { SmartTestResult } from 'app/interfaces/smart-test.interface';
 import { ZfsProperty } from './zfs-property.interface';
 
 // As returned by pool.query under topology[<vdevtype>]
-export interface VDev {
-  type: string; // 'DISK'
-  path: string;
-  guid: string;
-  status: VDevStatus;
-  children: this[];
-  stats: VDevStats;
+export type TopologyItem = VDev | TopologyDisk;
 
-  // TODO: These fields are not present in pool.query response
-  device?: string;
-  disk?: string;
+export interface VDev {
+  type: Exclude<TopologyItemType, TopologyItemType.Disk>;
+  children: TopologyDisk[];
+  guid: string;
+  name: string;
+  path: string;
+  stats: TopologyItemStats;
+  status: TopologyItemStatus;
+  unavail_disk: unknown;
 }
 
-export interface VDevStats {
+export interface TopologyDisk {
+  type: TopologyItemType.Disk;
+  children: TopologyDisk[];
+  device: string;
+  disk: string;
+  guid: string;
+  name: string;
+  path: string;
+  stats: TopologyItemStats;
+  status: TopologyItemStatus;
+  unavail_disk: unknown;
+}
+
+export function isTopologyDisk(topologyItem: TopologyItem): topologyItem is TopologyDisk {
+  return topologyItem.type === TopologyItemType.Disk;
+}
+
+export function isVdev(topologyItem: TopologyItem): topologyItem is VDev {
+  return topologyItem.type !== TopologyItemType.Disk;
+}
+
+export interface TopologyItemStats {
   timestamp: number;
   read_errors: number;
   write_errors: number;
@@ -45,16 +69,16 @@ export interface EnclosureSlot {
 export interface Disk {
   advpowermgmt: DiskPowerLevel;
   bus: DiskBus;
-  critical: string;
+  critical: number;
   description: string;
   devname: string;
-  difference: string;
+  difference: number;
   duplicate_serial: string[];
   enclosure: EnclosureSlot;
   expiretime: string;
   hddstandby: DiskStandby;
   identifier: string;
-  informational: string;
+  informational: number;
   model: string;
   multipath_member: string;
   multipath_name: string;
@@ -71,26 +95,35 @@ export interface Disk {
   transfermode: string;
   type: DiskType;
   zfs_guid: string;
+  tests?: SmartTestResult[];
+}
+
+export interface StorageDashboardDisk extends Disk {
+  alerts: Alert[];
+  smartTests: number;
+  tempAggregates: TemperatureAgg;
 }
 
 /**
  * Additional disk query options
  */
-export interface DiskQueryOptions {
-  /**
-   * Will also include expired disks.
-   */
-  include_expired?: boolean;
+export interface ExtraDiskQueryOptions {
+  extra?: {
+    /**
+     * Will also include expired disks.
+     */
+    include_expired?: boolean;
 
-  /**
-   * Will not hide KMIP password for the disks.
-   */
-  passwords?: boolean;
+    /**
+     * Will not hide KMIP password for the disks.
+     */
+    passwords?: boolean;
 
-  /**
-   * Will join pool name for each disk.
-   */
-  pools?: boolean;
+    /**
+     * Will join pool name for each disk.
+     */
+    pools?: boolean;
+  };
 }
 
 export interface DiskUpdate {
@@ -104,14 +137,15 @@ export interface DiskUpdate {
   difference?: number;
   informational?: number;
   enclosure?: EnclosureSlot;
-  number: number;
-  pool: string;
+  number?: number;
+  pool?: string;
 }
 
 export interface UnusedDisk extends Disk {
   partitions: {
     path: string;
   }[];
+  exported_zpool: string;
 }
 
 /**
@@ -182,4 +216,14 @@ export type DiskWipeParams = [
 
 export interface DiskTemperatures {
   [disk: string]: number | null;
+}
+
+export interface DiskTemperatureAgg {
+  [disk: string]: TemperatureAgg;
+}
+
+export interface TemperatureAgg {
+  min: number;
+  max: number;
+  avg: number;
 }

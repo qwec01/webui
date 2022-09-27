@@ -11,6 +11,7 @@ import { IscsiGlobalConfig } from 'app/interfaces/iscsi-global-config.interface'
 import { Service } from 'app/interfaces/service.interface';
 import { IxFormsModule } from 'app/modules/ix-forms/ix-forms.module';
 import { IxFormHarness } from 'app/modules/ix-forms/testing/ix-form.harness';
+import { SnackbarService } from 'app/modules/snackbar/services/snackbar.service';
 import { DialogService, WebSocketService } from 'app/services';
 import { TargetGlobalConfigurationComponent } from './target-global-configuration.component';
 
@@ -30,6 +31,7 @@ describe('TargetGlobalConfigurationComponent', () => {
           basename: 'iqn.2005-10.org.freenas.ctl',
           isns_servers: ['188.23.4.23', '92.233.1.1'],
           pool_avail_threshold: 20,
+          listen_port: 3260,
         } as IscsiGlobalConfig),
         mockCall('iscsi.global.update'),
         mockCall('service.query', [{
@@ -42,6 +44,7 @@ describe('TargetGlobalConfigurationComponent', () => {
       mockProvider(DialogService, {
         confirm: jest.fn(() => of(true)),
       }),
+      mockProvider(SnackbarService),
     ],
   });
 
@@ -63,6 +66,7 @@ describe('TargetGlobalConfigurationComponent', () => {
       'Base Name': 'iqn.2005-10.org.freenas.ctl',
       'ISNS Servers': ['188.23.4.23', '92.233.1.1'],
       'Pool Available Space Threshold (%)': '20',
+      'iSCSI listen port': '3260',
     });
   });
 
@@ -72,6 +76,7 @@ describe('TargetGlobalConfigurationComponent', () => {
       'Base Name': 'iqn.new.org.freenas.ctl',
       'ISNS Servers': ['32.12.112.42', '8.2.1.2'],
       'Pool Available Space Threshold (%)': '15',
+      'iSCSI listen port': '3270',
     });
 
     const saveButton = await loader.getHarness(MatButtonHarness.with({ text: 'Save' }));
@@ -80,7 +85,8 @@ describe('TargetGlobalConfigurationComponent', () => {
     expect(ws.call).toHaveBeenCalledWith('iscsi.global.update', [{
       basename: 'iqn.new.org.freenas.ctl',
       isns_servers: ['32.12.112.42', '8.2.1.2'],
-      pool_avail_threshold: '15',
+      pool_avail_threshold: 15,
+      listen_port: 3270,
     }]);
   });
 
@@ -105,7 +111,7 @@ describe('TargetGlobalConfigurationComponent', () => {
 
     expect(spectator.inject(DialogService).confirm).toHaveBeenCalled();
     expect(ws.call).toHaveBeenCalledWith('service.update', [13, { enable: true }]);
-    expect(ws.call).toHaveBeenCalledWith('service.start', [ServiceName.Iscsi]);
-    expect(spectator.inject(DialogService).info).toHaveBeenCalled();
+    expect(ws.call).toHaveBeenCalledWith('service.start', [ServiceName.Iscsi, { silent: false }]);
+    expect(spectator.inject(SnackbarService).success).toHaveBeenCalled();
   });
 });

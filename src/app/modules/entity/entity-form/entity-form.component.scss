@@ -16,6 +16,11 @@
   max-width: 100%;
 }
 
+.break {
+  flex-basis: 100%;
+  height: 0;
+}
+
 .entity-form .form-line:last-child {
   margin-right: 24px;
 }
@@ -131,7 +136,7 @@ span.form-message.warning {
   padding-left: 3px;
 }
 
-:host-context(app-system-alert) {
+:host-context(ix-alert-config-form) {
   .form-line:last-child {
     margin-right: 0;
   }

@@ -1,14 +1,13 @@
 import {
   Component, ViewChild, ElementRef,
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { UntypedFormGroup } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import globalHelptext from 'app/helptext/global-helptext';
 import { FormTextareaConfig } from 'app/modules/entity/entity-form/models/field-config.interface';
 import { Field } from 'app/modules/entity/entity-form/models/field.interface';
 
 @Component({
-  selector: 'form-textarea',
   templateUrl: './form-textarea.component.html',
   styleUrls: ['../dynamic-field/dynamic-field.scss'],
 })
@@ -16,7 +15,7 @@ export class FormTextareaComponent implements Field {
   @ViewChild('fileInput', { static: false }) fileInput: ElementRef<HTMLInputElement>;
 
   config: FormTextareaConfig;
-  group: FormGroup;
+  group: UntypedFormGroup;
   fieldShow: string;
   private hasPasteEvent = false;
   fileString: string | ArrayBuffer;

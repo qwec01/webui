@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
-import { Validators } from '@angular/forms';
-import { FormBuilder } from '@ngneat/reactive-forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import helptext from 'app/helptext/apps/apps';
+import { CatalogCreate } from 'app/interfaces/catalog.interface';
 import { FormErrorHandlerService } from 'app/modules/ix-forms/services/form-error-handler.service';
 import { DialogService, WebSocketService } from 'app/services';
 import { IxSlideInService } from 'app/services/ix-slide-in.service';
@@ -45,19 +45,23 @@ export class CatalogAddFormComponent {
     const values = this.form.value;
 
     this.isFormLoading = true;
-    this.ws.call('catalog.create', [values])
+    this.ws.call('catalog.create', [values as CatalogCreate])
       .pipe(untilDestroyed(this))
-      .subscribe(() => {
-        this.isFormLoading = false;
-        this.cdr.markForCheck();
-        this.dialogService.info(
-          helptext.catalogForm.dialog.title, helptext.catalogForm.dialog.message, '500px', 'info', true,
-        );
-        this.slideInService.close();
-      }, (error) => {
-        this.isFormLoading = false;
-        this.errorHandler.handleWsFormError(error, this.form);
-        this.cdr.markForCheck();
+      .subscribe({
+        next: () => {
+          this.isFormLoading = false;
+          this.cdr.markForCheck();
+          this.dialogService.info(
+            helptext.catalogForm.dialog.title,
+            helptext.catalogForm.dialog.message,
+          );
+          this.slideInService.close();
+        },
+        error: (error) => {
+          this.isFormLoading = false;
+          this.errorHandler.handleWsFormError(error, this.form);
+          this.cdr.markForCheck();
+        },
       });
   }
 }

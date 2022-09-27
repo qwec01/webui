@@ -57,7 +57,7 @@
   .no-data-row td {
     padding: 16px;
 
-    entity-empty {
+    ix-entity-empty {
       align-items: center;
       display: flex;
       justify-content: center;
@@ -66,6 +66,10 @@
 
   .clickable-row {
     cursor: pointer;
+  }
+
+  .cdk-column-actions {
+    width: 40px;
   }
 
   .cdk-column-expandedDetail {

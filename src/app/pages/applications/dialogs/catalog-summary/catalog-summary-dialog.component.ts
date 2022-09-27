@@ -4,10 +4,9 @@ import {
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import helptext from 'app/helptext/apps/apps';
 import { CatalogApp, CatalogAppVersion } from 'app/interfaces/catalog.interface';
-import { LocaleService } from 'app/services/locale.service';
 
 @Component({
-  selector: 'catalog-summary-dialog',
+  selector: 'ix-catalog-summary-dialog',
   styleUrls: ['./catalog-summary-dialog.component.scss'],
   templateUrl: './catalog-summary-dialog.component.html',
   // eslint-disable-next-line @angular-eslint/use-component-view-encapsulation
@@ -24,7 +23,6 @@ export class CatalogSummaryDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<CatalogSummaryDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: CatalogApp,
-    protected localeService: LocaleService,
   ) {
     this.catalogApp = data;
   }

@@ -15,7 +15,10 @@ import {
 import {
   KeyCreatedDialogComponent,
 } from 'app/pages/api-keys/components/key-created-dialog/key-created-dialog.component';
-import { AppLoaderService, DialogService, WebSocketService } from 'app/services';
+import { ApiKeyComponentStore } from 'app/pages/api-keys/store/api-key.store';
+import {
+  AppLoaderService, DialogService, WebSocketService,
+} from 'app/services';
 
 describe('ApiKeyFormDialogComponent', () => {
   let spectator: Spectator<ApiKeyFormDialogComponent>;
@@ -32,6 +35,10 @@ describe('ApiKeyFormDialogComponent', () => {
         mockCall('api_key.create', { key: 'generated-key' } as ApiKey),
         mockCall('api_key.update', {} as ApiKey),
       ]),
+      mockProvider(ApiKeyComponentStore, {
+        apiKeyAdded: jest.fn(),
+        apiKeyEdited: jest.fn(),
+      }),
       mockProvider(MatDialogRef),
       mockProvider(AppLoaderService),
       mockProvider(DialogService),
@@ -67,7 +74,8 @@ describe('ApiKeyFormDialogComponent', () => {
     const saveButton = await loader.getHarness(MatButtonHarness.with({ text: 'Save' }));
     await saveButton.click();
 
-    expect(spectator.inject(WebSocketService).call).toHaveBeenCalledWith('api_key.create', [{ name: 'My key' }]);
+    expect(spectator.inject(WebSocketService).call)
+      .toHaveBeenCalledWith('api_key.create', [{ name: 'My key', allowlist: [{ method: '*', resource: '*' }] }]);
     expect(spectator.inject(MatDialogRef).close).toHaveBeenCalledWith(true);
     expect(spectator.inject(MatDialog).open).toHaveBeenCalledWith(KeyCreatedDialogComponent, { data: 'generated-key' });
   });

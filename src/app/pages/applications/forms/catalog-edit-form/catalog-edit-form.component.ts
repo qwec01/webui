@@ -1,12 +1,11 @@
 import {
   ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit,
 } from '@angular/core';
-import { Validators } from '@angular/forms';
-import { FormBuilder } from '@ngneat/reactive-forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Observable, of } from 'rxjs';
 import helptext from 'app/helptext/apps/apps';
-import { Catalog } from 'app/interfaces/catalog.interface';
+import { Catalog, CatalogUpdate } from 'app/interfaces/catalog.interface';
 import { Option } from 'app/interfaces/option.interface';
 import { FormErrorHandlerService } from 'app/modules/ix-forms/services/form-error-handler.service';
 import { WebSocketService } from 'app/services';
@@ -43,7 +42,7 @@ export class CatalogEditFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.form.controls['label'].setDisable();
+    this.form.controls['label'].disable();
   }
 
   setCatalogForEdit(catalog: Catalog): void {
@@ -62,16 +61,19 @@ export class CatalogEditFormComponent implements OnInit {
     const values = this.form.value;
 
     this.isFormLoading = true;
-    this.ws.call('catalog.update', [this.editingCatalog.id, values])
+    this.ws.call('catalog.update', [this.editingCatalog.id, values as CatalogUpdate])
       .pipe(untilDestroyed(this))
-      .subscribe(() => {
-        this.isFormLoading = false;
-        this.cdr.markForCheck();
-        this.slideInService.close();
-      }, (error) => {
-        this.isFormLoading = false;
-        this.errorHandler.handleWsFormError(error, this.form);
-        this.cdr.markForCheck();
+      .subscribe({
+        next: () => {
+          this.isFormLoading = false;
+          this.cdr.markForCheck();
+          this.slideInService.close();
+        },
+        error: (error) => {
+          this.isFormLoading = false;
+          this.errorHandler.handleWsFormError(error, this.form);
+          this.cdr.markForCheck();
+        },
       });
   }
 }

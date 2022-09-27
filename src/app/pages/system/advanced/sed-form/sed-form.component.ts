@@ -1,8 +1,7 @@
 import {
   Component, ChangeDetectionStrategy, ChangeDetectorRef,
 } from '@angular/core';
-import { Validators } from '@angular/forms';
-import { FormBuilder } from '@ngneat/reactive-forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
@@ -12,7 +11,7 @@ import { helptextSystemAdvanced } from 'app/helptext/system/advanced';
 import { AdvancedConfig } from 'app/interfaces/advanced-config.interface';
 import { matchOtherValidator } from 'app/modules/entity/entity-form/validators/password-validation/password-validation';
 import { EntityUtils } from 'app/modules/entity/utils';
-import IxValidatorsService from 'app/modules/ix-forms/services/ix-validators.service';
+import { IxValidatorsService } from 'app/modules/ix-forms/services/ix-validators.service';
 import { WebSocketService } from 'app/services';
 import { IxSlideInService } from 'app/services/ix-slide-in.service';
 import { AppState } from 'app/store';
@@ -78,15 +77,18 @@ export class SedFormComponent {
     const values = this.form.value;
     delete values.sed_passwd2;
 
-    this.ws.call('system.advanced.update', [values]).pipe(untilDestroyed(this)).subscribe(() => {
-      this.isFormLoading = false;
-      this.cdr.markForCheck();
-      this.slideInService.close();
-      this.store$.dispatch(advancedConfigUpdated());
-    }, (res) => {
-      this.isFormLoading = false;
-      new EntityUtils().handleWsError(this, res);
-      this.cdr.markForCheck();
+    this.ws.call('system.advanced.update', [values]).pipe(untilDestroyed(this)).subscribe({
+      next: () => {
+        this.isFormLoading = false;
+        this.cdr.markForCheck();
+        this.slideInService.close();
+        this.store$.dispatch(advancedConfigUpdated());
+      },
+      error: (error) => {
+        this.isFormLoading = false;
+        new EntityUtils().handleWsError(this, error);
+        this.cdr.markForCheck();
+      },
     });
   }
 }

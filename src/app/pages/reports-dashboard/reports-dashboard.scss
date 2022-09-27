@@ -1,11 +1,31 @@
+@import 'cssvars';
+
 :host {
-  $pagetitle: 97px;
+  $pagetitle: 68px;
   $outer-padding: 16px;
 
   display: block;
-  height: calc(100% - #{$pagetitle});
+  height: calc(100% - #{$pagetitle} - #{$outer-padding});
   margin-right: -#{$outer-padding};
   position: relative;
+}
+
+.time-warning {
+  align-items: center;
+  color: var(--fg2);
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+  margin-bottom: 10px;
+  max-width: 70%;
+
+  .mat-icon {
+    align-items: center;
+    font-size: 16px;
+    justify-content: center;
+    margin-right: 6px;
+  }
 }
 
 .dashboard-wrap {
@@ -51,6 +71,10 @@ ul.ct-legend {
   // Adjustment should really be applied to .rightside-content-hold (margin-top 90px instead of 104px),
   // but didn't want to risk breaking layouts of other pages so I applied this instead
   margin-top: -14px;
+
+  .mat-ink-bar {
+    @include variable(background-color, --primary, $primary);
+  }
 }
 
 nav.reports-toolbar {

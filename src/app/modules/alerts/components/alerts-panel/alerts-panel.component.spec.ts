@@ -1,9 +1,10 @@
-import { createComponentFactory, Spectator } from '@ngneat/spectator/jest';
+import { createComponentFactory, mockProvider, Spectator } from '@ngneat/spectator/jest';
 import { EffectsModule } from '@ngrx/effects';
 import { Store, StoreModule } from '@ngrx/store';
 import { MockComponent } from 'ng-mocks';
 import { MockWebsocketService } from 'app/core/testing/classes/mock-websocket.service';
 import { mockCall, mockWebsocket } from 'app/core/testing/utils/mock-websocket.utils';
+import { AlertLevel } from 'app/enums/alert-level.enum';
 import { ApiEventMessage } from 'app/enums/api-event-message.enum';
 import { Alert } from 'app/interfaces/alert.interface';
 import { AlertComponent } from 'app/modules/alerts/components/alert/alert.component';
@@ -12,7 +13,7 @@ import { AlertsPanelPageObject } from 'app/modules/alerts/components/alerts-pane
 import { AlertEffects } from 'app/modules/alerts/store/alert.effects';
 import { adapter, alertReducer, alertsInitialState } from 'app/modules/alerts/store/alert.reducer';
 import { alertStateKey } from 'app/modules/alerts/store/alert.selectors';
-import { WebSocketService } from 'app/services';
+import { SystemGeneralService, WebSocketService } from 'app/services';
 import { adminUiInitialized } from 'app/store/admin-panel/admin.actions';
 
 const unreadAlerts = [
@@ -21,12 +22,14 @@ const unreadAlerts = [
     dismissed: false,
     formatted: 'Unread 1',
     datetime: { $date: 1641811015 },
+    level: AlertLevel.Critical,
   },
   {
     id: '2',
     dismissed: false,
     formatted: 'Unread 2',
     datetime: { $date: 1641810015 },
+    level: AlertLevel.Alert,
   },
 ] as Alert[];
 
@@ -67,7 +70,13 @@ describe('AlertsPanelComponent', () => {
         mockCall('alert.list', [...unreadAlerts, ...dismissedAlerts]),
         mockCall('alert.dismiss'),
         mockCall('alert.restore'),
+        mockCall('failover.licensed', true),
       ]),
+      mockProvider(SystemGeneralService, {
+        get isEnterprise(): boolean {
+          return true;
+        },
+      }),
     ],
   });
 
@@ -84,20 +93,27 @@ describe('AlertsPanelComponent', () => {
     expect(websocket.call).toHaveBeenCalledWith('alert.list');
   });
 
+  it('checks for HA status and passes it to the ix-alert', () => {
+    expect(spectator.inject(WebSocketService).call).toHaveBeenCalledWith('failover.licensed');
+
+    expect(alertPanel.unreadAlertComponents[0].isHa).toEqual(true);
+    expect(alertPanel.dismissedAlertComponents[0].isHa).toEqual(true);
+  });
+
   it('shows a list of unread alerts', () => {
     const unreadAlertComponents = alertPanel.unreadAlertComponents;
 
     expect(unreadAlertComponents.length).toEqual(2);
-    expect(unreadAlertComponents[0].alert).toEqual(unreadAlerts[0]);
-    expect(unreadAlertComponents[1].alert).toEqual(unreadAlerts[1]);
+    expect(unreadAlertComponents[0].alert).toEqual(unreadAlerts[1]);
+    expect(unreadAlertComponents[1].alert).toEqual(unreadAlerts[0]);
   });
 
   it('shows a list of dismissed alerts', () => {
     const dismissedAlertComponents = alertPanel.dismissedAlertComponents;
 
     expect(dismissedAlertComponents.length).toEqual(2);
-    expect(dismissedAlertComponents[0].alert).toEqual(dismissedAlerts[0]);
-    expect(dismissedAlertComponents[1].alert).toEqual(dismissedAlerts[1]);
+    expect(dismissedAlertComponents[0].alert).toEqual(dismissedAlerts[1]);
+    expect(dismissedAlertComponents[1].alert).toEqual(dismissedAlerts[0]);
   });
 
   it('dismisses all alerts when Dismiss All Alerts is pressed', () => {

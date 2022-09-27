@@ -1,13 +1,14 @@
 import {
   ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit,
 } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
-import { FormBuilder } from '@ngneat/reactive-forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { of } from 'rxjs';
 import { SshSftpLogFacility, SshSftpLogLevel, SshWeakCipher } from 'app/enums/ssh.enum';
 import { choicesToOptions } from 'app/helpers/options.helper';
 import helptext from 'app/helptext/services/components/service-ssh';
+import { SshConfigUpdate } from 'app/interfaces/ssh-config.interface';
 import { numberValidator } from 'app/modules/entity/entity-form/validators/number-validation';
 import { EntityUtils } from 'app/modules/entity/utils';
 import { FormErrorHandlerService } from 'app/modules/ix-forms/services/form-error-handler.service';
@@ -67,18 +68,18 @@ export class ServiceSshComponent implements OnInit {
 
   ngOnInit(): void {
     this.isFormLoading = true;
-    this.ws.call('ssh.config').pipe(untilDestroyed(this)).subscribe(
-      (config) => {
+    this.ws.call('ssh.config').pipe(untilDestroyed(this)).subscribe({
+      next: (config) => {
         this.form.patchValue(config);
         this.isFormLoading = false;
         this.cdr.markForCheck();
       },
-      (error) => {
+      error: (error) => {
         this.isFormLoading = false;
-        new EntityUtils().handleWsError(null, error, this.dialogService);
+        new EntityUtils().handleWsError(this, error, this.dialogService);
         this.cdr.markForCheck();
       },
-    );
+    });
   }
 
   onAdvancedSettingsToggled(): void {
@@ -86,22 +87,22 @@ export class ServiceSshComponent implements OnInit {
   }
 
   onSubmit(): void {
-    const values = {
-      ...this.form.value,
-      tcpport: Number(this.form.value.tcpport),
-    };
+    const values = this.form.value;
 
     this.isFormLoading = true;
-    this.ws.call('ssh.update', [values])
+    this.ws.call('ssh.update', [values as SshConfigUpdate])
       .pipe(untilDestroyed(this))
-      .subscribe(() => {
-        this.isFormLoading = false;
-        this.router.navigate(['/services']);
-        this.cdr.markForCheck();
-      }, (error) => {
-        this.isFormLoading = false;
-        this.errorHandler.handleWsFormError(error, this.form);
-        this.cdr.markForCheck();
+      .subscribe({
+        next: () => {
+          this.isFormLoading = false;
+          this.router.navigate(['/services']);
+          this.cdr.markForCheck();
+        },
+        error: (error) => {
+          this.isFormLoading = false;
+          this.errorHandler.handleWsFormError(error, this.form);
+          this.cdr.markForCheck();
+        },
       });
   }
 

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import * as _ from 'lodash';
@@ -11,15 +11,14 @@ import { Field } from 'app/modules/entity/entity-form/models/field.interface';
 
 @UntilDestroy()
 @Component({
-  selector: 'form-toggle-button',
   templateUrl: './form-toggle-button.component.html',
   styleUrls: ['./form-toggle-button.component.scss'],
 })
 export class FormToggleButtonComponent implements Field, OnInit {
   config: FormToggleButtonConfig;
-  group: FormGroup;
+  group: UntypedFormGroup;
   fieldShow: string;
-  groupValue: any[] = [];
+  groupValue: unknown[] = [];
   protected init: boolean;
   protected control: AbstractControl;
 
@@ -29,26 +28,28 @@ export class FormToggleButtonComponent implements Field, OnInit {
     this.init = true;
     this.control = this.group.controls[this.config.name];
 
-    this.control.valueChanges.pipe(untilDestroyed(this)).subscribe((res: any) => {
-      if (this.init && this.config.options && res) {
-        this.init = false;
-        let allSelected = false;
-        const values = _.split(this.control.value, ',');
-        if (this.control.value === '*') {
-          allSelected = true;
-        }
-        this.config.options.forEach((option) => {
-          if (_.indexOf(values, option.value) > -1) {
-            option.checked = false;
-            this.check(option);
-          }
-
-          if (allSelected) {
-            option.checked = false;
-            this.check(option);
-          }
-        });
+    this.control.valueChanges.pipe(untilDestroyed(this)).subscribe((res: unknown) => {
+      if (!this.init || !this.config.options || !res) {
+        return;
       }
+
+      this.init = false;
+      let allSelected = false;
+      const values = _.split(this.control.value, ',');
+      if (this.control.value === '*') {
+        allSelected = true;
+      }
+      this.config.options.forEach((option) => {
+        if (_.indexOf(values, option.value) > -1) {
+          option.checked = false;
+          this.check(option);
+        }
+
+        if (allSelected) {
+          option.checked = false;
+          this.check(option);
+        }
+      });
     });
   }
 

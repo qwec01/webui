@@ -7,15 +7,13 @@ import { EntityTableComponent } from 'app/modules/entity/entity-table/entity-tab
 import { EntityTableConfig } from 'app/modules/entity/entity-table/entity-table.interface';
 import { EntityUtils } from 'app/modules/entity/utils';
 import { WebdavFormComponent } from 'app/pages/sharing/webdav/webdav-form/webdav-form.component';
-import { ModalService } from 'app/services';
 import { DialogService } from 'app/services/dialog.service';
 import { IxSlideInService } from 'app/services/ix-slide-in.service';
 import { WebSocketService } from 'app/services/ws.service';
 
 @UntilDestroy()
 @Component({
-  selector: 'webdav-list',
-  template: '<entity-table [title]="title" [conf]="this"></entity-table>',
+  template: '<ix-entity-table [title]="title" [conf]="this"></ix-entity-table>',
 })
 export class WebdavListComponent implements EntityTableConfig, OnInit {
   title = this.translate.instant('WebDAV');
@@ -57,7 +55,6 @@ export class WebdavListComponent implements EntityTableConfig, OnInit {
 
   constructor(
     private ws: WebSocketService,
-    private modalService: ModalService,
     private dialog: DialogService,
     private translate: TranslateService,
     private slideInService: IxSlideInService,
@@ -83,14 +80,14 @@ export class WebdavListComponent implements EntityTableConfig, OnInit {
   onCheckboxChange(row: WebDavShare): void {
     this.ws.call(this.updateCall, [row.id, { enabled: row.enabled } as WebDavShareUpdate])
       .pipe(untilDestroyed(this))
-      .subscribe(
-        (res) => {
-          row.enabled = res.enabled;
+      .subscribe({
+        next: (share) => {
+          row.enabled = share.enabled;
         },
-        (err) => {
+        error: (err) => {
           row.enabled = !row.enabled;
           new EntityUtils().handleWsError(this, err, this.dialog);
         },
-      );
+      });
   }
 }

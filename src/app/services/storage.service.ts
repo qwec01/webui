@@ -3,29 +3,27 @@ import { Injectable } from '@angular/core';
 import { SortDirection } from '@angular/material/sort';
 import { format } from 'date-fns-tz';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { DiskPowerLevel } from 'app/enums/disk-power-level.enum';
-import { DiskStandby } from 'app/enums/disk-standby.enum';
-import { Choices } from 'app/interfaces/choices.interface';
+import { map, tap } from 'rxjs/operators';
 import { FileSystemStat } from 'app/interfaces/filesystem-stat.interface';
 import { Option } from 'app/interfaces/option.interface';
 import { Disk } from 'app/interfaces/storage.interface';
 import { WebSocketService } from './ws.service';
 
+function isStringArray(items: unknown[]): items is string[] {
+  return typeof items[0] === 'string';
+}
+
 @Injectable()
 export class StorageService {
   protected diskResource = 'disk.query' as const;
 
-  ids: string[];
-  diskNames: string[];
-  hddStandby: DiskStandby;
-  diskToggleStatus: boolean;
-  smartOptions: string;
-  advPowerMgt: DiskPowerLevel;
   humanReadable: string;
   iecUnits = ['KiB', 'MiB', 'GiB', 'TiB', 'PiB'];
 
-  constructor(protected ws: WebSocketService) {}
+  constructor(
+    protected ws: WebSocketService,
+    private http: HttpClient,
+  ) {}
 
   filesystemStat(path: string): Observable<FileSystemStat> {
     return this.ws.call('filesystem.stat', [path]);
@@ -63,7 +61,7 @@ export class StorageService {
     dlink.onclick = () => {
       // revokeObjectURL needs a delay to work properly
       setTimeout(() => {
-        window.URL.revokeObjectURL((this as any).href);
+        window.URL.revokeObjectURL(dlink.href);
       }, 1500);
     };
 
@@ -71,8 +69,8 @@ export class StorageService {
     dlink.remove();
   }
 
-  streamDownloadFile(http: HttpClient, url: string, filename: string, mimeType: string): Observable<Blob> {
-    return http.post(url, '',
+  streamDownloadFile(url: string, filename: string, mimeType: string): Observable<Blob> {
+    return this.http.post(url, '',
       { responseType: 'blob' }).pipe(
       map(
         (res) => {
@@ -83,10 +81,16 @@ export class StorageService {
     );
   }
 
+  downloadUrl(url: string, filename: string, mimeType: string): Observable<Blob> {
+    return this.streamDownloadFile(url, filename, mimeType).pipe(
+      tap((blob) => this.downloadBlob(blob, filename)),
+    );
+  }
+
   // Handles sorting for entity tables and some other ngx datatables
   tableSorter<T>(arr: T[], key: keyof T, asc: SortDirection): T[] {
-    const tempArr: any[] = [];
-    let sorter: any;
+    const tempArr: unknown[] = [];
+    let sorter: unknown[];
     const myCollator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
 
     // Breaks out the key to sort by
@@ -107,7 +111,7 @@ export class StorageService {
     // Select table columns labled with GiB, Mib, etc
     // Regex checks for ' XiB' with a leading space and X === K, M, G or T
     // also include bytes unit, which will get from convertBytesToHumanReadable function
-    if (typeof (tempArr[n]) === 'string'
+    if (isStringArray(tempArr)
       && (tempArr[n].slice(-2) === ' B' || /\s[KMGT]iB$/.test(tempArr[n].slice(-4)) || tempArr[n].slice(-6) === ' bytes')) {
       let bytes = []; let kbytes = []; let mbytes = []; let gbytes = []; let
         tbytes = [];
@@ -143,7 +147,7 @@ export class StorageService {
       sorter = bytes.concat(kbytes, mbytes, gbytes, tbytes);
 
       // Select disks where last two chars = a digit and the one letter space abbrev
-    } else if (typeof (tempArr[n]) === 'string'
+    } else if (isStringArray(tempArr)
       && tempArr[n][tempArr[n].length - 1].match(/[KMGTB]/)
       && tempArr[n][tempArr[n].length - 2].match(/[0-9]/)) {
       let bytes = []; let kiloBytes = []; let megaBytes = []; let gigaBytes = []; let teraBytes = [];
@@ -176,7 +180,7 @@ export class StorageService {
       sorter = bytes.concat(kiloBytes, megaBytes, gigaBytes, teraBytes);
 
     // Select strings that Date.parse can turn into a number (ie, that are a legit date)
-    } else if (typeof (tempArr[n]) === 'string'
+    } else if (isStringArray(tempArr)
       && !Number.isNaN(Date.parse(tempArr[n]))) {
       let timeArr = [];
       for (const i of tempArr) {
@@ -187,7 +191,7 @@ export class StorageService {
       sorter = [];
       for (const elem of timeArr) {
         try {
-          sorter.push(format(elem, 'yyyy-MM-dd HH:mm:ss')); // formate should matched locale service
+          sorter.push(format(elem, 'yyyy-MM-dd HH:mm:ss')); // format should match locale service
         } catch (error: unknown) {
           console.error(error);
         }
@@ -215,30 +219,6 @@ export class StorageService {
     return arr;
   }
 
-  // This section passes data from disk-list to disk-bulk-edit form
-  diskIdsBucket(arr: string[]): void {
-    this.ids = arr;
-  }
-
-  diskNamesBucket(arr: string[]): void {
-    this.diskNames = arr;
-  }
-
-  diskToggleBucket(bool: boolean): void {
-    this.diskToggleStatus = bool;
-  }
-
-  poolUnlockServiceOptions(id: number): Observable<Option[]> {
-    return this.ws.call('pool.unlock_services_restart_choices', [id]).pipe(
-      map((response: Choices) => {
-        return Object.keys(response || {}).map((serviceId) => ({
-          label: response[serviceId],
-          value: serviceId,
-        }));
-      }),
-    );
-  }
-
   getDatasetNameOptions(): Observable<Option[]> {
     return this.ws
       .call('pool.filesystem_choices')
@@ -261,8 +241,6 @@ export class StorageService {
 
     return !path.includes('/');
   }
-
-  // ----------------------- //
 
   normalizeUnit(unitStr: string): string {
     // normalize short units ("MB") or human units ("M") to IEC units ("MiB")

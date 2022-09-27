@@ -1,5 +1,5 @@
 import { JobState } from 'app/enums/job-state.enum';
-import { ChartSchemaGroup, ChartSchemaNode } from 'app/interfaces/chart-release.interface';
+import { ChartFormValue, ChartSchemaGroup, ChartSchemaNode } from 'app/interfaces/chart-release.interface';
 import { QueryParams } from 'app/interfaces/query-api.interface';
 
 export interface Catalog {
@@ -40,7 +40,6 @@ export type CatalogQueryParams = QueryParams<Catalog, {
   extra: {
     item_details?: boolean;
     cache?: boolean;
-    retrieve_versions?: boolean;
     include_chart_schema?: boolean;
   };
 }>;
@@ -72,13 +71,23 @@ export interface CatalogApp {
   latest_version: string;
   latest_app_version: string;
   latest_human_version: string;
-  versions: { [version: string]: CatalogAppVersion };
+  versions?: { [version: string]: CatalogAppVersion };
   catalog?: {
     id?: string;
     label?: string;
     train: string;
   };
-  schema?: any;
+  schema?: {
+    groups: ChartSchemaGroup[];
+    questions: ChartSchemaNode[];
+    portals: {
+      [portal: string]: {
+        host: string[];
+        ports: string[];
+        protocols: string[];
+      };
+    };
+  };
 }
 
 export interface CatalogAppVersion {
@@ -95,7 +104,7 @@ export interface CatalogAppVersion {
     groups: ChartSchemaGroup[];
     questions: ChartSchemaNode[];
     portals: {
-      web_portal: {
+      [portal: string]: {
         host: string[];
         ports: string[];
         protocols: string[];
@@ -103,7 +112,7 @@ export interface CatalogAppVersion {
     };
   };
   supported: boolean;
-  values: any;
+  values: { [key: string]: ChartFormValue };
   version: string;
   train?: string;
   app?: string;

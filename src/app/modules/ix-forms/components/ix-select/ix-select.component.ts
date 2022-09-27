@@ -1,13 +1,13 @@
 import {
   ChangeDetectionStrategy, ChangeDetectorRef,
-  Component, EventEmitter, Input, OnChanges, Output,
+  Component, Input, OnChanges,
 } from '@angular/core';
 import {
-  ControlValueAccessor, FormControl, NgControl,
+  ControlValueAccessor, UntypedFormControl, NgControl,
 } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { EMPTY, Observable } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { Option } from 'app/interfaces/option.interface';
 
 type IxSelectValue = string | number | string[] | number[];
@@ -27,9 +27,14 @@ export class IxSelectComponent implements ControlValueAccessor, OnChanges {
   @Input() required: boolean;
   @Input() tooltip: string;
   @Input() multiple: boolean;
-  @Output() linkClicked: EventEmitter<void> = new EventEmitter();
-  @Input() linkText: string = null;
   @Input() emptyValue: string = null;
+  @Input() hideEmpty = false;
+
+  formControl = new UntypedFormControl(this).value as UntypedFormControl;
+  isDisabled = false;
+  hasErrorInOptions = false;
+  opts$: Observable<Option[]>;
+  isLoading = false;
 
   constructor(
     public controlDirective: NgControl,
@@ -39,20 +44,23 @@ export class IxSelectComponent implements ControlValueAccessor, OnChanges {
   }
 
   ngOnChanges(): void {
-    if (this.options) {
+    if (!this.options) {
+      this.hasErrorInOptions = true;
+    } else {
+      this.hasErrorInOptions = false;
+      this.isLoading = true;
       this.opts$ = this.options.pipe(
         catchError(() => {
-          this.hasErrorInOptions = false;
+          this.hasErrorInOptions = true;
           return EMPTY;
+        }),
+        tap(() => {
+          this.isLoading = false;
+          this.cdr.markForCheck();
         }),
       );
     }
   }
-
-  formControl = new FormControl(this).value as FormControl;
-  isDisabled = false;
-  hasErrorInOptions = false;
-  opts$: Observable<Option[]>;
 
   onChange: (value: IxSelectValue) => void = (): void => {};
   onTouch: () => void = (): void => {};

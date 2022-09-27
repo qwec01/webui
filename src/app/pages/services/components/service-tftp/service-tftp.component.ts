@@ -1,11 +1,12 @@
 import {
   ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit,
 } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
-import { FormBuilder } from '@ngneat/reactive-forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { choicesToOptions } from 'app/helpers/options.helper';
 import helptext from 'app/helptext/services/components/service-tftp';
+import { TftpConfigUpdate } from 'app/interfaces/tftp-config.interface';
 import { EntityUtils } from 'app/modules/entity/utils';
 import { UserComboboxProvider } from 'app/modules/ix-forms/classes/user-combobox-provider';
 import { FormErrorHandlerService } from 'app/modules/ix-forms/services/form-error-handler.service';
@@ -60,8 +61,8 @@ export class ServiceTftpComponent implements OnInit {
     this.isFormLoading = true;
     this.ws.call('tftp.config')
       .pipe(untilDestroyed(this))
-      .subscribe(
-        (config) => {
+      .subscribe({
+        next: (config) => {
           this.form.patchValue({
             ...config,
             umask: invertUmask(config.umask),
@@ -69,12 +70,12 @@ export class ServiceTftpComponent implements OnInit {
           this.isFormLoading = false;
           this.cdr.markForCheck();
         },
-        (error) => {
-          new EntityUtils().handleWsError(null, error, this.dialogService);
+        error: (error) => {
+          new EntityUtils().handleWsError(this, error, this.dialogService);
           this.isFormLoading = false;
           this.cdr.markForCheck();
         },
-      );
+      });
   }
 
   onSubmit(): void {
@@ -84,20 +85,20 @@ export class ServiceTftpComponent implements OnInit {
     };
 
     this.isFormLoading = true;
-    this.ws.call('tftp.update', [values])
+    this.ws.call('tftp.update', [values as TftpConfigUpdate])
       .pipe(untilDestroyed(this))
-      .subscribe(
-        () => {
+      .subscribe({
+        next: () => {
           this.isFormLoading = false;
           this.cdr.markForCheck();
           this.router.navigate(['/services']);
         },
-        (error) => {
+        error: (error) => {
           this.isFormLoading = false;
           this.errorHandler.handleWsFormError(error, this.form);
           this.cdr.markForCheck();
         },
-      );
+      });
   }
 }
 

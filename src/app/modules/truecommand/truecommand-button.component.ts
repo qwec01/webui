@@ -1,31 +1,29 @@
 import {
-  Component, OnDestroy, OnInit,
+  Component, OnInit,
 } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { ViewControllerComponent } from 'app/core/components/view-controller/view-controller.component';
 import { TrueCommandStatus } from 'app/enums/true-command-status.enum';
 import helptext from 'app/helptext/topbar';
 import { TrueCommandConfig } from 'app/interfaces/true-command-config.interface';
-import { AppLoaderService } from 'app/modules/app-loader/app-loader.service';
 import { DialogFormConfiguration } from 'app/modules/entity/entity-dialog/dialog-form-configuration.interface';
 import { EntityDialogComponent } from 'app/modules/entity/entity-dialog/entity-dialog.component';
 import { EntityUtils } from 'app/modules/entity/utils';
+import { AppLoaderService } from 'app/modules/loader/app-loader.service';
 import { TruecommandSignupModalComponent, TruecommandSignupModalState } from 'app/modules/truecommand/components/truecommand-signup-modal.component';
 import { TruecommandStatusModalComponent } from 'app/modules/truecommand/components/truecommand-status-modal.component';
-import { CoreService } from 'app/services/core-service/core.service';
 import { DialogService } from 'app/services/dialog.service';
 import { WebSocketService } from 'app/services/ws.service';
 
 @UntilDestroy()
 @Component({
-  selector: 'truecommand-button',
+  selector: 'ix-truecommand-button',
   styleUrls: ['./truecommand-button.component.scss'],
   templateUrl: './truecommand-button.component.html',
 })
-export class TruecommandButtonComponent extends ViewControllerComponent implements OnInit, OnDestroy {
+export class TruecommandButtonComponent implements OnInit {
   readonly TrueCommandStatus = TrueCommandStatus;
-  mat_tooltips = helptext.mat_tooltips;
+  tooltips = helptext.mat_tooltips;
 
   tcStatus: TrueCommandConfig;
 
@@ -33,15 +31,24 @@ export class TruecommandButtonComponent extends ViewControllerComponent implemen
   private isTcStatusOpened = false;
   private tcStatusDialogRef: MatDialogRef<TruecommandStatusModalComponent>;
 
+  get tcsStatusMatBadge(): string {
+    if (this.tcStatus.status === TrueCommandStatus.Connected) {
+      return 'check';
+    }
+
+    if (this.tcStatus.status === TrueCommandStatus.Failed) {
+      return 'priority_high';
+    }
+
+    return '';
+  }
+
   constructor(
     private ws: WebSocketService,
     private dialogService: DialogService,
     private dialog: MatDialog,
     private loader: AppLoaderService,
-    core: CoreService,
-  ) {
-    super(core);
-  }
+  ) {}
 
   ngOnInit(): void {
     this.ws.call('truecommand.config').pipe(untilDestroyed(this)).subscribe((config) => {
@@ -93,15 +100,15 @@ export class TruecommandButtonComponent extends ViewControllerComponent implemen
     }).pipe(untilDestroyed(this)).subscribe((res) => {
       if (res) {
         this.loader.open();
-        this.ws.call('truecommand.update', [{ enabled: false }]).pipe(untilDestroyed(this)).subscribe(
-          () => {
+        this.ws.call('truecommand.update', [{ enabled: false }]).pipe(untilDestroyed(this)).subscribe({
+          next: () => {
             this.loader.close();
           },
-          (err) => {
+          error: (err) => {
             this.loader.close();
             new EntityUtils().handleWsError(this, err, this.dialogService);
           },
-        );
+        });
       }
     });
   }

@@ -7,7 +7,7 @@ import { Validators } from '@angular/forms';
 import { FormBuilder, FormControl } from '@ngneat/reactive-forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
-import { BootEnvironmentActions } from 'app/enums/bootenv-actions.enum';
+import { BootEnvironmentAction } from 'app/enums/boot-environment-action.enum';
 import { helptextSystemBootenv } from 'app/helptext/system/boot-env';
 import {
   BootenvTooltip,
@@ -21,14 +21,13 @@ import { IxSlideInService } from 'app/services/ix-slide-in.service';
 
 @UntilDestroy()
 @Component({
-  selector: 'app-bootenv-form',
   templateUrl: './bootenv-form.component.html',
   styleUrls: ['./bootenv-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BootEnvironmentFormComponent {
-  Operations = BootEnvironmentActions;
-  operation: BootEnvironmentActions = BootEnvironmentActions.Create;
+  Operations = BootEnvironmentAction;
+  operation: BootEnvironmentAction = BootEnvironmentAction.Create;
   currentName?: string;
   title: string;
 
@@ -52,7 +51,7 @@ export class BootEnvironmentFormComponent {
     private changeDetectorRef: ChangeDetectorRef,
   ) {}
 
-  setupForm(operation: BootEnvironmentActions, name?: string): void {
+  setupForm(operation: BootEnvironmentAction, name?: string): void {
     this.operation = operation;
 
     switch (this.operation) {
@@ -93,19 +92,23 @@ export class BootEnvironmentFormComponent {
   }
 
   onSubmit(): void {
+    this.isFormLoading = true;
     switch (this.operation) {
       case this.Operations.Create:
         const createParams: CreateBootenvParams = [{
           name: this.formGroup.value.name,
         }];
 
-        this.ws.call('bootenv.create', createParams).pipe(untilDestroyed(this)).subscribe(() => {
-          this.isFormLoading = false;
-          this.slideInService.close();
-        }, (error) => {
-          this.isFormLoading = false;
-          this.slideInService.close();
-          this.errorHandler.handleWsFormError(error, this.formGroup);
+        this.ws.call('bootenv.create', createParams).pipe(untilDestroyed(this)).subscribe({
+          next: () => {
+            this.isFormLoading = false;
+            this.slideInService.close(null, true);
+          },
+          error: (error) => {
+            this.isFormLoading = false;
+            this.slideInService.close(error, false);
+            this.errorHandler.handleWsFormError(error, this.formGroup);
+          },
         });
 
         break;
@@ -117,13 +120,16 @@ export class BootEnvironmentFormComponent {
           },
         ];
 
-        this.ws.call('bootenv.update', renameParams).pipe(untilDestroyed(this)).subscribe(() => {
-          this.isFormLoading = false;
-          this.slideInService.close();
-        }, (error) => {
-          this.isFormLoading = false;
-          this.slideInService.close();
-          this.errorHandler.handleWsFormError(error, this.formGroup);
+        this.ws.call('bootenv.update', renameParams).pipe(untilDestroyed(this)).subscribe({
+          next: () => {
+            this.isFormLoading = false;
+            this.slideInService.close(null, true);
+          },
+          error: (error) => {
+            this.isFormLoading = false;
+            this.slideInService.close(error, false);
+            this.errorHandler.handleWsFormError(error, this.formGroup);
+          },
         });
 
         break;
@@ -133,13 +139,16 @@ export class BootEnvironmentFormComponent {
           source: this.currentName,
         }];
 
-        this.ws.call('bootenv.create', cloneParams).pipe(untilDestroyed(this)).subscribe(() => {
-          this.isFormLoading = false;
-          this.slideInService.close();
-        }, (error) => {
-          this.isFormLoading = false;
-          this.slideInService.close();
-          this.errorHandler.handleWsFormError(error, this.formGroup);
+        this.ws.call('bootenv.create', cloneParams).pipe(untilDestroyed(this)).subscribe({
+          next: () => {
+            this.isFormLoading = false;
+            this.slideInService.close(null, true);
+          },
+          error: (error) => {
+            this.isFormLoading = false;
+            this.slideInService.close(error, false);
+            this.errorHandler.handleWsFormError(error, this.formGroup);
+          },
         });
 
         break;

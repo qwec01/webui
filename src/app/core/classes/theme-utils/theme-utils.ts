@@ -102,6 +102,11 @@ export class ThemeUtils {
     return output.map((str) => parseFloat(str));
   }
 
+  rgbToString(rgb: number[], alpha?: number): string {
+    const a = alpha ? alpha.toString() : '1';
+    return 'rgba(' + rgb.join(',') + ',' + a + ')';
+  }
+
   colorFromMeta(meta: string): string {
     const trimFront = meta.replace('var(--', '');
     const trimmed = trimFront.replace(')', '');
@@ -167,7 +172,7 @@ export class ThemeUtils {
     saturation = +(saturation * 100).toFixed(1);
 
     if (outputString) {
-      return 'hsl(' + hue + ', ' + saturation + '%, ' + lightness + '%)';
+      return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
     }
     return [hue, saturation, lightness];
   }
@@ -190,6 +195,6 @@ export class ThemeUtils {
 
     const adjusted = [hsl[0], hsl[1], lightness];
 
-    return 'hsl(' + adjusted[0] + ', ' + adjusted[1] + '%, ' + adjusted[2] + '%)';
+    return `hsl(${adjusted[0]}, ${adjusted[1]}%, ${adjusted[2]}%)`;
   }
 }

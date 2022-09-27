@@ -1,29 +1,26 @@
 import {
   Component, ViewChild, AfterViewInit, AfterViewChecked, ChangeDetectorRef,
 } from '@angular/core';
-import { AbstractControl, FormGroup } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup } from '@angular/forms';
 import { MatFormField } from '@angular/material/form-field';
 import { MatSelect, MatSelectChange } from '@angular/material/select';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import * as _ from 'lodash';
-import { DialogFormConfiguration } from 'app/modules/entity/entity-dialog/dialog-form-configuration.interface';
-import { EntityDialogComponent } from 'app/modules/entity/entity-dialog/entity-dialog.component';
 import { FormSelectConfig } from 'app/modules/entity/entity-form/models/field-config.interface';
 import { Field } from 'app/modules/entity/entity-form/models/field.interface';
 import { FormSelectOption } from 'app/modules/entity/entity-form/models/form-select-option.interface';
 import { EntityUtils, NULL_VALUE } from 'app/modules/entity/utils';
-import { DialogService } from 'app/services';
 
 @UntilDestroy()
 @Component({
-  selector: 'form-select',
+  selector: 'ix-form-select',
   styleUrls: ['form-select.component.scss', '../dynamic-field/dynamic-field.scss'],
   templateUrl: './form-select.component.html',
 })
 export class FormSelectComponent implements Field, AfterViewInit, AfterViewChecked {
   config: FormSelectConfig;
-  group: FormGroup;
+  group: UntypedFormGroup;
   fieldShow: string;
   control: AbstractControl;
 
@@ -31,25 +28,21 @@ export class FormSelectComponent implements Field, AfterViewInit, AfterViewCheck
   @ViewChild('field', { static: true }) field: MatFormField;
 
   formReady = false;
-  selected: any;
-  allSelected: boolean;
-  private disableAlert = false;
-  selectedValues: any[] = [];
+  selected: string;
+  selectedValues: string[] = [];
   selectStates: boolean[] = []; // Collection of checkmark states
-  selectAllStateCache: boolean[] = []; // Cache the state when select all was toggled
-  selectAllValueCache: boolean[] = []; // Cache the state when select all was toggled
-  customTriggerValue: any;
-  private _formValue: any;
+  customTriggerValue: string[];
+  private _formValue: string | string[];
   private entityUtils = new EntityUtils();
-  get formValue(): any {
+  get formValue(): string | string[] {
     return this._formValue;
   }
-  set formValue(value: any) {
+  set formValue(value: string | string[]) {
     const result = this.config.multiple ? this.selectedValues : this.selected;
     this._formValue = result;
   }
 
-  constructor(public translate: TranslateService, private dialog: DialogService, public cd: ChangeDetectorRef) {
+  constructor(public translate: TranslateService, public cd: ChangeDetectorRef) {
   }
 
   ngAfterViewInit(): void {
@@ -85,7 +78,7 @@ export class FormSelectComponent implements Field, AfterViewInit, AfterViewCheck
         }
       }
     }
-    this.control.valueChanges.pipe(untilDestroyed(this)).subscribe((evt: any) => {
+    this.control.valueChanges.pipe(untilDestroyed(this)).subscribe((evt: string | string[]) => {
       // When set the value to null, Change it to 'null_value' string
       if (this.control.value === null) {
         this.control.setValue(NULL_VALUE);
@@ -121,13 +114,15 @@ export class FormSelectComponent implements Field, AfterViewInit, AfterViewCheck
   }
 
   ngAfterViewChecked(): void {
-    if (!this.formReady && typeof this.config.options !== 'undefined' && this.config.options && this.config.options.length > 0) {
-      const newStates = this.config.options.map((item) => item && this.selectedValues.includes(item.value));
-      this.selectStates = newStates;
-      this.updateValues();
-      this.formReady = true;
-      this.cd.detectChanges();
+    if (this.formReady || typeof this.config.options === 'undefined' || !this.config.options || this.config.options.length <= 0) {
+      return;
     }
+
+    const newStates = this.config.options.map((item) => item && this.selectedValues.includes(item.value));
+    this.selectStates = newStates;
+    this.updateValues();
+    this.formReady = true;
+    this.cd.detectChanges();
   }
 
   onChangeOption($event: MatSelectChange): void {
@@ -136,35 +131,7 @@ export class FormSelectComponent implements Field, AfterViewInit, AfterViewCheck
     }
   }
 
-  showAlert(option: FormSelectOption): void {
-    if (!this.shouldAlertOnOption(option) || this.disableAlert) return;
-
-    const conf: DialogFormConfiguration = {
-      title: this.translate.instant('Alert'),
-      message: this.config.alert.message,
-      hideCancel: true,
-      fieldConfig: [
-        {
-          type: 'checkbox',
-          name: 'disable_alert',
-          placeholder: this.translate.instant('Don\'t show this message again'),
-        },
-      ],
-      saveButtonText: this.translate.instant('OK'),
-      customSubmit: (entityDialog: EntityDialogComponent) => {
-        entityDialog.dialogRef.close(true);
-        if (entityDialog.formValue.disable_alert) {
-          this.disableAlert = true;
-        }
-      },
-    };
-    this.dialog.dialogForm(conf);
-  }
-
   onSelect(option: FormSelectOption): void {
-    if (this.config.alert) {
-      this.showAlert(option);
-    }
     this.selected = option.value;
     this.group.value[this.config.name] = this.selected;
     this.formValue = this.selected;
@@ -175,26 +142,18 @@ export class FormSelectComponent implements Field, AfterViewInit, AfterViewCheck
     return option.disabled ? option.disabled : false;
   }
 
-  isHiddenFromDisplay(index: number): boolean {
-    const option = this.config.options[index];
-    return option.hiddenFromDisplay ? option.hiddenFromDisplay : false;
-  }
-
   onToggleSelect(option: FormSelectOption): void {
     if (!this.config.multiple) {
       this.onSelect(option);
       return;
     }
 
-    if (this.selectedValues.findIndex((selectedValue) => selectedValue === option.value) >= 0 && this.config.alert) {
-      this.showAlert(option);
-    }
     this.group.value[this.config.name] = this.selectedValues;
   }
 
   updateValues(): void {
-    const newValues: any[] = [];
-    const triggerValue: any[] = [];
+    const newValues: string[] = [];
+    const triggerValue: string[] = [];
     this.selectStates.forEach((item, index) => {
       if (item) {
         newValues.push(this.config.options[index].value);
@@ -204,11 +163,5 @@ export class FormSelectComponent implements Field, AfterViewInit, AfterViewCheck
     this.selectedValues = newValues;
     this.customTriggerValue = triggerValue;
     this.formValue = '';
-  }
-
-  shouldAlertOnOption(option: FormSelectOption): boolean {
-    return this.config.alert
-      ? this.config.alert.forValues.findIndex((alertForValue) => alertForValue === option.value) >= 0
-      : false;
   }
 }

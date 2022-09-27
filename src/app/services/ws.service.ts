@@ -2,11 +2,12 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { UUID } from 'angular2-uuid';
+import { environment } from 'environments/environment';
 import { LocalStorage } from 'ngx-webstorage';
 import {
   Observable, Observer, Subject, Subscriber,
 } from 'rxjs';
-import { share } from 'rxjs/operators';
+import { filter, share, switchMap } from 'rxjs/operators';
 import { ApiEventMessage } from 'app/enums/api-event-message.enum';
 import { JobState } from 'app/enums/job-state.enum';
 import { ApiDirectory, ApiMethod } from 'app/interfaces/api-directory.interface';
@@ -14,27 +15,13 @@ import { ApiEventDirectory } from 'app/interfaces/api-event-directory.interface'
 import { ApiEvent } from 'app/interfaces/api-event.interface';
 import { LoginParams } from 'app/interfaces/auth.interface';
 import { Job } from 'app/interfaces/job.interface';
-import { environment } from '../../environments/environment';
 
 @UntilDestroy()
 @Injectable()
 export class WebSocketService {
-  private authStatus$: Subject<boolean>;
-  onCloseSubject$: Subject<boolean>;
-  onOpenSubject$: Subject<boolean>;
-  pendingCalls: Map<string, {
-    method: ApiMethod;
-    args: unknown;
-    observer: Subscriber<unknown>;
-  }>;
-  pendingSubs: {
-    [name: string]: {
-      observers: {
-        [id: string]: Subscriber<unknown>;
-      };
-    };
-  } = {};
-  pendingMessages: unknown[] = [];
+  onCloseSubject$ = new Subject<boolean>();
+  onOpenSubject$ = new Subject<boolean>();
+
   socket: WebSocket;
   connected = false;
   loggedIn = false;
@@ -42,16 +29,29 @@ export class WebSocketService {
   redirectUrl = '';
   shuttingdown = false;
 
-  protocol: string;
-  remote: string;
+  private authStatus$ = new Subject<boolean>();
+  private pendingCalls = new Map<string, {
+    method: ApiMethod;
+    args: unknown;
+    observer: Subscriber<unknown>;
+  }>();
+  private pendingSubs: {
+    [name: string]: {
+      observers: {
+        [id: string]: Subscriber<unknown>;
+      };
+    };
+  } = {};
+  private pendingMessages: unknown[] = [];
 
-  subscriptions = new Map<string, Observer<unknown>[]>();
+  private protocol: string;
+  private remote: string;
 
-  constructor(protected router: Router) {
-    this.authStatus$ = new Subject<boolean>();
-    this.onOpenSubject$ = new Subject();
-    this.onCloseSubject$ = new Subject();
-    this.pendingCalls = new Map();
+  private subscriptions = new Map<string, Observer<unknown>[]>();
+
+  constructor(
+    protected router: Router,
+  ) {
     this.protocol = window.location.protocol;
     this.remote = environment.remote;
     this.connect();
@@ -124,8 +124,8 @@ export class WebSocketService {
 
       this.pendingCalls.delete(data.id);
       if (data.error) {
-        console.error('Error: ', data.error);
-        call.observer.error(data.error);
+        console.error('Error: ', data.id, data.error);
+        call?.observer?.error(data.error);
       }
       if (call && call.observer) {
         call.observer.next(data.result);
@@ -173,14 +173,13 @@ export class WebSocketService {
   }
 
   subscribe<K extends keyof ApiEventDirectory>(name: K | '*'): Observable<ApiEvent<ApiEventDirectory[K]['response']>> {
-    const source = Observable.create((observer: Subscriber<ApiEventDirectory[K]['response']>) => {
+    return new Observable((observer) => {
       if (this.subscriptions.has(name)) {
         this.subscriptions.get(name).push(observer);
       } else {
         this.subscriptions.set(name, [observer]);
       }
     });
-    return source;
   }
 
   unsubscribe(observer: any): void {
@@ -263,25 +262,23 @@ export class WebSocketService {
   }
 
   job<K extends ApiMethod>(method: K, params?: ApiDirectory[K]['params']): Observable<Job<ApiDirectory[K]['response']>> {
-    const source = Observable.create((observer: Subscriber<Job<ApiDirectory[K]['response']>>) => {
-      this.call(method, params).pipe(untilDestroyed(this)).subscribe((jobId) => {
-        this.subscribe('core.get_jobs').pipe(untilDestroyed(this)).subscribe((event) => {
-          if (event.id === jobId) {
-            observer.next(event.fields);
-            if (event.fields.state === JobState.Success) observer.complete();
-            if (event.fields.state === JobState.Failed) observer.error(event.fields);
-          }
-        });
+    return new Observable((observer: Subscriber<Job<ApiDirectory[K]['response']>>) => {
+      this.call(method, params).pipe(
+        switchMap((jobId) => this.subscribe('core.get_jobs').pipe(filter((event) => event.id === jobId))),
+        untilDestroyed(this),
+      ).subscribe((event) => {
+        observer.next(event.fields);
+        if (event.fields.state === JobState.Success) observer.complete();
+        if (event.fields.state === JobState.Failed) observer.error(event.fields);
       });
     });
-    return source;
   }
 
   login(username: string, password: string, otpToken?: string): Observable<boolean> {
     const params: LoginParams = otpToken
       ? [username, password, otpToken]
       : [username, password];
-    return Observable.create((observer: Subscriber<boolean>) => {
+    return new Observable((observer: Subscriber<boolean>) => {
       this.call('auth.login', params).pipe(untilDestroyed(this)).subscribe((wasLoggedIn) => {
         this.loginCallback(wasLoggedIn, observer);
       });
@@ -311,7 +308,7 @@ export class WebSocketService {
   }
 
   loginToken(token: string): Observable<boolean> {
-    return Observable.create((observer: Subscriber<boolean>) => {
+    return new Observable((observer: Subscriber<boolean>) => {
       if (token) {
         this.call('auth.token', [token]).pipe(untilDestroyed(this)).subscribe((result) => {
           this.loginCallback(result, observer);

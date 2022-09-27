@@ -8,11 +8,11 @@ import { of } from 'rxjs';
 import { mockCall, mockWebsocket } from 'app/core/testing/utils/mock-websocket.utils';
 import { OpenVpnDeviceType } from 'app/enums/open-vpn-device-type.enum';
 import { OpenvpnServerConfig } from 'app/interfaces/openvpn-server-config.interface';
-import { AppLoaderModule } from 'app/modules/app-loader/app-loader.module';
 import { IxSelectHarness } from 'app/modules/ix-forms/components/ix-select/ix-select.harness';
 import { IxTextareaHarness } from 'app/modules/ix-forms/components/ix-textarea/ix-textarea.harness';
 import { IxFormsModule } from 'app/modules/ix-forms/ix-forms.module';
 import { IxFormHarness } from 'app/modules/ix-forms/testing/ix-form.harness';
+import { AppLoaderModule } from 'app/modules/loader/app-loader.module';
 import {
   DownloadClientConfigModalComponent,
 } from 'app/pages/network/components/download-client-config-modal/download-client-config-modal.component';
@@ -140,7 +140,7 @@ describe('OpenVpnServerConfigComponent', () => {
       root_ca: 2,
       server: '198.51.100.0',
       netmask: 25,
-      port: '7000',
+      port: 7000,
       authentication_algorithm: 'MD99',
       cipher: 'AES-256-CFB',
       compression: 'LZ4',

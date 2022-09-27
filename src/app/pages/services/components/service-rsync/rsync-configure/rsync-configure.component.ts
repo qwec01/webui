@@ -2,9 +2,8 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef, Component, OnInit,
 } from '@angular/core';
-import { Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { FormBuilder } from '@ngneat/reactive-forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import helptext from 'app/helptext/services/components/service-rsync';
 import { RsyncConfigUpdate } from 'app/interfaces/rsync-config.interface';
@@ -14,7 +13,7 @@ import { WebSocketService, DialogService, AppLoaderService } from 'app/services'
 
 @UntilDestroy()
 @Component({
-  selector: 'app-rsync-configure',
+  selector: 'ix-rsync-configure',
   templateUrl: './rsync-configure.component.html',
   styleUrls: ['./rsync-configure.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -50,30 +49,33 @@ export class RsyncConfigureComponent implements OnInit {
   ngOnInit(): void {
     this.loader.open();
 
-    this.ws.call('rsyncd.config').pipe(untilDestroyed(this)).subscribe(
-      (config: RsyncConfigUpdate) => {
+    this.ws.call('rsyncd.config').pipe(untilDestroyed(this)).subscribe({
+      next: (config: RsyncConfigUpdate) => {
         this.form.patchValue(config);
         this.loader.close();
         this.cdr.markForCheck();
       },
-      (error) => {
+      error: (error) => {
         this.loader.close();
-        new EntityUtils().handleWsError(null, error, this.dialogService);
+        new EntityUtils().handleWsError(this, error, this.dialogService);
       },
-    );
+    });
   }
 
   onSubmit(): void {
     this.loader.open();
 
     const values = this.form.value;
-    this.ws.call('rsyncd.update', [values] as [RsyncConfigUpdate]).pipe(untilDestroyed(this)).subscribe(() => {
-      this.loader.close();
-      this.router.navigate(['services']);
-    }, (error) => {
-      this.loader.close();
-      this.errorHandler.handleWsFormError(error, this.form);
-      this.cdr.markForCheck();
+    this.ws.call('rsyncd.update', [values] as [RsyncConfigUpdate]).pipe(untilDestroyed(this)).subscribe({
+      next: () => {
+        this.loader.close();
+        this.router.navigate(['services']);
+      },
+      error: (error) => {
+        this.loader.close();
+        this.errorHandler.handleWsFormError(error, this.form);
+        this.cdr.markForCheck();
+      },
     });
   }
 

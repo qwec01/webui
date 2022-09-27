@@ -8,7 +8,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -21,10 +20,13 @@ import { TreeModule } from '@circlon/angular-tree-component';
 import { TranslateModule } from '@ngx-translate/core';
 import { MarkdownModule } from 'ngx-markdown';
 import { CommonDirectivesModule } from 'app/directives/common/common-directives.module';
+import { CastModule } from 'app/modules/cast/cast.module';
 import { IxCheckboxListComponent } from 'app/modules/ix-forms/components/ix-checkbox-list/ix-checkbox-list.component';
 import { IxCheckboxComponent } from 'app/modules/ix-forms/components/ix-checkbox/ix-checkbox.component';
 import { IxChipsComponent } from 'app/modules/ix-forms/components/ix-chips/ix-chips.component';
 import { IxComboboxComponent } from 'app/modules/ix-forms/components/ix-combobox/ix-combobox.component';
+import { IxDynamicFormItemComponent } from 'app/modules/ix-forms/components/ix-dynamic-form/ix-dynamic-form-item/ix-dynamic-form-item.component';
+import { IxDynamicFormComponent } from 'app/modules/ix-forms/components/ix-dynamic-form/ix-dynamic-form.component';
 import { IxErrorsComponent } from 'app/modules/ix-forms/components/ix-errors/ix-errors.component';
 import { IxExplorerComponent } from 'app/modules/ix-forms/components/ix-explorer/ix-explorer.component';
 import { IxFieldsetComponent } from 'app/modules/ix-forms/components/ix-fieldset/ix-fieldset.component';
@@ -40,9 +42,12 @@ import { IxModalHeaderComponent } from 'app/modules/ix-forms/components/ix-slide
 import { IxSlideInComponent } from 'app/modules/ix-forms/components/ix-slide-in/ix-slide-in.component';
 import { IxSlideToggleComponent } from 'app/modules/ix-forms/components/ix-slide-toggle/ix-slide-toggle.component';
 import { IxTextareaComponent } from 'app/modules/ix-forms/components/ix-textarea/ix-textarea.component';
+import { IxWarningComponent } from 'app/modules/ix-forms/components/ix-warning/ix-warning.component';
 import { IxFormatterService } from 'app/modules/ix-forms/services/ix-formatter.service';
-import IxValidatorsService from 'app/modules/ix-forms/services/ix-validators.service';
+import { IxValidatorsService } from 'app/modules/ix-forms/services/ix-validators.service';
+import { IxIconModule } from 'app/modules/ix-icon/ix-icon.module';
 import { TooltipModule } from 'app/modules/tooltip/tooltip.module';
+import { IxLabelComponent } from './components/ix-label/ix-label.component';
 
 @NgModule({
   imports: [
@@ -56,7 +61,7 @@ import { TooltipModule } from 'app/modules/tooltip/tooltip.module';
     MatSelectModule,
     MatButtonModule,
     MatAutocompleteModule,
-    MatIconModule,
+    IxIconModule,
     MatSlideToggleModule,
     MatProgressBarModule,
     MatRadioModule,
@@ -70,10 +75,12 @@ import { TooltipModule } from 'app/modules/tooltip/tooltip.module';
     TranslateModule,
     TreeModule,
     MatListModule,
+    CastModule,
   ],
   declarations: [
     IxInputComponent,
     IxErrorsComponent,
+    IxWarningComponent,
     IxSelectComponent,
     IxFieldsetComponent,
     IxSlideInComponent,
@@ -91,9 +98,13 @@ import { TooltipModule } from 'app/modules/tooltip/tooltip.module';
     IxRadioGroupComponent,
     IxIpInputWithNetmaskComponent,
     IxCheckboxListComponent,
+    IxDynamicFormComponent,
+    IxDynamicFormItemComponent,
+    IxLabelComponent,
   ],
   exports: [
     IxErrorsComponent,
+    IxWarningComponent,
     IxInputComponent,
     IxSelectComponent,
     IxSlideInComponent,
@@ -112,6 +123,9 @@ import { TooltipModule } from 'app/modules/tooltip/tooltip.module';
     IxRadioGroupComponent,
     IxIpInputWithNetmaskComponent,
     IxCheckboxListComponent,
+    IxDynamicFormComponent,
+    IxDynamicFormItemComponent,
+    IxLabelComponent,
   ],
   providers: [
     IxFormatterService,

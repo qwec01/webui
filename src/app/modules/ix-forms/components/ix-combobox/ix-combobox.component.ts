@@ -6,7 +6,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { ControlValueAccessor, FormControl, NgControl } from '@angular/forms';
+import { ControlValueAccessor, UntypedFormControl, NgControl } from '@angular/forms';
 import { MatAutocomplete, MatAutocompleteTrigger } from '@angular/material/autocomplete';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
@@ -46,11 +46,12 @@ export class IxComboboxComponent implements ControlValueAccessor, OnInit {
   @Input() provider: IxComboboxProvider;
 
   private filterChanged$ = new Subject<string>();
-  formControl = new FormControl(this);
+  formControl = new UntypedFormControl(this);
   value: string | number = '';
   isDisabled = false;
   filterValue: string;
   selectedOption: Option = null;
+  textContent = '';
 
   onChange: (value: string | number) => void = (): void => {};
   onTouch: () => void = (): void => {};
@@ -91,7 +92,7 @@ export class IxComboboxComponent implements ControlValueAccessor, OnInit {
   }
 
   filterOptions(filterValue: string): void {
-    this.loading = this.filterValue !== '';
+    this.loading = true;
     this.cdr.markForCheck();
     this.provider?.fetch(filterValue).pipe(
       catchError(() => {
@@ -101,11 +102,30 @@ export class IxComboboxComponent implements ControlValueAccessor, OnInit {
       untilDestroyed(this),
     ).subscribe((options: Option[]) => {
       this.loading = false;
+      this.cdr.markForCheck();
+
       this.options = options;
+      const selectedOptionFromLabel = this.options.find((option: Option) => option.label === filterValue);
+      if (selectedOptionFromLabel) {
+        this.selectedOption = selectedOptionFromLabel;
+        this.value = selectedOptionFromLabel.value;
+        this.onChange(this.value);
+      }
       if (!this.selectedOption && this.value !== null && this.value !== '') {
         const setOption = this.options.find((option: Option) => option.value === this.value);
         if (setOption) {
           this.selectedOption = setOption ? { ...setOption } : null;
+          if (this.selectedOption) {
+            this.filterChanged$.next('');
+          }
+        } else {
+          /**
+           * We are adding a custom fake option here so we can show the current value of the control even
+           * if we haven't found the correct option in the list of options fetched so far. The assumption
+           * is that the correct option exists in one of the following pages of list of options
+           */
+          this.options.push({ label: this.value as string, value: this.value });
+          this.selectedOption = { ...this.options.find((option: Option) => option.value === this.value) };
           if (this.selectedOption) {
             this.filterChanged$.next('');
           }
@@ -118,35 +138,60 @@ export class IxComboboxComponent implements ControlValueAccessor, OnInit {
   onOpenDropdown(): void {
     setTimeout(() => {
       if (
-        this.autoCompleteRef
-        && this.autocompleteTrigger
-        && this.autoCompleteRef.panel
+        !this.autoCompleteRef
+        || !this.autocompleteTrigger
+        || !this.autoCompleteRef.panel
       ) {
-        fromEvent(this.autoCompleteRef.panel.nativeElement, 'scroll')
-          .pipe(
-            debounceTime(300),
-            map(() => this.autoCompleteRef.panel.nativeElement.scrollTop),
-            takeUntil(this.autocompleteTrigger.panelClosingActions),
-            untilDestroyed(this),
-          ).subscribe(() => {
-            const { scrollTop, scrollHeight, clientHeight: elementHeight } = this.autoCompleteRef.panel.nativeElement;
-            const atBottom = scrollHeight === scrollTop + elementHeight;
-            if (atBottom) {
-              this.loading = true;
-              this.cdr.markForCheck();
-              this.provider?.nextPage(this.filterValue !== null || this.filterValue !== undefined ? this.filterValue : '')
-                .pipe(untilDestroyed(this)).subscribe((options: Option[]) => {
-                  this.loading = false;
-                  this.options.push(...options);
-                  this.cdr.markForCheck();
-                });
-            }
-          });
+        return;
       }
+
+      fromEvent(this.autoCompleteRef.panel.nativeElement, 'scroll')
+        .pipe(
+          debounceTime(300),
+          map(() => this.autoCompleteRef.panel.nativeElement.scrollTop),
+          takeUntil(this.autocompleteTrigger.panelClosingActions),
+          untilDestroyed(this),
+        ).subscribe(() => {
+          const { scrollTop, scrollHeight, clientHeight: elementHeight } = this.autoCompleteRef.panel.nativeElement;
+          const atBottom = scrollHeight === scrollTop + elementHeight;
+          if (!atBottom) {
+            return;
+          }
+
+          this.loading = true;
+          this.cdr.markForCheck();
+          this.provider?.nextPage(this.filterValue !== null || this.filterValue !== undefined ? this.filterValue : '')
+            .pipe(untilDestroyed(this)).subscribe((options: Option[]) => {
+              this.loading = false;
+              this.cdr.markForCheck();
+              /**
+               * The following logic checks if we used a fake option to show value for an option that exists
+               * on one of the following pages of the list of options for this combobox. If we have done so
+               * previously, we want to remove that option if we managed to find the correct option on the
+               * page we just fetched
+               */
+              const valueIndex = this.options.findIndex(
+                (option) => option.label === (this.value as string) && option.value === this.value,
+              );
+
+              if (
+                options.some((option) => option.value === this.value)
+                && valueIndex >= 0
+              ) {
+                this.options.splice(valueIndex, 1);
+              }
+              this.options.push(...options);
+              this.cdr.markForCheck();
+            });
+        });
     });
   }
 
   onChanged(changedValue: string): void {
+    if (this.selectedOption || this.value) {
+      this.resetInput();
+    }
+    this.textContent = changedValue;
     this.filterChanged$.next(changedValue);
   }
 
@@ -157,6 +202,7 @@ export class IxComboboxComponent implements ControlValueAccessor, OnInit {
     }
     this.selectedOption = null;
     this.value = null;
+    this.textContent = '';
     this.onChange(null);
   }
 

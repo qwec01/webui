@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import * as isCidr from 'is-cidr';
 import { Observable } from 'rxjs';
 import { Choices } from 'app/interfaces/choices.interface';
 import { Option } from 'app/interfaces/option.interface';
@@ -7,6 +6,8 @@ import { WebSocketService } from './ws.service';
 
 @Injectable({ providedIn: 'root' })
 export class NetworkService {
+  macRegex = /\b([0-9A-F]{2}[:-]){5}([0-9A-F]){2}\b/i;
+
   ipv4Regex = /^((25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})\.){3}(25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})$/;
   ipv4CidrRegex = /^((25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})\.){3}(25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})(\/(3[0-2]|[1-2][0-9]|[0-9]))$/;
   ipv4CidrOptionalRegex = /^((25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})\.){3}(25[0-5]|2[0-4][0-9]|1?[0-9]{1,2})(\/(3[0-2]|[1-2][0-9]|[0-9]))?$/;
@@ -18,9 +19,8 @@ export class NetworkService {
   ipv4OrIpv6 = new RegExp('(' + this.ipv6Regex.source + ')|(' + this.ipv4Regex.source + ')');
   ipv4OrIpv6Cidr = new RegExp('(' + this.ipv6CidrRegex.source + ')|(' + this.ipv4CidrRegex.source + ')');
   ipv4OrIpv6CidrOptional = new RegExp('(' + this.ipv6CidrOptionalRegex.source + ')|(' + this.ipv4CidrOptionalRegex.source + ')');
-  ipv4OrIpv6CidrOrNone = new RegExp('(' + this.ipv4OrIpv6Cidr + ')?');
 
-  hostnameRegex = /^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$/;
+  hostnameRegex = /^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9-]*[A-Za-z0-9])$/;
 
   constructor(protected ws: WebSocketService) {}
 
@@ -64,12 +64,5 @@ export class NetworkService {
         return { label: String((33 - i) * 4), value: String((33 - i) * 4) };
       },
     );
-  }
-
-  authNetworkValidator(str: string): boolean {
-    if (isCidr.v4(str) || isCidr.v6(str)) {
-      return true;
-    }
-    return false;
   }
 }

@@ -1,26 +1,24 @@
-import { HttpClient } from '@angular/common/http';
 import {
-  Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation,
+  AfterViewInit,
+  Component, ElementRef, OnDestroy, OnInit, TemplateRef, ViewChild, ViewEncapsulation,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import { UUID } from 'angular2-uuid';
 import * as _ from 'lodash';
-import { Subject, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import helptext from 'app/helptext/apps/apps';
-import { CoreEvent } from 'app/interfaces/events';
 import { Option } from 'app/interfaces/option.interface';
-import { AppLoaderService } from 'app/modules/app-loader/app-loader.service';
 import { DialogFormConfiguration } from 'app/modules/entity/entity-dialog/dialog-form-configuration.interface';
 import { EntityDialogComponent } from 'app/modules/entity/entity-dialog/entity-dialog.component';
 import { FormSelectConfig } from 'app/modules/entity/entity-form/models/field-config.interface';
-import { EntityToolbarComponent } from 'app/modules/entity/entity-toolbar/entity-toolbar.component';
 import { EntityUtils } from 'app/modules/entity/utils';
+import { AppLoaderService } from 'app/modules/loader/app-loader.service';
+import { ApplicationsService } from 'app/pages/applications/applications.service';
 import { DialogService, ShellService, WebSocketService } from 'app/services';
-import { CoreService } from 'app/services/core-service/core.service';
+import { LayoutService } from 'app/services/layout.service';
 import { StorageService } from 'app/services/storage.service';
-import { ApplicationsService } from '../applications.service';
 
 interface PodLogEvent {
   data: string;
@@ -29,18 +27,17 @@ interface PodLogEvent {
 
 @UntilDestroy()
 @Component({
-  selector: 'app-pod-logs',
   templateUrl: './pod-logs.component.html',
   styleUrls: ['./pod-logs.component.scss'],
   providers: [ShellService],
   // eslint-disable-next-line @angular-eslint/use-component-view-encapsulation
   encapsulation: ViewEncapsulation.None,
 })
-
-export class PodLogsComponent implements OnInit, OnDestroy {
+export class PodLogsComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('logContainer', { static: true }) logContainer: ElementRef;
+  @ViewChild('pageHeader') pageHeader: TemplateRef<unknown>;
+
   fontSize = 14;
-  formEvent$: Subject<CoreEvent>;
   chartReleaseName: string;
   podName: string;
   containerName: string;
@@ -56,7 +53,7 @@ export class PodLogsComponent implements OnInit, OnDestroy {
   private podLogsChangedListener: Subscription;
   podLogs: PodLogEvent[];
 
-  constructor(protected core: CoreService,
+  constructor(
     private ws: WebSocketService,
     private appService: ApplicationsService,
     private dialogService: DialogService,
@@ -64,8 +61,8 @@ export class PodLogsComponent implements OnInit, OnDestroy {
     protected aroute: ActivatedRoute,
     protected loader: AppLoaderService,
     protected storageService: StorageService,
-    protected http: HttpClient,
-    protected router: Router) {}
+    private layoutService: LayoutService,
+  ) {}
 
   ngOnInit(): void {
     this.aroute.params.pipe(untilDestroyed(this)).subscribe((params) => {
@@ -97,9 +94,12 @@ export class PodLogsComponent implements OnInit, OnDestroy {
         }
       });
 
-      this.setupToolbarButtons();
       this.reconnect();
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.layoutService.pageHeaderUpdater$.next(this.pageHeader);
   }
 
   ngOnDestroy(): void {
@@ -139,52 +139,16 @@ export class PodLogsComponent implements OnInit, OnDestroy {
     }
   }
 
-  setupToolbarButtons(): void {
-    this.formEvent$ = new Subject();
-    this.formEvent$.pipe(untilDestroyed(this)).subscribe((evt: CoreEvent) => {
-      if (evt.data.event_control === 'download') {
-        this.showChooseLogsDialog(true);
-      } else if (evt.data.event_control === 'reconnect') {
-        this.showChooseLogsDialog(false);
-      } else if (evt.data.event_control === 'fontsize') {
-        this.fontSize = evt.data.fontsize;
-      }
-    });
+  onFontSizeChanged(newSize: number): void {
+    this.fontSize = newSize;
+  }
 
-    let controls = [];
-    controls = [
-      {
-        name: 'fontsize',
-        label: this.translate.instant('Set font size'),
-        type: 'slider',
-        min: 10,
-        max: 20,
-        step: 1,
-        value: this.fontSize,
-      },
-      {
-        name: 'reconnect',
-        label: this.translate.instant('Reconnect'),
-        type: 'button',
-        color: 'secondary',
-      },
-      {
-        name: 'download',
-        label: this.translate.instant('Download Logs'),
-        type: 'button',
-        color: 'primary',
-      },
-    ];
-    // Setup Global Actions
-    const actionsConfig = {
-      actionType: EntityToolbarComponent,
-      actionConfig: {
-        target: this.formEvent$,
-        controls,
-      },
-    };
+  onDownloadLogs(): void {
+    this.showChooseLogsDialog(true);
+  }
 
-    this.core.emit({ name: 'GlobalActions', data: actionsConfig, sender: this });
+  onReconnect(): void {
+    this.showChooseLogsDialog(false);
   }
 
   updateChooseLogsDialog(isDownload = false): void {
@@ -270,19 +234,22 @@ export class PodLogsComponent implements OnInit, OnDestroy {
         [chartReleaseName, { pod_name: podName, container_name: containerName, tail_lines: tailLines }],
         fileName,
       ],
-    ).pipe(untilDestroyed(this)).subscribe((res) => {
-      this.loader.close();
-      const url = res[1];
-      this.storageService.streamDownloadFile(this.http, url, fileName, mimetype)
-        .pipe(untilDestroyed(this))
-        .subscribe((file: Blob) => {
-          if (res !== null) {
-            this.storageService.downloadBlob(file, fileName);
-          }
-        });
-    }, (error) => {
-      this.loader.close();
-      new EntityUtils().handleWsError(this, error, this.dialogService);
+    ).pipe(untilDestroyed(this)).subscribe({
+      next: (res) => {
+        this.loader.close();
+        const url = res[1];
+        this.storageService.streamDownloadFile(url, fileName, mimetype)
+          .pipe(untilDestroyed(this))
+          .subscribe((file: Blob) => {
+            if (res !== null) {
+              this.storageService.downloadBlob(file, fileName);
+            }
+          });
+      },
+      error: (error) => {
+        this.loader.close();
+        new EntityUtils().handleWsError(this, error, this.dialogService);
+      },
     });
   }
 

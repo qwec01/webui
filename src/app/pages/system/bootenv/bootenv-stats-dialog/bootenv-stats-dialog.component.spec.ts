@@ -12,13 +12,25 @@ import { MockWebsocketService } from 'app/core/testing/classes/mock-websocket.se
 import { mockCall, mockWebsocket } from 'app/core/testing/utils/mock-websocket.utils';
 import { PoolStatus } from 'app/enums/pool-status.enum';
 import { AdvancedConfig } from 'app/interfaces/advanced-config.interface';
-import { BootPoolState } from 'app/interfaces/boot-pool-state.interface';
-import { AppLoaderModule } from 'app/modules/app-loader/app-loader.module';
+import { PoolInstance } from 'app/interfaces/pool.interface';
 import { IxFormsModule } from 'app/modules/ix-forms/ix-forms.module';
 import { IxFormHarness } from 'app/modules/ix-forms/testing/ix-form.harness';
+import { AppLoaderModule } from 'app/modules/loader/app-loader.module';
+import { SnackbarService } from 'app/modules/snackbar/services/snackbar.service';
 import { DialogService, WebSocketService } from 'app/services';
 import { selectAdvancedConfig } from 'app/store/system-config/system-config.selectors';
 import { BootenvStatsDialogComponent } from './bootenv-stats-dialog.component';
+
+const poolInstance = {
+  status: PoolStatus.Online,
+  size: 20401094656,
+  allocated: 16723320832,
+  scan: {
+    end_time: {
+      $date: 1643309114000,
+    },
+  },
+} as PoolInstance;
 
 describe('BootenvStatsDialogComponent', () => {
   let spectator: Spectator<BootenvStatsDialogComponent>;
@@ -34,26 +46,10 @@ describe('BootenvStatsDialogComponent', () => {
     ],
     providers: [
       mockProvider(DialogService),
+      mockProvider(SnackbarService),
       mockProvider(MatDialogRef),
       mockWebsocket([
-        mockCall('boot.get_state', {
-          properties: {
-            health: {
-              value: PoolStatus.Online,
-            },
-            size: {
-              parsed: 20401094656,
-            },
-            allocated: {
-              parsed: 16723320832,
-            },
-          },
-          scan: {
-            end_time: {
-              $date: 1643309114000,
-            },
-          },
-        } as BootPoolState),
+        mockCall('boot.get_state', poolInstance),
         mockCall('boot.set_scrub_interval'),
       ]),
       provideMockStore({
@@ -106,7 +102,6 @@ describe('BootenvStatsDialogComponent', () => {
   });
 
   it('saves new scrub interval and closes modal when form is submitted', async () => {
-    const dialogService = spectator.inject(DialogService);
     const form = await loader.getHarness(IxFormHarness);
     await form.fillForm({
       'Scrub interval (in days)': 3,
@@ -116,19 +111,16 @@ describe('BootenvStatsDialogComponent', () => {
     await saveButton.click();
 
     expect(websocket.call).toHaveBeenCalledWith('boot.set_scrub_interval', [3]);
-    expect(dialogService.info.mock.calls[0][0]).toEqual('Scrub Interval Set');
+    expect(spectator.inject(SnackbarService).success).toHaveBeenCalledWith('Scrub interval set to 3 days');
     expect(spectator.inject(MatDialogRef).close).toHaveBeenCalled();
   });
 
   it('tells user to look at alerts if boot pool status is degraded', () => {
     const mockWebsocket = spectator.inject(MockWebsocketService);
     mockWebsocket.mockCall('boot.get_state', {
-      properties: {
-        health: {
-          value: PoolStatus.Degraded,
-        },
-      },
-    } as BootPoolState);
+      ...poolInstance,
+      status: PoolStatus.Degraded,
+    } as PoolInstance);
 
     spectator.component.ngOnInit();
     spectator.detectChanges();
